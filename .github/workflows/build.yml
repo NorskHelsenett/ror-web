@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [lts/Iron]
+        node-version: ['20']
         bun-version: [latest]
 
     steps:
