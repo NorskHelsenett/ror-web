@@ -31,7 +31,7 @@ jobs:
       - name: Set up bun ${{ matrix.bun-version }}
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: ${{ matrix.node-version }}
+          bun-version: ${{ matrix.bun-version }}
 
       - name: Cache node modules
         uses: actions/cache@v3
