@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [lts/*]
         bun-version: [latest]
 
     steps:
@@ -31,7 +31,7 @@ jobs:
       - name: Set up bun ${{ matrix.bun-version }}
         uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          bun-version: ${{ matrix.node-version }}
 
       - name: Cache node modules
         uses: actions/cache@v3
