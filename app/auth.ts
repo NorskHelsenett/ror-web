@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { Provider } from "next-auth/providers";
-import { env } from "../env";
+import { env } from "@/env";
 
 /**
  * We are adding the accessToken to the session so it can be retrieved from the
@@ -30,11 +30,9 @@ const dexIdpProvider: Provider = {
   },
 };
 
-const trusthost = Boolean(JSON.parse(env.TRUST_HOST));
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [dexIdpProvider],
-  trustHost: trusthost,
+  trustHost: env.AUTH_TRUST_HOST,
   callbacks: {
     jwt({ token, account }) {
       if (account?.provider === "dex") {
