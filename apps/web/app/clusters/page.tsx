@@ -1,7 +1,7 @@
+import { Breadcrumb, BreadcrumbItem } from '@ror/react/components/breadcrumb'
+import { CodeSnippet } from '@ror/react/components/code-snippet'
 import { rorApiClient } from '@/services/ror-api'
 import { authGuard } from '../auth-guard'
-import { Breadcrumb, BreadcrumbItem } from '@ror/react/components/breadcrumb'
-import { Tile } from '@ror/react/components/tile'
 import { ClustersTable } from './cluster-table'
 
 export default async function ClustersPage() {
@@ -20,11 +20,11 @@ export default async function ClustersPage() {
 
       <ClustersTable data={clustersResponse.data} />
 
-      <Tile className='mt-10'>
-        <code>
-          <pre>{JSON.stringify(clustersResponse, null, 2)}</pre>
-        </code>
-      </Tile>
+      <div className='mt-10'>
+        <CodeSnippet type='multi' hideCopyButton>
+          {JSON.stringify(clustersResponse, null, 2)}
+        </CodeSnippet>
+      </div>
     </div>
   )
 }

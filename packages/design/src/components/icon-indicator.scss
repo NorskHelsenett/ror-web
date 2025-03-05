@@ -8,7 +8,21 @@
   --icon-color: #{get-var('icon-secondary')};
   --icon-size: #{convert.to-rem(20px)};
   display: flex;
+  align-items: center;
   color: get-var('text-primary');
+
+  &__icon {
+    align-self: center;
+    margin-inline-end: 0.5rem;
+    block-size: var(--icon-size);
+    inline-size: var(--icon-size);
+    color: var(--icon-color);
+  }
+
+  &__label {
+    display: inline-flex;
+    transform: translateY(1px);
+  }
 }
 
 .#{$prefix}-icon-indicator--md {
@@ -19,14 +33,6 @@
 .#{$prefix}-icon-indicator--lg {
   --icon-size: #{convert.to-rem(24px)};
   @include type.type-style('body-02');
-}
-
-.#{$prefix}-icon-indicator__icon {
-  align-self: center;
-  margin-inline-end: 0.5rem;
-  block-size: var(--icon-size);
-  inline-size: var(--icon-size);
-  color: var(--icon-color);
 }
 
 .#{$prefix}-icon-indicator--failed {

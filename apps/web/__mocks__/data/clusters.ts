@@ -1,3 +1,6 @@
+import { Health } from '@ror/js-api-client'
+import { sub } from 'date-fns'
+
 export default [
   {
     id: '6523967984fddd1597f6166f',
@@ -122,10 +125,10 @@ export default [
     ingresses: null,
     updated: '0001-01-01T00:00:00Z',
     created: '2023-10-09T05:10:10Z',
-    lastObserved: '2025-03-03T13:28:54.941Z',
-    firstObserved: '2023-10-09T05:58:17.704Z',
+    firstObserved: '2025-03-03T13:28:54.941Z',
+    lastObserved: sub(new Date(), { minutes: 5 }).toISOString(),
     healthStatus: {
-      health: 1,
+      health: Health.Healthy,
       messages: null,
     },
     createdBy: '',
@@ -440,10 +443,10 @@ export default [
     ],
     updated: '0001-01-01T00:00:00Z',
     created: '2024-06-24T07:13:19Z',
-    lastObserved: '2025-03-03T13:28:31.33Z',
     firstObserved: '2024-06-24T07:54:31.64Z',
+    lastObserved: sub(new Date(), { minutes: 12 }).toLocaleString(),
     healthStatus: {
-      health: 1,
+      health: Health.Unhealthy,
       messages: null,
     },
     createdBy: '',
