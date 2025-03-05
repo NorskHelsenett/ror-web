@@ -52,14 +52,14 @@ export function BaseButton(props: BaseButtonProps) {
       /**
        * The primary variant is the default and doesn't need a modifier class.
        */
-      [`r-btn--${variant}`]: variant !== 'primary',
+      [`r-btn--${variant}`]: variant,
     },
     className
   )
 
-  const Comp = asChild ? Slot : 'button'
-
   // TODO: Implement rendering of an icon inside the button together with the children
+
+  const Comp = asChild ? Slot : 'button'
 
   return (
     <Comp className={classes} {...rest}>

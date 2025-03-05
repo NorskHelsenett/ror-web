@@ -7,9 +7,13 @@
     "./reset.css": "./dist/reset.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "dist/**/*",
+    "src/**/*"
+  ],
   "scripts": {
     "build": "sass src/index.scss:dist/index.css src/reset.scss:dist/reset.css",
     "dev": "sass --watch src/index.scss:dist/index.css src/reset.scss:dist/reset.css",
@@ -17,5 +21,13 @@
   },
   "devDependencies": {
     "sass": "^1.83.4"
+  },
+  "peerDependencies": {
+    "sass": "^1.83.4"
+  },
+  "peerDependenciesMeta": {
+    "sass": {
+      "optional": true
+    }
   }
 }

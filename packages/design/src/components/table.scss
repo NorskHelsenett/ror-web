@@ -219,6 +219,12 @@
   font-weight: inherit;
   color: inherit;
   background: transparent;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: transparent;
+  }
 }
 
 /* Grid layout */

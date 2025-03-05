@@ -53,7 +53,7 @@ function isButtonIconOnly(props: ButtonProps): props is ButtonWithIconOnlyProps 
   return 'iconOnly' in props && props.iconOnly === true && isValidElement(props.icon)
 }
 
-export function Button(props: ButtonProps) {
+export function Button(props: ButtonProps = { variant: 'primary', size: 'md' }) {
   const { iconOnly, ...rest } = props
   if (isButtonIconOnly(props)) {
     return <IconOnlyButton icon={props.icon} {...rest} />

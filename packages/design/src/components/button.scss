@@ -3,8 +3,8 @@
 @use '../utilities/css-variable.scss' as cv;
 
 .#{c.$prefix}-btn {
-  --btn-height: 2.5rem;
-  --btn-width: 2.5rem;
+  --btn-height: 2rem;
+  --btn-x-padding: #{cv.get-var('spacing-05')};
   block-size: var(--btn-height);
   display: inline-flex;
   vertical-align: top;
@@ -25,7 +25,7 @@
   inline-size: max-content;
   max-inline-size: 20rem;
   min-inline-size: 2rem;
-  padding: 0 0.875rem;
+  padding: 0 var(--btn-x-padding);
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
   @include types.type-style('body-01');
@@ -33,24 +33,52 @@
 
 .#{c.$prefix}-btn--sm {
   --btn-height: 1.75rem;
-  --btn-weight: 1.75rem;
-  font-size: cv.get-var('font-size-xsmall', 0.75rem);
-  padding: 0 0.5rem;
+  border-radius: 4px;
+}
+
+.#{c.$prefix}-btn--md {
+  --btn-height: 2rem;
+  padding: 0 1rem;
   border-radius: 4px;
 }
 
 .#{c.$prefix}-btn--lg {
   --btn-height: 2.5rem;
-  --btn-weight: 2.5rem;
-  font-size: cv.get-var('font-size-medium', 0.75rem);
-  padding: 0 1.25rem;
   border-radius: 6px;
+}
+
+.#{c.$prefix}-btn--primary {
+  background: cv.get-var('button-primary');
+  border-color: cv.get-var('button-primary-border');
+  color: cv.get-var('text-on-color');
+
+  &:hover {
+    background: cv.get-var('button-primary-hover');
+    border-color: cv.get-var('button-primary-border-hover');
+  }
+
+  &:active {
+    background: cv.get-var('button-primary-active');
+    border-color: cv.get-var('button-primary-border-active');
+  }
 }
 
 .#{c.$prefix}-btn--secondary {
   background: cv.get-var('button-secondary');
-  color: cv.get-var('text-on-color');
   border-color: cv.get-var('button-secondary-border');
+  color: cv.get-var('text-on-color');
+}
+
+.#{c.$prefix}-btn--tertiary {
+  background: cv.get-var('button-tertiary');
+  border-color: cv.get-var('button-tertiary-border');
+  color: cv.get-var('button-primary');
+}
+
+.#{c.$prefix}-btn--danger {
+  background: cv.get-var('button-danger');
+  border-color: cv.get-var('button-danger-border');
+  color: cv.get-var('text-on-color');
 }
 
 .#{c.$prefix}-btn--ghost {
@@ -65,7 +93,7 @@
 .#{c.$prefix}-btn--icon-only {
   justify-content: center;
   padding: 0;
-  inline-size: var(--btn-width);
+  inline-size: var(--btn-height);
 }
 
 .#{c.$prefix}-btn--icon-only svg {

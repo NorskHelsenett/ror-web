@@ -73,14 +73,22 @@
   @include light-dark('text-primary', rgb-color('neutral', '950'), rgb-color('neutral', '100'));
   @include light-dark('text-secondary', rgb-color('neutral', '700'), rgb-color('neutral', '300'));
   @include light-dark('text-placeholder', rgb-color('neutral', '400'), rgb-color('neutral', '600'));
-  @include light-dark('text-on-color', rgb-color('teal', '950'), rgb-color('teal', '200'));
+  @include light-dark('text-on-color', cv.get-var('color-white'), rgb-color('neutral', '100'));
   @include light-dark('text-inverse', rgb-color('neutral', '100'), rgb-color('neutral', '950'));
 
   /// Button
-  @include light-dark('button-primary', rgb-color('teal', '500'), rgb-color('teal', '800'));
+  @include light-dark('button-primary', rgb-color('teal', '600'), rgb-color('blue', '800'));
   @include light-dark('button-primary-border', rgb-color('teal', '600'), rgb-color('teal', '700'));
-  @include light-dark('button-secondary', rgb-color('neutral', '300'), rgb-color('neutral', '800'));
-  @include light-dark('button-secondary-border', rgb-color('neutral', '400'), rgb-color('neutral', '900'));
+  @include light-dark('button-primary-hover', rgb-color('teal', '700'), rgb-color('blue', '700'));
+  @include light-dark('button-primary-border-hover', rgb-color('teal', '700'), rgb-color('teal', '600'));
+  @include light-dark('button-primary-active', rgb-color('teal', '800'), rgb-color('blue', '600'));
+  @include light-dark('button-primary-border-active', rgb-color('teal', '800'), rgb-color('teal', '500'));
+  @include light-dark('button-secondary', rgb-color('neutral', '800'), rgb-color('neutral', '800'));
+  @include light-dark('button-secondary-border', rgb-color('neutral', '800'), rgb-color('neutral', '700'));
+  @include light-dark('button-tertiary', cv.get-var('color-white'), rgb-color('neutral', '800'));
+  @include light-dark('button-tertiary-border', rgb-color('teal', '600'), rgb-color('neutral', '900'));
+  @include light-dark('button-danger', rgb-color('red', '600'), rgb-color('red', '800'));
+  @include light-dark('button-danger-border', rgb-color('red', '600'), rgb-color('red', '900'));
 
   /// Icons
   @include light-dark('icon-primary', rgb-color('neutral', '950'), rgb-color('neutral', '100'));

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
    */
   output: 'standalone',
   experimental: {
-    optimizePackageImports: ['@ror/react'],
+    optimizePackageImports: ['@ror/react', '@ror/design'],
   },
 }
 
