@@ -8,15 +8,6 @@ interface ClusterPageBreadcrumbsProps {
   clusterId: string
 }
 
-const segmentRouteMap: Record<string, string> = {
-  ingresses: 'Ingresses',
-  policies: 'Policies',
-  vulnerabilities: 'Vulnerabilities',
-  compliance: 'Compliance',
-  about: 'About',
-  'raw-data': 'Raw data',
-}
-
 /**
  * Display the breadcrumbs for a cluster page.
  * For subpages we display the trailing slash after the cluster name.
