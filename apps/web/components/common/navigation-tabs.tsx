@@ -1,5 +1,4 @@
 'use client'
-import { Key, useState } from 'react'
 import { MotionConfig, motion } from 'motion/react'
 import { clsx } from 'clsx'
 import { usePathname } from 'next/navigation'

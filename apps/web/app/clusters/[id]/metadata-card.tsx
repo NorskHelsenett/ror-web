@@ -1,8 +1,7 @@
 'use client'
 import copy from 'clipboard-copy'
 import type { Cluster } from '@ror/js-api-client'
-import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react'
-import { Tile } from '@ror/react/components/tile'
+import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react/components/definition-list'
 import { CopyButton } from '@ror/react/components/copy-button'
 
 interface ClusterMetadataCardProps {
