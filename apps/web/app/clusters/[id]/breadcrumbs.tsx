@@ -1,7 +1,7 @@
 'use client'
 import { Breadcrumb, BreadcrumbItem } from '@ror/react/components/breadcrumb'
 import Link from 'next/link'
-import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
+import { useSelectedLayoutSegment } from 'next/navigation'
 
 interface ClusterPageBreadcrumbsProps {
   clusterName: string
@@ -18,7 +18,6 @@ const segmentRouteMap: Record<string, string> = {
 }
 
 export function ClusterPageBreadcrumbs({ clusterName, clusterId }: ClusterPageBreadcrumbsProps) {
-  const pathname = usePathname()
   const segment = useSelectedLayoutSegment()
 
   const clusterPageActive = clusterId === segment
