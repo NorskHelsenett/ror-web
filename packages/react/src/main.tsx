@@ -3,6 +3,8 @@ export type { BreadcrumbProps, BreadcrumbItemProps } from './components/breadcru
 export { Button, ButtonSizes, ButtonVariants } from './components/button/index.tsx'
 export type { ButtonProps, ButtonSize, ButtonVariant } from './components/button/index.tsx'
 export { CodeSnippet } from './components/code-snippet.tsx'
+export { CopyButton } from './components/copy-button.tsx'
+export type { CopyButtonProps } from './components/copy-button.tsx'
 export { DefinitionList, DefinitionTerm, DefinitionDescription } from './components/definition-list.tsx'
 export type { DefinitionListProps } from './components/definition-list.tsx'
 export { IconIndicator } from './components/icon-indicator.tsx'

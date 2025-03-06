@@ -17,6 +17,16 @@ export const MetadataModel = z.object({
   project: ProjectModel.optional(),
 })
 
+export const DatacenterModel = z.object({
+  name: z.string(),
+  provider: z.string(),
+})
+
+export const WorkspaceModel = z.object({
+  name: z.string(),
+  datacenter: DatacenterModel,
+})
+
 export const Cluster = z
   .object({
     clusterId: z.string(),
@@ -34,6 +44,7 @@ export const Cluster = z
     created: z.string(),
     versions: VersionsModel,
     metadata: MetadataModel,
+    workspace: WorkspaceModel,
   })
   .passthrough()
 

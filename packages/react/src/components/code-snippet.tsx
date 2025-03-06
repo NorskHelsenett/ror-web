@@ -73,7 +73,9 @@ export function CodeSnippet({ type, hideCopyButton = false, children }: CodeSnip
         </pre>
       </div>
       {type === 'single' ? <div className={`${baseClass}__overflow-indicator--right`} /> : null}
-      {!hideCopyButton ? <CopyButton className={`${baseClass}__copy-btn`} onClick={handleOnCopyClick} /> : null}
+      {!hideCopyButton ? (
+        <CopyButton size='lg' className={`${baseClass}__copy-btn`} onClick={handleOnCopyClick} />
+      ) : null}
     </div>
   )
 }

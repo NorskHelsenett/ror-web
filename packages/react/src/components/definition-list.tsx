@@ -6,15 +6,17 @@ export interface DefinitionListProps {
   className?: string
 }
 
-export function DefinitionList({ children, className }: DefinitionListProps) {
+export function DefinitionList({ className, children }: DefinitionListProps) {
   const classes = clsx('r-dl', className)
   return <dl className={classes}>{children}</dl>
 }
 
-export function DefinitionTerm({ children }: { children: ReactNode }) {
-  return <dt className='r-dl__term'>{children}</dt>
+export function DefinitionTerm({ className, children }: { className?: string; children: ReactNode }) {
+  const classes = clsx('r-dl__term', className)
+  return <dt className={classes}>{children}</dt>
 }
 
-export function DefinitionDescription({ children }: { children: ReactNode }) {
-  return <dd className='r-dl__description'>{children}</dd>
+export function DefinitionDescription({ className, children }: { className?: string; children: ReactNode }) {
+  const classes = clsx('dl__description', className)
+  return <dd className={classes}>{children}</dd>
 }

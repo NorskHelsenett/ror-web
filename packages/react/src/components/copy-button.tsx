@@ -1,9 +1,10 @@
 'use client'
-import { Button } from './button'
 import { Copy } from 'lucide-react'
-import { Tooltip } from './tooltip'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { clsx } from 'clsx'
+import { Tooltip } from './tooltip'
+import { Button, ButtonSize } from './button'
 
 export interface CopyButtonProps {
   /**
@@ -27,6 +28,12 @@ export interface CopyButtonProps {
   onClick?: () => void
 
   /**
+   * How large should the copy button be?
+   * @default 'md'
+   */
+  size?: ButtonSize
+
+  /**
    * Specify an optional className to be applied to the button
    */
   className?: string
@@ -48,6 +55,7 @@ export function CopyButton({
   onClick,
   className,
   children,
+  size = 'md',
 }: CopyButtonProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [tooltipOpen, setTooltipOpen] = useState(false)
@@ -95,6 +103,7 @@ export function CopyButton({
         onMouseLeave={handleOnMouseLeave}
         onClick={handleOnClick}
         className={classes}
+        size={size}
       >
         {children}
       </Button>

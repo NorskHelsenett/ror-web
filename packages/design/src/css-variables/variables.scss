@@ -60,6 +60,7 @@
   @include light-dark('layer-accent-active-03', rgb-color('neutral', '400'), rgb-color('neutral', '800'));
 
   /// Borders
+  @include light-dark('border-interactive', rgb-color('teal', '600'), rgb-color('teal', '700'));
   /// 00 - Paired with $background
   @include light-dark('border-subtle-00', rgb-color('neutral', '200'), rgb-color('neutral', '800'));
   /// 01 - Paired with $layer-01
@@ -77,11 +78,11 @@
   @include light-dark('text-inverse', rgb-color('neutral', '100'), rgb-color('neutral', '950'));
 
   /// Button
-  @include light-dark('button-primary', rgb-color('teal', '600'), rgb-color('blue', '800'));
+  @include light-dark('button-primary', rgb-color('teal', '600'), rgb-color('teal', '800'));
   @include light-dark('button-primary-border', rgb-color('teal', '600'), rgb-color('teal', '700'));
-  @include light-dark('button-primary-hover', rgb-color('teal', '700'), rgb-color('blue', '700'));
+  @include light-dark('button-primary-hover', rgb-color('teal', '700'), rgb-color('teal', '700'));
   @include light-dark('button-primary-border-hover', rgb-color('teal', '700'), rgb-color('teal', '600'));
-  @include light-dark('button-primary-active', rgb-color('teal', '800'), rgb-color('blue', '600'));
+  @include light-dark('button-primary-active', rgb-color('teal', '800'), rgb-color('teal', '600'));
   @include light-dark('button-primary-border-active', rgb-color('teal', '800'), rgb-color('teal', '500'));
   @include light-dark('button-secondary', rgb-color('neutral', '800'), rgb-color('neutral', '800'));
   @include light-dark('button-secondary-border', rgb-color('neutral', '800'), rgb-color('neutral', '700'));
