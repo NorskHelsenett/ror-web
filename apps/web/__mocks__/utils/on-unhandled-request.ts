@@ -7,7 +7,7 @@ import { env } from '@/env'
 export const warningList: string[] = [env.NEXT_PUBLIC_ROR_API_URL as string]
 
 export function onUnhandledRequest(request: Request, print: { warning: () => void }) {
-  if (request.url.includes('_next')) {
+  if (request.url.includes('__next') || request.url.includes('stream')) {
     return
   }
 

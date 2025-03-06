@@ -2,12 +2,28 @@ import { clsx } from 'clsx'
 import { ReactNode } from 'react'
 
 export interface DefinitionListProps {
-  children: ReactNode
+  /**
+   * Specify an optional className to be applied to the button
+   */
   className?: string
+
+  /**
+   * Specify the direction of the definition list
+   */
+  direction?: 'horizontal' | 'vertical'
+
+  children: ReactNode
 }
 
-export function DefinitionList({ className, children }: DefinitionListProps) {
-  const classes = clsx('r-dl', className)
+export function DefinitionList({ className, direction = 'horizontal', children }: DefinitionListProps) {
+  const classes = clsx(
+    'r-dl',
+    {
+      'r-dl--horizontal': direction === 'horizontal',
+      'r-dl--vertical': direction === 'vertical',
+    },
+    className
+  )
   return <dl className={classes}>{children}</dl>
 }
 
@@ -17,6 +33,6 @@ export function DefinitionTerm({ className, children }: { className?: string; ch
 }
 
 export function DefinitionDescription({ className, children }: { className?: string; children: ReactNode }) {
-  const classes = clsx('dl__description', className)
+  const classes = clsx('r-dl__description', className)
   return <dd className={classes}>{children}</dd>
 }

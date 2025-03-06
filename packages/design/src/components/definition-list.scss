@@ -3,12 +3,21 @@
 @use '../utilities/css-variable.scss' as cv;
 
 .#{$prefix}-dl {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 1rem;
-  column-gap: 0.5rem;
   margin: 0;
   inline-size: 100%;
+
+  &--horizontal {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: cv.get-var('spacing-04');
+    column-gap: cv.get-var('spacing-02');
+  }
+
+  &--vertical {
+    display: flex;
+    flex-direction: column;
+    row-gap: cv.get-var('spacing-03');
+  }
 }
 
 .#{$prefix}-dl__term {

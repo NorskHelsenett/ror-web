@@ -20,6 +20,7 @@ export const MetadataModel = z.object({
 export const DatacenterModel = z.object({
   name: z.string(),
   provider: z.string(),
+  apiEndpoint: z.string(),
 })
 
 export const WorkspaceModel = z.object({

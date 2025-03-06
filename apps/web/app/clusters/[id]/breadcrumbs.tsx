@@ -17,13 +17,18 @@ const segmentRouteMap: Record<string, string> = {
   'raw-data': 'Raw data',
 }
 
+/**
+ * Display the breadcrumbs for a cluster page.
+ * For subpages we display the trailing slash after the cluster name.
+ * There is no need to display the current page name as it already displayed in the sub-navigation
+ */
+
 export function ClusterPageBreadcrumbs({ clusterName, clusterId }: ClusterPageBreadcrumbsProps) {
   const segment = useSelectedLayoutSegment()
-
   const clusterPageActive = clusterId === segment
 
   return (
-    <Breadcrumb noTrailingSlash className='mb-10'>
+    <Breadcrumb noTrailingSlash={!segment} className='mb-10'>
       <BreadcrumbItem asChild>
         <Link href='/clusters'>Clusters</Link>
       </BreadcrumbItem>
@@ -34,9 +39,6 @@ export function ClusterPageBreadcrumbs({ clusterName, clusterId }: ClusterPageBr
       ) : (
         <BreadcrumbItem isCurrentPage={clusterPageActive}>{clusterName}</BreadcrumbItem>
       )}
-      {segment && segment !== clusterId ? (
-        <BreadcrumbItem isCurrentPage={true}>{segmentRouteMap[segment]}</BreadcrumbItem>
-      ) : null}
     </Breadcrumb>
   )
 }

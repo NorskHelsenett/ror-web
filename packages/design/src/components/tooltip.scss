@@ -24,4 +24,12 @@
   &__inner > *:first-child {
     display: block;
   }
+
+  &__arrow {
+    fill: cv.get-var('background-inverse');
+  }
+}
+
+[data-radix-popper-content-wrapper] {
+  z-index: 99999 !important;
 }

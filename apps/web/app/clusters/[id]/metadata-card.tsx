@@ -4,21 +4,26 @@ import type { Cluster } from '@ror/js-api-client'
 import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react/components/definition-list'
 import { CopyButton } from '@ror/react/components/copy-button'
 import { Tile } from '@ror/react/components/tile'
+import clsxm from '@/utils/clsxm'
 
 interface ClusterMetadataCardProps {
   cluster: Cluster
+  className?: string
 }
 
-export function ClusterMetadataCard({ cluster }: ClusterMetadataCardProps) {
+export function ClusterMetadataCard({ cluster, className }: ClusterMetadataCardProps) {
   const { clusterId, clusterName, workspace, metadata } = cluster
 
   const handleOnCopyClick = () => {
     void copy(clusterId)
   }
 
+  const classes = clsxm('p-4', className)
+
   return (
-    <Tile className='p-4'>
+    <Tile className={classes}>
       <div className=''>
+        <h3 className='text-base pb-2 mb-4 border-b border-b-(--r-border-subtle)'>Infoormation</h3>
         <DefinitionList className='grid-cols-4'>
           <div className='flex flex-col gap-1'>
             <DefinitionTerm>Project</DefinitionTerm>
