@@ -22,7 +22,7 @@
 
   &::after {
     box-sizing: inherit;
-    color: cv.get-var('text-secondary');
+    color: cv.get-var('text-primary');
     content: '/';
     margin-inline-start: 0.5rem;
   }

@@ -3,6 +3,7 @@ import copy from 'clipboard-copy'
 import type { Cluster } from '@ror/js-api-client'
 import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react/components/definition-list'
 import { CopyButton } from '@ror/react/components/copy-button'
+import { Tile } from '@ror/react/components/tile'
 
 interface ClusterMetadataCardProps {
   cluster: Cluster
@@ -16,10 +17,7 @@ export function ClusterMetadataCard({ cluster }: ClusterMetadataCardProps) {
   }
 
   return (
-    <div>
-      <header className='mb-4'>
-        <h4>Details</h4>
-      </header>
+    <Tile className='p-4'>
       <div className=''>
         <DefinitionList className='grid-cols-4'>
           <div className='flex flex-col gap-1'>
@@ -53,6 +51,6 @@ export function ClusterMetadataCard({ cluster }: ClusterMetadataCardProps) {
           </div>
         </DefinitionList>
       </div>
-    </div>
+    </Tile>
   )
 }

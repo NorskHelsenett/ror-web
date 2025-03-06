@@ -7,6 +7,7 @@ import { Tile } from '@ror/react/components/tile'
 import { format, formatDistance } from 'date-fns'
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { ClusterPageBreadcrumbs } from './breadcrumbs'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -41,6 +42,10 @@ const createTabNavigationItems = (clusterId: string) => {
       label: 'About',
       href: `/clusters/${clusterId}/about`,
     },
+    {
+      label: 'Raw data',
+      href: `/clusters/${clusterId}/raw-data`,
+    },
   ]
 }
 
@@ -59,12 +64,7 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   return (
     <div>
       <Tile as='header' className='mb-4 min-h-40 rounded-none flex flex-col flex-start px-8 pt-8 md:pl-12'>
-        <Breadcrumb noTrailingSlash className='mb-10'>
-          <BreadcrumbItem asChild>
-            <Link href='/clusters'>Clusters</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem isCurrentPage>{cluster.clusterName}</BreadcrumbItem>
-        </Breadcrumb>
+        <ClusterPageBreadcrumbs clusterId={cluster.clusterId} clusterName={cluster.clusterName} />
         <div className='flex items-center gap-8 mb-10'>
           <h1>{cluster.clusterName}</h1>
           <div className='flex flex-col gap-2'>

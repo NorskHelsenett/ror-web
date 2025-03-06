@@ -1,7 +1,7 @@
 'use client'
 import { clsx } from 'clsx'
 import { useRef } from 'react'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import copy from 'clipboard-copy'
 import { CopyButton } from './copy-button'
 
@@ -19,15 +19,25 @@ export interface CodeSnippetProps {
   hideCopyButton?: boolean
 
   /**
+   * Specify an optional className to be applied
+   */
+  className?: string
+
+  /**
    * The content to display
    */
   children: ReactNode
+
+  /**
+   * Specify inline CSS to be applied
+   */
+  style?: CSSProperties & { '--code-snippet-multi-max-height': string }
 }
 
-export function CodeSnippet({ type, hideCopyButton = false, children }: CodeSnippetProps) {
+export function CodeSnippet({ type, hideCopyButton = false, className, style, children }: CodeSnippetProps) {
   const codeElementRef = useRef<HTMLElement | null>(null)
   const baseClass = 'r-code-snippet'
-  const classes = clsx(baseClass, {
+  const classes = clsx(baseClass, className, {
     [`${baseClass}--single`]: type === 'single',
     [`${baseClass}--inline`]: type === 'inline',
     [`${baseClass}--multi`]: type === 'multi',
@@ -42,7 +52,7 @@ export function CodeSnippet({ type, hideCopyButton = false, children }: CodeSnip
   if (type === 'inline') {
     if (hideCopyButton) {
       return (
-        <span className={classes}>
+        <span className={classes} style={style}>
           <code ref={codeElementRef} className={`${baseClass}__inline-code`}>
             {children}
           </code>
@@ -52,7 +62,7 @@ export function CodeSnippet({ type, hideCopyButton = false, children }: CodeSnip
 
     return (
       <CopyButton className={classes} onClick={handleOnCopyClick}>
-        <code ref={codeElementRef} className={`${baseClass}__inline-code`}>
+        <code ref={codeElementRef} style={style} className={`${baseClass}__inline-code`}>
           {children}
         </code>
       </CopyButton>
@@ -60,7 +70,7 @@ export function CodeSnippet({ type, hideCopyButton = false, children }: CodeSnip
   }
 
   return (
-    <div className={classes}>
+    <div className={classes} style={style}>
       <div
         role='textbox'
         tabIndex={0}

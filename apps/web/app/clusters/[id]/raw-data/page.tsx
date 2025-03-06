@@ -1,7 +1,6 @@
-import type { Metadata } from 'next'
 import { authGuard } from '@/app/auth-guard'
 import { rorApiClient } from '@/services/ror-api'
-import { ClusterMetadataCard } from './metadata-card'
+import { CodeSnippet } from '@ror/react/components/code-snippet'
 
 interface ClusterPageProps {
   params: Promise<{
@@ -9,12 +8,7 @@ interface ClusterPageProps {
   }>
 }
 
-export const metadata: Metadata = {
-  title: 'ROR (Beta) - Cluster',
-  description: 'View and manage cluster details',
-}
-
-export default async function ClusterPage({ params }: ClusterPageProps) {
+export default async function ClusterRawDataPage({ params }: ClusterPageProps) {
   const { id } = await params
   const session = await authGuard()
   const client = rorApiClient(session.accessToken)
@@ -22,7 +16,9 @@ export default async function ClusterPage({ params }: ClusterPageProps) {
 
   return (
     <div className=''>
-      <ClusterMetadataCard cluster={cluster} />
+      <CodeSnippet type='multi' style={{ '--code-snippet-multi-max-height': '40rem' }}>
+        {JSON.stringify(cluster, null, 2)}
+      </CodeSnippet>
     </div>
   )
 }
