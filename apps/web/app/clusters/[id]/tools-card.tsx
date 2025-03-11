@@ -1,5 +1,5 @@
 import { Cluster } from '@ror/js-api-client'
-import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react'
+import { Stack } from '@ror/react'
 import { CodeSnippet } from '@ror/react/components/code-snippet'
 import { Layer } from '@ror/react/components/layer'
 import { Tile } from '@ror/react/components/tile'
@@ -16,16 +16,16 @@ export function ClusterToolsCard({ cluster, user }: { cluster: Cluster; user: Us
     <Tile className='p-5 col-span-2'>
       <h3 className='text-base pb-3 mb-5 border-b border-b-(--r-border-subtle)'>Tools</h3>
       <Layer layer={1}>
-        <DefinitionList direction='vertical'>
-          <DefinitionTerm>ROR CLI</DefinitionTerm>
-          <DefinitionDescription className='mb-2'>
+        <Stack gap={5} className='max-w-full'>
+          <div>
+            <h4 className='text-sm text-secondary font-medium mb-2'>ROR CLI</h4>
             <CodeSnippet type='single'>{rorLogin}</CodeSnippet>
-          </DefinitionDescription>
-          <DefinitionTerm>Kubectl</DefinitionTerm>
-          <DefinitionDescription>
+          </div>
+          <div>
+            <h4 className='text-sm text-secondary font-medium mb-2'>Kubectl</h4>
             <CodeSnippet type='single'>{kubectlLogin}</CodeSnippet>
-          </DefinitionDescription>
-        </DefinitionList>
+          </div>
+        </Stack>
       </Layer>
     </Tile>
   )
