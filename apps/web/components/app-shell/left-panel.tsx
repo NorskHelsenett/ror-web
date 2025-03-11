@@ -20,7 +20,7 @@ const variants = {
 export function AppShellLeftPanel({ children }: AppShellLeftPanelProps) {
   const { leftPanelExpanded } = useAppShellContext()
   const classes = clsxm(
-    '@container w-(--left-panel-width) bg-background text-primary h-screen border-r border-subtle-00 transition-width duration-200 hide-scrollbar overflow-y-auto'
+    '@container w-(--left-panel-width) bg-background text-primary h-screen border-r border-subtle transition-width duration-200 hide-scrollbar overflow-y-auto'
   )
   return (
     <motion.div
