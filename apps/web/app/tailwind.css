@@ -52,94 +52,51 @@
   }
 
   /* Layer Utilities */
-  .bg-layer-01 {
-    background-color: var(--r-layer-01);
+  .bg-layer {
+    background-color: var(--r-layer);
   }
-  .bg-layer-02 {
-    background-color: var(--r-layer-02);
+  .bg-layer-hover {
+    background-color: var(--r-layer-hover);
   }
-  .bg-layer-03 {
-    background-color: var(--r-layer-03);
+  .bg-layer-active {
+    background-color: var(--r-layer-active);
   }
-  .bg-layer-hover-01 {
-    background-color: var(--r-layer-hover-01);
+  .bg-layer-selected {
+    background-color: var(--r-layer-selected);
   }
-  .bg-layer-hover-02 {
-    background-color: var(--r-layer-hover-02);
+  .bg-layer-selected-hover {
+    background-color: var(--r-layer-selected-hover);
   }
-  .bg-layer-hover-03 {
-    background-color: var(--r-layer-hover-03);
+  .bg-layer-accent {
+    background-color: var(--r-layer-accent);
   }
-  .bg-layer-active-01 {
-    background-color: var(--r-layer-active-01);
+  .bg-layer-accent-hover {
+    background-color: var(--r-layer-accent-hover);
   }
-  .bg-layer-active-02 {
-    background-color: var(--r-layer-active-02);
+  .bg-layer-accent-active {
+    background-color: var(--r-layer-accent-active);
   }
-  .bg-layer-active-03 {
-    background-color: var(--r-layer-active-03);
+
+  /* Field Utilities */
+  .bg-field {
+    background-color: var(--r-field);
   }
-  .bg-layer-selected-01 {
-    background-color: var(--r-layer-selected-01);
-  }
-  .bg-layer-selected-02 {
-    background-color: var(--r-layer-selected-02);
-  }
-  .bg-layer-selected-03 {
-    background-color: var(--r-layer-selected-03);
-  }
-  .bg-layer-selected-hover-01 {
-    background-color: var(--r-layer-selected-hover-01);
-  }
-  .bg-layer-selected-hover-02 {
-    background-color: var(--r-layer-selected-hover-02);
-  }
-  .bg-layer-selected-hover-03 {
-    background-color: var(--r-layer-selected-hover-03);
-  }
-  .bg-layer-accent-01 {
-    background-color: var(--r-layer-accent-01);
-  }
-  .bg-layer-accent-02 {
-    background-color: var(--r-layer-accent-02);
-  }
-  .bg-layer-accent-03 {
-    background-color: var(--r-layer-accent-03);
-  }
-  .bg-layer-accent-hover-01 {
-    background-color: var(--r-layer-accent-hover-01);
-  }
-  .bg-layer-accent-hover-02 {
-    background-color: var(--r-layer-accent-hover-02);
-  }
-  .bg-layer-accent-hover-03 {
-    background-color: var(--r-layer-accent-hover-03);
-  }
-  .bg-layer-accent-active-01 {
-    background-color: var(--r-layer-accent-active-01);
-  }
-  .bg-layer-accent-active-02 {
-    background-color: var(--r-layer-accent-active-02);
-  }
-  .bg-layer-accent-active-03 {
-    background-color: var(--r-layer-accent-active-03);
+  .bg-field-hover {
+    background-color: var(--r-field-hover);
   }
 
   /* Border Utilities */
   .border-interactive {
     border-color: var(--r-border-interactive);
   }
-  .border-subtle-00 {
-    border-color: var(--r-border-subtle-00);
+  .border-subtle {
+    border-color: var(--r-border-subtle);
   }
-  .border-subtle-01 {
-    border-color: var(--r-border-subtle-01);
+  .border-subtle-selected {
+    border-color: var(--r-border-subtle-selected);
   }
-  .border-subtle-02 {
-    border-color: var(--r-border-subtle-02);
-  }
-  .border-subtle-03 {
-    border-color: var(--r-border-subtle-03);
+  .border-strong {
+    border-color: var(--r-border-strong);
   }
 
   /* Text Utilities */
