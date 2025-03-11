@@ -1,7 +1,7 @@
 import { auth } from '@/app/auth'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover'
-import s from './profile.module.css'
+import s from './profile.module.scss'
 import Link from 'next/link'
 
 export async function Profile() {

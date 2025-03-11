@@ -8,12 +8,13 @@ interface AppShellLeftPanelProps {
   children: ReactNode
 }
 
+// The variants add 1px to account for the border width
 const variants = {
   expanded: {
-    '--left-panel-width': '16rem',
+    '--left-panel-width': 'calc(16rem + 1px)',
   },
   collapsed: {
-    '--left-panel-width': '3rem',
+    '--left-panel-width': 'calc(3rem + 1px)',
   },
 }
 

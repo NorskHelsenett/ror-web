@@ -1,5 +1,7 @@
+@use '@ror/styles/scss/type' as *;
+
 .profile {
-  --avatar-size: var(--spacing-8);
+  --avatar-size: var(--spacing-7);
   display: flex;
   gap: var(--spacing-3);
   justify-content: flex-start;
@@ -11,7 +13,7 @@
   display: flex;
   overflow: hidden;
   position: relative;
-  shrink: 0;
+  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   border-radius: 9999px;
@@ -21,9 +23,8 @@
 }
 
 .label {
-  font-size: var(--text-xs);
-  line-height: var(--text-xs--line-height);
-  color: var(--r-icon-secondary);
+  @include font-size(1);
+  color: var(--r-text-secondary);
 }
 
 .popover {

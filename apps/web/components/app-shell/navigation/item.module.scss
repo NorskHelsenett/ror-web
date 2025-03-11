@@ -5,22 +5,23 @@
   --menu-item-y-padding: var(--spacing-2);
 }
 
-.trigger {
+.trigger,
+.menuItem {
   display: flex;
   align-items: center;
   gap: var(--menu-item-gap);
-  width: 100%;
   padding: var(--menu-item-y-padding) var(--menu-item-x-padding);
-  height: 2rem;
+  min-height: 2rem;
   min-width: 2rem;
   border-radius: var(--radius-sm);
-  cursor: pointer;
-  background: transparent;
   color: var(--r-text-primary);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  position: relative;
 }
 
-.trigger:hover {
-  background: var(--menu-item-hover-bg);
+.trigger {
+  width: 100%;
 }
 
 .label {
@@ -47,17 +48,10 @@
 }
 
 .menuItem {
-  display: flex;
-  align-items: center;
-  gap: var(--menu-item-gap);
-  padding: var(--menu-item-y-padding) var(--menu-item-x-padding);
-  font-size: var(--text-sm);
-  border-radius: var(--radius-sm);
-  height: 2rem;
-  position: relative;
   cursor: pointer;
 }
 
+.trigger:hover,
 .menuItem:hover,
 .staticMenu a:hover {
   background: var(--menu-item-hover-bg);
