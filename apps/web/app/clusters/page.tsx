@@ -4,6 +4,7 @@ import { CodeSnippet } from '@ror/react/components/code-snippet'
 import { rorApiClient } from '@/services/ror-api'
 import { authGuard } from '../auth-guard'
 import { ClustersTable } from './cluster-table'
+import { Fragment } from 'react'
 
 export const metadata: Metadata = {
   title: 'ROR (Beta) - Clusters',
@@ -16,21 +17,23 @@ export default async function ClustersPage() {
   const clustersResponse = await client.clusters.filter()
 
   return (
-    <div className='p-10'>
-      <header className='mb-8'>
-        <Breadcrumb className='mb-2'>
+    <Fragment>
+      <header className='px-6 pt-6 mb-8'>
+        <Breadcrumb className='mb-6'>
           <BreadcrumbItem isCurrentPage>Clusters</BreadcrumbItem>
         </Breadcrumb>
         <h1>Clusters</h1>
       </header>
 
-      <ClustersTable data={clustersResponse.data} />
+      <section className='px-6'>
+        <ClustersTable data={clustersResponse.data} />
+      </section>
 
-      <div className='mt-10'>
+      <div className='mt-8 px-6'>
         <CodeSnippet type='multi' hideCopyButton>
           {JSON.stringify(clustersResponse, null, 2)}
         </CodeSnippet>
       </div>
-    </div>
+    </Fragment>
   )
 }

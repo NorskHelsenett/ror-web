@@ -1,10 +1,7 @@
 'use client'
-import copy from 'clipboard-copy'
 import type { Cluster } from '@ror/js-api-client'
-import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react/components/definition-list'
-import { CopyButton } from '@ror/react/components/copy-button'
-import { Tile } from '@ror/react/components/tile'
 import clsxm from '@/utils/clsxm'
+import { Tile, CodeSnippet, Layer, DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react'
 
 interface ClusterMetadataCardProps {
   cluster: Cluster
@@ -14,16 +11,12 @@ interface ClusterMetadataCardProps {
 export function ClusterMetadataCard({ cluster, className }: ClusterMetadataCardProps) {
   const { clusterId, clusterName, workspace, metadata } = cluster
 
-  const handleOnCopyClick = () => {
-    void copy(clusterId)
-  }
-
-  const classes = clsxm('p-4', className)
+  const classes = clsxm('p-5', className)
 
   return (
     <Tile className={classes}>
       <div className=''>
-        <h3 className='text-base pb-2 mb-4 border-b border-b-(--r-border-subtle)'>Information</h3>
+        <h3 className='text-base pb-3 mb-5 border-b border-b-(--r-border-subtle)'>Information</h3>
         <DefinitionList className='grid-cols-4'>
           <div className='flex flex-col gap-1'>
             <DefinitionTerm>Project</DefinitionTerm>
@@ -32,10 +25,9 @@ export function ClusterMetadataCard({ cluster, className }: ClusterMetadataCardP
           <div className='flex flex-col gap-1'>
             <DefinitionTerm>Cluster ID</DefinitionTerm>
             <DefinitionDescription>
-              <div className='flex items-center gap-2'>
-                {clusterId}
-                <CopyButton onClick={handleOnCopyClick} />
-              </div>
+              <Layer layer={1}>
+                <CodeSnippet type='inline'>{clusterId}</CodeSnippet>
+              </Layer>
             </DefinitionDescription>
           </div>
           <div className='flex flex-col gap-1'>

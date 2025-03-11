@@ -16,7 +16,7 @@ export function LeftPanelToggleButton() {
   return (
     <Tooltip content={tooltipText}>
       <button
-        className='w-8 h-8 shrink-0 cursor-pointer hover:bg-(--r-background-hover) flex items-center justify-center justify-self-end rounded-sm border border-(--r-border-subtle-00)'
+        className='w-8 h-8 shrink-0 cursor-pointer hover:bg-background-hover flex items-center justify-center justify-self-end rounded-sm border border-(--r-border-subtle-00)'
         onClick={handleOnClick}
       >
         <svg
@@ -28,7 +28,7 @@ export function LeftPanelToggleButton() {
           strokeLinecap='round'
           strokeLinejoin='round'
           strokeWidth='2'
-          className='w-4 h-4 text-(--r-icon-primary)'
+          className='w-5 h-5 text-(--r-icon-primary)'
           viewBox='0 0 24 24'
         >
           <rect width='18' height='18' x='3' y='3' rx='2'></rect>

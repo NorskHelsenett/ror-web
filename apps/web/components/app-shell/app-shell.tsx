@@ -16,13 +16,13 @@ export async function AppShell({ children }: AppShellProps) {
   return (
     <div className='grid grid-cols-[max-content_auto]'>
       <AppShellLeftPanel>
-        <div className='p-2 '>
+        <div className='p-2'>
           <Logo />
         </div>
         <div className='p-2 flex flex-col gap-y-4'>
           <Navigation />
         </div>
-        <div className='p-2 mt-auto flex flex-col @min-[6rem]:flex-row items-center justify-between gap-2'>
+        <div className='p-3 mt-auto flex flex-col @min-[6rem]:flex-row items-center justify-between gap-2'>
           <Profile />
           <div className='flex flex-col @min-[6rem]:flex-row items-center justify-end gap-2'>
             <ThemeToggle colorScheme={colorScheme} onSavePreferenceAction={saveDarkModePreferenceAction} />
@@ -30,7 +30,7 @@ export async function AppShell({ children }: AppShellProps) {
           </div>
         </div>
       </AppShellLeftPanel>
-      <div className='h-screen overflow-y-auto bg-(--r-background)'>{children}</div>
+      <div className='h-screen overflow-y-auto bg-background'>{children}</div>
     </div>
   )
 }

@@ -13,8 +13,8 @@ export function ClusterToolsCard({ cluster, user }: { cluster: Cluster; user: Us
   const kubectlLogin = `kubectl vsphere login --server=${serverUrl} -u ${user?.email} --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace ${cluster?.workspace?.name} --tanzu-kubernetes-cluster-name ${cluster?.clusterName}`
 
   return (
-    <Tile className='p-4 lg:p-6 col-span-2'>
-      <h3 className='text-base pb-2 mb-4 border-b border-b-(--r-border-subtle)'>Tools</h3>
+    <Tile className='p-5 col-span-2'>
+      <h3 className='text-base pb-3 mb-5 border-b border-b-(--r-border-subtle)'>Tools</h3>
       <Layer layer={1}>
         <DefinitionList direction='vertical'>
           <DefinitionTerm>ROR CLI</DefinitionTerm>

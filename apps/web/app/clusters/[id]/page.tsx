@@ -22,8 +22,8 @@ export default async function ClusterPage({ params }: ClusterPageProps) {
   const cluster = await client.clusters.get(id)
 
   return (
-    <div className='grid grid-cols-6 gap-2'>
-      <ClusterMetadataCard cluster={cluster} className='col-span-4 lg:p-6' />
+    <div className='grid grid-cols-6 gap-4'>
+      <ClusterMetadataCard cluster={cluster} className='col-span-4' />
       <ClusterToolsCard cluster={cluster} user={session.user} />
     </div>
   )

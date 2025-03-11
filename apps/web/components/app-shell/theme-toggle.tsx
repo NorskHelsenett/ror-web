@@ -68,7 +68,7 @@ interface ThemeToggleTriggerProps {
 function ThemeToggleTrigger({ theme, ...rest }: ThemeToggleTriggerProps) {
   return (
     <button
-      className='w-8 h-8 shrink-0 cursor-pointer hover:bg-(--r-background-hover) flex items-center justify-center justify-self-end rounded-sm border border-(--r-border-subtle-00)'
+      className='w-8 h-8 shrink-0 cursor-pointer hover:bg-background-hover flex items-center justify-center justify-self-end rounded-sm border border-(--r-border-subtle-00)'
       {...rest}
     >
       <ThemeIcon theme={theme} />
@@ -79,11 +79,11 @@ function ThemeToggleTrigger({ theme, ...rest }: ThemeToggleTriggerProps) {
 function ThemeIcon({ theme }: { theme: ColorScheme }) {
   switch (theme) {
     case ColorScheme.Light:
-      return <Sun className='w-4 h-4 text-(--r-icon-primary)' />
+      return <Sun className='w-5 h-5 text-(--r-icon-primary)' />
     case ColorScheme.Dark:
-      return <Moon className='w-4 h-4 text-(--r-icon-primary)' />
+      return <Moon className='w-5 h-5 text-(--r-icon-primary)' />
     case ColorScheme.System:
-      return <SunMoon className='w-4 h-4 text-(--r-icon-primary)' />
+      return <SunMoon className='w-5 h-5 text-(--r-icon-primary)' />
     default:
       return null
   }

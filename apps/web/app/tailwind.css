@@ -1,2 +1,161 @@
 @import '@evilmartians/harmony/tailwind.css';
 @import 'tailwindcss';
+
+/**
+ * Configure theme variables for tailwind
+ */
+@theme {
+  /* Override spacing to use our spacing tokens from @ror/styles */
+  --spacing: inherit; /* for reference purposed this used to be 0.25rem/4px */
+  --spacing-1: var(--r-spacing-01); /* 2px */
+  --spacing-2: var(--r-spacing-02); /* 4px */
+  --spacing-3: var(--r-spacing-03); /* 8px */
+  --spacing-4: var(--r-spacing-04); /* 12px */
+  --spacing-5: var(--r-spacing-05); /* 16px */
+  --spacing-6: var(--r-spacing-06); /* 24px */
+  --spacing-7: var(--r-spacing-07); /* 32px */
+  --spacing-8: var(--r-spacing-08); /* 40px */
+  --spacing-9: var(--r-spacing-09); /* 48px */
+  --spacing-10: var(--r-spacing-10); /* 64px */
+  --spacing-11: var(--r-spacing-11); /* 80px */
+  --spacing-12: var(--r-spacing-12); /* 96px */
+  --spacing-13: var(--r-spacing-13); /* 128px */
+  --spacing-14: var(--r-spacing-14); /* 160px */
+}
+
+/**
+* Create custom utility classes making use of our different tokens from @ror/styles
+*/
+
+@layer utilities {
+  /* Background Utilities */
+  .bg-background {
+    background-color: var(--r-background);
+  }
+  .bg-background-hover {
+    background-color: var(--r-background-hover);
+  }
+  .bg-background-active {
+    background-color: var(--r-background-active);
+  }
+  .bg-background-selected {
+    background-color: var(--r-background-selected);
+  }
+  .bg-background-selected-hover {
+    background-color: var(--r-background-selected-hover);
+  }
+  .bg-background-inverse {
+    background-color: var(--r-background-inverse);
+  }
+  .bg-background-inverse-hover {
+    background-color: var(--r-background-inverse-hover);
+  }
+
+  /* Layer Utilities */
+  .bg-layer-01 {
+    background-color: var(--r-layer-01);
+  }
+  .bg-layer-02 {
+    background-color: var(--r-layer-02);
+  }
+  .bg-layer-03 {
+    background-color: var(--r-layer-03);
+  }
+  .bg-layer-hover-01 {
+    background-color: var(--r-layer-hover-01);
+  }
+  .bg-layer-hover-02 {
+    background-color: var(--r-layer-hover-02);
+  }
+  .bg-layer-hover-03 {
+    background-color: var(--r-layer-hover-03);
+  }
+  .bg-layer-active-01 {
+    background-color: var(--r-layer-active-01);
+  }
+  .bg-layer-active-02 {
+    background-color: var(--r-layer-active-02);
+  }
+  .bg-layer-active-03 {
+    background-color: var(--r-layer-active-03);
+  }
+  .bg-layer-selected-01 {
+    background-color: var(--r-layer-selected-01);
+  }
+  .bg-layer-selected-02 {
+    background-color: var(--r-layer-selected-02);
+  }
+  .bg-layer-selected-03 {
+    background-color: var(--r-layer-selected-03);
+  }
+  .bg-layer-selected-hover-01 {
+    background-color: var(--r-layer-selected-hover-01);
+  }
+  .bg-layer-selected-hover-02 {
+    background-color: var(--r-layer-selected-hover-02);
+  }
+  .bg-layer-selected-hover-03 {
+    background-color: var(--r-layer-selected-hover-03);
+  }
+  .bg-layer-accent-01 {
+    background-color: var(--r-layer-accent-01);
+  }
+  .bg-layer-accent-02 {
+    background-color: var(--r-layer-accent-02);
+  }
+  .bg-layer-accent-03 {
+    background-color: var(--r-layer-accent-03);
+  }
+  .bg-layer-accent-hover-01 {
+    background-color: var(--r-layer-accent-hover-01);
+  }
+  .bg-layer-accent-hover-02 {
+    background-color: var(--r-layer-accent-hover-02);
+  }
+  .bg-layer-accent-hover-03 {
+    background-color: var(--r-layer-accent-hover-03);
+  }
+  .bg-layer-accent-active-01 {
+    background-color: var(--r-layer-accent-active-01);
+  }
+  .bg-layer-accent-active-02 {
+    background-color: var(--r-layer-accent-active-02);
+  }
+  .bg-layer-accent-active-03 {
+    background-color: var(--r-layer-accent-active-03);
+  }
+
+  /* Border Utilities */
+  .border-interactive {
+    border-color: var(--r-border-interactive);
+  }
+  .border-subtle-00 {
+    border-color: var(--r-border-subtle-00);
+  }
+  .border-subtle-01 {
+    border-color: var(--r-border-subtle-01);
+  }
+  .border-subtle-02 {
+    border-color: var(--r-border-subtle-02);
+  }
+  .border-subtle-03 {
+    border-color: var(--r-border-subtle-03);
+  }
+
+  /* Text Utilities */
+  .text-primary {
+    color: var(--r-text-primary);
+  }
+  .text-secondary {
+    color: var(--r-text-secondary);
+  }
+  .text-placeholder {
+    color: var(--r-text-placeholder);
+  }
+  .text-on-color {
+    color: var(--r-text-on-color);
+  }
+  .text-inverse {
+    color: var(--r-text-inverse);
+  }
+}

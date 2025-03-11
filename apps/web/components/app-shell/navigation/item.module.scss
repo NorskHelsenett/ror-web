@@ -1,8 +1,8 @@
 .item {
   --menu-item-hover-bg: var(--r-layer-hover);
-  --menu-item-gap: calc(var(--spacing) * 3);
-  --menu-item-x-padding: calc(var(--spacing) * 2);
-  --menu-item-y-padding: calc(var(--spacing) * 1);
+  --menu-item-gap: var(--spacing-4);
+  --menu-item-x-padding: var(--spacing-3);
+  --menu-item-y-padding: var(--spacing-2);
 }
 
 .trigger {
@@ -91,7 +91,7 @@
 }
 
 .staticMenu {
-  margin-top: calc(var(--spacing) * 0.5);
+  margin-top: var(--spacing-1);
 }
 
 .staticMenu a {
@@ -101,7 +101,7 @@
   padding: var(--menu-item-y-padding) var(--menu-item-x-padding) var(--menu-item-y-padding)
     /// Align the sub navigation label with the top level label
     /// x-padding + icon size + menu item gap
-    calc(var(--menu-item-x-padding) + calc(var(--spacing) * 4) + var(--menu-item-gap));
+    calc(var(--menu-item-x-padding) + var(--spacing-5) + var(--menu-item-gap));
   font-size: var(--text-sm);
   border-radius: var(--radius-sm);
   height: 2rem;
