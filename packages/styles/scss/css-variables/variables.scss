@@ -2,10 +2,8 @@
 @use 'sass:meta';
 @use '../config' as *;
 @use '../colors/theme' as *;
-@use '../spacing' as *;
-@use '../utilities/css-variable' as cv;
-
-// TODO: Split into core-tokens and component-tokens
+@use '../spacing' as spacing;
+@use '../utilities/custom-properties.scss' as cv;
 
 /// Set CSS variable with a light-dark value
 /// @param {String} $property-name - The CSS property to set
@@ -119,7 +117,7 @@
   @include light-dark('support-cuation-undefined', rgb-color('purple', '500'), rgb-color('purple', '400'));
 
   // Spacing
-  @include spacing-custom-properties();
+  @include spacing.emit-spacing-custom-properties();
 }
 
 @supports (color: oklch(0% 0 0)) {

@@ -7,7 +7,13 @@ const nextConfig: NextConfig = {
    */
   output: 'standalone',
   experimental: {
-    optimizePackageImports: ['@ror/react', '@ror/design'],
+    /**
+     * Optimizes package imports to load only the modules actually used.
+     * This improves performance for packages with many exports by allowing
+     * convenient import statements while avoiding loading unused modules.
+     * @docs https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizePackageImports
+     */
+    optimizePackageImports: ['@ror/react'],
   },
 }
 

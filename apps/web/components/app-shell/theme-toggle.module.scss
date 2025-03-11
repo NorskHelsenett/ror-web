@@ -1,14 +1,15 @@
+@use '@ror/styles/scss/type' as *;
+
 .popover {
-  background: var(--r-layer-01);
+  background: var(--r-layer);
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   padding: calc(var(--spacing) * 3);
   border-radius: var(--radius-sm);
 }
 
 .title {
+  @include type-style('heading-01');
   display: block;
-  font-size: var(--text-xs);
-  line-height: var(--text-xs--line-height);
   color: var(--r-text-secondary);
   margin-bottom: calc(var(--spacing) * 2);
 }
@@ -20,8 +21,7 @@
 }
 
 .label {
-  font-size: var(--text-xs);
-  line-height: var(--text-xs--line-height);
+  @include type-style('body-01');
   padding: 0 calc(var(--spacing) * 1);
   margin-top: calc(var(--spacing) * 1);
   color: var(--r-text-primary);

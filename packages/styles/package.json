@@ -1,0 +1,29 @@
+{
+  "name": "@ror/styles",
+  "version": "0.0.10",
+  "private": true,
+  "files": [
+    "css",
+    "scss"
+  ],
+  "sideEffects": [
+    "css/**/*.css",
+    "scss/**/*.scss"
+  ],
+  "scripts": {
+    "build": "sass index.scss:css/index.css",
+    "dev": "sass --watch index.scss:css/index.css",
+    "clean": "rm -rf css && rm -rf .turbo"
+  },
+  "devDependencies": {
+    "sass": "^1.83.4"
+  },
+  "peerDependencies": {
+    "sass": "^1.83.4"
+  },
+  "peerDependenciesMeta": {
+    "sass": {
+      "optional": true
+    }
+  }
+}

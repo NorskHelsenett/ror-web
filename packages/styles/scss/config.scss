@@ -1,0 +1,17 @@
+/// The namespace of all classes and css-variables in the codebase.
+/// @access public
+/// @type String
+/// @group config
+$prefix: 'r' !default;
+
+/// If true, include reset CSS
+/// @access public
+/// @type Bool
+/// @group config
+$css--reset: true !default;
+
+/// If true, include layer custom properties
+/// @access public
+/// @type Bool
+/// @group config
+$css--layer-tokens: true !default;

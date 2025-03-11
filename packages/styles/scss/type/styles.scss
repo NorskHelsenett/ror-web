@@ -89,7 +89,7 @@ $tokens: (
   'code-01': $code-01,
 );
 
-@mixin custom-properties($name, $value) {
+@mixin emit-custom-properties($name, $value) {
   @each $property, $value in $value {
     #{$property}: var(--#{config.$prefix}-#{$name}-#{$property}, #{$value});
   }
@@ -101,5 +101,5 @@ $tokens: (
   }
 
   $token: map.get($tokens, $name);
-  @include custom-properties($name, $token);
+  @include emit-custom-properties($name, $token);
 }

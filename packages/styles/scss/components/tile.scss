@@ -1,6 +1,6 @@
 @use '../config.scss' as *;
 @use '../type/styles.scss' as types;
-@use '../utilities/css-variable.scss' as cv;
+@use '../utilities/custom-properties.scss' as cv;
 
 .#{$prefix}-tile {
   @include types.type-style('body-01');

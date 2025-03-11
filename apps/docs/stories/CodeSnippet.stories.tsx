@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>
 export const Single: Story = {
   args: {
     type: 'single',
-    children: 'npm install @ror/react@latest @ror/design@latest @ror/js-api-client@latest',
+    children: 'npm install @ror/react@latest @ror/styles@latest @ror/js-api-client@latest',
   },
 }
 

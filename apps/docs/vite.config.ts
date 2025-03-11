@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    entries: ['@ror/design', '@ror/react'],
+    entries: ['@ror/styles', '@ror/react'],
   },
 })

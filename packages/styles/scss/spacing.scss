@@ -1,5 +1,5 @@
 @use './utilities/convert.scss';
-@use './utilities/css-variable.scss';
+@use './utilities/custom-properties.scss';
 
 $spacing-01: convert.to-rem(2px);
 $spacing-02: convert.to-rem(4px);
@@ -34,8 +34,8 @@ $spacing: (
 );
 
 /// Generate css custom properties for all spacing tokens
-@mixin spacing-custom-properties() {
+@mixin emit-spacing-custom-properties() {
   @each $key, $value in $spacing {
-    @include css-variable.declaration(#{spacing}-#{$key}, $value);
+    @include custom-properties.declaration(#{spacing}-#{$key}, $value);
   }
 }

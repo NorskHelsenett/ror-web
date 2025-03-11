@@ -1,6 +1,6 @@
 @use '../config.scss' as c;
 @use '../type/styles.scss' as types;
-@use '../utilities/css-variable.scss' as cv;
+@use '../utilities/custom-properties.scss' as cv;
 
 .#{c.$prefix}-btn {
   --btn-height: 2rem;

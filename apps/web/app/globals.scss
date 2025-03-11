@@ -1,0 +1,32 @@
+@use '@ror/styles' with (
+  $css--reset: false
+);
+
+@use '@ror/styles/scss/reset';
+
+@layer base {
+  @include reset.emit-reset-style();
+
+  /// This lets the browser know that this websites supports both light and dark modes.
+  html,
+  html[data-color-scheme='system'] {
+    color-scheme: light dark;
+  }
+
+  /// Override the color system to say it only supports light mode
+  html[data-color-scheme='light'] {
+    color-scheme: light;
+  }
+
+  /// Override the color system to say it only supports dark mode (see )
+  html[data-color-scheme='dark'] {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}

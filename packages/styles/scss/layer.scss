@@ -1,0 +1,57 @@
+@use 'config.scss' as *;
+@use './utilities/custom-properties.scss' as *;
+
+@mixin emit-layer-custom-properties {
+  :root,
+  .#{$prefix}-layer--one {
+    @include declaration('layer', get-var('layer-01'));
+    @include declaration('layer-active', get-var('layer-active-01'));
+    @include declaration('layer-hover', get-var('layer-hover-01'));
+    @include declaration('layer-selected', get-var('layer-selected-01'));
+    @include declaration('layer-selected-hover', get-var('layer-selected-hover-01'));
+    @include declaration('layer-accent', get-var('layer-accent-01'));
+    @include declaration('layer-accent-hover', get-var('layer-accent-hover-01'));
+    @include declaration('layer-accent-active', get-var('layer-accent-active-01'));
+    @include declaration('field', get-var('field-01'));
+    @include declaration('field-hover', get-var('field-hover-01'));
+    @include declaration('border-subtle', get-var('border-subtle-01'));
+    @include declaration('border-subtle-selected', get-var('border-subtle-selected-01'));
+    @include declaration('border-strong', get-var('border-strong-01'));
+  }
+
+  .#{$prefix}-layer--two {
+    @include declaration('layer', get-var('layer-02'));
+    @include declaration('layer-active', get-var('layer-active-02'));
+    @include declaration('layer-hover', get-var('layer-hover-02'));
+    @include declaration('layer-selected', get-var('layer-selected-02'));
+    @include declaration('layer-selected-hover', get-var('layer-selected-hover-02'));
+    @include declaration('layer-accent', get-var('layer-accent-02'));
+    @include declaration('layer-accent-hover', get-var('layer-accent-hover-02'));
+    @include declaration('layer-accent-active', get-var('layer-accent-active-02'));
+    @include declaration('field', get-var('field-02'));
+    @include declaration('field-hover', get-var('field-hover-02'));
+    @include declaration('border-subtle', get-var('border-subtle-01'));
+    @include declaration('border-subtle-selected', get-var('border-subtle-selected-02'));
+    @include declaration('border-strong', get-var('border-strong-02'));
+  }
+
+  .#{$prefix}-layer--three {
+    @include declaration('layer', get-var('layer-03'));
+    @include declaration('layer-active', get-var('layer-active-03'));
+    @include declaration('layer-hover', get-var('layer-hover-03'));
+    @include declaration('layer-selected', get-var('layer-selected-03'));
+    @include declaration('layer-selected-hover', get-var('layer-selected-hover-03'));
+    @include declaration('layer-accent', get-var('layer-accent-03'));
+    @include declaration('layer-accent-hover', get-var('layer-accent-hover-03'));
+    @include declaration('layer-accent-active', get-var('layer-accent-active-03'));
+    @include declaration('field', get-var('field-03'));
+    @include declaration('field-hover', get-var('field-hover-03'));
+    @include declaration('border-subtle', get-var('border-subtle-02'));
+    @include declaration('border-subtle-selected', get-var('border-subtle-selected-03'));
+    @include declaration('border-strong', get-var('border-strong-03'));
+  }
+}
+
+@if $css--layer-tokens == true {
+  @include emit-layer-custom-properties;
+}

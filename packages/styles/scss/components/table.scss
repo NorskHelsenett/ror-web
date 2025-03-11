@@ -1,5 +1,5 @@
 @use '../config.scss' as c;
-@use '../utilities/css-variable.scss' as *;
+@use '../utilities/custom-properties.scss' as *;
 @use '../utilities/convert.scss';
 @use '../type/styles.scss' as type;
 @use '../type/font-family.scss' as ff;

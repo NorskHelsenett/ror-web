@@ -1,6 +1,6 @@
 @use '../config.scss' as *;
 @use '../type/styles.scss' as *;
-@use '../utilities/css-variable.scss' as cv;
+@use '../utilities/custom-properties.scss' as cv;
 
 .#{$prefix}-dl {
   margin: 0;

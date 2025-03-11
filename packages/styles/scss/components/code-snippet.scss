@@ -1,5 +1,5 @@
 @use '../config.scss' as *;
-@use '../utilities/css-variable.scss' as cv;
+@use '../utilities/custom-properties.scss' as cv;
 @use '../type/styles.scss' as type;
 
 .#{$prefix}-code-snippet {

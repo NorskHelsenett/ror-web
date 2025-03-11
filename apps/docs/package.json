@@ -1,5 +1,5 @@
 {
-  "name": "@ror/design-docs",
+  "name": "@ror/styles-docs",
   "private": true,
   "version": "0.0.6",
   "type": "module",
@@ -10,7 +10,7 @@
     "clean": "rm -rf storybook-static && rm -rf .turbo && rm -rf node_modules"
   },
   "dependencies": {
-    "@ror/design": "*",
+    "@ror/styles": "*",
     "@ror/react": "*",
     "lucide-react": "0.475.0",
     "react": "^19.0.0",

@@ -11,6 +11,10 @@ export async function saveDarkModePreferenceAction(value: ColorScheme) {
   }
 }
 
+/**
+ * Get the user's dark mode preference from the cookie.
+ * If the cookie is not set, return the default value.
+ */
 export async function getDarkModePreferenceAction(): Promise<ColorScheme> {
   const value = await getSavedPreference(COLOR_SCHEME_COOKIE_KEY, ColorScheme.System)
   const colorScheme = validateColorScheme(value)
