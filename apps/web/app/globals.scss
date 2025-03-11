@@ -23,10 +23,3 @@
     color-scheme: dark;
   }
 }
-
-@layer utilities {
-  .hide-scrollbar {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-}

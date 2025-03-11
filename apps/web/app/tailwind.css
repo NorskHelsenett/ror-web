@@ -115,4 +115,10 @@
   .text-inverse {
     color: var(--r-text-inverse);
   }
+
+  /* Visual Utilities */
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
 }
