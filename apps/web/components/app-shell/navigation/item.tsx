@@ -105,7 +105,7 @@ export function NavigationItem({ label, href, icon, items }: NavigationItemProps
               className={fo.flyout}
               side='right'
               align='center'
-              sideOffset={8}
+              sideOffset={12}
               onMouseEnter={handleOnContentMouseEnter}
               onMouseLeave={handleOnContentMouseLeave}
             >
