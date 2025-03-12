@@ -25,7 +25,7 @@ export function ClusterMetadataCard({ cluster, className }: ClusterMetadataCardP
           <div className='flex flex-col gap-1'>
             <DefinitionTerm>Cluster ID</DefinitionTerm>
             <DefinitionDescription>
-              <Layer layer={1}>
+              <Layer level={1}>
                 <CodeSnippet type='inline'>{clusterId}</CodeSnippet>
               </Layer>
             </DefinitionDescription>

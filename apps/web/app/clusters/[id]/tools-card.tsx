@@ -15,7 +15,7 @@ export function ClusterToolsCard({ cluster, user }: { cluster: Cluster; user: Us
   return (
     <Tile className='p-5 col-span-2'>
       <h3 className='text-base pb-3 mb-5 border-b border-b-(--r-border-subtle)'>Tools</h3>
-      <Layer layer={1}>
+      <Layer level={1}>
         <Stack gap={5} className='max-w-full'>
           <div>
             <h4 className='text-sm text-secondary font-medium mb-2'>ROR CLI</h4>

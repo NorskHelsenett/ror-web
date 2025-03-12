@@ -10,8 +10,9 @@
     "clean": "rm -rf storybook-static && rm -rf .turbo && rm -rf node_modules"
   },
   "dependencies": {
-    "@ror/styles": "*",
     "@ror/react": "*",
+    "@ror/styles": "*",
+    "clsx": "2.1.1",
     "lucide-react": "0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

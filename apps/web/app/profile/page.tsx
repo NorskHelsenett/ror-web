@@ -59,11 +59,11 @@ export default async function ProfilePage() {
             </DefinitionList>
             <hr className='my-4' />
             <h3 className='font-semibold text-sm mb-2'>Your access token</h3>
-            <Layer layer={1}>
+            <Layer level={1}>
               <CodeSnippet type='single'>{session.accessToken}</CodeSnippet>
             </Layer>
             <h3 className='font-semibold text-sm mb-2 mt-4'>Your access token (with Bearer)</h3>
-            <Layer layer={1}>
+            <Layer level={1}>
               <CodeSnippet type='single'>{`Bearer ${session.accessToken}`}</CodeSnippet>
             </Layer>
           </Tile>

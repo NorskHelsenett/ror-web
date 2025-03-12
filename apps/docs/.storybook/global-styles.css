@@ -1,0 +1,5 @@
+.example-layer-test-component {
+  padding: 1rem;
+  background: var(--r-layer);
+  color: var(--r-text-primary, #161616);
+}

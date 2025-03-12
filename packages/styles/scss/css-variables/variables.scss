@@ -31,13 +31,13 @@
 
   /// Layer
   @include light-dark('layer-01', rgb-color('neutral', '100'), rgb-color('neutral', '900'));
-  @include light-dark('layer-02', rgb-color('neutral', '200'), rgb-color('neutral', '800'));
-  @include light-dark('layer-03', rgb-color('neutral', '100'), rgb-color('neutral', '700'));
+  @include light-dark('layer-02', cv.get-var('color-white'), rgb-color('neutral', '800'));
+  @include light-dark('layer-03', rgb-color('neutral', '200'), rgb-color('neutral', '700'));
   @include light-dark('layer-hover-01', rgb-color('neutral', '200'), rgb-color('neutral', '800'));
-  @include light-dark('layer-hover-02', rgb-color('neutral', '300'), rgb-color('neutral', '700'));
+  @include light-dark('layer-hover-02', rgb-color('neutral', '200'), rgb-color('neutral', '700'));
   @include light-dark('layer-hover-03', rgb-color('neutral', '200'), rgb-color('neutral', '600'));
   @include light-dark('layer-active-01', rgb-color('neutral', '300'), rgb-color('neutral', '700'));
-  @include light-dark('layer-active-02', rgb-color('neutral', '400'), rgb-color('neutral', '600'));
+  @include light-dark('layer-active-02', rgb-color('neutral', '300'), rgb-color('neutral', '600'));
   @include light-dark('layer-active-03', rgb-color('neutral', '300'), rgb-color('neutral', '500'));
   @include light-dark('layer-selected-01', rgb-color('neutral', '200'), rgb-color('neutral', '800'));
   @include light-dark('layer-selected-02', rgb-color('neutral', '200'), rgb-color('neutral', '700'));

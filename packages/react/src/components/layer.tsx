@@ -3,12 +3,12 @@ import type { ReactNode } from 'react'
 import { clsx } from 'clsx'
 import { MAX_LEVEL, MIN_LEVEL, type LayerLevel, levels } from '../utils/layer'
 
-interface LayerProps {
+export interface LayerProps {
   /**
    * Layering level tokens - 0, 1, 2
    * @default 0
    */
-  layer?: LayerLevel
+  level?: LayerLevel
 
   /**
    * Children to be rendered within the layer.
@@ -23,8 +23,8 @@ interface LayerProps {
   asChild?: boolean
 }
 
-export function Layer({ layer = 0, asChild = false, children }: LayerProps) {
-  const value = Math.max(MIN_LEVEL, Math.min(layer, MAX_LEVEL))
+export function Layer({ level = 0, asChild = false, children }: LayerProps) {
+  const value = Math.max(MIN_LEVEL, Math.min(level, MAX_LEVEL))
   const Comp = asChild ? Slot : 'div'
   const layerName = `r-layer--${levels[value]}`
   const classes = clsx({

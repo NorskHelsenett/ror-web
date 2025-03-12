@@ -1,0 +1,73 @@
+.ror-sb-annotation {
+  --annotation-border-color: #009d9a;
+  --annotation-color: #009d9a;
+  --annotation-background: #f6f2ff;
+  position: relative;
+  border: 1px dashed var(--annotation-border-color);
+}
+
+.ror-sb-annotation .ror-sb-annotation {
+  margin-block-start: 2rem;
+}
+
+.ror-sb-annotation__content > .ror-sb-annotation:first-child {
+  margin-block-start: 0;
+}
+
+.ror-sb-annotation__icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: currentColor;
+}
+
+.ror-sb-annotation__label {
+  font-family: var(--r-font-family-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: 0.32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem;
+  column-gap: 0.5rem;
+  background-color: var(--annotation-background);
+  color: var(--annotation-color);
+}
+
+.ror-sb-annotation__label > :first-child {
+  flex-shrink: 0;
+}
+
+.ror-sb-annotation__label a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.ror-sb-annotation__content {
+  padding: 1rem;
+}
+
+/**
+* The different properties should have the following color scale:
+* - Border color: 500
+* - Text color: 800
+* - Background color: 300
+*/
+
+.ror-sb-annotation--layer {
+  --annotation-border-color: #b992fb;
+  --annotation-color: #544076;
+  --annotation-background: #d8c6fd;
+}
+
+.ror-sb-annotation--deprecation-notice {
+  --annotation-border-color: #fa4d56;
+  --annotation-color: #750e13;
+  --annotation-background: #fff1f1;
+}
+
+.ror-sb-annotation--experimental {
+  --annotation-border-color: #009d9a;
+  --annotation-color: #004144;
+  --annotation-background: #d9fbfb;
+}
