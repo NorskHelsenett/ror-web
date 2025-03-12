@@ -9,8 +9,8 @@ import {
   TableBody,
   TableCell,
   TableTitle,
+  TableSubtitle,
 } from '@ror/react/src/components/table/index'
-import { TableSubtitle } from '@ror/react'
 import { SortDirection } from '@ror/react/utils/sorting'
 import { MouseEvent } from 'react'
 
