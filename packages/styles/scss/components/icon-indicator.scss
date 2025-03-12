@@ -40,15 +40,15 @@
 }
 
 .#{$prefix}-icon-indicator--caution-major {
-  --icon-color: #{get-var('support-cuation-major')};
+  --icon-color: #{get-var('support-caution-major')};
 }
 
 .#{$prefix}-icon-indicator--caution-minor {
-  --icon-color: #{get-var('support-cuation-minor')};
+  --icon-color: #{get-var('support-caution-minor')};
 }
 
 .#{$prefix}-icon-indicator--undefined {
-  --icon-color: #{get-var('support-cuation-undefined')};
+  --icon-color: #{get-var('support-caution-undefined')};
 }
 
 .#{$prefix}-icon-indicator--succeeded {

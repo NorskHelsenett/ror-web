@@ -112,9 +112,9 @@
   @include light-dark('support-success', rgb-color('green', '500'), rgb-color('green', '400'));
   @include light-dark('support-warning', rgb-color('yellow', '500'), rgb-color('yellow', '400'));
   @include light-dark('support-info', rgb-color('blue', '500'), rgb-color('blue', '400'));
-  @include light-dark('support-cuation-minor', rgb-color('yellow', '500'), rgb-color('yellow', '400'));
-  @include light-dark('support-cuation-major', rgb-color('orange', '500'), rgb-color('orange', '400'));
-  @include light-dark('support-cuation-undefined', rgb-color('purple', '500'), rgb-color('purple', '400'));
+  @include light-dark('support-caution-minor', rgb-color('yellow', '500'), rgb-color('yellow', '400'));
+  @include light-dark('support-caution-major', rgb-color('orange', '500'), rgb-color('orange', '400'));
+  @include light-dark('support-caution-undefined', rgb-color('purple', '500'), rgb-color('purple', '400'));
 
   // Spacing
   @include spacing.emit-spacing-custom-properties();
@@ -207,9 +207,9 @@
       @include light-dark('support-success', p3-color('green', '500'), p3-color('green', '400'));
       @include light-dark('support-warning', p3-color('yellow', '500'), p3-color('yellow', '400'));
       @include light-dark('support-info', p3-color('blue', '500'), p3-color('blue', '400'));
-      @include light-dark('support-cuation-minor', p3-color('yellow', '500'), p3-color('yellow', '400'));
-      @include light-dark('support-cuation-major', p3-color('orange', '500'), p3-color('orange', '400'));
-      @include light-dark('support-cuation-undefined', p3-color('purple', '500'), p3-color('purple', '400'));
+      @include light-dark('support-caution-minor', p3-color('yellow', '500'), p3-color('yellow', '400'));
+      @include light-dark('support-caution-major', p3-color('orange', '500'), p3-color('orange', '400'));
+      @include light-dark('support-caution-undefined', p3-color('purple', '500'), p3-color('purple', '400'));
     }
   }
 }
