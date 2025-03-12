@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { CodeSnippet } from '@ror/react/src/components/code-snippet'
 import { TooltipProvider } from '@ror/react/components/tooltip'
+import { Annotation } from '../.storybook/templates/annotation'
+import { Layer } from '@ror/react/src/components/layer'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -66,4 +68,26 @@ export const Multi: Story = {
         "@babel/runtime": "^7.10.0",
         "@commitlint/cli": "^8.3.5",`,
   },
+}
+
+export const WithLayer: Story = {
+  args: {
+    type: 'inline',
+    children: 'node -v',
+  },
+  render: (args) => (
+    <Annotation type='layer' text='Layer 0'>
+      <CodeSnippet {...args} />
+      <Annotation type='layer' text='Layer 1'>
+        <Layer level={1}>
+          <CodeSnippet {...args} />
+          <Annotation type='layer' text='Layer 2'>
+            <Layer level={2}>
+              <CodeSnippet {...args} />
+            </Layer>
+          </Annotation>
+        </Layer>
+      </Annotation>
+    </Annotation>
+  ),
 }
