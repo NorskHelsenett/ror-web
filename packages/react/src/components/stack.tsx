@@ -17,7 +17,7 @@ export interface StackProps extends ComponentPropsWithoutRef<'div'> {
   /**
    * Provide the elements that will be rendered as children inside of the Stack
    * component. These elements will have having spacing between them according
-   * to the `step` and `orientation` prop
+   * to the `gap` and `orientation` prop
    */
   children?: ReactNode
 
@@ -41,30 +41,28 @@ export interface StackProps extends ComponentPropsWithoutRef<'div'> {
   /**
    * Specify custom style properties
    */
-  style?: CSSProperties & { '--r-stack-gap': string }
+  style?: CSSProperties
 }
 
-export function Stack(props: StackProps) {
-  const {
-    as: Comp = 'div',
-    children,
-    className: customClassName,
-    gap = 0,
-    orientation = 'vertical',
-    style: customStyle,
-    ...rest
-  } = props
-
-  const numericGap = typeof gap === 'number' ? gap.toFixed() : ''
+export function Stack({
+  as: Comp = 'div',
+  children,
+  className: customClassName,
+  gap = 0,
+  orientation = 'vertical',
+  style: customStyle,
+  ...rest
+}: StackProps) {
+  const numericGap = typeof gap === 'number' ? gap.toString() : ''
 
   const className = clsx('r-stack', customClassName, {
     [`r-stack--${orientation}`]: true,
     [`r-stack--scale-${numericGap}`]: typeof gap === 'number' && gap > 0,
   })
 
-  const style = {
+  const style: CSSProperties & { '--r-stack-gap'?: string } = {
     ...customStyle,
-  } satisfies CSSProperties
+  }
 
   if (typeof gap === 'string') {
     style[`--r-stack-gap`] = gap
