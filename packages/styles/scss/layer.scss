@@ -53,5 +53,7 @@
 }
 
 @if $css--layer-tokens == true {
-  @include emit-layer-custom-properties;
+  @layer base {
+    @include emit-layer-custom-properties;
+  }
 }

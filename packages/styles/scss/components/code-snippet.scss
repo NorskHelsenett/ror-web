@@ -2,116 +2,118 @@
 @use '../utilities/custom-properties.scss' as cv;
 @use '../type/styles.scss' as type;
 
-.#{$prefix}-code-snippet {
-  --code-snippet-multi-max-height: 16rem;
-  background-color: cv.get-var('layer');
-  color: cv.get-var('text-primary');
-  position: relative;
-}
+@layer components {
+  .#{$prefix}-code-snippet {
+    --code-snippet-multi-max-height: 16rem;
+    background-color: cv.get-var('layer');
+    color: cv.get-var('text-primary');
+    position: relative;
+  }
 
-/// Base
-.#{$prefix}-code-snippet code {
-  @include type.type-style('code-01');
-}
+  /// Base
+  .#{$prefix}-code-snippet code {
+    @include type.type-style('code-01');
+  }
 
-.#{$prefix}-code-snippet pre {
-  margin: 0;
-}
+  .#{$prefix}-code-snippet pre {
+    margin: 0;
+  }
 
-.#{$prefix}-code-snippet__overflow-indicator--right {
-  order: 2;
-  background-image: linear-gradient(to right, transparent, cv.get-var('layer'));
-  margin-inline-start: -1rem;
-}
+  .#{$prefix}-code-snippet__overflow-indicator--right {
+    order: 2;
+    background-image: linear-gradient(to right, transparent, cv.get-var('layer'));
+    margin-inline-start: -1rem;
+  }
 
-.#{$prefix}-code-snippet__overflow-indicator--left,
-.#{$prefix}-code-snippet__overflow-indicator--right {
-  z-index: 1;
-  flex: 1 0 auto;
-  inline-size: 1rem;
-}
+  .#{$prefix}-code-snippet__overflow-indicator--left,
+  .#{$prefix}-code-snippet__overflow-indicator--right {
+    z-index: 1;
+    flex: 1 0 auto;
+    inline-size: 1rem;
+  }
 
-.#{$prefix}-code-snippet__copy-btn {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-end: 0;
-  border-radius: 0;
-}
+  .#{$prefix}-code-snippet__copy-btn {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    border-radius: 0;
+  }
 
-/// Inline
-.#{$prefix}-code-snippet--inline {
-  position: relative;
-  display: inline;
-  padding: 0;
-  border: 1px solid rgba(0, 0, 0, 0);
-  border-radius: 4px;
-  cursor: pointer;
-}
+  /// Inline
+  .#{$prefix}-code-snippet--inline {
+    position: relative;
+    display: inline;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0);
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-.#{$prefix}-code-snippet--inline.#{$prefix}-btn {
-  block-size: 1.25rem;
-  inline-size: initial;
-  max-inline-size: unset;
-  min-block-size: 1.25rem;
-  padding-inline: 0;
-}
+  .#{$prefix}-code-snippet--inline.#{$prefix}-btn {
+    block-size: 1.25rem;
+    inline-size: initial;
+    max-inline-size: unset;
+    min-block-size: 1.25rem;
+    padding-inline: 0;
+  }
 
-.#{$prefix}-code-snippet--inline code {
-  padding-inline: 0.5rem;
-}
+  .#{$prefix}-code-snippet--inline code {
+    padding-inline: 0.5rem;
+  }
 
-/// Single
-.#{$prefix}-code-snippet--single {
-  position: relative;
-  inline-size: 100%;
-  max-inline-size: 48rem;
-  display: flex;
-  align-items: center;
-  block-size: 2.5rem;
-  padding-inline-end: 2.5rem;
-  border-radius: 0.125rem;
-}
+  /// Single
+  .#{$prefix}-code-snippet--single {
+    position: relative;
+    inline-size: 100%;
+    max-inline-size: 48rem;
+    display: flex;
+    align-items: center;
+    block-size: 2.5rem;
+    padding-inline-end: 2.5rem;
+    border-radius: 0.125rem;
+  }
 
-.#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  block-size: 100%;
-  overflow-x: auto;
-  padding-inline-start: 1rem;
-  scrollbar-width: none;
-}
+  .#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    block-size: 100%;
+    overflow-x: auto;
+    padding-inline-start: 1rem;
+    scrollbar-width: none;
+  }
 
-.#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--right {
-  inset-inline-end: 2.5rem;
-}
+  .#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--right {
+    inset-inline-end: 2.5rem;
+  }
 
-.#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--right,
-.#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--left {
-  position: absolute;
-  block-size: calc(100% - 0.25rem);
-  inline-size: 2rem;
-}
+  .#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--right,
+  .#{$prefix}-code-snippet--single .#{$prefix}-code-snippet__overflow-indicator--left {
+    position: absolute;
+    block-size: calc(100% - 0.25rem);
+    inline-size: 2rem;
+  }
 
-.#{$prefix}-code-snippet--single pre,
-.#{$prefix}-code-snippet--inline code {
-  white-space: pre;
-}
+  .#{$prefix}-code-snippet--single pre,
+  .#{$prefix}-code-snippet--inline code {
+    white-space: pre;
+  }
 
-.#{$prefix}-code-snippet--single pre {
-  padding-inline-end: 0.5rem;
-}
+  .#{$prefix}-code-snippet--single pre {
+    padding-inline-end: 0.5rem;
+  }
 
-/// Multi
-.#{$prefix}-code-snippet--multi {
-  padding: 1rem;
-}
+  /// Multi
+  .#{$prefix}-code-snippet--multi {
+    padding: 1rem;
+  }
 
-.#{$prefix}-code-snippet--multi .#{$prefix}-code-snippet__container {
-  position: relative;
-  order: 1;
-  overflow: auto;
-  max-block-size: 100%;
-  min-block-size: 100%;
-  max-height: var(--code-snippet-multi-max-height);
+  .#{$prefix}-code-snippet--multi .#{$prefix}-code-snippet__container {
+    position: relative;
+    order: 1;
+    overflow: auto;
+    max-block-size: 100%;
+    min-block-size: 100%;
+    max-height: var(--code-snippet-multi-max-height);
+  }
 }

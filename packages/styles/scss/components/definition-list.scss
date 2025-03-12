@@ -2,32 +2,34 @@
 @use '../type/styles.scss' as *;
 @use '../utilities/custom-properties.scss' as cv;
 
-.#{$prefix}-dl {
-  margin: 0;
-  inline-size: 100%;
+@layer components {
+  .#{$prefix}-dl {
+    margin: 0;
+    inline-size: 100%;
 
-  &--horizontal {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    row-gap: cv.get-var('spacing-04');
-    column-gap: cv.get-var('spacing-02');
+    &--horizontal {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: cv.get-var('spacing-04');
+      column-gap: cv.get-var('spacing-02');
+    }
+
+    &--vertical {
+      display: flex;
+      flex-direction: column;
+      row-gap: cv.get-var('spacing-03');
+    }
   }
 
-  &--vertical {
-    display: flex;
-    flex-direction: column;
-    row-gap: cv.get-var('spacing-03');
+  .#{$prefix}-dl__term {
+    margin: 0;
+    @include type-style('heading-01');
+    color: cv.get-var('text-secondary');
   }
-}
 
-.#{$prefix}-dl__term {
-  margin: 0;
-  @include type-style('heading-01');
-  color: cv.get-var('text-secondary');
-}
-
-.#{$prefix}-dl__description {
-  font-style: normal;
-  margin: 0;
-  @include type-style('body-01');
+  .#{$prefix}-dl__description {
+    font-style: normal;
+    margin: 0;
+    @include type-style('body-01');
+  }
 }

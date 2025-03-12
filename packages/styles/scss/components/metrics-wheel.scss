@@ -13,35 +13,37 @@ $metric-colors: (
   'emerald': cv.get-var('metrics-emerald'),
 );
 
-.#{c.$prefix}-metrics-wheel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@layer components {
+  .#{c.$prefix}-metrics-wheel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  svg {
-    width: 9rem;
-    height: 9rem;
-  }
+    svg {
+      width: 9rem;
+      height: 9rem;
+    }
 
-  &__circle {
-    stroke-width: 10;
-    stroke-linecap: round;
-    fill: transparent;
-    transition: stroke-dashoffset 0.5s ease-in-out;
+    &__circle {
+      stroke-width: 10;
+      stroke-linecap: round;
+      fill: transparent;
+      transition: stroke-dashoffset 0.5s ease-in-out;
 
-    @each $color, $value in $metric-colors {
-      &--#{'' + $color} {
-        stroke: $value;
+      @each $color, $value in $metric-colors {
+        &--#{'' + $color} {
+          stroke: $value;
+        }
       }
     }
-  }
 
-  &__label {
-    color: get-var('text-primary');
-    font-weight: bold;
-    text-anchor: middle;
-    dominant-baseline: middle;
-    font-size: 0.875rem;
-    letter-spacing: 0.16px;
+    &__label {
+      color: get-var('text-primary');
+      font-weight: bold;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      font-size: 0.875rem;
+      letter-spacing: 0.16px;
+    }
   }
 }

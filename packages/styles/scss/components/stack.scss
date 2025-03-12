@@ -3,32 +3,34 @@
 @use '../utilities/convert.scss';
 @use '../spacing.scss';
 
-.#{$prefix}-stack {
-  &--vertical {
-    display: grid;
-    grid-auto-flow: row;
-    row-gap: get-var('stack-gap', 0);
-  }
-
-  &--horizontal {
-    display: inline-grid;
-    column-gap: get-var('stack-gap', 0);
-    grid-auto-flow: column;
-  }
-
-  /// Hack to prevent children from extending beyond the parent width
-  /// @see issue https://github.com/carbon-design-system/carbon/issues/18419
-  & > * {
-    min-inline-size: 0;
-  }
-
-  $index: 1;
-
-  @each $step, $value in spacing.$spacing {
-    &--scale-#{$index} {
-      @include declaration('stack-gap', $value);
+@layer components {
+  .#{$prefix}-stack {
+    &--vertical {
+      display: grid;
+      grid-auto-flow: row;
+      row-gap: get-var('stack-gap', 0);
     }
 
-    $index: $index + 1;
+    &--horizontal {
+      display: inline-grid;
+      column-gap: get-var('stack-gap', 0);
+      grid-auto-flow: column;
+    }
+
+    /// Hack to prevent children from extending beyond the parent width
+    /// @see issue https://github.com/carbon-design-system/carbon/issues/18419
+    & > * {
+      min-inline-size: 0;
+    }
+
+    $index: 1;
+
+    @each $step, $value in spacing.$spacing {
+      &--scale-#{$index} {
+        @include declaration('stack-gap', $value);
+      }
+
+      $index: $index + 1;
+    }
   }
 }

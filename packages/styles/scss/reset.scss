@@ -93,5 +93,7 @@
 }
 
 @if config.$css--reset == true {
-  @include emit-reset-style;
+  @layer base {
+    @include emit-reset-style;
+  }
 }

@@ -1,8 +1,11 @@
 // Forward configuration
 @forward 'scss/config';
 
+// Establish layer cascade rules
+@use 'layer-cascade-rules';
+
 // Use CSS variables
-@use 'scss/css-variables/variables.scss';
+@use 'scss/css-variables/variables';
 @use 'scss/layer';
 
 /// Add reset styles (can be overriden with configuration)

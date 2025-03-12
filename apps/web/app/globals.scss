@@ -1,12 +1,6 @@
-@use '@ror/styles' with (
-  $css--reset: false
-);
-
-@use '@ror/styles/scss/reset';
+@use '@ror/styles';
 
 @layer base {
-  @include reset.emit-reset-style();
-
   /// This lets the browser know that this websites supports both light and dark modes.
   html,
   html[data-color-scheme='system'] {

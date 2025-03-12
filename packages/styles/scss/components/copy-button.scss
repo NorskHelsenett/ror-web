@@ -1,21 +1,23 @@
 @use '../config.scss' as *;
 @use '../utilities/custom-properties.scss' as cv;
 
-.#{$prefix}-copy-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background-color: cv.get-var('layer');
-  cursor: pointer;
-  outline: none;
+@layer components {
+  .#{$prefix}-copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background-color: cv.get-var('layer');
+    cursor: pointer;
+    outline: none;
 
-  &:hover {
-    background-color: cv.get-var('layer-hover');
-  }
+    &:hover {
+      background-color: cv.get-var('layer-hover');
+    }
 
-  &:active {
-    background-color: cv.get-var('layer-active');
+    &:active {
+      background-color: cv.get-var('layer-active');
+    }
   }
 }

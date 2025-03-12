@@ -4,242 +4,243 @@
 @use '../type/styles.scss' as type;
 @use '../type/font-family.scss' as ff;
 
-/* Default table styles */
-
-.#{c.$prefix}-table-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'title actions'
-    'subtitle subtitle'
-    'filter filter'
-    'table table'
-    'footer footer';
-  column-gap: get-var('spacing-03');
-}
-
-.#{c.$prefix}-table__title {
-  @include type.type-style('heading-03');
-  margin: 0;
-  color: get-var('text-primary');
-  grid-area: title;
-  align-self: center;
-}
-
-.#{c.$prefix}-table__subtitle {
-  margin: 0;
-  @include type.type-style('body-01');
-  color: get-var('text-secondary');
-  grid-area: subtitle;
-}
-
-.#{c.$prefix}-table__actions {
-  display: flex;
-  column-gap: get-var('spacing-03');
-  align-items: center;
-  grid-area: actions;
-  justify-self: end;
-}
-
-.#{c.$prefix}-table__divider {
-  width: 100%;
-  height: 1px;
-  background-color: get-var('border-subtle');
-  grid-area: divider;
-  margin-block-start: get-var('spacing-05');
-  margin-block-end: get-var('spacing-03');
-}
-
-/* Spacing before the table */
-.#{c.$prefix}-table__title + .#{c.$prefix}-table-overflow,
-.#{c.$prefix}-table__subtitle + .#{c.$prefix}-table-overflow,
-.#{c.$prefix}-table__actions + .#{c.$prefix}-table-overflow {
-  margin-block-start: get-var('spacing-03');
-}
-
-.#{c.$prefix}-table-overflow {
-  grid-area: table;
-}
-
-/* Table -------------------------------------------------------------------- */
-.#{c.$prefix}-table {
+@layer components {
   /* Default table styles */
-  --table-border-radius: #{convert.to-rem(4px)};
-  --table-cell-x-padding: var(--cell-padding-inline, #{get-var('spacing-04')});
-  --table-cell-y-padding: var(--cell-padding-block, #{get-var('spacing-03')});
-  --table-cell-padding: var(--table-cell-y-padding) var(--table-cell-x-padding);
-  --table-font-size: 0.75rem;
-  display: grid;
-  width: 100%;
-  border-spacing: 0;
-  border-collapse: separate;
-  grid-area: table;
-  grid-template-columns: var(--grid-template-columns);
-  @include type.type-style('body-01');
-  /* Density modes: condensed, normal, spacious */
-  &--condensed {
-    --cell-padding-block: #{get-var('spacing-03')};
-    --cell-padding-inline: #{get-var('spacing-04')};
+  .#{c.$prefix}-table-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'title actions'
+      'subtitle subtitle'
+      'filter filter'
+      'table table'
+      'footer footer';
+    column-gap: get-var('spacing-03');
   }
-  &--normal {
-    --cell-padding-block: #{get-var('spacing-04')};
-    --cell-padding-inline: #{get-var('spacing-05')};
+
+  .#{c.$prefix}-table__title {
+    @include type.type-style('heading-03');
+    margin: 0;
+    color: get-var('text-primary');
+    grid-area: title;
+    align-self: center;
   }
-  &--spacious {
-    --cell-padding-block: #{get-var('spacing-05')};
-    --cell-padding-inline: #{get-var('spacing-06')};
+
+  .#{c.$prefix}-table__subtitle {
+    margin: 0;
+    @include type.type-style('body-01');
+    color: get-var('text-secondary');
+    grid-area: subtitle;
   }
-}
 
-.#{c.$prefix}-table__header,
-.#{c.$prefix}-table__cell {
-  display: flex;
-  padding: var(--table-cell-padding);
-  text-align: start;
-  align-items: center;
-}
+  .#{c.$prefix}-table__actions {
+    display: flex;
+    column-gap: get-var('spacing-03');
+    align-items: center;
+    grid-area: actions;
+    justify-self: end;
+  }
 
-.#{c.$prefix}-table__header:where([data-cell-align='end']),
-.#{c.$prefix}-table__cell:where([data-cell-align='end']) {
-  display: flex;
-  text-align: end;
-  justify-content: flex-end;
-}
+  .#{c.$prefix}-table__divider {
+    width: 100%;
+    height: 1px;
+    background-color: get-var('border-subtle');
+    grid-area: divider;
+    margin-block-start: get-var('spacing-05');
+    margin-block-end: get-var('spacing-03');
+  }
 
-.#{c.$prefix}-table__header[data-cell-align='end'] .#{c.$prefix}-table__sort-btn {
-  display: flex;
-  flex-direction: row-reverse;
-}
+  /* Spacing before the table */
+  .#{c.$prefix}-table__title + .#{c.$prefix}-table-overflow,
+  .#{c.$prefix}-table__subtitle + .#{c.$prefix}-table-overflow,
+  .#{c.$prefix}-table__actions + .#{c.$prefix}-table-overflow {
+    margin-block-start: get-var('spacing-03');
+  }
 
-/* Border radius */
-.#{c.$prefix}-table__head .#{c.$prefix}-table__row:first-of-type .#{c.$prefix}-table__header:first-child {
-  border-top-left-radius: var(--table-border-radius);
-}
+  .#{c.$prefix}-table-overflow {
+    grid-area: table;
+  }
 
-.#{c.$prefix}-table__head .#{c.$prefix}-table__row:first-of-type .#{c.$prefix}-table__header:last-child {
-  border-top-right-radius: var(--table-border-radius);
-}
+  /* Table -------------------------------------------------------------------- */
+  .#{c.$prefix}-table {
+    /* Default table styles */
+    --table-border-radius: #{convert.to-rem(4px)};
+    --table-cell-x-padding: var(--cell-padding-inline, #{get-var('spacing-04')});
+    --table-cell-y-padding: var(--cell-padding-block, #{get-var('spacing-03')});
+    --table-cell-padding: var(--table-cell-y-padding) var(--table-cell-x-padding);
+    --table-font-size: 0.75rem;
+    display: grid;
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+    grid-area: table;
+    grid-template-columns: var(--grid-template-columns);
+    @include type.type-style('body-01');
+    /* Density modes: condensed, normal, spacious */
+    &--condensed {
+      --cell-padding-block: #{get-var('spacing-03')};
+      --cell-padding-inline: #{get-var('spacing-04')};
+    }
+    &--normal {
+      --cell-padding-block: #{get-var('spacing-04')};
+      --cell-padding-inline: #{get-var('spacing-05')};
+    }
+    &--spacious {
+      --cell-padding-block: #{get-var('spacing-05')};
+      --cell-padding-inline: #{get-var('spacing-06')};
+    }
+  }
 
-.#{c.$prefix}-table-overflow:last-child
-  .#{c.$prefix}-table
-  .#{c.$prefix}-table__body
-  .#{c.$prefix}-table__row:last-of-type
-  .#{c.$prefix}-table__cell:first-child {
-  border-bottom-left-radius: var(--table-border-radius);
-}
+  .#{c.$prefix}-table__header,
+  .#{c.$prefix}-table__cell {
+    display: flex;
+    padding: var(--table-cell-padding);
+    text-align: start;
+    align-items: center;
+  }
 
-.#{c.$prefix}-table-overflow:last-child
-  .#{c.$prefix}-table
-  .#{c.$prefix}-table__body
-  .#{c.$prefix}-table__row:last-of-type
-  .#{c.$prefix}-table__cell:last-child {
-  border-bottom-right-radius: var(--table-border-radius);
-}
+  .#{c.$prefix}-table__header:where([data-cell-align='end']),
+  .#{c.$prefix}-table__cell:where([data-cell-align='end']) {
+    display: flex;
+    text-align: end;
+    justify-content: flex-end;
+  }
 
-/**
+  .#{c.$prefix}-table__header[data-cell-align='end'] .#{c.$prefix}-table__sort-btn {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  /* Border radius */
+  .#{c.$prefix}-table__head .#{c.$prefix}-table__row:first-of-type .#{c.$prefix}-table__header:first-child {
+    border-top-left-radius: var(--table-border-radius);
+  }
+
+  .#{c.$prefix}-table__head .#{c.$prefix}-table__row:first-of-type .#{c.$prefix}-table__header:last-child {
+    border-top-right-radius: var(--table-border-radius);
+  }
+
+  .#{c.$prefix}-table-overflow:last-child
+    .#{c.$prefix}-table
+    .#{c.$prefix}-table__body
+    .#{c.$prefix}-table__row:last-of-type
+    .#{c.$prefix}-table__cell:first-child {
+    border-bottom-left-radius: var(--table-border-radius);
+  }
+
+  .#{c.$prefix}-table-overflow:last-child
+    .#{c.$prefix}-table
+    .#{c.$prefix}-table__body
+    .#{c.$prefix}-table__row:last-of-type
+    .#{c.$prefix}-table__cell:last-child {
+    border-bottom-right-radius: var(--table-border-radius);
+  }
+
+  /**
 * Offset padding to make sure type aligns regardless of cell padding
 * selection
 */
-.#{c.$prefix}-table__row > *:first-child:not(.#{c.$prefix}-table__cell-skeleton),
-.#{c.$prefix}-table__row > *:first-child .#{c.$prefix}-table__cell-skeleton-item {
-  padding-inline-start: get-var('spacing-05');
-}
-
-.#{c.$prefix}-table__row > *:last-child:not(.#{c.$prefix}-table__cell-skeleton),
-.#{c.$prefix}-table__row > *:last-child .#{c.$prefix}-table__cell-skeleton-item {
-  padding-inline-end: get-var('spacing-05');
-}
-
-/* Table header */
-.#{c.$prefix}-table__header {
-  color: get-var('text-primary');
-  background-color: get-var('layer-accent');
-  font-weight: ff.font-weight('semibold');
-}
-
-.#{c.$prefix}-table__header:where([aria-sort='descending']),
-.#{c.$prefix}-table__header:where([aria-sort='ascending']) {
-  color: get-var('text-primary');
-  background-color: get-var('layer-selected-hover');
-}
-
-.#{c.$prefix}-table__header:hover:has(.#{c.$prefix}-table__sort-btn),
-.#{c.$prefix}-table__header:hover:has(.#{c.$prefix}-table__sort-btn) {
-  background-color: get-var('layer-selected-hover');
-}
-
-/* Table body */
-.#{c.$prefix}-table__body {
-}
-
-/* Table cell */
-.#{c.$prefix}-table__cell {
-  background-color: get-var('layer');
-}
-
-.#{c.$prefix}-table .#{c.$prefix}-table__body .#{c.$prefix}-table__row:not(:last-of-type) .#{c.$prefix}-table__cell {
-  border-bottom: 1px solid get-var('border-subtle');
-}
-
-/* Control visibility of sort icons */
-.#{c.$prefix}-table__sort-icon {
-  width: convert.to-rem(20px);
-  height: convert.to-rem(20px);
-  visibility: hidden;
-}
-
-/* The ASC icon is visible if the header is sortable and is hovered or focused */
-.#{c.$prefix}-table__header:hover .#{c.$prefix}-table__sort-icon--ascending,
-.#{c.$prefix}-table__header .#{c.$prefix}-table__sort-btn:focus .#{c.$prefix}-table__sort-icon--ascending {
-  visibility: visible;
-}
-
-/* Each sort icon is visible if the TableHeader is currently in the corresponding sort state */
-.#{c.$prefix}-table__header[aria-sort='ascending'] .#{c.$prefix}-table__sort-icon--ascending,
-.#{c.$prefix}-table__header[aria-sort='descending'] .#{c.$prefix}-table__sort-icon--descending {
-  visibility: visible;
-}
-
-.#{c.$prefix}-table__cell:where([scope='row']) {
-  display: flex;
-  font-weight: ff.font-weight('semibold');
-  color: get-var('text-primary');
-  align-items: center;
-}
-
-.#{c.$prefix}-table__sort-btn {
-  --btn-height: auto;
-  --btn-width: auto;
-  padding: 0;
-  border: 0 none;
-  column-gap: 0.5rem;
-  inline-size: 100%;
-  block-size: 100%;
-  justify-content: flex-start;
-  font-weight: inherit;
-  color: inherit;
-  background: transparent;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: transparent;
+  .#{c.$prefix}-table__row > *:first-child:not(.#{c.$prefix}-table__cell-skeleton),
+  .#{c.$prefix}-table__row > *:first-child .#{c.$prefix}-table__cell-skeleton-item {
+    padding-inline-start: get-var('spacing-05');
   }
-}
 
-/* Grid layout */
-.#{c.$prefix}-table__head,
-.#{c.$prefix}-table__body,
-.#{c.$prefix}-table__row {
-  display: contents;
-}
+  .#{c.$prefix}-table__row > *:last-child:not(.#{c.$prefix}-table__cell-skeleton),
+  .#{c.$prefix}-table__row > *:last-child .#{c.$prefix}-table__cell-skeleton-item {
+    padding-inline-end: get-var('spacing-05');
+  }
 
-@supports (grid-template-columns: subgrid) {
+  /* Table header */
+  .#{c.$prefix}-table__header {
+    color: get-var('text-primary');
+    background-color: get-var('layer-accent');
+    font-weight: ff.font-weight('semibold');
+  }
+
+  .#{c.$prefix}-table__header:where([aria-sort='descending']),
+  .#{c.$prefix}-table__header:where([aria-sort='ascending']) {
+    color: get-var('text-primary');
+    background-color: get-var('layer-selected-hover');
+  }
+
+  .#{c.$prefix}-table__header:hover:has(.#{c.$prefix}-table__sort-btn),
+  .#{c.$prefix}-table__header:hover:has(.#{c.$prefix}-table__sort-btn) {
+    background-color: get-var('layer-selected-hover');
+  }
+
+  /* Table body */
+  .#{c.$prefix}-table__body {
+  }
+
+  /* Table cell */
+  .#{c.$prefix}-table__cell {
+    background-color: get-var('layer');
+  }
+
+  .#{c.$prefix}-table .#{c.$prefix}-table__body .#{c.$prefix}-table__row:not(:last-of-type) .#{c.$prefix}-table__cell {
+    border-bottom: 1px solid get-var('border-subtle');
+  }
+
+  /* Control visibility of sort icons */
+  .#{c.$prefix}-table__sort-icon {
+    width: convert.to-rem(20px);
+    height: convert.to-rem(20px);
+    visibility: hidden;
+  }
+
+  /* The ASC icon is visible if the header is sortable and is hovered or focused */
+  .#{c.$prefix}-table__header:hover .#{c.$prefix}-table__sort-icon--ascending,
+  .#{c.$prefix}-table__header .#{c.$prefix}-table__sort-btn:focus .#{c.$prefix}-table__sort-icon--ascending {
+    visibility: visible;
+  }
+
+  /* Each sort icon is visible if the TableHeader is currently in the corresponding sort state */
+  .#{c.$prefix}-table__header[aria-sort='ascending'] .#{c.$prefix}-table__sort-icon--ascending,
+  .#{c.$prefix}-table__header[aria-sort='descending'] .#{c.$prefix}-table__sort-icon--descending {
+    visibility: visible;
+  }
+
+  .#{c.$prefix}-table__cell:where([scope='row']) {
+    display: flex;
+    font-weight: ff.font-weight('semibold');
+    color: get-var('text-primary');
+    align-items: center;
+  }
+
+  .#{c.$prefix}-table__sort-btn {
+    --btn-height: auto;
+    --btn-width: auto;
+    padding: 0;
+    border: 0 none;
+    column-gap: 0.5rem;
+    inline-size: 100%;
+    block-size: 100%;
+    justify-content: flex-start;
+    font-weight: inherit;
+    color: inherit;
+    background: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: transparent;
+    }
+  }
+
+  /* Grid layout */
   .#{c.$prefix}-table__head,
   .#{c.$prefix}-table__body,
   .#{c.$prefix}-table__row {
-    display: grid;
-    grid-template-columns: subgrid;
-    grid-column: -1 /1;
+    display: contents;
+  }
+
+  @supports (grid-template-columns: subgrid) {
+    .#{c.$prefix}-table__head,
+    .#{c.$prefix}-table__body,
+    .#{c.$prefix}-table__row {
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: -1 /1;
+    }
   }
 }

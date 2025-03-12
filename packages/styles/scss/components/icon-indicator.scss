@@ -4,60 +4,62 @@
 @use '../type/styles.scss' as type;
 @use '../type/font-family.scss' as ff;
 
-.#{$prefix}-icon-indicator {
-  --icon-color: #{get-var('icon-secondary')};
-  --icon-size: #{convert.to-rem(20px)};
-  display: flex;
-  align-items: center;
-  color: get-var('text-primary');
+@layer components {
+  .#{$prefix}-icon-indicator {
+    --icon-color: #{get-var('icon-secondary')};
+    --icon-size: #{convert.to-rem(20px)};
+    display: flex;
+    align-items: center;
+    color: get-var('text-primary');
 
-  &__icon {
-    align-self: center;
-    margin-inline-end: 0.5rem;
-    block-size: var(--icon-size);
-    inline-size: var(--icon-size);
-    color: var(--icon-color);
+    &__icon {
+      align-self: center;
+      margin-inline-end: 0.5rem;
+      block-size: var(--icon-size);
+      inline-size: var(--icon-size);
+      color: var(--icon-color);
+    }
+
+    &__label {
+      display: inline-flex;
+      transform: translateY(1px);
+    }
   }
 
-  &__label {
-    display: inline-flex;
-    transform: translateY(1px);
+  .#{$prefix}-icon-indicator--md {
+    --icon-size: #{convert.to-rem(20px)};
+    @include type.type-style('body-01');
   }
-}
 
-.#{$prefix}-icon-indicator--md {
-  --icon-size: #{convert.to-rem(20px)};
-  @include type.type-style('body-01');
-}
+  .#{$prefix}-icon-indicator--lg {
+    --icon-size: #{convert.to-rem(24px)};
+    @include type.type-style('body-02');
+  }
 
-.#{$prefix}-icon-indicator--lg {
-  --icon-size: #{convert.to-rem(24px)};
-  @include type.type-style('body-02');
-}
+  .#{$prefix}-icon-indicator--failed {
+    --icon-color: #{get-var('support-error')};
+  }
 
-.#{$prefix}-icon-indicator--failed {
-  --icon-color: #{get-var('support-error')};
-}
+  .#{$prefix}-icon-indicator--caution-major {
+    --icon-color: #{get-var('support-caution-major')};
+  }
 
-.#{$prefix}-icon-indicator--caution-major {
-  --icon-color: #{get-var('support-caution-major')};
-}
+  .#{$prefix}-icon-indicator--caution-minor {
+    --icon-color: #{get-var('support-caution-minor')};
+  }
 
-.#{$prefix}-icon-indicator--caution-minor {
-  --icon-color: #{get-var('support-caution-minor')};
-}
+  .#{$prefix}-icon-indicator--undefined {
+    --icon-color: #{get-var('support-caution-undefined')};
+  }
 
-.#{$prefix}-icon-indicator--undefined {
-  --icon-color: #{get-var('support-caution-undefined')};
-}
+  .#{$prefix}-icon-indicator--succeeded {
+    --icon-color: #{get-var('support-success')};
+  }
 
-.#{$prefix}-icon-indicator--succeeded {
-  --icon-color: #{get-var('support-success')};
-}
-
-.#{$prefix}-icon-indicator--normal,
-.#{$prefix}-icon-indicator--in-progress,
-.#{$prefix}-icon-indicator--incomplete,
-.#{$prefix}-icon-indicator--informative {
-  --icon-color: #{get-var('support-info')};
+  .#{$prefix}-icon-indicator--normal,
+  .#{$prefix}-icon-indicator--in-progress,
+  .#{$prefix}-icon-indicator--incomplete,
+  .#{$prefix}-icon-indicator--informative {
+    --icon-color: #{get-var('support-info')};
+  }
 }

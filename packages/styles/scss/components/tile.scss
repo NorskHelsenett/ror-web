@@ -2,14 +2,16 @@
 @use '../type/styles.scss' as types;
 @use '../utilities/custom-properties.scss' as cv;
 
-.#{$prefix}-tile {
-  @include types.type-style('body-01');
-  position: relative;
-  display: block;
-  min-block-size: 4rem;
-  min-inline-size: 8rem;
-  outline: 2px solid rgba(0, 0, 0, 0);
-  outline-offset: -2px;
-  background-color: cv.get-var('layer');
-  border-radius: 0.25rem;
+@layer components {
+  .#{$prefix}-tile {
+    @include types.type-style('body-01');
+    position: relative;
+    display: block;
+    min-block-size: 4rem;
+    min-inline-size: 8rem;
+    outline: 2px solid rgba(0, 0, 0, 0);
+    outline-offset: -2px;
+    background-color: cv.get-var('layer');
+    border-radius: 0.25rem;
+  }
 }

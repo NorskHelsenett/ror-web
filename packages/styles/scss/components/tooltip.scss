@@ -2,34 +2,37 @@
 @use '../type/styles.scss' as types;
 @use '../utilities/custom-properties.scss' as cv;
 
-.#{$prefix}-tooltip {
-  --r-tooltip-shadow:
-    0 0 1px var(--r-tooltip-shadow-color-default, #05050629), 0 0 2px var(--r-tooltip-shadow-color-default, #05050629),
-    0 2px 8px var(--r-tooltip-shadow-color-default, #05050629);
-  --r-tooltip-shadow-colored:
-    0 0 1px var(--r-tooltip-shadow-color), 0 0 2px var(--r-tooltip-shadow-color),
-    0 2px 8px var(--r-tooltip-shadow-color);
+@layer components {
+  .#{$prefix}-tooltip {
+    --r-tooltip-shadow:
+      0 0 1px var(--r-tooltip-shadow-color-default, #05050629),
+      0 0 2px var(--r-tooltip-shadow-color-default, #05050629),
+      0 2px 8px var(--r-tooltip-shadow-color-default, #05050629);
+    --r-tooltip-shadow-colored:
+      0 0 1px var(--r-tooltip-shadow-color), 0 0 2px var(--r-tooltip-shadow-color),
+      0 2px 8px var(--r-tooltip-shadow-color);
 
-  &__inner {
-    background: cv.get-var('background-inverse');
-    color: cv.get-var('text-inverse');
-    max-inline-size: 18rem;
-    box-shadow: var(--r-ring-offset-shadow, 0 0 #0000), var(--r-ring-shadow, 0 0 #0000), var(--r-tooltip-shadow);
-    border-radius: 0.25rem;
-    text-align: center;
-    @include types.type-style('body-01');
-    padding: 0.5rem 1rem;
+    &__inner {
+      background: cv.get-var('background-inverse');
+      color: cv.get-var('text-inverse');
+      max-inline-size: 18rem;
+      box-shadow: var(--r-ring-offset-shadow, 0 0 #0000), var(--r-ring-shadow, 0 0 #0000), var(--r-tooltip-shadow);
+      border-radius: 0.25rem;
+      text-align: center;
+      @include types.type-style('body-01');
+      padding: 0.5rem 1rem;
+    }
+
+    &__inner > *:first-child {
+      display: block;
+    }
+
+    &__arrow {
+      fill: cv.get-var('background-inverse');
+    }
   }
 
-  &__inner > *:first-child {
-    display: block;
+  [data-radix-popper-content-wrapper] {
+    z-index: 99999 !important;
   }
-
-  &__arrow {
-    fill: cv.get-var('background-inverse');
-  }
-}
-
-[data-radix-popper-content-wrapper] {
-  z-index: 99999 !important;
 }

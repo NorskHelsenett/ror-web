@@ -2,104 +2,106 @@
 @use '../type/styles.scss' as types;
 @use '../utilities/custom-properties.scss' as cv;
 
-.#{c.$prefix}-btn {
-  --btn-height: 2rem;
-  --btn-x-padding: #{cv.get-var('spacing-05')};
-  block-size: var(--btn-height);
-  display: inline-flex;
-  vertical-align: top;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin: 0;
-  border-radius: 5px;
-  transition-property: border, background-color, color, opacity;
-  transition-duration: cv.get-var('speed-highlight-fadeout', '150ms');
-  user-select: none;
-  app-region: no-drag;
-  position: relative;
-  border: 0.5px solid cv.get-var('button-primary-border');
-  background-color: cv.get-var('button-primary');
-  color: cv.get-var('text-on-color');
-  inline-size: max-content;
-  max-inline-size: 20rem;
-  min-inline-size: 2rem;
-  padding: 0 var(--btn-x-padding);
-  cursor: pointer;
-  -webkit-font-smoothing: antialiased;
-  @include types.type-style('body-01');
-}
-
-.#{c.$prefix}-btn--sm {
-  --btn-height: 1.75rem;
-  border-radius: 4px;
-}
-
-.#{c.$prefix}-btn--md {
-  --btn-height: 2rem;
-  padding: 0 1rem;
-  border-radius: 4px;
-}
-
-.#{c.$prefix}-btn--lg {
-  --btn-height: 2.5rem;
-  border-radius: 6px;
-}
-
-.#{c.$prefix}-btn--primary {
-  background: cv.get-var('button-primary');
-  border-color: cv.get-var('button-primary-border');
-  color: cv.get-var('text-on-color');
-
-  &:hover {
-    background: cv.get-var('button-primary-hover');
-    border-color: cv.get-var('button-primary-border-hover');
+@layer components {
+  .#{c.$prefix}-btn {
+    --btn-height: 2rem;
+    --btn-x-padding: #{cv.get-var('spacing-05')};
+    block-size: var(--btn-height);
+    display: inline-flex;
+    vertical-align: top;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin: 0;
+    border-radius: 5px;
+    transition-property: border, background-color, color, opacity;
+    transition-duration: cv.get-var('speed-highlight-fadeout', '150ms');
+    user-select: none;
+    app-region: no-drag;
+    position: relative;
+    border: 0.5px solid cv.get-var('button-primary-border');
+    background-color: cv.get-var('button-primary');
+    color: cv.get-var('text-on-color');
+    inline-size: max-content;
+    max-inline-size: 20rem;
+    min-inline-size: 2rem;
+    padding: 0 var(--btn-x-padding);
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
+    @include types.type-style('body-01');
   }
 
-  &:active {
-    background: cv.get-var('button-primary-active');
-    border-color: cv.get-var('button-primary-border-active');
+  .#{c.$prefix}-btn--sm {
+    --btn-height: 1.75rem;
+    border-radius: 4px;
   }
-}
 
-.#{c.$prefix}-btn--secondary {
-  background: cv.get-var('button-secondary');
-  border-color: cv.get-var('button-secondary-border');
-  color: cv.get-var('text-on-color');
-}
+  .#{c.$prefix}-btn--md {
+    --btn-height: 2rem;
+    padding: 0 1rem;
+    border-radius: 4px;
+  }
 
-.#{c.$prefix}-btn--tertiary {
-  background: cv.get-var('button-tertiary');
-  border-color: cv.get-var('button-tertiary-border');
-  color: cv.get-var('button-primary');
-}
+  .#{c.$prefix}-btn--lg {
+    --btn-height: 2.5rem;
+    border-radius: 6px;
+  }
 
-.#{c.$prefix}-btn--danger {
-  background: cv.get-var('button-danger');
-  border-color: cv.get-var('button-danger-border');
-  color: cv.get-var('text-on-color');
-}
+  .#{c.$prefix}-btn--primary {
+    background: cv.get-var('button-primary');
+    border-color: cv.get-var('button-primary-border');
+    color: cv.get-var('text-on-color');
 
-.#{c.$prefix}-btn--ghost {
-  border-color: transparent;
-  background-color: transparent;
-}
+    &:hover {
+      background: cv.get-var('button-primary-hover');
+      border-color: cv.get-var('button-primary-border-hover');
+    }
 
-.#{c.$prefix}-btn--ghost:hover {
-  background: cv.get-var('background-hover');
-}
+    &:active {
+      background: cv.get-var('button-primary-active');
+      border-color: cv.get-var('button-primary-border-active');
+    }
+  }
 
-.#{c.$prefix}-btn--icon-only {
-  justify-content: center;
-  padding: 0;
-  inline-size: var(--btn-height);
-  block-size: var(--btn-height);
-}
+  .#{c.$prefix}-btn--secondary {
+    background: cv.get-var('button-secondary');
+    border-color: cv.get-var('button-secondary-border');
+    color: cv.get-var('text-on-color');
+  }
 
-.#{c.$prefix}-btn--icon-only svg {
-  min-inline-size: 1rem;
-  inline-size: 1rem;
-  block-size: 1rem;
-  color: cv.get-var('icon-primary');
+  .#{c.$prefix}-btn--tertiary {
+    background: cv.get-var('button-tertiary');
+    border-color: cv.get-var('button-tertiary-border');
+    color: cv.get-var('button-primary');
+  }
+
+  .#{c.$prefix}-btn--danger {
+    background: cv.get-var('button-danger');
+    border-color: cv.get-var('button-danger-border');
+    color: cv.get-var('text-on-color');
+  }
+
+  .#{c.$prefix}-btn--ghost {
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  .#{c.$prefix}-btn--ghost:hover {
+    background: cv.get-var('background-hover');
+  }
+
+  .#{c.$prefix}-btn--icon-only {
+    justify-content: center;
+    padding: 0;
+    inline-size: var(--btn-height);
+    block-size: var(--btn-height);
+  }
+
+  .#{c.$prefix}-btn--icon-only svg {
+    min-inline-size: 1rem;
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: cv.get-var('icon-primary');
+  }
 }

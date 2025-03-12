@@ -1,69 +1,70 @@
 @use '../config.scss' as c;
 
-// TODO: Finish tag component
+@layer components {
+  // TODO: Finish tag component
+  .#{c.$prefix}-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-small, 0.875rem);
+    border-radius: 4px;
+    font-weight: var(--font-weight-medium, 500);
+    white-space: nowrap;
+    user-select: none;
+    cursor: default;
+    background-color: red;
+  }
 
-.#{c.$prefix}-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  font-size: var(--font-size-small, 0.875rem);
-  border-radius: 4px;
-  font-weight: var(--font-weight-medium, 500);
-  white-space: nowrap;
-  user-select: none;
-  cursor: default;
-  background-color: red;
+  /* Sizes */
+  .#{c.$prefix}-tag--small {
+    font-size: var(--font-size-xsmall, 0.75rem);
+    block-size: 1.75rem;
+    padding: 0 0.5rem;
+    border-radius: 4px;
+  }
+
+  .#{c.$prefix}-tag--large {
+    font-size: var(--font-size-medium, 1rem);
+    block-size: 2.5rem;
+    padding: 0 1.25rem;
+    border-radius: 6px;
+  }
+
+  /* Variants */
+
+  /* Types */
+  // .#{c.$prefix}-tag--primary {
+  //   background-color: var(--#{c.$prefix}-tag-primary-bg);
+  //   color: var(--#{c.$prefix}-tag-primary-text);
+  // }
+
+  // .#{c.$prefix}-tag--secondary {
+  //   background-color: var(--#{c.$prefix}-tag-secondary-bg);
+  //   color: var(--#{c.$prefix}-tag-secondary-text);
+  // }
+
+  // .#{c.$prefix}-tag--success {
+  //   background-color: var(--#{c.$prefix}-tag-success-bg);
+  //   color: var(--#{c.$prefix}-tag-success-text);
+  // }
+
+  // .#{c.$prefix}-tag--warning {
+  //   background-color: var(--#{c.$prefix}-tag-warning-bg);
+  //   color: var(--#{c.$prefix}-tag-warning-text);
+  // }
+
+  // .#{c.$prefix}-tag--error {
+  //   background-color: var(--#{c.$prefix}-tag-error-bg);
+  //   color: var(--#{c.$prefix}-tag-error-text);
+  // }
+
+  /* Clickable Tags */
+  // .#{c.$prefix}-tag--clickable {
+  //   cursor: pointer;
+  //   transition: background-color 0.2s ease-in-out;
+  // }
+
+  // .#{c.$prefix}-tag--clickable:hover {
+  //   background-color: var(--#{c.$prefix}-tag-hover);
+  // }
 }
-
-/* Sizes */
-.#{c.$prefix}-tag--small {
-  font-size: var(--font-size-xsmall, 0.75rem);
-  block-size: 1.75rem;
-  padding: 0 0.5rem;
-  border-radius: 4px;
-}
-
-.#{c.$prefix}-tag--large {
-  font-size: var(--font-size-medium, 1rem);
-  block-size: 2.5rem;
-  padding: 0 1.25rem;
-  border-radius: 6px;
-}
-
-/* Variants */
-
-/* Types */
-// .#{c.$prefix}-tag--primary {
-//   background-color: var(--#{c.$prefix}-tag-primary-bg);
-//   color: var(--#{c.$prefix}-tag-primary-text);
-// }
-
-// .#{c.$prefix}-tag--secondary {
-//   background-color: var(--#{c.$prefix}-tag-secondary-bg);
-//   color: var(--#{c.$prefix}-tag-secondary-text);
-// }
-
-// .#{c.$prefix}-tag--success {
-//   background-color: var(--#{c.$prefix}-tag-success-bg);
-//   color: var(--#{c.$prefix}-tag-success-text);
-// }
-
-// .#{c.$prefix}-tag--warning {
-//   background-color: var(--#{c.$prefix}-tag-warning-bg);
-//   color: var(--#{c.$prefix}-tag-warning-text);
-// }
-
-// .#{c.$prefix}-tag--error {
-//   background-color: var(--#{c.$prefix}-tag-error-bg);
-//   color: var(--#{c.$prefix}-tag-error-text);
-// }
-
-/* Clickable Tags */
-// .#{c.$prefix}-tag--clickable {
-//   cursor: pointer;
-//   transition: background-color 0.2s ease-in-out;
-// }
-
-// .#{c.$prefix}-tag--clickable:hover {
-//   background-color: var(--#{c.$prefix}-tag-hover);
-// }
