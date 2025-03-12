@@ -61,13 +61,13 @@
 }
 
 .ror-sb-annotation--deprecation-notice {
-  --annotation-border-color: #fa4d56;
-  --annotation-color: #750e13;
-  --annotation-background: #fff1f1;
+  --annotation-border-color: #fc8083;
+  --annotation-color: #773638;
+  --annotation-background: #ffbebc;
 }
 
 .ror-sb-annotation--experimental {
-  --annotation-border-color: #009d9a;
-  --annotation-color: #004144;
-  --annotation-background: #d9fbfb;
+  --annotation-border-color: #e98d61;
+  --annotation-color: #6d3d26;
+  --annotation-background: #f4c3ac;
 }
