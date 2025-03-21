@@ -174,11 +174,14 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
   // Generate a text representing the slice of items displayed including the total number of items
   // .e.g. "Showing 11-20 of 100 items"
-  const itemRangeText = getItemRangeText({
-    pageIndex: currentPage,
-    pageSize: paginationPageSize,
-    max: totalCount,
-  })
+  const itemRangeText =
+    totalCount !== -1 && pageCount !== -1
+      ? getItemRangeText({
+          pageIndex: currentPage,
+          pageSize: paginationPageSize,
+          max: totalCount,
+        })
+      : null
 
   const numberOfColumns = table.getAllColumns().length.toString()
   const gridTemplateColumns = `repeat(${numberOfColumns}, minmax(max-content, 1fr))`

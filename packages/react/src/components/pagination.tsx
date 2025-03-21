@@ -15,7 +15,7 @@ export interface PaginationProps extends Omit<HTMLAttributes<HTMLDivElement>, Ex
    * Describe in your own words how many items are visible out of the total
    * e.g. "1-10 of total 100 pages"
    */
-  itemRangeText: string
+  itemRangeText?: string | null
 
   /**
    * Describe in your own words how many number of items per page that is visible

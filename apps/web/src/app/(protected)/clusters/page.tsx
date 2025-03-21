@@ -53,7 +53,12 @@ export default async function ClustersPage({ searchParams }: ClusterPageProps) {
     sort: params.sort ? [sortOptions] : [],
   }
 
+  console.log('clusters page -> requestOptions', requestOptions)
+
   const clustersResponse = await client.clusters.filter(requestOptions)
+  const clustersv2Response = await client.clusters.list()
+
+  console.log('clusters page -> clustersv2Response', clustersv2Response)
 
   // Set up pagination state for the table
   const paginationState = {

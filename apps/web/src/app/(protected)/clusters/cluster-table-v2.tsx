@@ -124,17 +124,10 @@ const dataTableColumns = [
 
 interface ClusterTableV2Props<T> {
   data: T[]
-  totalCount: number
-  pageCount: number
   pagination: DataTablePagination
 }
 
-export function ClustersTableV2<T extends ClusterV2>({
-  data,
-  totalCount,
-  pageCount,
-  pagination,
-}: ClusterTableV2Props<T>) {
+export function ClustersTableV2<T extends ClusterV2>({ data, pagination }: ClusterTableV2Props<T>) {
   const router = useRouter()
   const currentSearchParams = useSearchParams()
 
@@ -191,8 +184,8 @@ export function ClustersTableV2<T extends ClusterV2>({
       title='Clusters'
       subtitle='Data coming from the new v2/resources endpoint'
       data={data}
-      totalCount={totalCount}
-      pageCount={pageCount}
+      totalCount={-1}
+      pageCount={-1}
       columns={dataTableColumns}
       pagination={pagination}
       sorting={sortState}
