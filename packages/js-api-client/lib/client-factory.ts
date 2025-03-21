@@ -17,12 +17,19 @@ export function createApiClient(config: ApiClientConfig, middlewares: Middleware
   }
 
   function getHeaders(additionalHeaders?: HeadersInit): HeadersInit {
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${defaultConfig.accessToken}`,
-      ...defaultConfig.headers,
-      ...additionalHeaders,
+    const headers = new Headers()
+    headers.set('Content-Type', 'application/json')
+    headers.set('Authorization', `Bearer ${defaultConfig.accessToken}`)
+
+    if (additionalHeaders) {
+      Object.entries(additionalHeaders).forEach(([key, value]) => headers.set(key, value))
     }
+
+    if (defaultConfig.headers) {
+      Object.entries(defaultConfig.headers).forEach(([key, value]) => headers.set(key, value))
+    }
+
+    return headers
   }
 
   function buildUrl(path: string): string {

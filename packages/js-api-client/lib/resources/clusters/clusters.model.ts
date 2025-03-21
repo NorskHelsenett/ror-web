@@ -126,3 +126,138 @@ export const ClusterListItem = Cluster.extend({
     }),
   }),
 })
+
+/**
+ * Version 2
+ * This data model represent a cluster from the v2/resources endpoints
+ */
+
+/**
+ * Version 2
+ * This data model represent a cluster from the v2/resources endpoints
+ */
+
+// Define the Tag model
+const TagModel = z.object({
+  key: z.string(),
+  value: z.string(),
+})
+
+// Define the Owner Reference model
+const OwnerRefModel = z.object({
+  scope: z.string(),
+  subject: z.string(),
+})
+
+// Define the RorMeta model
+const RorMetaModel = z.object({
+  version: z.string(),
+  ownerref: OwnerRefModel,
+  tags: z.array(TagModel),
+})
+
+// Define the Kubernetes Metadata model
+const K8sMetadataModel = z.object({
+  name: z.string(),
+  creationTimestamp: z.string(),
+})
+
+// Define the Resource model
+const ResourceModel = z.object({
+  name: z.string(),
+  allocated: z.string(),
+  usage: z.string(),
+})
+
+// Define the NodePool model for spec
+const NodePoolSpecModel = z.object({
+  name: z.string(),
+  replicas: z.number(),
+  provider: z.string(),
+  machineClass: z.string(),
+  metadata: z.object({
+    labels: z.null(),
+    annotations: z.null(),
+  }),
+  storage: z.null(),
+})
+
+// Define the NodePool model for status
+const NodePoolStatusModel = z.object({
+  name: z.string(),
+  status: z.string(),
+  message: z.string(),
+})
+
+// Define the Version model
+const ComponentVersionModel = z.object({
+  component: z.string(),
+  version: z.string(),
+  branch: z.string().optional(),
+})
+
+// Define the ClusterV2 model
+export const ClusterV2Model = z
+  .object({
+    kind: z.string(),
+    apiVersion: z.string(),
+    metadata: K8sMetadataModel,
+    rormeta: RorMetaModel,
+    kubernetescluster: z.object({
+      spec: z.object({
+        data: z.object({
+          clusterId: z.string(),
+          provider: z.string(),
+          datacenter: z.string(),
+          region: z.string(),
+          zone: z.string(),
+          project: z.string(),
+          workspace: z.string(),
+          workorder: z.string(),
+          environment: z.string(),
+        }),
+        topology: z.object({
+          version: z.string(),
+          controlplane: z.object({
+            replicas: z.number(),
+            provider: z.string(),
+            machineClass: z.string(),
+            metadata: z.object({
+              labels: z.null(),
+              annotations: z.null(),
+            }),
+            storage: z.null(),
+          }),
+          workers: z.object({
+            nodePools: z.array(NodePoolSpecModel),
+          }),
+        }),
+      }),
+      status: z.object({
+        status: z.object({
+          cluster: z.object({
+            externalId: z.string(),
+            resources: z.array(ResourceModel),
+            controlplane: z.object({
+              status: z.string(),
+              message: z.string(),
+            }),
+            workers: z.object({
+              nodepools: z.array(NodePoolStatusModel),
+            }),
+          }),
+          versions: z.array(ComponentVersionModel),
+          'egress-ip': z.string(),
+          controlplaneendpoint: z.string(),
+          lastUpdated: z.string(),
+          lastUpdatedBy: z.string(),
+          created: z.string(),
+        }),
+        phase: z.string(),
+        conditions: z.null(),
+      }),
+    }),
+  })
+  .passthrough()
+
+export const ClusterV2ListModel = z.array(ClusterV2Model)

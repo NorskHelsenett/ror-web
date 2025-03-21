@@ -17,7 +17,6 @@ import { SortDirection } from '@ror/react/utils/sorting'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import type { ColumnDef, Header, PaginationState, SortingState } from '@tanstack/react-table'
 import { getItemRangeText } from './pagination'
-import { Fragment } from 'react'
 
 /**
  * DataTableColumnDef is a type that represents a column definition for a DataTable.
@@ -185,7 +184,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   const gridTemplateColumns = `repeat(${numberOfColumns}, minmax(max-content, 1fr))`
 
   return (
-    <Fragment>
+    <div>
       <TableContainer hasPagination>
         {title ? <TableTitle id='table-title'>{title}</TableTitle> : null}
         {subtitle ? <TableSubtitle id='table-subtitle'>{subtitle}</TableSubtitle> : null}
@@ -263,6 +262,6 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
         onBackwards={handleOnPaginationBackwards}
         onForwards={handleOnPaginationForwards}
       />
-    </Fragment>
+    </div>
   )
 }
