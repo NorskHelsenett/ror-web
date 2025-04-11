@@ -62,10 +62,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.accessToken = token.accessToken as string
       return session
     },
-    authorized: async ({ request, auth }) => {
-      if (request.method === 'POST') {
-        // If the request has a valid auth token, it is authorized
-        return validateAuthToken(auth)
+    authorized: async ({ auth }) => {
+      // If the request has a valid auth token, it is authorized
+      const validated = validateAuthToken(auth)
+      if (!validated) {
+        return false
       }
 
       // Logged in users are authenticated, otherwise redirect to login page

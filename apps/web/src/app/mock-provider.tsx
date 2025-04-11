@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, use } from 'react'
+import type { ReactNode } from 'react'
 import { handlers } from '@/__mocks__/handlers'
 import { onUnhandledRequest } from '@/__mocks__/utils/on-unhandled-request'
 
@@ -24,11 +25,14 @@ const mockingEnabledPromise =
       })
     : Promise.resolve()
 
-export function MSWProvider({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+interface MswProviderProps {
+  children: ReactNode
+}
+
+// We export an anonymous function in order to knowlingly break fast-refresg
+// @see https://github.com/mswjs/examples/pull/101#discussion_r1825856123
+// eslint-disable-next-line
+export default ({ children }: MswProviderProps) => {
   // If MSW is enabled, we need to wait for the worker to start,
   // so we wrap the children in a Suspense boundary until it's ready.
   return (
@@ -41,7 +45,7 @@ export function MSWProvider({
 function MSWProviderWrapper({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   use(mockingEnabledPromise)
   return children

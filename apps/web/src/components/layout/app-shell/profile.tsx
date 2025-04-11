@@ -1,11 +1,11 @@
-import { authGuard } from '@/features/auth/utils/auth-guard'
+import { getSession } from '@/features/auth/utils/auth-guard'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover'
 import s from './profile.module.scss'
 import Link from 'next/link'
 
 export async function Profile() {
-  const session = await authGuard()
+  const session = await getSession()
 
   if (!session?.user) return null
   if (session.user?.image && session.user.name) {

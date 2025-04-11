@@ -2,10 +2,8 @@
 
 import { ColorScheme, COLOR_SCHEME_COOKIE_KEY, validateColorScheme } from '@/utils/dark-mode'
 import { deleteSavedPreference, getSavedPreference, setSavedPreference } from '@/utils/cookies'
-import { authGuard } from '@/features/auth/utils/auth-guard'
 
 export async function saveDarkModePreferenceAction(value: ColorScheme) {
-  await authGuard()
   try {
     if (value === ColorScheme.System) {
       await deleteSavedPreference(COLOR_SCHEME_COOKIE_KEY)
