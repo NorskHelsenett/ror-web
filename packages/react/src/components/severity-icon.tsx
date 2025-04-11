@@ -47,6 +47,11 @@ export interface SeverityIconProps extends ComponentPropsWithoutRef<'div'> {
   label?: string
 
   /**
+   * Specify whether or not a label should be displayed
+   */
+  disableLabel?: boolean
+
+  /**
    * Specify the size of the Icon Indicator. Defaults to "md".
    */
   size?: 'sm' | 'md' | 'lg'
@@ -65,7 +70,14 @@ export interface SeverityIconProps extends ComponentPropsWithoutRef<'div'> {
  * - Low: 0.0 - 3.9
  * - None: 0.0 - 0.0
  */
-export function SeverityIcon({ className, score, label: overrideLabel, size = 'md', ...rest }: SeverityIconProps) {
+export function SeverityIcon({
+  className,
+  score,
+  label: overrideLabel,
+  disableLabel,
+  size = 'md',
+  ...rest
+}: SeverityIconProps) {
   const kind = getKind(score)
 
   const classes = clsx(
@@ -83,7 +95,7 @@ export function SeverityIcon({ className, score, label: overrideLabel, size = 'm
   return (
     <div className={classes} {...rest}>
       <IconForKind className='r-severity-icon__icon' />
-      <span className='r-severity-icon__label'>{label}</span>
+      {!disableLabel ? <span className='r-severity-icon__label'>{label}</span> : null}
     </div>
   )
 }
