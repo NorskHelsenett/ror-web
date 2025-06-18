@@ -80,7 +80,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  // Enhanced cookie configuration to be consistent across environments
+  // Simplified cookie configuration - let NextAuth handle naming
   cookies: {
     sessionToken: {
       name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
@@ -90,24 +90,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         path: '/',
         secure: process.env.NODE_ENV === 'production',
         maxAge: 30 * 24 * 60 * 60, // 30 days
-      },
-    },
-    // Add explicit configuration for other cookies to ensure consistency
-    callbackUrl: {
-      name: process.env.NODE_ENV === 'production' ? '__Secure-next-auth.callback-url' : 'next-auth.callback-url',
-      options: {
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      },
-    },
-    csrfToken: {
-      name: process.env.NODE_ENV === 'production' ? '__Host-next-auth.csrf-token' : 'next-auth.csrf-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
+        domain: process.env.NODE_ENV === 'production' ? undefined : undefined, // Let NextAuth auto-detect
       },
     },
   },
@@ -116,7 +99,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: '/auth-debug', // Redirect to our debug page on auth errors
   },
   callbacks: {
-    jwt({ token, account }) {
+    jwt({ token, account, user }) {
       // Only log during initial token creation or refresh
       if (account) {
         console.log('[NEXTAUTH] JWT callback with account:', {
@@ -147,9 +130,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const updatedToken = {
             ...token,
             accessToken: account.access_token,
-            // Add exp explicitly for easier access in middleware
-            exp: decodedAccessToken.exp,
-            sub: decodedAccessToken.sub,
+            // Use the token's exp or the decoded access token's exp
+            exp: token.exp || decodedAccessToken.exp,
+            sub: token.sub || decodedAccessToken.sub,
+            name: token.name || user?.name,
+            email: token.email || user?.email,
             tokenType: 'Bearer',
           }
 
@@ -158,7 +143,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         } catch (error) {
           console.error('[NEXTAUTH] Error decoding access token:', error)
           // Still return the token with the access token but without decoded properties
-          return { ...token, accessToken: account.access_token }
+          return {
+            ...token,
+            accessToken: account.access_token,
+            name: token.name || user?.name,
+            email: token.email || user?.email,
+          }
         }
       }
       return token
@@ -181,26 +171,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.accessToken = token.accessToken as string
 
       // Add user information if available
-      if (token.sub && !session.user) {
-        session.user = {
-          id: token.sub as string,
-          name: (token.name as string) || (token.sub as string),
-          email: token.email as string,
-          // Add required properties for type compatibility
-          emailVerified: null,
-          image: null,
-        }
+      if (token.sub && session.user) {
+        session.user.id = token.sub as string
+        session.user.name = session.user.name || (token.name as string) || (token.sub as string)
+        session.user.email = session.user.email || (token.email as string)
       }
 
       return session
     },
     authorized: async ({ request, auth }) => {
+      // Don't run authorization on auth API routes
+      if (request.nextUrl.pathname.startsWith('/api/auth')) {
+        return true
+      }
+
       if (request.method === 'POST') {
-        // If the request has a valid auth token, it is authorized
+        // If it's a POST request, validate the auth token
         return validateAuthToken(auth)
       }
 
-      // Logged in users are authenticated, otherwise redirect to login page
+      // For GET requests, just check if user exists
       return !!auth?.user
     },
   },

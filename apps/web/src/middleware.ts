@@ -11,9 +11,6 @@ interface DecodedToken {
   [key: string]: string | number | boolean | undefined
 }
 
-// For debugging use
-const isDev = process.env.NODE_ENV !== 'production'
-
 // Debug route patterns that should bypass authentication
 const debugRoutes = ['/sign-in', '/sign-in-debug', '/auth-debug', '/api/auth']
 
@@ -22,107 +19,64 @@ export async function middleware(req: NextRequest) {
 
   // Log middleware execution context
   console.log(`[MIDDLEWARE] Running for path: ${path}`)
-  console.log(`[MIDDLEWARE] Environment: ${process.env.NODE_ENV}`)
 
-  // Skip auth for debug routes
-  if (isDev && debugRoutes.some((route) => path.startsWith(route))) {
-    console.log(`[MIDDLEWARE] Bypassing auth for debug route: ${path}`)
+  // Skip auth for debug routes and API routes
+  if (debugRoutes.some((route) => path.startsWith(route))) {
+    console.log(`[MIDDLEWARE] Bypassing auth for route: ${path}`)
     return NextResponse.next()
   }
 
-  // Check if cookies exist before trying to get token
-  const sessionCookie =
-    req.cookies.get('next-auth.session-token') || req.cookies.get('__Secure-next-auth.session-token')
-
-  console.log(`[MIDDLEWARE] Cookie check:`, {
-    hasCookie: !!sessionCookie,
-    cookieName: sessionCookie?.name,
-    isSecure: sessionCookie?.name?.startsWith('__Secure'),
-  })
-
-  // Environment-specific configuration
-  const getTokenOptions = {
+  // Try to get token with simplified configuration
+  const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === 'production',
-  }
-
-  console.log(`[MIDDLEWARE] Getting token with options:`, {
-    hasSecret: !!(process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET),
-    secureCookie: getTokenOptions.secureCookie,
+    // Let NextAuth handle cookie detection automatically
   })
-
-  // Enhanced debugging in dev mode
-  if (isDev) {
-    console.log(`[MIDDLEWARE] Raw cookies:`, {
-      all: Object.fromEntries(req.cookies.getAll().map((c) => [c.name, c.value])),
-    })
-  }
-
-  // Try to get token from request with explicit cookie handling
-  const tokenOptions = {
-    ...getTokenOptions,
-    cookieName: sessionCookie?.name, // Use the exact cookie name we found
-  }
-
-  console.log(`[MIDDLEWARE] Getting token with updated options:`, {
-    ...tokenOptions,
-    cookieName: tokenOptions.cookieName,
-  })
-
-  const token = await getToken(tokenOptions)
 
   if (!token) {
     console.log(`[MIDDLEWARE] No token found, redirecting to sign-in`)
     return NextResponse.redirect(`${req.nextUrl.origin}/sign-in`)
   }
 
-  console.log(`[MIDDLEWARE] Token exists with properties:`, Object.keys(token))
+  console.log(`[MIDDLEWARE] Token exists, validating...`)
 
   try {
-    console.log(`[MIDDLEWARE] Token format validation:`, {
-      hasAccessToken: 'accessToken' in token,
-      accessTokenType: typeof token.accessToken,
-      hasExpField: 'exp' in token,
-    })
+    // Check if token has valid expiration
+    if (token.exp && typeof token.exp === 'number') {
+      const currentTime = Date.now()
+      const expirationTime = token.exp * 1000
 
-    let expirationTime: number
-    let tokenToValidate: string | null = null
+      console.log(`[MIDDLEWARE] Token expiration check:`, {
+        currentTime: new Date(currentTime).toISOString(),
+        expirationTime: new Date(expirationTime).toISOString(),
+        isExpired: currentTime >= expirationTime,
+        timeRemaining: `${Math.floor((expirationTime - currentTime) / 1000)}s`,
+      })
 
-    if (typeof token.accessToken === 'string') {
-      tokenToValidate = token.accessToken
-      console.log(`[MIDDLEWARE] Using accessToken string from token`)
-    } else if ('exp' in token && typeof token.exp === 'number') {
-      expirationTime = (token.exp as number) * 1000
-      console.log(`[MIDDLEWARE] Using token's own exp field: ${token.exp}`)
-    } else {
-      console.log(`[MIDDLEWARE] Invalid token format - neither accessToken string nor exp field found`)
-      return NextResponse.redirect(`${req.nextUrl.origin}/sign-in`)
-    }
-
-    if (tokenToValidate) {
-      const decodedToken = jwtDecode<DecodedToken>(tokenToValidate)
-
-      if (!decodedToken.exp) {
-        console.log(`[MIDDLEWARE] Token missing exp claim`)
+      if (currentTime >= expirationTime) {
+        console.log(`[MIDDLEWARE] Token expired, redirecting to sign-in`)
         return NextResponse.redirect(`${req.nextUrl.origin}/sign-in`)
       }
-
-      expirationTime = decodedToken.exp * 1000
-      console.log(`[MIDDLEWARE] Decoded token exp: ${decodedToken.exp}`)
     }
 
-    const currentTime = Date.now()
-    console.log(`[MIDDLEWARE] Token expiration:`, {
-      currentTime: new Date(currentTime).toISOString(),
-      expirationTime: new Date(expirationTime!).toISOString(),
-      isExpired: currentTime >= expirationTime!,
-      timeRemaining: `${Math.floor((expirationTime! - currentTime) / 1000)}s`,
-    })
+    // If we have an accessToken, validate it as well
+    if (token.accessToken && typeof token.accessToken === 'string') {
+      try {
+        const decodedToken = jwtDecode<DecodedToken>(token.accessToken)
 
-    if (currentTime >= expirationTime!) {
-      console.log(`[MIDDLEWARE] Token expired, redirecting to sign-in`)
-      return NextResponse.redirect(`${req.nextUrl.origin}/sign-in`)
+        if (decodedToken.exp) {
+          const currentTime = Date.now()
+          const expirationTime = decodedToken.exp * 1000
+
+          if (currentTime >= expirationTime) {
+            console.log(`[MIDDLEWARE] Access token expired, redirecting to sign-in`)
+            return NextResponse.redirect(`${req.nextUrl.origin}/sign-in`)
+          }
+        }
+      } catch (error) {
+        console.warn(`[MIDDLEWARE] Could not decode access token, but continuing:`, error)
+        // Don't fail here - the main session token is still valid
+      }
     }
   } catch (error) {
     console.error(`[MIDDLEWARE] Error processing token:`, error)
