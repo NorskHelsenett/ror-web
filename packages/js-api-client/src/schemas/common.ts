@@ -23,7 +23,6 @@ export const V2ResourceSchema = z.object({
   apiVersion: z.string(),
   metadata: ResourceMetaDataSchema,
   rormeta: RorMetaDataSchema,
-  resources: z.any().optional(),
 })
 
 /**
@@ -34,12 +33,9 @@ export const V2ResourceSchema = z.object({
  *
  */
 export function createV2ResourceResponseSchema<T extends z.ZodType>(schema: T) {
-  return z
-    .object({
-      resources: z.array(schema),
-    })
-    .nullable()
+  return z.array(schema).nullable()
 }
+
 /**
  * Create a Zod schema for pagination response
  *
