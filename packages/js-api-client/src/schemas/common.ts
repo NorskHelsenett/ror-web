@@ -23,6 +23,7 @@ export const V2ResourceSchema = z.object({
   apiVersion: z.string(),
   metadata: ResourceMetaDataSchema,
   rormeta: RorMetaDataSchema,
+  resources: z.any().optional(),
 })
 
 /**
