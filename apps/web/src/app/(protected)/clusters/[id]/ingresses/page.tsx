@@ -24,7 +24,7 @@ export default async function ClusterIngressesPage({ params }: ClusterIngressesP
   ]
   const listParams = new URLSearchParams([['filter', JSON.stringify(ingressFilter)]])
   const clusterIngresses = await client.ingresses.list(listParams)
-  const ingresses = clusterIngresses?.resources ?? []
+  const ingresses = clusterIngresses ?? []
 
   if (!ingresses) {
     return <div>No ingresses found</div>

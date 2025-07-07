@@ -21,7 +21,7 @@ export default async function NodesPage({ params }: NodesPageProps) {
   const client = rorApiClient(session.accessToken)
 
   const response = await client.nodes.listByCluster(id)
-  const nodes = response?.resources ?? []
+  const nodes = response ?? []
   console.log(nodes) // TODO: remove later, needed to build
 
   return (
