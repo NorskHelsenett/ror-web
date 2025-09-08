@@ -45,6 +45,8 @@ export const createKubernetesClusterService = (request: (requestOptions: Request
     params.set('apiversion', 'general.ror.internal/v1alpha1')
     params.set('kind', 'KubernetesCluster')
 
+    console.log('[KubernetesClusterService] Params:', params.toString())
+
     const responseSchema = z.object({
       resources: z.array(KubernetesClusterSchema),
     })
@@ -54,7 +56,13 @@ export const createKubernetesClusterService = (request: (requestOptions: Request
       path: '/v2/resources',
       params,
     })
-    return validateResponse(response, responseSchema)
+    console.log('[KubernetesClusterService] API response:', response)
+    try {
+      return validateResponse(response, responseSchema)
+    } catch (error) {
+      console.error('[KubernetesClusterService] Validation error:', error)
+      throw error
+    }
   },
   id: async (id: string) => {
     try {

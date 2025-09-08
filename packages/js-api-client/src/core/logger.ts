@@ -58,11 +58,18 @@ export function logValidationError(error: ValidationError, data: unknown) {
   if (error instanceof ZodError) {
     const zodErr = error as ZodError
     messageArray = zodErr.issues.map((e) => {
-      const path = e.path.join('.') || '(root)'
+      const path = e.path.length ? e.path.join('.') : '(root)'
       return `${path} - ${e.message}`
     })
   } else if ('validationErrors' in error && error.validationErrors) {
-    messageArray = Object.entries(error.validationErrors).map(([key, value]) => `${key}: ${value}`)
+    messageArray = Object.entries(error.validationErrors).map(
+      ([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`
+    )
   }
-  console.error('[@ror/js-api-client] ValidationError', '\nMessages:', messageArray, '\nData:', data)
+  console.error(
+    '[@ror/js-api-client] ValidationError\nMessages:\n' +
+      messageArray.join('\n') +
+      '\nData:\n' +
+      JSON.stringify(data, null, 2)
+  )
 }
