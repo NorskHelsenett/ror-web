@@ -1,3 +1,4 @@
+import { ZodError } from 'zod'
 import { isApiError, ValidationError } from './errors'
 
 interface ErrorInfo {
@@ -53,10 +54,15 @@ export function logApiError(
 
 export function logValidationError(error: ValidationError, data: unknown) {
   let messageArray: string[] = []
-  const messages = Object.entries(error.validationErrors).reduce((acc, [key, value]) => {
-    acc.push(`${key}: ${value}`)
-    return acc
-  }, messageArray)
 
-  console.error(`[@ror/js-api-client] ValidationError`, messages, data)
+  if (error instanceof ZodError) {
+    const zodErr = error as ZodError
+    messageArray = zodErr.issues.map((e) => {
+      const path = e.path.join('.') || '(root)'
+      return `${path} - ${e.message}`
+    })
+  } else if ('validationErrors' in error && error.validationErrors) {
+    messageArray = Object.entries(error.validationErrors).map(([key, value]) => `${key}: ${value}`)
+  }
+  console.error('[@ror/js-api-client] ValidationError', '\nMessages:', messageArray, '\nData:', data)
 }
