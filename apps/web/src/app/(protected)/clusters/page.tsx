@@ -39,7 +39,7 @@ export default async function ClustersPage({
 
   // ---- Coerce URL params (single source of truth) ----
   const page = Number(sp.page ?? '1') || 1
-  const limit = Number(sp.limit ?? '42') || 42
+  const limit = Number(sp.limit ?? '41') || 41
   const sort = typeof sp.sort === 'string' ? sp.sort : undefined
   const order: 'asc' | 'desc' = sp.order === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = sp.view === 'list' ? 'list' : 'grid'
