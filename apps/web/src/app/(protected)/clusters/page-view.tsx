@@ -714,6 +714,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { createApiClient } from '@ror/js-api-client'
 import { env } from '@/config/env'
 import { clustersVersion2 } from '@/__mocks__/data/clusters'
@@ -831,6 +832,8 @@ const idOf = (c: KubernetesCluster) => c.kubernetescluster?.spec?.data?.clusterI
 const idsKey = (arr: KubernetesCluster[]) => arr.map(idOf).join('|')
 
 export const PageView = ({ className, user, clusters, params }: PageViewProps) => {
+  // Get NextAuth session (client-side)
+  const { data: session } = useSession()
   const DEFAULT_LIMIT = 3
   const DEFAULT_PAGE = 1
 
@@ -859,15 +862,14 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
   }, [clusters])
 
   // --- js-api-client integration ---
-  // Import at top: import { createApiClient } from '@ror/js-api-client'
-  // You need a valid accessToken and baseUrl (can be env or context)
-  const apiClient = useMemo(() => {
+  // Always use the latest accessToken from NextAuth session
+  const getApiClient = useCallback(() => {
     if (typeof window === 'undefined') return null
     return createApiClient({
       baseUrl: env.NEXT_PUBLIC_ROR_API_URL,
-      accessToken: window.localStorage.getItem('accessToken') || '',
+      accessToken: session?.accessToken || '',
     })
-  }, [])
+  }, [session?.accessToken])
 
   const fetchMoreClusters = useCallback(
     async ({ offset, limit }: { offset: number; limit: number }) => {
@@ -881,6 +883,7 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
           data = { resources: clustersVersion2.resources.slice(offset, offset + limit) as KubernetesCluster[] }
         } else {
           // Use real API client
+          const apiClient = getApiClient()
           if (!apiClient) return
           const params = new URLSearchParams({
             offset: String(offset),
@@ -906,7 +909,7 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
         inFlightRef.current = false
       }
     },
-    [isLoading, hasMore, apiClient]
+    [isLoading, hasMore, getApiClient]
   )
 
   // observe sentinel once per items.length / flags change
