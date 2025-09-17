@@ -226,7 +226,7 @@ export default async function ClustersPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Clusters' />
-      <PageView clusters={mergedClusters} params={params} />
+      <PageView user={user} clusters={mergedClusters} params={params} />
     </div>
   )
 }
