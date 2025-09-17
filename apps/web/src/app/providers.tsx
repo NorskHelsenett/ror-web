@@ -6,6 +6,8 @@ import { cookies } from 'next/headers'
 import { ReactNode } from 'react'
 import { MSWProvider } from './mock-provider'
 import { Toaster } from 'sonner'
+import { SessionProvider } from 'next-auth/react'
+import { auth } from '@/config/next-auth'
 
 interface ProvidersProps {
   children: ReactNode
@@ -20,16 +22,19 @@ export async function Providers({ children }: ProvidersProps) {
   const colorScheme = await getDarkModePreferenceAction()
   const cookieStore = await cookies()
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true'
+  const session = await auth()
 
   return (
-    <MSWProvider>
-      <ColorSchemeProvider>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          {colorScheme ? <AppSidebar colorScheme={colorScheme} /> : null}
-          <main className='w-full'>{children}</main>
-          <Toaster richColors position='bottom-right' theme={colorScheme} />
-        </SidebarProvider>
-      </ColorSchemeProvider>
-    </MSWProvider>
+    <SessionProvider session={session}>
+      <MSWProvider>
+        <ColorSchemeProvider>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            {colorScheme ? <AppSidebar colorScheme={colorScheme} /> : null}
+            <main className='w-full'>{children}</main>
+            <Toaster richColors position='bottom-right' theme={colorScheme} />
+          </SidebarProvider>
+        </ColorSchemeProvider>
+      </MSWProvider>
+    </SessionProvider>
   )
 }
