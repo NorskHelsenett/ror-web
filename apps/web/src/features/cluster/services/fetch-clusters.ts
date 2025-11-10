@@ -37,6 +37,14 @@ export async function fetchClusters(
     order: 'asc' | 'desc'
   }
 ) {
+  console.log('🚀 [fetchClusters] Starting cluster fetch with params:', {
+    page: params.page,
+    limit: params.limit,
+    sort: params.sort,
+    order: params.order,
+    timestamp: new Date().toISOString(),
+  })
+
   const skip = (params.page - 1) * params.limit
 
   // v2
@@ -44,16 +52,58 @@ export async function fetchClusters(
   listParams.set('limit', String(params.limit))
   listParams.set('offset', String(skip))
   if (params.sort) listParams.set('sort', params.sort)
+
+  console.log('📡 [fetchClusters] V2 API call parameters:', {
+    limit: listParams.get('limit'),
+    offset: listParams.get('offset'),
+    sort: listParams.get('sort'),
+    fullParams: listParams.toString(),
+  })
+
   const v2 = api.kubernetesClusters.list(listParams)
 
   // v1
   const sortOptions = params.sort ? [{ sortField: params.sort, sortOrder: params.order === 'asc' ? 1 : -1 }] : []
+
+  console.log('📡 [fetchClusters] V1 API call parameters:', {
+    limit: params.limit,
+    skip,
+    sortOptions,
+  })
+
   const v1 = api.kubernetesClusters.filter({ limit: params.limit, skip, sort: sortOptions })
 
   const [v2response, v1response] = await Promise.all([v2, v1])
 
+  const v2Clusters = v2response?.resources ?? []
+  const v1Clusters = v1response?.data ?? []
+
+  console.log('✅ [fetchClusters] API responses received:', {
+    v2ClustersCount: v2Clusters.length,
+    v1ClustersCount: v1Clusters.length,
+    v2HasResources: !!v2response?.resources,
+    v1HasData: !!v1response?.data,
+    v2FirstCluster: v2Clusters[0] ? (v2Clusters[0].metadata?.name ?? 'unnamed') : 'No V2 clusters',
+    v1FirstCluster: v1Clusters[0] ? (v1Clusters[0].clusterName ?? 'unnamed') : 'No V1 clusters',
+    v2Sample: v2Clusters.slice(0, 3).map((cluster) => ({
+      name: cluster.metadata?.name,
+      uid: cluster.metadata?.uid,
+    })),
+    v1Sample: v1Clusters.slice(0, 3).map((cluster) => ({
+      name: cluster.clusterName,
+      id: cluster.clusterId,
+    })),
+  })
+
+  if (v2Clusters.length === 0 && v1Clusters.length === 0) {
+    console.warn('⚠️ [fetchClusters] No clusters returned from either API. Raw responses:', {
+      v2response,
+      v1response,
+    })
+  }
+
   return {
-    v2Clusters: v2response?.resources ?? [],
-    v1Clusters: v1response?.data ?? [],
+    v2Clusters: v2Clusters,
+    v1Clusters: v1Clusters,
   }
 }

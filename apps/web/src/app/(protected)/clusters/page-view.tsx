@@ -95,6 +95,13 @@ interface PageViewProps {
  * @returns The rendered page view component.
  */
 export const PageView = ({ className, user, clusters, params }: PageViewProps) => {
+  console.log('🔵 [Cluster PageView] Initial render:', {
+    totalClustersReceived: clusters?.length ?? 0,
+    params,
+    firstClusterName: clusters?.[0] ? getClusterName(clusters[0]) : 'No clusters',
+    clusterIds: clusters?.slice(0, 3).map((cluster) => getClusterId(cluster)) ?? [],
+  })
+
   // Filter state
   const filtersOpen = params.filters === 'open'
 
@@ -106,16 +113,33 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
     getItemId: getClusterId,
     getItemsKey: getClustersKey,
     loadMore: async (offset, limit) => {
+      console.log('🔄 [Cluster PageView] Loading more clusters:', { offset, limit, sort: params.sort })
       const res = await loadMoreClusters({ offset, limit, sort: params.sort })
+      console.log('✅ [Cluster PageView] Loaded additional clusters:', {
+        newItemsCount: res.items?.length ?? 0,
+        hasMore: res.hasMore,
+        newItemIds: res.items?.slice(0, 3).map((cluster) => getClusterId(cluster)) ?? [],
+      })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
   // Clusters valid after filtering and searching
-  const safeItems = useMemo(
-    () => items.filter((c) => c.kubernetescluster?.spec?.data && typeof c.kubernetescluster.spec.data === 'object'),
-    [items]
-  )
+  const safeItems = useMemo(() => {
+    const filtered = items.filter(
+      (c) => c.kubernetescluster?.spec?.data && typeof c.kubernetescluster.spec.data === 'object'
+    )
+    console.log('🛡️ [Cluster PageView] Safe items filtering:', {
+      totalItems: items.length,
+      safeItemsCount: filtered.length,
+      filteredOut: items.length - filtered.length,
+      safeItemIds: filtered.slice(0, 5).map((cluster) => getClusterId(cluster)),
+    })
+    if (items.length > 0 && filtered.length === 0) {
+      console.warn('⚠️ [Cluster PageView] All clusters were filtered out! First item structure:', items[0])
+    }
+    return filtered
+  }, [items])
 
   // Cluster filters, display data and search result
   const filterDefinitions = [
@@ -143,9 +167,26 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
     safeItems,
     filterDefinitions
   )
+
+  console.log('🔍 [Cluster PageView] Filtering applied:', {
+    safeItemsCount: safeItems.length,
+    selectedFilters,
+    filteredItemsCount: filteredItems.length,
+    filteredOut: safeItems.length - filteredItems.length,
+    filteredItemIds: filteredItems.slice(0, 5).map((cluster) => getClusterId(cluster)),
+  })
+
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<ClusterCardDisplayData>('clusters')
   const [searchResults, setSearchResults] = useState<KubernetesCluster[]>(safeItems)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
+
+  console.log('📊 [Cluster PageView] Sorting applied:', {
+    filteredItemsCount: filteredItems.length,
+    sortKey: params.sort,
+    sortOrder: params.order,
+    sortedItemsCount: sortedItems.length,
+    sortedItemIds: sortedItems.slice(0, 5).map((cluster) => getClusterId(cluster)),
+  })
 
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) =>
@@ -182,9 +223,31 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
   const toggleSortParams = useMemo(() => buildSortParams(params, 'clusters'), [params])
 
   const displayedItems = useMemo(() => {
-    if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getClusterId))
-    return sortedItems.filter((c) => ids.has(getClusterId(c)))
+    let result
+    if (!searchResults?.length) {
+      result = sortedItems
+      console.log('🎯 [Cluster PageView] No search results, using sortedItems:', {
+        sortedItemsCount: sortedItems.length,
+        displayedCount: result.length,
+      })
+    } else {
+      const ids = new Set(searchResults.map(getClusterId))
+      result = sortedItems.filter((c) => ids.has(getClusterId(c)))
+      console.log('🔎 [Cluster PageView] Search applied, filtering sortedItems:', {
+        sortedItemsCount: sortedItems.length,
+        searchResultsCount: searchResults.length,
+        displayedCount: result.length,
+        searchResultIds: searchResults.slice(0, 3).map((cluster) => getClusterId(cluster)),
+        finalDisplayedIds: result.slice(0, 3).map((cluster) => getClusterId(cluster)),
+      })
+    }
+
+    console.log('🎬 [Cluster PageView] Final displayed items:', {
+      count: result.length,
+      itemIds: result.slice(0, 5).map((cluster) => getClusterId(cluster)),
+    })
+
+    return result
   }, [sortedItems, searchResults])
 
   // Grid and table view

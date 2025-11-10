@@ -56,6 +56,13 @@ import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
+  console.log('🔵 [VM PageView] Initial render:', {
+    totalVmsReceived: vms?.length ?? 0,
+    params,
+    firstVmHostname: vms?.[0] ? getVmHostName(vms[0]) : 'No VMs',
+    vmIds: vms?.slice(0, 3).map((vm) => getVmUniqueKey(vm)) ?? [],
+  })
+
   const filtersOpen = params.filters === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine>({
@@ -65,11 +72,17 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     getItemId: getVmUniqueKey,
     getItemsKey: getVmsKey,
     loadMore: async (offset, limit) => {
+      console.log('🔄 [VM PageView] Loading more VMs:', { offset, limit, sort: params.sort, order: params.order })
       const res = await loadMoreVMs({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
+      })
+      console.log('✅ [VM PageView] Loaded additional VMs:', {
+        newItemsCount: res.items?.length ?? 0,
+        hasMore: res.hasMore,
+        newItemIds: res.items?.slice(0, 3).map((vm) => getVmUniqueKey(vm)) ?? [],
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -77,10 +90,19 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   //const sentinelRef = useRef<HTMLDivElement>(null)
 
-  const safeItems = useMemo(
-    () => items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
-    [items]
-  )
+  const safeItems = useMemo(() => {
+    const filtered = items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object')
+    console.log('🛡️ [VM PageView] Safe items filtering:', {
+      totalItems: items.length,
+      safeItemsCount: filtered.length,
+      filteredOut: items.length - filtered.length,
+      safeItemIds: filtered.slice(0, 5).map((vm) => getVmUniqueKey(vm)),
+    })
+    if (items.length > 0 && filtered.length === 0) {
+      console.warn('⚠️ [VM PageView] All VMs were filtered out! First item structure:', items[0])
+    }
+    return filtered
+  }, [items])
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine) => getVmPowerState(vm) },
@@ -101,9 +123,26 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     safeItems,
     filterDefinitions
   )
+
+  console.log('🔍 [VM PageView] Filtering applied:', {
+    safeItemsCount: safeItems.length,
+    selectedFilters,
+    filteredItemsCount: filteredItems.length,
+    filteredOut: safeItems.length - filteredItems.length,
+    filteredItemIds: filteredItems.slice(0, 5).map((vm) => getVmUniqueKey(vm)),
+  })
+
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<VMCardData>('vms')
   const [searchResults, setSearchResults] = useState<VirtualMachine[]>(safeItems)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
+
+  console.log('📊 [VM PageView] Sorting applied:', {
+    filteredItemsCount: filteredItems.length,
+    sortKey: params.sort,
+    sortOrder: params.order,
+    sortedItemsCount: sortedItems.length,
+    sortedItemIds: sortedItems.slice(0, 5).map((vm) => getVmUniqueKey(vm)),
+  })
   //const filterOptions = useMemo(() => generateFilterOptions(safeItems), [safeItems])
 
   // Handler for display data changes
@@ -144,9 +183,31 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
   const displayedItems = useMemo(() => {
-    if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getVmUniqueKey))
-    return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+    let result
+    if (!searchResults?.length) {
+      result = sortedItems
+      console.log('🎯 [VM PageView] No search results, using sortedItems:', {
+        sortedItemsCount: sortedItems.length,
+        displayedCount: result.length,
+      })
+    } else {
+      const ids = new Set(searchResults.map(getVmUniqueKey))
+      result = sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+      console.log('🔎 [VM PageView] Search applied, filtering sortedItems:', {
+        sortedItemsCount: sortedItems.length,
+        searchResultsCount: searchResults.length,
+        displayedCount: result.length,
+        searchResultIds: searchResults.slice(0, 3).map((vm) => getVmUniqueKey(vm)),
+        finalDisplayedIds: result.slice(0, 3).map((vm) => getVmUniqueKey(vm)),
+      })
+    }
+
+    console.log('🎬 [VM PageView] Final displayed items:', {
+      count: result.length,
+      itemIds: result.slice(0, 5).map((vm) => getVmUniqueKey(vm)),
+    })
+
+    return result
   }, [sortedItems, searchResults])
 
   const renderControls = () => (
