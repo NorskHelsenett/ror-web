@@ -77,6 +77,21 @@ const createTabNavigationItems = (clusterId: string) => {
 
 // TODO: Add async when we are back to using api
 // export default async function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
+
+/**
+ * Layout component for the Cluster page.
+ *
+ * This component is responsible for:
+ * - Fetching the cluster ID from the provided `params` prop.
+ * - Retrieving the selected cluster data from localStorage.
+ * - Providing the cluster context to its children.
+ * - Rendering the cluster header, navigation tabs, and a development notice.
+ * - Displaying a loading message while the cluster data is being loaded.
+ *
+ * @param params - A promise that resolves to an object containing the cluster ID.
+ * @param children - The child components to be rendered within the layout.
+ * @returns The layout for the cluster page, including context and navigation.
+ */
 export default function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
   // TODO: Add back when we are back to using api
   // const { id } = await params
@@ -102,9 +117,7 @@ export default function ClusterPageLayout({ params, children }: ClusterPageLayou
   return (
     <ClusterProvider value={clusterContextValue}>
       <Fragment>
-        <div className='border-b'>
-          <ClusterHeader tabs={tabs} />
-        </div>
+        <ClusterHeader tabs={tabs} />
         <NotReadyMessage className='mx-6 mt-8'>
           The page is still under development, so some data and functionality is missing.
         </NotReadyMessage>

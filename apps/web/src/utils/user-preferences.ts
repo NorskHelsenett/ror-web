@@ -2,18 +2,20 @@
 
 import { z } from 'zod'
 
-const clusterCardSchema = z.object({
-  layouts: z.record(z.string(), z.array(z.any())),
+const cardSchema = z.object({
+  layouts: z.record(z.string(), z.array(z.any())).default({}),
 })
 
 const userPreferencesSchema = z.object({
-  key: z.string(),
-  language: z.enum(['en', 'nb']),
-  darkMode: z.boolean(),
-  clusterCards: clusterCardSchema,
+  key: z.string().default('user-preferences'),
+  language: z.enum(['en', 'nb']).default('en'),
+  darkMode: z.boolean().default(false),
+  clusterCards: cardSchema.default({ layouts: {} }),
+  vmDetails: cardSchema.default({ layouts: {} }),
 })
 
-export type ClusterCard = z.infer<typeof clusterCardSchema>
+export type ClusterCard = z.infer<typeof cardSchema>
+export type VMDetails = z.infer<typeof cardSchema>
 export type Preferences = z.infer<typeof userPreferencesSchema>
 
 function getInitialDarkMode(): boolean {
@@ -29,6 +31,7 @@ export const DEFAULT_USERPREFERENCES: Preferences = {
   language: 'nb',
   darkMode: getInitialDarkMode(),
   clusterCards: {} as ClusterCard,
+  vmDetails: {} as VMDetails,
 }
 
 /**
