@@ -50,7 +50,7 @@
     "lucide-react": "0.503.0",
     "motion": "12.23.26",
     "next": "15.2.8",
-    "next-auth": "4.24.11",
+    "next-auth": "4.24.12",
     "next-runtime-env": "^3.0.0",
     "radash": "12.1.0",
     "react-grid-layout": "1.5.1",
