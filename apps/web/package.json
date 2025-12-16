@@ -49,7 +49,7 @@
     "jwt-decode": "4.0.0",
     "lucide-react": "0.503.0",
     "motion": "12.23.26",
-    "next": "15.2.8",
+    "next": "15.4.10",
     "next-auth": "4.24.11",
     "next-runtime-env": "^3.0.0",
     "radash": "12.1.0",
