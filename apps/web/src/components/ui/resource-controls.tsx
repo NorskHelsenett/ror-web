@@ -193,6 +193,15 @@ export function ResourceControls<T>({
           </Link>
         )}
 
+        {domain === 'vms' && (
+          <Link href={`/vms/new-vm`}>
+            <Button>
+              <Plus />
+              Create VM
+            </Button>
+          </Link>
+        )}
+
         <Button
           type='button'
           onClick={handleRefreshFilters}

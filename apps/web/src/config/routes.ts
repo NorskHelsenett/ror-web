@@ -126,6 +126,10 @@ export const routes = {
       label: 'Virtual machine',
       getHref: (id: string) => `/vms/${id}`,
     },
+    createVm: {
+      label: 'Create VM',
+      getHref: () => '/vms/create-vm',
+    },
     vmRawData: {
       label: 'Raw data',
       getHref: (id: string) => `/vms/${id}/raw-data`,
