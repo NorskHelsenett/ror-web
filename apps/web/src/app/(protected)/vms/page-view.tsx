@@ -58,8 +58,25 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
+import { useSearchParams } from 'next/navigation'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
+  const searchParams = useSearchParams()
+  const isCreating = searchParams.get('creating-vm') === 'true'
+  const [showCreatingBanner, setShowCreatingBanner] = useState(isCreating)
+  const [dots, setDots] = useState('.')
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => {
+        if (prev === '...') return '.'
+        return prev + '.'
+      })
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [])
+
   const filtersOpen = params.filters === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
@@ -177,6 +194,17 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     clearUrl()
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
+  useEffect(() => {
+    if (!isCreating) return
+
+    const timer = setTimeout(() => {
+      setShowCreatingBanner(false)
+      router.replace(pathname, { scroll: false })
+    }, 10000)
+
+    return () => clearTimeout(timer)
+  }, [isCreating, pathname, router])
+
   // ---------- Toggle/Sort params ----------
   const toggleParams = useMemo(() => buildToggledParams(params, 'filters', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
@@ -273,11 +301,19 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         />
       </div>
 
-      <NotReadyMessage className='mx-12 my-6'>
-        Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
-        expect finished functionality or that all data is present. The development team is working hard on delivering a
-        complete product as quick as possible :)
-      </NotReadyMessage>
+      {showCreatingBanner && (
+        <div className='mx-12 my-6 border-3 rounded-md bg-blue-400 dark:bg-blue-500 border-blue-600 dark:border-blue-700 text-black px-4 py-2'>
+          VM is being created {dots}
+        </div>
+      )}
+
+      {!showCreatingBanner && (
+        <NotReadyMessage className='mx-12 my-6'>
+          Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
+          expect finished functionality or that all data is present. The development team is working hard on delivering
+          a complete product as quick as possible :)
+        </NotReadyMessage>
+      )}
 
       <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>
     </div>
