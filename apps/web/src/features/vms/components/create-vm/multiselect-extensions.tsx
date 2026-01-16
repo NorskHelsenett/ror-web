@@ -7,12 +7,12 @@ import { extensions } from '@/features/vms/config/create-vm-values'
 import { CreateVmForm } from '@/features/vms/types/create-vm'
 import { Control } from 'react-hook-form'
 
-interface MultiselectExtensionsProps {
+interface MultiselectProps {
   control: Control<CreateVmForm>
   error?: string
 }
 
-export const MultiselectExtensions = ({ control, error }: MultiselectExtensionsProps) => {
+export const MultiselectExtensions = ({ control, error }: MultiselectProps) => {
   // Convert extensions to multiselect options
   const extensionOptions: Option[] = extensions.map((extension) => ({
     value: extension.key,
