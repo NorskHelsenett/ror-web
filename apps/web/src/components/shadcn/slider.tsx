@@ -53,7 +53,7 @@ const SliderWithInput = React.forwardRef<HTMLInputElement, SliderWithInputProps>
         <div className='flex items-center justify-between'>
           <span className='text-sm font-medium mr-4'>VM Size ({label})</span>
           <div className='flex items-center gap-2'>
-            <span className='text-sm text-muted-foreground'>
+            <span className='text-sm text-muted-foreground min-w-[4rem] text-right'>
               {value} {label}
             </span>
             <Button
@@ -82,19 +82,6 @@ const SliderWithInput = React.forwardRef<HTMLInputElement, SliderWithInputProps>
                 step={step}
                 value={value}
                 onChange={handleSliderChange}
-                disabled={disabled}
-                className={cn(
-                  'w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer',
-                  'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
-                  '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5',
-                  '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer',
-                  '[&::-webkit-slider-thumb]:hover:bg-primary/90 [&::-webkit-slider-thumb]:transition-colors',
-                  '[&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5',
-                  '[&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:cursor-pointer',
-                  '[&::-moz-range-thumb]:border-none',
-                  '[&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-muted [&::-moz-range-track]:rounded-lg',
-                  'disabled:opacity-50 disabled:cursor-not-allowed'
-                )}
                 style={{
                   background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${((value - min) / (max - min)) * 100}%, hsl(var(--muted)) ${((value - min) / (max - min)) * 100}%, hsl(var(--muted)) 100%)`,
                 }}
