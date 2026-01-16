@@ -20,3 +20,13 @@ export const extensions: { key: Extensions; display: string }[] = [
   { key: 'SCOM', display: 'SCOM' },
   { key: 'Chocolatey', display: 'Chocolatey' },
 ]
+
+export const securityBaselines: { key: string; display: string }[] = [
+  { key: 'deactivate-secure-protocols', display: 'Deactivate Secure Protocols' },
+  { key: 'deactivate-winRM', display: 'Deactivate WinRM' },
+  { key: 'activate-local-firewall', display: 'Activate Local Firewall' },
+  { key: 'activate-audit-log', display: 'Activate Audit Log' },
+  { key: 'secure-boot', display: 'Secure Boot (UEFI)' },
+]
+
+export const osConfigs: { key: string; display: string }[] = [{ key: 'install-vm-tools', display: 'Install VMw Tools' }]
