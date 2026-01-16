@@ -8,17 +8,23 @@ import { addTag, removeTag } from '@/features/cluster/utils/tags'
 import { useRouter } from 'next/navigation'
 import { FormSection } from '@/features/cluster/components/create-cluster/form-section'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/shadcn/select'
-// import { Slider } from "@/components/shadcn/slider"
 import { SliderWithInput } from '@/components/shadcn/slider'
-import { MultiselectExtensions } from '@/features/vms/components/create-vm/multiselect-extensions'
-import { datacenters, images } from '@/features/vms/config/create-vm-values'
+import { datacenters, images, extensions, securityBaselines, osConfigs } from '@/features/vms/config/create-vm-values'
 import { WizardContentType } from '@/types/wizard-content-type'
 import { TagsSection } from '@/features/cluster/components/create-cluster/tags-section'
 import { Wizard } from '@/components/ui/wizard'
 import { Input } from '@/components/shadcn/input'
+import { GenericMultiselect } from '@/components/ui/generic-multiselect'
+import { copyToClipboard } from '@/utils/copy-to-clipboard'
+import { toast } from 'sonner'
+import { routes } from '@/config/routes'
+import { Button } from '@/components/shadcn/button'
+import { CodeSnippet } from '@ror/react'
+import { buildVmYaml } from '@/features/vms/utils/generate-vm-yaml'
 
 const stepFields: Array<Array<Path<CreateVmForm>>> = [
-  ['name', 'project', 'workspace', 'region', 'serviceId', 'size', 'image'],
+  ['name', 'project', 'workspace'],
+  ['region', 'serviceId', 'size', 'image'],
   ['extensions'],
   ['securityBaseline', 'osConfig'],
   [],
@@ -28,6 +34,7 @@ const stepFields: Array<Array<Path<CreateVmForm>>> = [
 export const PageView = () => {
   const [tagKey, setTagKey] = useState('')
   const [tagValue, setTagValue] = useState('')
+  const [yamlOpen, setYamlOpen] = useState(false)
 
   const {
     register,
@@ -63,6 +70,22 @@ export const PageView = () => {
 
   const handleRemoveTag = (key: string) => {
     setValue('tags', removeTag(tagsWatch ?? {}, key), { shouldDirty: true })
+  }
+
+  // YAML
+  const copyYaml = async () => {
+    try {
+      await copyToClipboard(buildVmYaml(getValues()))
+      toast.info('YAML copied to clipboard')
+    } catch {
+      toast.error('Failed to copy YAML')
+    }
+  }
+
+  // Helper functions for form
+  const onSubmit = async () => {
+    copyYaml()
+    router.push(`${routes.app.vms.getHref()}?creating-vm=true`)
   }
 
   //Router
@@ -170,29 +193,62 @@ export const PageView = () => {
   }, [errors.image, control])
 
   const SecurityBaselineInput = useCallback(() => {
+    const securityBaselineOptions = securityBaselines.map((baseline) => ({
+      value: baseline.key,
+      label: baseline.display,
+    }))
+
     return (
-      <FormSection title='Security baseline'>
-        <Input
-          {...register('securityBaseline', { required: 'Security baseline is required' })}
-          placeholder='Enter security baseline...'
-        />
-      </FormSection>
+      <GenericMultiselect
+        control={control}
+        name='securityBaseline'
+        title='Security baseline'
+        options={securityBaselineOptions}
+        placeholder='Select security baselines...'
+        error={
+          errors.securityBaseline && typeof errors.securityBaseline.message === 'string'
+            ? errors.securityBaseline.message
+            : undefined
+        }
+        hideClearAllButton={false}
+      />
     )
-  }, [errors.securityBaseline, register])
+  }, [control, errors.securityBaseline])
 
   const OsConfigInput = useCallback(() => {
+    const osConfigOptions = osConfigs.map((config) => ({
+      value: config.key,
+      label: config.display,
+    }))
+
     return (
-      <FormSection title='OS Config'>
-        <Input {...register('osConfig', { required: 'OS Config is required' })} placeholder='Enter OS Config...' />
-      </FormSection>
+      <GenericMultiselect
+        control={control}
+        name='osConfig'
+        title='OS config'
+        options={osConfigOptions}
+        placeholder='Select OS configurations...'
+        error={errors.osConfig && typeof errors.osConfig.message === 'string' ? errors.osConfig.message : undefined}
+        hideClearAllButton={false}
+      />
     )
-  }, [errors.osConfig, register])
+  }, [control, errors.osConfig])
 
   const ExtensionsInput = useCallback(() => {
+    const extensionOptions = extensions.map((extension) => ({
+      value: extension.key,
+      label: extension.display,
+    }))
+
     return (
-      <MultiselectExtensions
-        control={control as any}
+      <GenericMultiselect
+        control={control}
+        name='extensions'
+        title='Extensions'
+        options={extensionOptions}
+        placeholder='Select extensions...'
         error={errors.extensions ? String(errors.extensions.message || errors.extensions) : undefined}
+        hideClearAllButton={false}
       />
     )
   }, [control, errors.extensions])
@@ -235,14 +291,22 @@ export const PageView = () => {
                   : 'None selected'}
               </td>
             </tr>
-            {/* <tr>
-                        <td className='font-semibold py-1 pr-4'>Security Baseline</td>
-                        <td>{securityBaselineWatch || 'N/A'}</td>
-                    </tr>
-                    <tr>
-                        <td className='font-semibold py-1 pr-4'>OS Config</td>
-                        <td>{osConfigWatch || 'N/A'}</td>
-                    </tr> */}
+            <tr>
+              <td className='font-semibold py-1 pr-4'>Security Baseline</td>
+              <td>
+                {securityBaselineWatch && Object.keys(securityBaselineWatch).length > 0
+                  ? Object.keys(securityBaselineWatch).join(', ')
+                  : 'None selected'}
+              </td>
+            </tr>
+            <tr>
+              <td className='font-semibold py-1 pr-4'>OS Config</td>
+              <td>
+                {osConfigWatch && Object.keys(osConfigWatch).length > 0
+                  ? Object.keys(osConfigWatch).join(', ')
+                  : 'None selected'}
+              </td>
+            </tr>
             <tr>
               <td className='font-semibold py-1 pr-4'>Tags</td>
               <td>
@@ -263,6 +327,31 @@ export const PageView = () => {
     )
   }
 
+  const VmYaml = () => {
+    return (
+      <section>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <Button type='button' onClick={() => setYamlOpen(!yamlOpen)}>
+            {yamlOpen ? 'Close YAML' : 'View YAML'}
+          </Button>
+          <Button type='button' className='mx-2' onClick={copyYaml}>
+            Copy YAML
+          </Button>
+          <Button type='submit'>Create VM</Button>
+          {yamlOpen && (
+            <CodeSnippet
+              type='multi'
+              className='rounded-lg mt-2'
+              style={{ '--code-snippet-multi-max-height': '27rem' }}
+            >
+              {buildVmYaml(getValues())}
+            </CodeSnippet>
+          )}
+        </form>
+      </section>
+    )
+  }
+
   const content: WizardContentType[] = [
     {
       title: 'Basic',
@@ -271,8 +360,15 @@ export const PageView = () => {
           <NameInput />
           <ProjectInput />
           <WorkspaceInput />
-          <ServiceIdInput />
+        </div>
+      ),
+    },
+    {
+      title: 'Config',
+      wizardContent: (
+        <div className='flex flex-row gap-24 justify-center'>
           <RegionInput />
+          <ServiceIdInput />
           <ImageInput />
           <SizeInput />
         </div>
@@ -316,6 +412,7 @@ export const PageView = () => {
       wizardContent: (
         <div className='w-fit mx-auto'>
           <Summary />
+          <VmYaml />
         </div>
       ),
     },
