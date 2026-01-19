@@ -8,6 +8,12 @@ export const datacenters: { key: Datacenter; display: string }[] = [
   { key: 'osl2', display: 'OSL2' },
 ]
 
+export const sizes: { key: string; display: string }[] = [
+  { key: 'small', display: 'Small' },
+  { key: 'medium', display: 'Medium' },
+  { key: 'large', display: 'Large' },
+]
+
 export const images: { key: Image; display: string }[] = [
   { key: 'rhel9_64Guest', display: 'rhel9_64Guest' },
   { key: 'windows9Server64Guest', display: 'windows9Server64Guest' },

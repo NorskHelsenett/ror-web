@@ -9,7 +9,7 @@ export const useCreateVmForm = () => {
       workspace: '',
       region: '',
       serviceId: '',
-      size: 0,
+      size: '',
       image: '',
       extensions: {},
       securityBaseline: {},

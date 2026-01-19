@@ -21,6 +21,42 @@ export function buildVmYaml(v: CreateVmForm) {
   const securityBaselineList = Object.keys(securityBaseline)
   const osConfigList = Object.keys(osConfig)
 
+  const smallTemplate = `resources:
+        cpu:
+            cores: ${1}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "2Gi"
+    disks:
+    - name: "root"
+        size: "20Gi"
+        storageClass: "default"`
+
+  const mediumTemplate = `resources:
+        cpu:
+            cores: ${2}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "4Gi"
+    disks:
+    - name: "root"
+        size: "40Gi"
+        storageClass: "default"`
+
+  const largeTemplate = `resources:
+        cpu:
+            cores: ${4}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "8Gi"
+    disks:
+    - name: "root"
+        size: "80Gi"
+        storageClass: "default"`
+
   return `
     apiVersion: vitistack.io/v1alpha1
     kind: Machine
@@ -30,56 +66,45 @@ export function buildVmYaml(v: CreateVmForm) {
     labels:
         cluster.vitistack.io/cluster-name: ${project}
         vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
-        vitistack.io/service-id: ${serviceId} ---check
-        vitistack.io/region: ${region} ---check
+        vitistack.io/service-id: ${serviceId} 
+        vitistack.io/region: ${region}
     spec:
-    template: ${convertToVitiMachineClass(size)} ---check
+        template: ${size}
 
-    resources:
-        cpu: ---check
-            cores: ${2}
-            threads: ${2}
-            sockets: ${1}
-        memory:
-            size: "${size}Gi" ---check
+        ${size === 'small' ? smallTemplate : size === 'medium' ? mediumTemplate : size === 'large' ? largeTemplate : ''}
+            accessMode: "ReadWriteOnce"
+            volumeMode: "Filesystem"
 
-    disks:
-    - name: "primary-disk"
-        size: "${size}Gi"
-        storageClass: "fast-ssd"
-        accessMode: "ReadWriteOnce"
-        volumeMode: "Filesystem"
+        networks:
+        - name: "default"
+            networkName: "default-network"
+            model: "virtio"
 
-    networks:
-    - name: "default"
-        networkName: "default-network"
-        model: "virtio"
+        bootOrder: 
+        - "disk"
 
-    bootOrder: 
-    - "disk"
+        cloudInit:
+            userData: |
+            networkData: |
+            secretRef:
+                name: "secretName"
+                key: "secretKey"
 
-    cloudInit:
-        userData: |
-        networkData: |
-        secretRef:
-            name: "secretName"
-            key: "secretKey"
-
-    domain:
-        machine:
-            type: "${image === 'windows9Server64Guest' ? 'pc-q35' : 'pc-i440fx'}"
-        features:
-            acpi: true
-            apic: true
-            hyperv: true
-        firmware:
-        bootloader:
-            efi: true
-            secureBoot: false
+        domain:
+            machine:
+                type: "${image === 'windows9Server64Guest' ? 'pc-q35' : 'pc-i440fx'}"
+            features:
+                acpi: true
+                apic: true
+                hyperv: true
+            firmware:
+            bootloader:
+                efi: true
+                secureBoot: false
 
     status:
         phase: "Succeeded"
-        conditions: "ListConditions" --check
+        conditions: "ListConditions"
         vmName: ${name}
         vmiName: ${name}-vmi
         ipAddress: "4523423523423"

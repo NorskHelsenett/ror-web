@@ -4,7 +4,7 @@ export interface CreateVmForm {
   workspace: string
   region: string
   serviceId: string
-  size: number
+  size: string
   image: string
   extensions: Record<string, string>
   securityBaseline: Record<string, string>

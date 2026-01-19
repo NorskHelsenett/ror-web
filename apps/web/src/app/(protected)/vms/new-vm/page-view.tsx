@@ -1,6 +1,6 @@
 'use client'
 
-import { CreateVmForm, Datacenter, Image, Extensions } from '@/features/vms/types/create-vm'
+import { CreateVmForm } from '@/features/vms/types/create-vm'
 import { useCallback, useState } from 'react'
 import { Controller, Path } from 'react-hook-form'
 import { useCreateVmForm } from '@/features/vms/hooks/use-create-vm-form'
@@ -8,8 +8,14 @@ import { addTag, removeTag } from '@/features/cluster/utils/tags'
 import { useRouter } from 'next/navigation'
 import { FormSection } from '@/features/cluster/components/create-cluster/form-section'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/shadcn/select'
-import { SliderWithInput } from '@/components/shadcn/slider'
-import { datacenters, images, extensions, securityBaselines, osConfigs } from '@/features/vms/config/create-vm-values'
+import {
+  datacenters,
+  images,
+  extensions,
+  securityBaselines,
+  osConfigs,
+  sizes,
+} from '@/features/vms/config/create-vm-values'
 import { WizardContentType } from '@/types/wizard-content-type'
 import { TagsSection } from '@/features/cluster/components/create-cluster/tags-section'
 import { Wizard } from '@/components/ui/wizard'
@@ -147,22 +153,45 @@ export const PageView = () => {
     )
   }, [errors.serviceId, register])
 
+  // const SizeInput = useCallback(() => {
+  //   return (
+  //     <FormSection title='Size' error={errors.size && errors.size.message}>
+  //       <Controller
+  //         control={control}
+  //         name='size'
+  //         defaultValue={20}
+  //         render={({ field }) => (
+  //           <SliderWithInput
+  //             value={field.value || 20}
+  //             onValueChange={field.onChange}
+  //             min={10}
+  //             max={500}
+  //             step={10}
+  //             label='GB'
+  //           />
+  //         )}
+  //       />
+  //     </FormSection>
+  //   )
+  // }, [errors.size, control])
+
   const SizeInput = useCallback(() => {
     return (
       <FormSection title='Size' error={errors.size && errors.size.message}>
         <Controller
           control={control}
           name='size'
-          defaultValue={20}
           render={({ field }) => (
-            <SliderWithInput
-              value={field.value || 20}
-              onValueChange={field.onChange}
-              min={10}
-              max={500}
-              step={10}
-              label='GB'
-            />
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className='w-52'>{field.value || 'Select size...'}</SelectTrigger>
+              <SelectContent>
+                {sizes.map((size) => (
+                  <SelectItem key={size.key} value={size.key}>
+                    {size.display}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
         />
       </FormSection>
@@ -276,8 +305,12 @@ export const PageView = () => {
               <td>{serviceIdWatch || 'N/A'}</td>
             </tr>
             <tr>
+              <td className='font-semibold py-1 pr-4'>Region</td>
+              <td>{regionWatch || 'N/A'}</td>
+            </tr>
+            <tr>
               <td className='font-semibold py-1 pr-4'>VM Size</td>
-              <td>{sizeWatch || 20} GB</td>
+              <td>{sizeWatch} </td>
             </tr>
             <tr>
               <td className='font-semibold py-1 pr-4'>Image</td>
@@ -292,7 +325,7 @@ export const PageView = () => {
               </td>
             </tr>
             <tr>
-              <td className='font-semibold py-1 pr-4'>Security Baseline</td>
+              <td className='font-semibold py-1 pr-4'>Security baseline</td>
               <td>
                 {securityBaselineWatch && Object.keys(securityBaselineWatch).length > 0
                   ? Object.keys(securityBaselineWatch).join(', ')
@@ -300,7 +333,7 @@ export const PageView = () => {
               </td>
             </tr>
             <tr>
-              <td className='font-semibold py-1 pr-4'>OS Config</td>
+              <td className='font-semibold py-1 pr-4'>OS config</td>
               <td>
                 {osConfigWatch && Object.keys(osConfigWatch).length > 0
                   ? Object.keys(osConfigWatch).join(', ')
