@@ -653,7 +653,7 @@ export const clustersVersion1 = Array.from({ length: 104 }, (_, i) => {
 // export const clustersVersion2 = {
 //   resources: [
 //     {
-//       apiVersion: 'general.ror.internal/v1alpha1',
+//       apiVersion: 'vitistack.io/v1alpha1',
 //       kind: 'KubernetesCluster',
 //       metadata: {
 //         name: 'aaa-001-dev',
@@ -842,7 +842,7 @@ export const clustersVersion1 = Array.from({ length: 104 }, (_, i) => {
 //       },
 //     },
 //     {
-//       apiVersion: 'general.ror.internal/v1alpha1',
+//       apiVersion: 'vitistack.io/v1alpha1',
 //       kind: 'KubernetesCluster',
 //       metadata: {
 //         name: 'bbb-002-prod',
@@ -989,7 +989,7 @@ export const clustersVersion2 = {
     const idx = i + 1
     return {
       kind: 'KubernetesCluster',
-      apiVersion: 'general.ror.internal/v1alpha1',
+      apiVersion: 'vitistack.io/v1alpha1',
       metadata: {
         name: `Mock Cluster ${idx}`,
         namespace: `workspace-${idx}`,
@@ -1091,7 +1091,7 @@ export const clustersVersion2 = {
 // export const clustersVersion2 = {
 //   resources: [
 //     {
-//       apiVersion: 'general.ror.internal/v1alpha1',
+//       apiVersion: 'vitistack.io/v1alpha1',
 //       kind: 'KubernetesCluster',
 //       metadata: {
 //         name: 'aaa-001-dev',
@@ -1183,7 +1183,7 @@ export const clustersVersion2 = {
 //       },
 //     },
 //     {
-//       apiVersion: 'general.ror.internal/v1alpha1',
+//       apiVersion: 'vitistack.io/v1alpha1',
 //       kind: 'KubernetesCluster',
 //       metadata: {
 //         name: 'bbb-002-prod',
