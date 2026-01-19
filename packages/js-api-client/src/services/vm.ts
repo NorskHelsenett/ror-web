@@ -5,7 +5,7 @@ import { VMResourceResponseSchema } from '../schemas/vm'
 export const createVirtualMachineService = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
   list: async (otherParams: URLSearchParams) => {
     const params = new URLSearchParams(otherParams)
-    params.set('apiversion', 'vitistack.io/v1alpha1')
+    params.set('apiversion', 'general.ror.internal/v1alpha1')
     params.set('kind', 'VirtualMachine')
 
     const response = await request({
