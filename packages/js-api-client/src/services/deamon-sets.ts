@@ -5,7 +5,7 @@ import { DaemonSetResponseSchema, DaemonSetSchema } from '../schemas/daemon-set'
 export const createDaemonSetService = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
   list: async (otherParams: URLSearchParams) => {
     const params = new URLSearchParams(otherParams)
-    params.set('apiversion', 'general.ror.internal/v1alpha1')
+    params.set('apiversion', 'vitistack.io/v1alpha1')
     params.set('kind', 'DaemonSet')
 
     const response = await request({

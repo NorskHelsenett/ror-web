@@ -45,7 +45,7 @@ export const mockVms = {
 
     return {
       kind: 'VirtualMachine',
-      apiVersion: 'general.ror.internal/v1alpha1',
+      apiVersion: 'vitistack.io/v1alpha1',
       metadata: {
         name: `Mock-Virtual-machine-${idx}`,
         uid: `mock-uid-${idx}`,
