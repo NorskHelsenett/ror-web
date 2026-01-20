@@ -63,6 +63,7 @@ export function buildVmYaml(v: CreateVmForm) {
     metadata:
     name: ${name}
     namespace: ${workspace}
+    ${renderTagsYaml(tags)}
     labels:
         cluster.vitistack.io/cluster-name: ${project}
         vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
@@ -74,7 +75,6 @@ export function buildVmYaml(v: CreateVmForm) {
         ${size === 'small' ? smallTemplate : size === 'medium' ? mediumTemplate : size === 'large' ? largeTemplate : ''}
             accessMode: "ReadWriteOnce"
             volumeMode: "Filesystem"
-
         networks:
         - name: "default"
             networkName: "default-network"

@@ -2,14 +2,16 @@
 
 import { CreateVmForm } from '@/features/vms/types/create-vm'
 import { useCallback, useState } from 'react'
-import { Controller, Path } from 'react-hook-form'
+import { Controller, Form, Path } from 'react-hook-form'
 import { useCreateVmForm } from '@/features/vms/hooks/use-create-vm-form'
 import { addTag, removeTag } from '@/features/cluster/utils/tags'
 import { useRouter } from 'next/navigation'
 import { FormSection } from '@/features/cluster/components/create-cluster/form-section'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/shadcn/select'
 import {
+  providers,
   datacenters,
+  regions,
   images,
   extensions,
   securityBaselines,
@@ -27,10 +29,12 @@ import { routes } from '@/config/routes'
 import { Button } from '@/components/shadcn/button'
 import { CodeSnippet } from '@ror/react'
 import { buildVmYaml } from '@/features/vms/utils/generate-vm-yaml'
+import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 const stepFields: Array<Array<Path<CreateVmForm>>> = [
-  ['name', 'project', 'workspace'],
-  ['region', 'serviceId', 'size', 'image'],
+  ['name', 'project'],
+  ['region', 'datacenter', 'serviceId', 'provider', 'size', 'image'],
   ['extensions'],
   ['securityBaseline', 'osConfig'],
   [],
@@ -58,6 +62,8 @@ export const PageView = () => {
   const projectWatch = watch('project')
   const workspaceWatch = watch('workspace')
   const regionWatch = watch('region')
+  const datacenterWatch = watch('datacenter')
+  const providerWatch = watch('provider')
   const serviceIdWatch = watch('serviceId')
   const sizeWatch = watch('size')
   const imageWatch = watch('image')
@@ -122,15 +128,61 @@ export const PageView = () => {
     )
   }, [errors.workspace, register])
 
+  const ProviderInput = useCallback(() => {
+    return (
+      <FormSection title='Provider' error={errors.provider && errors.provider.message}>
+        <Controller
+          control={control}
+          name='provider'
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className='w-52'>{field.value || 'Select provider...'}</SelectTrigger>
+              <SelectContent>
+                {providers.map((provider) => (
+                  <SelectItem key={provider.key} value={provider.key}>
+                    {provider.display}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </FormSection>
+    )
+  }, [errors.provider, control])
+
   const RegionInput = useCallback(() => {
     return (
-      <FormSection title='Datacenter' error={errors.region && errors.region.message}>
+      <FormSection title='Region' error={errors.region && errors.region.message}>
         <Controller
           control={control}
           name='region'
           render={({ field }) => (
             <Select value={field.value} onValueChange={field.onChange}>
               <SelectTrigger className='w-52'>{field.value || 'Select region...'}</SelectTrigger>
+              <SelectContent>
+                {regions.map((region) => (
+                  <SelectItem key={region.key} value={region.key}>
+                    {region.display}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </FormSection>
+    )
+  }, [errors.region, control])
+
+  const DatacenterInput = useCallback(() => {
+    return (
+      <FormSection title='Datacenter' error={errors.datacenter && errors.datacenter.message}>
+        <Controller
+          control={control}
+          name='datacenter'
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className='w-52'>{field.value || 'Select datacenter...'}</SelectTrigger>
               <SelectContent>
                 {datacenters.map((datacenter) => (
                   <SelectItem key={datacenter.key} value={datacenter.key}>
@@ -143,7 +195,7 @@ export const PageView = () => {
         />
       </FormSection>
     )
-  }, [errors.region, control])
+  }, [errors.datacenter, control])
 
   const ServiceIdInput = useCallback(() => {
     return (
@@ -177,7 +229,37 @@ export const PageView = () => {
 
   const SizeInput = useCallback(() => {
     return (
-      <FormSection title='Size' error={errors.size && errors.size.message}>
+      <FormSection
+        title={
+          <div className='flex items-center gap-1'>
+            Size
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <QuestionMarkCircledIcon className='w-4 h-4 text-gray-500' />
+                </TooltipTrigger>
+                <TooltipContent className='max-w-xs'>
+                  <div className='space-y-2 text-sm'>
+                    <div className='font-semibold'>VM Size Options:</div>
+                    <div className='space-y-1'>
+                      <div>
+                        <span className='font-medium'>Small: 1 CPU, 2GB RAM, 20GB Disk</span>{' '}
+                      </div>
+                      <div>
+                        <span className='font-medium'>Medium: 2 CPU, 4GB RAM, 40GB Disk</span>
+                      </div>
+                      <div>
+                        <span className='font-medium'>Large: 4 CPU, 8GB RAM, 80GB Disk</span>
+                      </div>
+                    </div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        }
+        error={errors.size && errors.size.message}
+      >
         <Controller
           control={control}
           name='size'
@@ -389,10 +471,10 @@ export const PageView = () => {
     {
       title: 'Basic',
       wizardContent: (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+        <div className='flex flex-row gap-24 justify-center'>
           <NameInput />
           <ProjectInput />
-          <WorkspaceInput />
+          {/* <WorkspaceInput /> */}
         </div>
       ),
     },
@@ -400,7 +482,9 @@ export const PageView = () => {
       title: 'Config',
       wizardContent: (
         <div className='flex flex-row gap-24 justify-center'>
+          <ProviderInput />
           <RegionInput />
+          <DatacenterInput />
           <ServiceIdInput />
           <ImageInput />
           <SizeInput />

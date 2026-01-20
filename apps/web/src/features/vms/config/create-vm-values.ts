@@ -1,11 +1,26 @@
 import { Datacenter, Image, Extensions } from '../types/create-vm'
 
+export const providers: { key: string; display: string }[] = [
+  { key: 'Vsphere', display: 'VMware' },
+  { key: 'Proxmox', display: 'Proxmox' },
+  { key: 'Kubevirt', display: 'Kubevirt' },
+]
+
 export const datacenters: { key: Datacenter; display: string }[] = [
   { key: 'trd1', display: 'TRD1' },
   { key: 'trd2', display: 'TRD2' },
   { key: 'trd3', display: 'TRD3' },
   { key: 'osl1', display: 'OSL1' },
   { key: 'osl2', display: 'OSL2' },
+  { key: 'tromsø1', display: 'Tromsø1' },
+  { key: 'bergen1', display: 'Bergen1' },
+]
+
+export const regions: { key: string; display: string }[] = [
+  { key: 'trondheim', display: 'Trondheim' },
+  { key: 'oslo', display: 'Oslo' },
+  { key: 'bergen', display: 'Bergen' },
+  { key: 'tromsø', display: 'Tromsø' },
 ]
 
 export const sizes: { key: string; display: string }[] = [
