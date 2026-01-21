@@ -31,6 +31,7 @@ import { CodeSnippet } from '@ror/react'
 import { buildVmYaml } from '@/features/vms/utils/generate-vm-yaml'
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/shadcn/tooltip'
+import { NorwayMap } from '@/features/vms/components/create-vm/norway-map'
 
 const stepFields: Array<Array<Path<CreateVmForm>>> = [
   ['name', 'project'],
@@ -468,6 +469,14 @@ export const PageView = () => {
   }
 
   const content: WizardContentType[] = [
+    {
+      title: 'Map',
+      wizardContent: (
+        <div className='flex flex-row gap-24 justify-center'>
+          <NorwayMap />
+        </div>
+      ),
+    },
     {
       title: 'Basic',
       wizardContent: (

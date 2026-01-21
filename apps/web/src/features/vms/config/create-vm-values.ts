@@ -11,7 +11,7 @@ export const datacenters: { key: Datacenter; display: string }[] = [
   { key: 'trd2', display: 'TRD2' },
   { key: 'trd3', display: 'TRD3' },
   { key: 'osl1', display: 'OSL1' },
-  { key: 'osl2', display: 'OSL2' },
+  { key: 'osl3', display: 'OSL3' },
   { key: 'tromsø1', display: 'Tromsø1' },
   { key: 'bergen1', display: 'Bergen1' },
 ]
