@@ -21,7 +21,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-1m-gitlab-opt',
-            status: 'active',
+            status: 'inactive',
             policyId: '4923908281402464:1614676439887:3153',
             schedules: [
               {
@@ -125,7 +125,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-1m-test-backup',
-            status: 'active',
+            status: 'paused',
             policyId: '4923908281402464:1614676439887:3154',
             schedules: [
               {
@@ -195,7 +195,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-12h-single-vm',
-            status: 'active',
+            status: 'deleted',
             policyId: '4923908281402464:1614676439887:3155',
             schedules: [
               {

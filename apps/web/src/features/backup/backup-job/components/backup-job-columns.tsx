@@ -11,15 +11,58 @@ import {
   getBackupJobAllRunIds,
   getBackupJobActiveTargets,
   BackupActiveTarget,
+  getBackupJobName,
+  getBackupStatus,
 } from '@/features/vms/backup/utils/backup-job'
 import Link from 'next/link'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ActiveTargetsTooltip, IdListTooltip } from '../../utils/active-targets-tooltip'
+import { BackupJobStatus, BackupJobStatusType } from './backup-job-status'
+import { CopyButton } from '@/components/ui/copy-button'
+import copy from 'clipboard-copy'
 
 const columnHelper = createColumnHelper<BackupJob>()
 
 export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
   return [
+    columnHelper.accessor(
+      (row) => {
+        const backupJobName = getBackupJobName(row)
+        return backupJobName
+      },
+      {
+        id: 'name',
+        header: 'Name',
+        enableSorting: true,
+        sortingFn: 'text',
+        cell: (info) => {
+          const name = info.getValue()
+          return React.createElement(
+            'div',
+            {
+              className: 'min-w-0 break-words font-mono text-sm',
+            },
+            name
+          )
+        },
+      }
+    ),
+    columnHelper.accessor(
+      (row) => {
+        const backupJobStatus = getBackupStatus(row)
+        return backupJobStatus
+      },
+      {
+        id: 'status',
+        header: 'Status',
+        enableSorting: true,
+        sortingFn: 'text',
+        cell: (info) => {
+          const jobStatus = info.getValue() as BackupJobStatusType
+          return <BackupJobStatus status={jobStatus} />
+        },
+      }
+    ),
     columnHelper.accessor(
       (row) => {
         const backupJobId = getBackupJobId(row)
@@ -32,12 +75,19 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         sortingFn: 'text',
         cell: (info) => {
           const id = info.getValue()
+
+          const copyIdValue = (e?: React.MouseEvent) => {
+            e?.preventDefault()
+            void copy(id)
+          }
+
           return React.createElement(
             'div',
             {
-              className: 'min-w-0 break-words font-mono text-sm',
+              className: 'min-w-0 break-words font-mono text-sm flex items-center gap-2',
             },
-            id
+            id,
+            React.createElement(CopyButton, { onClick: copyIdValue })
           )
         },
       }

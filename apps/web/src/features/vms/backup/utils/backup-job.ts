@@ -41,6 +41,14 @@ export const getBackupJobExternalId = (backupActiveTarget: BackupActiveTarget) =
   return backupActiveTarget?.externalId ?? 'No backupJob External ID'
 }
 
+export const getBackupJobName = (backupJob: BackupJob) => {
+  return backupJob?.backupjob?.status?.resourceBackupJobSpec?.name ?? 'No backupJob Name'
+}
+
+export const getBackupStatus = (backupJob: BackupJob) => {
+  return backupJob?.backupjob?.status?.resourceBackupJobSpec?.status ?? 'Unknown'
+}
+
 export const getLastBackupRun = (backupJob: BackupJob) => {
   return backupJob?.backupjob?.status?.backupRunIds?.[0] ?? null
 }

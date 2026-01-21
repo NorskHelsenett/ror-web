@@ -15,6 +15,8 @@ import { BackupRun } from '@ror/js-api-client'
 import { createColumnHelper } from '@tanstack/react-table'
 import React from 'react'
 import { ActiveTargetsTooltip } from '@/features/backup/utils/active-targets-tooltip'
+import { CopyButton } from '@/components/ui/copy-button'
+import copy from 'clipboard-copy'
 
 const columnHelper = createColumnHelper<BackupRun>()
 
@@ -36,12 +38,18 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         sortingFn: 'text',
         cell: (info) => {
           const id = info.getValue()
+          const copyIdValue = (e?: React.MouseEvent) => {
+            e?.preventDefault()
+            void copy(id)
+          }
+
           return React.createElement(
             'div',
             {
-              className: 'min-w-0 break-words font-mono text-sm',
+              className: 'min-w-0 break-words font-mono text-sm flex items-center gap-2',
             },
-            id
+            id,
+            React.createElement(CopyButton, { onClick: copyIdValue })
           )
         },
       }
@@ -147,12 +155,18 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         sortingFn: 'text',
         cell: (info) => {
           const backupJobId = info.getValue()
+          const copyIdValue = (e?: React.MouseEvent) => {
+            e?.preventDefault()
+            void copy(backupJobId)
+          }
+
           return React.createElement(
             'div',
             {
-              className: 'min-w-0 break-words font-mono text-sm',
+              className: 'min-w-0 break-words font-mono text-sm flex items-center gap-2',
             },
-            backupJobId
+            backupJobId,
+            React.createElement(CopyButton, { onClick: copyIdValue })
           )
         },
       }
