@@ -31,20 +31,23 @@ export default async function VMPage({
   const api = await getRorApi()
 
   const sp = await searchParams
-  const params = normalizeParams(sp)
-
-  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchVms(api, params),
-    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
-  ])
-
-  const vms = fetchedVms.vms
+  //const params = normalizeParams(sp)
 
   // Fetch ALL VMs without limit for console logging
   const allVmsParams = new URLSearchParams()
   allVmsParams.set('limit', '10000') // Set a very high limit to get all VMs
   allVmsParams.set('offset', '0')
+
+  // Params for backup jobs/runs: page, limit, order (required by fetchBackupJobs/fetchBackupRuns)
+  const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
+
+  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
+    fetchVms(api, backupQueryParams),
+    fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
+  ])
+
+  const vms = fetchedVms.vms
 
   const allVmsResponse = await api.virtualMachine.list(allVmsParams)
   const allVms = allVmsResponse?.resources ?? []
@@ -74,7 +77,7 @@ export default async function VMPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} />
+      <PageView vms={vmsWithBackup} params={backupQueryParams} />
     </div>
   )
 }

@@ -79,6 +79,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     },
   })
 
+  console.log(items)
+
   const safeItems = useMemo(
     () => items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
     [items]
