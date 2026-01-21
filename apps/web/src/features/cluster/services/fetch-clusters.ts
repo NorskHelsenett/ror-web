@@ -37,14 +37,6 @@ export async function fetchClusters(
     order: 'asc' | 'desc'
   }
 ) {
-  console.log('🚀 [fetchClusters] Starting cluster fetch with params:', {
-    page: params.page,
-    limit: params.limit,
-    sort: params.sort,
-    order: params.order,
-    timestamp: new Date().toISOString(),
-  })
-
   const skip = (params.page - 1) * params.limit
 
   // v2

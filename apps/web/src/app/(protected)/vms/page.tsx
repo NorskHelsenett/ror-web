@@ -40,6 +40,32 @@ export default async function VMPage({
   ])
 
   const vms = fetchedVms.vms
+
+  // Fetch ALL VMs without limit for console logging
+  const allVmsParams = new URLSearchParams()
+  allVmsParams.set('limit', '10000') // Set a very high limit to get all VMs
+  allVmsParams.set('offset', '0')
+
+  const allVmsResponse = await api.virtualMachine.list(allVmsParams)
+  const allVms = allVmsResponse?.resources ?? []
+
+  console.log('[VMPage] ALL VMs fetched from API (without pagination limit):', {
+    totalVmsCount: allVms.length,
+    vmsWithPagination: vms.length,
+    firstTenVms: allVms.slice(0, 10).map((vm, index) => ({
+      index: index + 1,
+      name: vm.metadata?.name ?? 'unnamed',
+      uid: vm.metadata?.uid,
+      hostname: vm.virtualmachine?.status?.operatingSystem?.hostName,
+    })),
+    lastFiveVms: allVms.slice(-5).map((vm, index) => ({
+      index: allVms.length - 4 + index,
+      name: vm.metadata?.name ?? 'unnamed',
+      uid: vm.metadata?.uid,
+      hostname: vm.virtualmachine?.status?.operatingSystem?.hostName,
+    })),
+  })
+
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
 

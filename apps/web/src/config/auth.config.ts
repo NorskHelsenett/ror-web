@@ -245,23 +245,10 @@ export const authOptions: NextAuthOptions = {
     }) {
       const dbg = process.env.AUTH_DEBUG === 'true' || process.env.NODE_ENV !== 'production'
       if (!dbg) return
-      try {
-        console.log('[AUTH][EVT] signIn', {
-          provider: message?.account?.provider,
-          userId: message?.user?.id,
-          isNewUser: message?.isNewUser,
-        })
-      } catch {}
     },
     async session(message: { session?: Session & { accessToken?: string } }) {
       const dbg = process.env.AUTH_DEBUG === 'true' || process.env.NODE_ENV !== 'production'
       if (!dbg) return
-      try {
-        console.log('[AUTH][EVT] session', {
-          userId: message?.session?.user?.id,
-          hasAccessToken: Boolean(message?.session?.accessToken),
-        })
-      } catch {}
     },
   },
   // Route NextAuth's internal logger to console in non-prod (quiet in prod)

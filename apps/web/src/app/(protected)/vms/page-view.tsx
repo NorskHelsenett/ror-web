@@ -60,13 +60,6 @@ import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
-  console.log('🔵 [VM PageView] Initial render:', {
-    totalVmsReceived: vms?.length ?? 0,
-    params,
-    firstVmHostname: vms?.[0] ? getVmHostName(vms[0]) : 'No VMs',
-    vmIds: vms?.slice(0, 3).map((vm) => getVmUniqueKey(vm)) ?? [],
-  })
-
   const filtersOpen = params.filters === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
@@ -76,17 +69,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     getItemId: getVmUniqueKey,
     getItemsKey: getVmsKey,
     loadMore: async (offset, limit) => {
-      console.log('🔄 [VM PageView] Loading more VMs:', { offset, limit, sort: params.sort, order: params.order })
       const res = await loadMoreVMs({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
-      })
-      console.log('✅ [VM PageView] Loaded additional VMs:', {
-        newItemsCount: res.items?.length ?? 0,
-        hasMore: res.hasMore,
-        newItemIds: res.items?.slice(0, 3).map((vm) => getVmUniqueKey(vm)) ?? [],
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -198,27 +185,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     let result
     if (!searchResults?.length) {
       result = sortedItems
-      console.log('🎯 [VM PageView] No search results, using sortedItems:', {
-        sortedItemsCount: sortedItems.length,
-        displayedCount: result.length,
-      })
     } else {
       const ids = new Set(searchResults.map(getVmUniqueKey))
       result = sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
-      console.log('🔎 [VM PageView] Search applied, filtering sortedItems:', {
-        sortedItemsCount: sortedItems.length,
-        searchResultsCount: searchResults.length,
-        displayedCount: result.length,
-        searchResultIds: searchResults.slice(0, 3).map((vm) => getVmUniqueKey(vm)),
-        finalDisplayedIds: result.slice(0, 3).map((vm) => getVmUniqueKey(vm)),
-      })
     }
-
-    console.log('🎬 [VM PageView] Final displayed items:', {
-      count: result.length,
-      itemIds: result.slice(0, 5).map((vm) => getVmUniqueKey(vm)),
-    })
-
     return result
   }, [sortedItems, searchResults])
 
