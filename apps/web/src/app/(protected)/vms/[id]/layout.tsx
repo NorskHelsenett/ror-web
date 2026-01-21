@@ -24,7 +24,7 @@ interface VmPageLayoutProps {
   children: ReactNode
 }
 
-const { vm, vmRawData, vmNetworks, vmDisks, vmMetaData } = routes.app
+const { vm, vmRawData, vmNetworks, vmDisks, vmBackup } = routes.app
 
 export interface navigationItemObject {
   label: string
@@ -46,8 +46,8 @@ const createTabNavigationItems = (vmId: string): navigationItemObject[] => {
       href: vmDisks.getHref(vmId),
     },
     {
-      label: vmMetaData.label,
-      href: vmMetaData.getHref(vmId),
+      label: vmBackup.label,
+      href: vmBackup.getHref(vmId),
     },
     {
       label: vmRawData.label,

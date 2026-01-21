@@ -6,7 +6,7 @@ import { HealthStatus } from '../types/health-status'
  * Maps each `HealthStatus` to its corresponding visual representation.
  *
  * Each entry contains:
- * - `icon`: A JSX element representing the status icon.
+ * - `icon`: A ReactNode representing the status icon.
  * - `colors`: An array of Tailwind CSS class names for background colors, supporting both light and dark themes.
  *
  * Statuses:
@@ -15,7 +15,7 @@ import { HealthStatus } from '../types/health-status'
  * - `error`: Uses a skull icon and red colors.
  * - `unknown`: Uses a help icon and gray colors.
  */
-const healthVisuals: Record<HealthStatus, { icon: JSX.Element; colors: string[] }> = {
+const healthVisuals: Record<HealthStatus, { icon: React.ReactNode; colors: string[] }> = {
   ok: {
     icon: <CircleCheck />,
     colors: ['bg-cyan-500', 'dark:bg-cyan-600'],

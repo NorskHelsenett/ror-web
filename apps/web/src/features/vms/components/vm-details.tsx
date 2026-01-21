@@ -4,8 +4,13 @@
  * FILE OVERVIEW:
  * ------------------------
  * This file defines a React component that displays detailed information about a Virtual Machine (VM).
- * It uses a responsive grid layout to organize various attributes and actions related to the VM.
- * The component is designed to be interactive, allowing users to resize and rearrange the layout.
+ * It uses a clean, responsive CSS grid layout to organize various attributes and actions related to the VM.
+ *
+ * LAYOUT STRUCTURE:
+ * - Left Column (2/3 width): CPU usage, OS info, configuration details, team info
+ * - Right Column (1/3 width): Control panel with VM power actions
+ * - Responsive design that stacks on smaller screens
+ * - Uses shadcn/ui Card components for consistent styling
  *
  */
 'use client'
@@ -24,34 +29,27 @@ import {
   getVmVersion,
   getSpecSockets,
   getSpecCoresPerSocket,
-  getStatusCpuUsage,
   getVmToolVersion,
-  getAdGroup,
-  getSpecMemory,
   getTeamValue,
   VMDetailsProps,
-  serviceIdDescription,
-  serviceIdValue,
-  getTeamName,
+  getTeamDescription,
+  getLocation,
+  getTags,
+  getLastUpdated,
+  getVmDisks,
 } from '../utils/vms'
-import { standardLayouts } from '@/features/vms/config/vm-details-layout'
-import { useLayoutPreferences } from '@/hooks/use-layout-preferences'
-import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
-import { CardHeader } from '@/components/ui/grid-layout-card'
+import { Card, CardContent, CardHeader as ShadcnCardHeader, CardTitle } from '@/components/shadcn/card'
+import { DetailedCPUUsage } from './detailed-cpu-usage'
+import { DetailedMemoryUsage } from './detailed-memory-usage'
+import { Badge } from '@/components/shadcn/badge'
+import Link from 'next/link'
 
-export const VMDetails = ({ user, className }: VMDetailsProps) => {
+export const VMDetails = ({ user }: VMDetailsProps) => {
   const { vm } = useVMContext()
-  const { layouts, setLayouts, layoutKey, currentBreakpoint, setCurrentBreakpoint } = useLayoutPreferences(
-    'vmDetails',
-    standardLayouts
-  )
-  console.log('key', layoutKey)
-  console.log(currentBreakpoint) // For future use if needed
-  const cpuUsage = getStatusCpuUsage(vm)
-  const cpuSockets = getSpecSockets(vm)
-  const cpuCoresPerSocket = getSpecCoresPerSocket(vm)
-  const memory = getSpecMemory(vm)
-  const memoryInGB = ((memory ?? 0) / 1024 ** 3).toFixed(2)
+  const cpuSockets = getSpecSockets(vm) || 0
+  const cpuCoresPerSocket = getSpecCoresPerSocket(vm) || 0
+  const disks = getVmDisks(vm)
+  const numberOfDisks = disks.length
 
   const id = getVmOperatingSystemId(vm)
   const name = getVmName(vm)
@@ -62,251 +60,295 @@ export const VMDetails = ({ user, className }: VMDetailsProps) => {
   const powerState = getVmPowerState(vm)
   const toolVersion = getVmToolVersion(vm)
 
-  const teamName = getTeamName(vm)
+  const teamName = getTeamDescription(vm)
   const teamValue = getTeamValue(vm)
-  const AdGroup = getAdGroup(vm)
-  const serviceId = serviceIdDescription(vm)
-  const serviceValue = serviceIdValue(vm)
+  const location = getLocation(vm)
+  const lastUpdatedRaw = getLastUpdated(vm)
+  const lastUpdated = lastUpdatedRaw
+    ? new Date(lastUpdatedRaw).toLocaleString('nb-NO', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+    : 'Ukjent'
+
+  const tags = getTags(vm)
+  const tagKey = Object.keys(tags)
 
   console.log(user)
 
-  const MemoryCard = () => (
-    <>
-      <CardHeader title='Memory' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <span>{memoryInGB} GB</span>
-          </div>
-        </div>
-      </div>
-    </>
-  )
-
   const ConfigurationCard = () => (
-    <>
-      <CardHeader title='Configuration' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <b>CPU Sockets: </b>
-            <span>{cpuSockets}</span>
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <div className='flex justify-between items-center'>
+          <CardTitle>CPU configuration</CardTitle>
+          <Badge variant='secondary' className='text-xs'>
+            {cpuSockets * cpuCoresPerSocket} cores in total
+          </Badge>
+        </div>
+      </ShadcnCardHeader>
+      <CardContent>
+        <div className='flex flex-col gap-3'>
+          <div className='flex justify-between items-center'>
+            <span className='text-sm text-muted-foreground'>CPU Sockets:</span>
+            <span className='font-medium'>{cpuSockets}</span>
           </div>
-          <div className='flex flex-col'>
-            <b>CPU Cores per Socket: </b>
-            <span>{cpuCoresPerSocket}</span>
+          <div className='flex justify-between items-center'>
+            <span className='text-sm text-muted-foreground'>CPU Cores per Socket:</span>
+            <span className='font-medium'>{cpuCoresPerSocket}</span>
           </div>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   )
 
-  const CpuCard = () => (
-    <>
-      <CardHeader title='CPU' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <b>CPU Usage: </b>
-            <span>{cpuUsage}%</span>
+  const CpuCard = () => {
+    return <DetailedCPUUsage />
+  }
+
+  const MemoryCard = () => {
+    return <DetailedMemoryUsage />
+  }
+
+  const DiskCard = () => (
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Disks</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <div className='flex flex-col gap-3'>
+          <div className='flex justify-between items-center'>
+            <span className='text-sm text-muted-foreground'>Number of disks:</span>
+            <span className='font-xs'>{numberOfDisks}</span>
+          </div>
+          <div className='flex justify-between items-center'>
+            <Link href={`/vms/${hostName.toLowerCase()}/disks`} className='hover:underline'>
+              <span className='text-sm text-muted-foreground hover:underline'>More information... </span>
+            </Link>
           </div>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   )
 
-  const TeamCard = () => (
-    <>
-      <CardHeader title='Team' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <span>
-              {teamValue} ({teamName})
-            </span>
-          </div>
-        </div>
-      </div>
-    </>
+  const TeamCard = () => {
+    if (!teamName) {
+      return (
+        <Card className='bg-slate-50 dark:bg-slate-900/50'>
+          <ShadcnCardHeader>
+            <CardTitle>Team</CardTitle>
+          </ShadcnCardHeader>
+          <CardContent>
+            <span className='font-medium'>No team assigned</span>
+          </CardContent>
+        </Card>
+      )
+    }
+    return (
+      <Card className='bg-slate-50 dark:bg-slate-900/50'>
+        <ShadcnCardHeader>
+          <CardTitle>Team</CardTitle>
+        </ShadcnCardHeader>
+        <CardContent>
+          <span className='font-medium'>
+            {teamName} ({teamValue})
+          </span>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const LocationCard = () => (
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Location</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <span className='font-medium'>{location}</span>
+      </CardContent>
+    </Card>
   )
 
-  const AdGroupsCard = () => (
-    <>
-      <CardHeader title='AD Group' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <span>{AdGroup}</span>
-          </div>
-        </div>
-      </div>
-    </>
+  const LastUpdatedCard = () => (
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Last updated</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <span className='font-medium'>{lastUpdated}</span>
+      </CardContent>
+    </Card>
   )
 
-  const ServiceIdCard = () => (
-    <>
-      <CardHeader title='Service ID' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <span>
-              {serviceId} ({serviceValue})
-            </span>
-          </div>
+  const TagCards = () => (
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Available tags</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <div className='flex flex-col gap-3'>
+          {tagKey.map((key) => (
+            <div key={key} className='flex justify-between items-start'>
+              <span className='text-sm text-muted-foreground font-medium'>{key}:</span>
+              <span className='text-sm text-right max-w-[60%]'>{tags[key].description || 'Missing..'}</span>
+            </div>
+          ))}
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   )
 
   const InfoCard = () => (
-    <>
-      <CardHeader title='Operating System' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <b>Id: </b>
-            <span>{id}</span>
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Operating System</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <div className='grid grid-cols-1 gap-4'>
+          <div className='flex flex-col gap-3'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>ID:</span>
+              <span className='font-xs'>{id}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>OS Version:</span>
+              <span className='font-xs'>{name}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>Version:</span>
+              <span className='font-xs'>{version}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>Hostname:</span>
+              <span className='font-xs'>{hostName}</span>
+            </div>
           </div>
-          <div className='flex flex-col'>
-            <b>OS-version: </b>
-            <span>{name}</span>
-          </div>
-          <div className='flex flex-col'>
-            <b>Version: </b>
-            <span>{version}</span>
-          </div>
-          <div className='flex flex-col'>
-            <b>Hostname: </b>
-            <span>{hostName}</span>
+          <div className='flex flex-col gap-3'>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>VMware Tools:</span>
+              <span className='font-xs'>{toolVersion}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>Architecture:</span>
+              <span className='font-xs'>{architecture}</span>
+            </div>
+            <div className='flex justify-between items-center'>
+              <span className='text-sm text-muted-foreground'>Family:</span>
+              <span className='font-xs'>{family}</span>
+            </div>
           </div>
         </div>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <b>VMware Tools version: </b>
-            <span>{toolVersion}</span>
-          </div>
-          <div className='flex flex-col'>
-            <b>Architecture: </b>
-            <span>{architecture}</span>
-          </div>
-          <div className='flex flex-col'>
-            <b>OS-type: </b>
-            <span>{family}</span>
-          </div>
-        </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   )
 
   const ControlPanelCard = () => (
-    <>
-      <CardHeader title='Control Panel' />
-      <div className='flex gap-2'>
-        <div className='flex flex-1 flex-col gap-2'>
-          <div className='flex flex-col'>
-            <b>Power: </b>
-            <span>{powerState === 'poweredOn' ? 'On' : powerState === 'poweredOff' ? 'Off' : 'Unknown'}</span>
-            <b>Actions:</b>
-            {powerState === 'poweredOn' ? null : (
+    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+      <ShadcnCardHeader>
+        <CardTitle>Control Panel</CardTitle>
+      </ShadcnCardHeader>
+      <CardContent>
+        <div className='flex flex-col gap-4 '>
+          <div className='flex justify-between items-center '>
+            <span className='text-sm text-muted-foreground'>Power State:</span>
+            <span className='font-medium'>
+              {powerState === 'poweredOn' ? 'On' : powerState === 'poweredOff' ? 'Off' : 'Unknown'}
+            </span>
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            <span className='text-sm font-medium text-muted-foreground'>Actions:</span>
+            <div className='flex flex-wrap gap-2'>
+              {powerState === 'poweredOff' && (
+                <Pill
+                  asChild
+                  variant={vmActionsColors['powerOn']}
+                  className='px-3 cursor-pointer'
+                  onClick={() => {
+                    // TODO: Implement turn on functionality
+                  }}
+                >
+                  <button type='button'>Turn on</button>
+                </Pill>
+              )}
+              {powerState === 'poweredOn' && (
+                <Pill
+                  asChild
+                  variant={vmActionsColors['powerOff']}
+                  className='px-3 cursor-pointer'
+                  onClick={() => {
+                    // TODO: Implement turn off functionality
+                  }}
+                >
+                  <button type='button'>Turn off</button>
+                </Pill>
+              )}
               <Pill
                 asChild
-                variant={vmActionsColors['powerOn']}
-                className='mt-2 px-3 cursor-pointer'
+                variant={vmActionsColors['restart']}
+                className='px-3 cursor-pointer'
                 onClick={() => {
-                  // TODO: Implement turn on functionality
+                  // TODO: Implement restart functionality
                 }}
               >
-                <button type='button'>Turn on</button>
+                <button type='button'>Restart</button>
               </Pill>
-            )}
-            {powerState === 'poweredOff' ? null : (
               <Pill
                 asChild
-                variant={vmActionsColors['powerOff']}
-                className='mt-2 px-3 cursor-pointer'
+                variant={vmActionsColors['suspend']}
+                className='px-3 cursor-pointer'
                 onClick={() => {
-                  // TODO: Implement turn off functionality
+                  // TODO: Implement suspend functionality
                 }}
               >
-                <button type='button'>Turn off</button>
+                <button type='button'>Suspend</button>
               </Pill>
-            )}
-            <Pill
-              asChild
-              variant={vmActionsColors['restart']}
-              className='mt-2 px-3 cursor-pointer'
-              onClick={() => {
-                // TODO: Implement restart functionality
-              }}
-            >
-              <button type='button'>Restart</button>
-            </Pill>
-            <Pill
-              asChild
-              variant={vmActionsColors['suspend']}
-              className='mt-2 px-3 cursor-pointer'
-              onClick={() => {
-                // TODO: Implement suspend functionality
-              }}
-            >
-              <button type='button'>Suspend</button>
-            </Pill>
-            <Pill
-              asChild
-              variant={vmActionsColors['delete']}
-              className='mt-2 px-3 cursor-pointer'
-              onClick={() => {
-                // TODO: Implement delete functionality
-              }}
-            >
-              <button type='button'>Delete</button>
-            </Pill>
+              <Pill
+                asChild
+                variant={vmActionsColors['delete']}
+                className='px-3 cursor-pointer'
+                onClick={() => {
+                  // TODO: Implement delete functionality
+                }}
+              >
+                <button type='button'>Delete</button>
+              </Pill>
+            </div>
           </div>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   )
 
   return (
-    <div>
-      <GridLayoutWrapper
-        className={className}
-        layouts={layouts}
-        layoutKey={layoutKey}
-        onLayoutChange={(layout) => setLayouts({ ...layouts, [currentBreakpoint]: layout })}
-        onBreakpointChange={setCurrentBreakpoint}
-      >
-        <div key='memory' className='drag-handle '>
-          <MemoryCard />
+    <div className={'space-y-4 mb-4'}>
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-4'>
+        <div className='lg:col-span-2 space-y-4'>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            <TeamCard />
+            <LocationCard />
+            <LastUpdatedCard />
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <ConfigurationCard />
+            <DiskCard />
+            {/* <MemoryCard /> */}
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <CpuCard />
+            <MemoryCard />
+          </div>
         </div>
-        <div key='configuration' className='drag-handle '>
-          <ConfigurationCard />
-        </div>
-        <div key='cpu' className='drag-handle '>
-          <CpuCard />
-        </div>
-        {/* {teamValue && ( */}
-        <div key='team' className='drag-handle '>
-          <TeamCard />
-        </div>
-        {/* )} */}
-        {/* {AdGroup && ( */}
-        <div key='ad-groups' className='drag-handle '>
-          <AdGroupsCard />
-        </div>
-        {/* )} */}
-        {/* {serviceId && ( */}
-        <div key='service-id' className='drag-handle '>
-          <ServiceIdCard />
-        </div>
-        {/* )} */}
-        <div key='info' className='drag-handle '>
-          <InfoCard />
-        </div>
-        <div key='control-panel' className='drag-handle '>
+        <div className='lg:col-span-1 space-y-4'>
           <ControlPanelCard />
+          <InfoCard />
+          <TagCards />
         </div>
-      </GridLayoutWrapper>
+      </div>
     </div>
   )
 }

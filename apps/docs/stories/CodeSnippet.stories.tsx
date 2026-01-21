@@ -51,12 +51,6 @@ export const Multi: Story = {
         "test": "cross-env BABEL_ENV=test jest",
         "test:e2e": "cross-env BABEL_ENV=test jest --testPathPattern=e2e --testPathIgnorePatterns='examples,/packages/components/,/packages/react/'"
       },
-      "resolutions": {
-        "react": "~16.9.0",
-        "react-dom": "~16.9.0",
-        "react-is": "~16.9.0",
-        "react-test-renderer": "~16.9.0"
-      },
       "devDependencies": {
         "@babel/core": "^7.10.0",
         "@babel/plugin-proposal-class-properties": "^7.7.4",

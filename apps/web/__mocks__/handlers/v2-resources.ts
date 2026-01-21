@@ -5,6 +5,8 @@ import { clustersVersion2 } from '../data/clusters'
 import datacenters from '../data/datacenters'
 import { vulnerabilityReports } from '../data/vulnerability-reports'
 import { mockVms } from '../data/vms'
+import { mockBackupJobs } from '../data/backup-job'
+import { mockBackupRuns } from '../data/backup-run'
 
 type Resource = (typeof clustersVersion2.resources)[number]
 type NotFound = { message: string }
@@ -43,6 +45,18 @@ export const v2ResourcesHandlers = [
         const offset = Number(url.searchParams.get('offset') || 0)
         const allVMs = mockVms.resources
         return HttpResponse.json({ resources: allVMs.slice(offset, offset + limit) })
+      }
+      case 'BackupJob': {
+        const limit = Number(url.searchParams.get('limit') || 50)
+        const offset = Number(url.searchParams.get('offset') || 0)
+        const allBackupJobs = mockBackupJobs.resources
+        return HttpResponse.json({ resources: allBackupJobs.slice(offset, offset + limit) })
+      }
+      case 'BackupRun': {
+        const limit = Number(url.searchParams.get('limit') || 50)
+        const offset = Number(url.searchParams.get('offset') || 0)
+        const allBackupRuns = mockBackupRuns.resources
+        return HttpResponse.json({ resources: allBackupRuns.slice(offset, offset + limit) })
       }
       default:
         return HttpResponse.json(null) // If unknown kind, return null

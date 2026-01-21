@@ -14,10 +14,13 @@ import { useMemo } from 'react'
  * @property key - The unique identifier for the sort definition.
  * @property extractor - A function that extracts the value to sort by from an item.
  *   The extracted value can be a string, number, null, or undefined.
+ * @property compareFn - Optional custom comparison function for advanced sorting logic.
+ *   If provided, this will be used instead of the default comparison.
  */
 export interface SortDefinition<T> {
   key: string
   extractor: (item: T) => string | number | null | undefined
+  compareFn?: (a: T, b: T) => number
 }
 
 /**
@@ -48,10 +51,16 @@ export function useSorting<T>({
     const def = definitions.find((d) => d.key === sortKey)
     if (!def) return items
 
-    const { extractor } = def
+    const { extractor, compareFn } = def
     const orderMultiplier = sortOrder === 'desc' ? -1 : 1
 
     return [...items].sort((a, b) => {
+      // Use custom comparison function if provided
+      if (compareFn) {
+        return compareFn(a, b) * orderMultiplier
+      }
+
+      // Default comparison logic
       const aVal = extractor(a)
       const bVal = extractor(b)
 

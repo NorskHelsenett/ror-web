@@ -1,18 +1,53 @@
 export const mockVms = {
   resources: Array.from({ length: 104 }, (_, i) => {
     const idx = i + 1
-    const teams = ['Monitorering', 'stamnett']
-    const hostnames = [
-      'LTRD-WD-ANS01.365lab.no-mock',
-      'TTRD-WD-ANS02.365lab.no-mock',
-      'PTRD-WD-ANS03.365lab.no-mock',
-      'MTRD-WD-ANS04.365lab.no-mock',
+    const teamsDescription = ['Monitorering', 'stamnett', '']
+    const teamsValue = ['mon', 'stam']
+    const osFamily = ['Windows', 'Linux']
+    const osName = ['Windows', 'Red Hat Enterprise Linux']
+    const diskCount = (idx % 3) + 1
+    const allDisks = [
+      {
+        id: `disk-${idx}`,
+        name: `Mock-Virtual-machine-disk-${idx}-vmdk`,
+        sizeBytes: 78843545600,
+        type: 'persistent',
+        usageBytes: 0,
+        isMounted: true,
+      },
+      {
+        id: `disk-${idx + 1}`,
+        name: `Mock-Virtual-machine-disk-${idx + 1}-vmdk`,
+        sizeBytes: 35843545600,
+        type: 'persistent',
+        usageBytes: 15843545600,
+        isMounted: false,
+      },
+      {
+        id: `disk-${idx + 2}`,
+        name: `Mock-Virtual-machine-disk-${idx + 2}-vmdk`,
+        sizeBytes: 54843545600,
+        type: 'persistent',
+        usageBytes: 44843545600,
+        isMounted: true,
+      },
     ]
+    const disks = allDisks.slice(0, diskCount)
+    const memorySizes = [4294967296, 8589934592] // 4GB, 8GB in bytes
+    const memorySize = memorySizes[idx % 2]
+    const memoryUsageOptions = [3221225472, 4096000000, 0] // 2GB, 3GB, 3.81GB in bytes
+    const memoryUsage = memoryUsageOptions[idx % 3]
+
+    const CoresPerSocketOptions = [2, 4]
+    const CoresPerSocket = CoresPerSocketOptions[idx % 2]
+    const cpuUsageOptions = [0, 2, 5]
+    const cpuUsage = cpuUsageOptions[idx % 3]
+
     return {
       kind: 'VirtualMachine',
       apiVersion: 'general.ror.internal/v1alpha1',
       metadata: {
-        name: `LTRD-WD-ANS01.365lab.no-mock-${idx}`,
+        name: `Mock-Virtual-machine-${idx}`,
         uid: `mock-uid-${idx}`,
       },
       rormeta: {
@@ -27,54 +62,29 @@ export const mockVms = {
         provider: 'Vsphere',
         spec: {
           cpu: {
-            coresPerSocket: 1,
-            sockets: 2,
+            coresPerSocket: CoresPerSocket,
+            sockets: 4,
           },
-          name: `LTRD-WD-ANS01.365lab.no-mock-${idx}`,
+          name: `Mock-Virtual-machine-${idx}`,
           disks: null,
           memory: {
-            sizeBytes: 4294967296,
+            sizeBytes: memorySize,
           },
         },
         status: {
           lastUpdated: '2025-09-23T07:52:41Z',
           location: 'OSL3 NAM02',
           cpu: {
-            coresPerSocket: 1,
-            sockets: 2,
-            unit: 'vCPU',
-            usage: 0,
+            coresPerSocket: CoresPerSocket,
+            sockets: 4,
+            unit: '',
+            usage: cpuUsage,
           },
-          disks: [
-            {
-              id: `disk-${idx}`,
-              name: `disk-LTRD-WD-ANS01.365lab.no-mock-${idx}-vmdk`,
-              sizeBytes: 78843545600,
-              type: 'persistent',
-              usageBytes: 35843545600,
-              isMounted: true,
-            },
-            {
-              id: `disk-${idx + 1}`,
-              name: `disk-LTRD-WD-ANS01.365lab.no-mock-${idx + 1}-vmdk`,
-              sizeBytes: 35843545600,
-              type: 'persistent',
-              usageBytes: 20843545600,
-              isMounted: false,
-            },
-            {
-              id: `disk-${idx + 2}`,
-              name: `disk-${idx + 2}-vmdk`,
-              sizeBytes: 54843545600,
-              type: 'persistent',
-              usageBytes: 40084354560,
-              isMounted: true,
-            },
-          ],
+          disks: disks,
           memory: {
-            sizeBytes: 4294967296,
+            sizeBytes: memorySize,
             unit: 'bytes',
-            usage: 0,
+            usage: memoryUsage,
           },
           networks: [
             {
@@ -98,10 +108,10 @@ export const mockVms = {
           ],
           operatingSystem: {
             id: `mock${idx}`,
-            name: `Red Hat Enterprise Linux`,
-            family: 'Linux',
+            name: osName[idx % 5],
+            family: osFamily[idx % 2],
             version: '5.4.0-208-generic',
-            hostName: `LTRD-WD-ANS01.365lab.no-mock-${idx}`,
+            hostName: `Mock-Virtual-machine-${idx}`,
             powerState: idx % 3 === 0 ? 'poweredOn' : idx % 3 === 1 ? 'poweredOff' : 'undefined',
             toolVersion: '11360',
             architecture: 'X86',
@@ -113,9 +123,9 @@ export const mockVms = {
           },
           tags: {
             team: {
-              description: teams[idx % 2],
+              description: teamsDescription[idx % 3],
               key: 'team',
-              value: teams[idx % 2],
+              value: teamsValue[idx % 2],
             },
             _AdGroup: {
               description: '',

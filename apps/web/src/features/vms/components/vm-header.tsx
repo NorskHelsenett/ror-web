@@ -15,6 +15,7 @@ import { Power, PowerOff, TriangleAlert } from 'lucide-react'
 import { vmCardPowerStatus } from '../utils/env-colors'
 import { getVmHostName, getVmPowerState } from '../utils/vms'
 import { ResourceHeader } from '@/components/ui/resource-header'
+import { changePowerStateValues } from '../types/powerState'
 
 interface VMHeaderProps {
   className?: string
@@ -22,9 +23,9 @@ interface VMHeaderProps {
 }
 
 function PowerIcon({ state }: { state: string }) {
-  if (state === 'poweredOn') return <Power size={32} />
-  if (state === 'poweredOff') return <PowerOff size={32} />
-  return <TriangleAlert size={32} />
+  if (state === 'poweredOn') return <Power size={25} />
+  if (state === 'poweredOff') return <PowerOff size={25} />
+  return <TriangleAlert size={25} />
 }
 
 export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
@@ -40,8 +41,8 @@ export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
           <span className='flex items-center pr-3'>
             <PowerIcon state={powerstate} />
           </span>
-          <span className='hidden xl:block'>Power state:&nbsp;</span>
-          <span className='hidden md:block'>{powerstate}</span>
+          <span className='hidden xl:block'>Power:&nbsp;</span>
+          <span className='hidden md:block'>{changePowerStateValues[powerstate]}</span>
         </p>
       </div>
     </div>
@@ -50,12 +51,12 @@ export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
   return (
     <ResourceHeader
       className={className}
-      title={hostname}
+      title={hostname.toLowerCase()}
       tabs={tabs}
       rightContent={rightContent}
       lightmodeColor={lightmode}
       darkmodeColor={darkmode}
-      titleSize='text-3xl sm:text-5xl'
+      titleSize='text-3xl sm:text-4xl'
     />
   )
 }

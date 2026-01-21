@@ -1,7 +1,10 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import MultipleSelector from '@/components/shadcn/multiselect'
-import { filterOptions } from '@/features/vms/config/page-view-options'
+import { powerStateOptions, backupStatusOptions } from '@/features/vms/config/page-view-options'
+import { generateServerTeamOptions } from '@/features/vms/config/page-view-options'
+import { Option } from '@/components/shadcn/multiselect'
 
 interface VmFilterSectionProps {
   filtersOpen: boolean
@@ -10,7 +13,37 @@ interface VmFilterSectionProps {
 }
 
 export const VmFilterSection = ({ filtersOpen, selectedFilters, setSelectedFilters }: VmFilterSectionProps) => {
+  const [teamOptions, setTeamOptions] = useState<Option[]>([])
+  const [isLoadingTeams, setIsLoadingTeams] = useState(false)
+
+  useEffect(() => {
+    const fetchTeamOptions = async () => {
+      setIsLoadingTeams(true)
+      try {
+        const options = await generateServerTeamOptions()
+        setTeamOptions(options)
+      } catch (error) {
+        console.error('Failed to fetch team options:', error)
+        setTeamOptions([])
+      } finally {
+        setIsLoadingTeams(false)
+      }
+    }
+
+    fetchTeamOptions()
+  }, [])
+
   if (!filtersOpen) return null
+
+  const filterOptions = [
+    { label: 'Power States', placeholder: 'Choose Power State', data: powerStateOptions },
+    {
+      label: 'Teams',
+      placeholder: isLoadingTeams ? 'Loading teams...' : 'Choose Team',
+      data: teamOptions,
+    },
+    { label: 'Backup', placeholder: 'Choose Backup Status', data: backupStatusOptions },
+  ]
 
   return (
     <div className='flex flex-wrap items-center gap-x-4 gap-y-6 min-h-28 mx-12 mt-6'>
@@ -34,6 +67,7 @@ export const VmFilterSection = ({ filtersOpen, selectedFilters, setSelectedFilte
           hideClearAllButton
           hidePlaceholderWhenSelected
           emptyIndicator={<p className='text-center text-sm'>No results found</p>}
+          disabled={option.label === 'Teams' && isLoadingTeams}
         />
       ))}
     </div>

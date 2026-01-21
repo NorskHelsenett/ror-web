@@ -32,6 +32,7 @@ import { envColors, getHighDifferenceEnvironmentColors } from '../utils/env-colo
 import { formatResource } from '../utils/formats'
 import { HealthCircle } from './health-circle'
 import { Environment } from '../types/environment'
+import { routes } from '@/config/routes'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -230,7 +231,7 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
 
   return (
     <Link
-      href={`/clusters/${clusterId}`}
+      href={routes.app.cluster.getHref(clusterId)}
       onClick={() => localStorage.setItem('selectedCluster', JSON.stringify(cluster))}
     >
       <Card

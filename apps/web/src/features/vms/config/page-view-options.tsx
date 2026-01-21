@@ -1,34 +1,33 @@
 import { Option } from '@/components/shadcn/multiselect'
-import { getTeamValue } from '../utils/vms'
-import type { VirtualMachine } from '@ror/js-api-client'
+import { fetchAllTeamOptions } from '@/utils/vm-team-actions'
 
 export const displayDataOptions: Option[] = [
-  { label: 'OS-version', value: 'name' },
-  { label: 'ID', value: 'id' },
+  { label: 'Backup status', value: 'activeBackup' },
+  { label: 'Team', value: 'team' },
   { label: 'Power', value: 'powerState' },
-  { label: 'Architecture', value: 'architecture' },
-  //{ label: 'OS-type', value: 'family' },
-  { label: 'Version', value: 'version' },
-  { label: 'VMware Tools version', value: 'toolVersion' },
-  { label: 'Disk Size', value: 'disk-size' },
+  { label: 'Disk usage', value: 'disk-usage' },
   { label: 'Memory', value: 'memory' },
   { label: 'CPU', value: 'cpu' },
-  { label: 'Team', value: 'team' },
+  { label: 'ID', value: 'id' },
+  { label: 'Architecture', value: 'architecture' },
+  { label: 'Family', value: 'family' },
+  { label: 'Version', value: 'version' },
+  { label: 'VMware Tools version', value: 'toolVersion' },
 ]
 
 export const sortingOptions = [
-  { value: 'hostName', label: 'Hostname' },
-  { value: 'name', label: 'OS-version' },
-  { value: 'id', label: 'ID' },
-  { value: 'powerState', label: 'Power' },
-  { value: 'architecture', label: 'Architecture' },
-  //{ value: 'family', label: 'OS-type' },
-  { value: 'version', label: 'Version' },
-  { value: 'toolVersion', label: 'VMware Tools version' },
-  { value: 'disk-size', label: 'Disk Size' },
-  { value: 'memory', label: 'Memory' },
-  { value: 'cpu', label: 'CPU' },
-  { value: 'team', label: 'Team' },
+  { label: 'Hostname', value: 'hostName' },
+  { label: 'Backup status', value: 'activeBackup' },
+  { label: 'Team', value: 'team' },
+  { label: 'Power', value: 'powerState' },
+  { label: 'Disk usage', value: 'disk-usage' },
+  { label: 'Memory', value: 'memory' },
+  { label: 'CPU', value: 'cpu' },
+  { label: 'ID', value: 'id' },
+  { label: 'Architecture', value: 'architecture' },
+  { label: 'Family', value: 'family' },
+  { label: 'Version', value: 'version' },
+  { label: 'VMware Tools version', value: 'toolVersion' },
 ]
 
 export const powerStateOptions: Option[] = [
@@ -37,29 +36,33 @@ export const powerStateOptions: Option[] = [
   { value: 'undefined', label: 'Undefined' },
 ]
 
-// Generate team options from VM data
-export const generateTeamOptions = (vms: VirtualMachine[]): Option[] => {
-  const teams = new Set<string>()
+export const backupStatusOptions: Option[] = [
+  { value: 'activeBackup', label: 'Active Backup' },
+  { value: 'historicalBackup', label: 'Historical Backup' },
+  { value: 'configuredBackup', label: 'Configured Backup' },
+  { value: 'noBackup', label: 'No Backup' },
+  // TODO: Implement these statuses in the future
+  // { value: 'inProgress', label: 'In Progress' },
+  // { value: 'completed', label: 'Completed' },
+  // { value: 'failed', label: 'Failed' },
+]
 
-  vms.forEach((vm) => {
-    const teamName = getTeamValue(vm)
-    if (teamName && teamName.trim()) {
-      teams.add(teamName)
-    }
-  })
-  teams.add('No Team')
-
-  return Array.from(teams)
-    .sort()
-    .map((team) => ({ value: team, label: team }))
+export const generateServerTeamOptions = async (): Promise<Option[]> => {
+  return await fetchAllTeamOptions()
 }
 
-export const generateFilterOptions = (vms: VirtualMachine[]) => [
-  { label: 'Power States', placeholder: 'Choose Power State', data: powerStateOptions },
-  { label: 'Teams', placeholder: 'Choose Team', data: generateTeamOptions(vms) },
-]
+// export const generateServerDetailedTeamOptions = async (): Promise<Option[]> => {
+//   return await fetchAllDetailedTeamOptions()
+// }
 
-export const filterOptions = [
-  { label: 'Power States', placeholder: 'Choose Power State', data: powerStateOptions },
-  { label: 'Teams', placeholder: 'Choose Team', data: [] },
-]
+export const generateServerFilterOptions = async (): Promise<
+  Array<{ label: string; placeholder: string; data: Option[] }>
+> => {
+  const teamOptions = await generateServerTeamOptions()
+
+  return [
+    { label: 'Power States', placeholder: 'Choose Power State', data: powerStateOptions },
+    { label: 'Teams', placeholder: 'Choose Team', data: teamOptions },
+    { label: 'Backup', placeholder: 'Choose Backup Status', data: backupStatusOptions },
+  ]
+}

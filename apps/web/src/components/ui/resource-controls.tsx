@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/shadcn/dropdown-menu'
 import { Button } from '@/components/shadcn/button'
-import { ArrowDownWideNarrow, ArrowDownNarrowWide, Funnel, RotateCw, Download } from 'lucide-react'
+import { ArrowDownWideNarrow, ArrowDownNarrowWide, Funnel, RotateCw, Download, Plus } from 'lucide-react'
 import { SortSelect } from './sort-select'
 import { TabsViewSwitcher } from './tabs-view-switcher'
 import MultipleSelector, { Option } from '@/components/shadcn/multiselect'
@@ -183,6 +183,15 @@ export function ResourceControls<T>({
             <Funnel aria-hidden='true' />
           </Link>
         </Toggle>
+
+        {domain === 'clusters' && (
+          <Link href={`/clusters/new-cluster`}>
+            <Button>
+              <Plus />
+              Create Cluster
+            </Button>
+          </Link>
+        )}
 
         <Button
           type='button'

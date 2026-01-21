@@ -6,11 +6,13 @@
  * It handles authentication, data fetching, and rendering of the page layout.
  */
 
-import { authGuard } from '@/features/auth/utils/auth-guard'
 import PageView from './page-view'
 import { Header } from '@/components/layout/app-shell/header'
 import { normalizeParams } from '@/features/cluster/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
+import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
+import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
+import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
 
@@ -26,20 +28,27 @@ export default async function VMPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const session = await authGuard()
-  const user = session.user
   const api = await getRorApi()
 
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  const fetchedVms = await fetchVms(api, params)
+  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
+    fetchVms(api, params),
+    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
+  ])
+
   const vms = fetchedVms.vms
+  const backupJobs = fetchedBackupJobs.backupJobs || []
+  const backupRuns = fetchedBackupRuns.backupRuns || []
+
+  const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView user={user} vms={vms} params={params} />
+      <PageView vms={vmsWithBackup} params={params} />
     </div>
   )
 }

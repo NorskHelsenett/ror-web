@@ -11,7 +11,6 @@ import { DataTable } from '@/components/ui/data-table'
 import { Button } from '@/components/shadcn/button'
 import { Plus } from 'lucide-react'
 import { TableCell, TableRow } from '@ror/react/components/table/table'
-import Link from 'next/link'
 import type { Node } from '@ror/js-api-client'
 import { routes } from '@/config/routes'
 import { useClusterContext } from '@/context/cluster-context'
@@ -34,6 +33,7 @@ import {
   getNodeEphemeralStorage,
 } from '@/features/cluster/utils/node'
 import { nodePoolsColumns } from '@/features/cluster/components/node-pools-columns'
+import Link from 'next/link'
 
 interface PageViewProps {
   id: string
@@ -121,9 +121,11 @@ export function PageView({ id, initialNodes }: PageViewProps) {
   return (
     <div>
       <Link href={routes.app.newNodePool.getHref(id)}>
-        <Button>
-          <Plus />
-          Create nodepool
+        <Button asChild>
+          <span className='flex items-center'>
+            <Plus />
+            Create nodepool
+          </span>
         </Button>
       </Link>
 

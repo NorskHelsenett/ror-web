@@ -14,6 +14,8 @@ import { createReplicaSetService } from '../services/replica-sets'
 import { createPriceService } from '../services/prices'
 import { createDatacentersService } from '../services/datacenters'
 import { createVirtualMachineService } from '../services/vm'
+import { createBackupJobService } from '../services/backup-job'
+import { createBackupRunService } from '../services/backup-run'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -56,6 +58,8 @@ export function createApiClient(config: ApiClientConfig) {
     users: createUsersService(request),
     vulnerabilityReport: createVulnerabilityReportService(request),
     virtualMachine: createVirtualMachineService(request),
+    backupJob: createBackupJobService(request),
+    backupRun: createBackupRunService(request),
   }
 
   return services

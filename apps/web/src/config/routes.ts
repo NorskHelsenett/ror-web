@@ -22,6 +22,10 @@ export const routes = {
       label: 'Cluster',
       getHref: (id: string) => `/clusters/${id}`,
     },
+    createCluster: {
+      label: 'Create cluster',
+      getHref: () => '/clusters/create-cluster',
+    },
     clusterIngresses: {
       label: 'Ingresses',
       getHref: (id: string) => `/clusters/${id}/ingresses`,
@@ -134,9 +138,17 @@ export const routes = {
       label: 'Disks',
       getHref: (id: string) => `/vms/${id}/disks`,
     },
-    vmMetaData: {
-      label: 'Metadata',
-      getHref: (id: string) => `/vms/${id}/metadata`,
+    vmBackup: {
+      label: 'Backup',
+      getHref: (id: string) => `/vms/${id}/backup`,
+    },
+    backupRuns: {
+      label: 'Backup runs',
+      getHref: () => `/vms/backup/backup-runs`,
+    },
+    backupJobs: {
+      label: 'Backup jobs',
+      getHref: () => `/vms/backup/backup-jobs`,
     },
   },
 } as const

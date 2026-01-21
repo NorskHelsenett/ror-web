@@ -518,13 +518,14 @@ const SidebarMenuButton = React.forwardRef<
         >
           {popoverContent.items.length === 1 ? (
             'url' in popoverContent.items[0] ? (
-              <div className='hover:bg-[var(--r-layer)] rounded-md px-2 pt-1'>
-                <Link className='pt-1' href={popoverContent.items[0].url}>
-                  {popoverContent.items[0].title}
-                </Link>
-              </div>
+              <Link
+                className='block hover:bg-[var(--r-layer)] rounded-md px-2 pt-1 pb-1'
+                href={popoverContent.items[0].url}
+              >
+                {popoverContent.items[0].title}
+              </Link>
             ) : (
-              <span>{popoverContent.items[0].title}</span>
+              <span className='block px-2 pt-1 pb-1'>{popoverContent.items[0].title}</span>
             )
           ) : (
             <div>
@@ -532,8 +533,14 @@ const SidebarMenuButton = React.forwardRef<
               <hr />
               <div className='mt-2'>
                 {popoverContent.items.map((item) => (
-                  <div key={item.title} className='hover:bg-[var(--r-layer)] rounded-md px-2 pt-2'>
-                    {'url' in item ? <Link href={item.url}>{item.title}</Link> : <span>{item.title}</span>}
+                  <div key={item.title}>
+                    {'url' in item ? (
+                      <Link href={item.url} className='block hover:bg-[var(--r-layer)] rounded-md px-2 pt-2 pb-1'>
+                        {item.title}
+                      </Link>
+                    ) : (
+                      <span className='block px-2 pt-2 pb-1'>{item.title}</span>
+                    )}
                   </div>
                 ))}
               </div>
