@@ -15,7 +15,7 @@ import {
   getBackupStatus,
 } from '@/features/vms/backup/utils/backup-job'
 import Link from 'next/link'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { ActiveTargetsTooltip, IdListTooltip } from '../../utils/active-targets-tooltip'
 import { BackupJobStatus, BackupJobStatusType } from './backup-job-status'
 import { CopyButton } from '@/components/ui/copy-button'
