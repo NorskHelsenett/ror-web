@@ -33,16 +33,46 @@ export interface NormalizeParamsResult {
  * - `filters`: The filter value if set to 'open', otherwise undefined.
  */
 export function normalizeParams(parameters: Record<string, string | string[] | undefined>): NormalizeParamsResult {
-  const get = (key: string): string | undefined =>
-    typeof parameters[key] === 'string' ? (parameters[key] as string) : undefined
+  // Debug: Log all incoming parameters
 
-  const page = Number(get('page') ?? '1') || 1
-  const limit = Number(get('limit') ?? '50') || 50
+  // Enhanced parameter extractor with debugging
+  const get = (key: string): string | undefined => {
+    const value = parameters[key]
+    console.log(`🔍 [VM normalizeParams] Key '${key}':`, value, typeof value)
+
+    if (typeof value === 'string') {
+      return value
+    }
+    if (Array.isArray(value) && value.length > 0) {
+      return value[0]
+    }
+    return undefined
+  }
+
+  const rawPage = get('page')
+  const rawLimit = get('limit')
+
+  // Add validation to prevent problematic values
+  let page = Number(rawPage ?? '1') || 1
+  let limit = Number(rawLimit ?? '50') || 50
+
+  // Ensure page is always >= 1 (prevents negative offsets)
+  if (page < 1) {
+    page = 1
+  }
+
+  // Ensure limit is reasonable (prevents API overload or errors)
+  if (limit < 1) {
+    limit = 50
+  } else if (limit > 10000) {
+    limit = 10000
+  }
+
   const order: 'asc' | 'desc' = get('order') === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = get('view') === 'list' ? 'list' : 'grid'
   //const sort = get('sort')
   // const filters = get('filters') === 'open' ? 'open' : undefined
 
-  return { page, limit, order, view }
-  // return { view, page, limit, order, sort, filters }
+  const result = { page, limit, order, view }
+  return result
 }
