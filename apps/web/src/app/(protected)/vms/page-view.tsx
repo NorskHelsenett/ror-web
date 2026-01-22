@@ -64,7 +64,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
-    sort: params.sort,
+    // sort: params.sort,
     pageSize: 50,
     getItemId: getVmUniqueKey,
     getItemsKey: getVmsKey,
@@ -72,14 +72,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       const res = await loadMoreVMs({
         offset,
         limit,
-        sort: params.sort,
         order: params.order,
+        // sort: params.sort,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
-  console.log(items)
+  //console.log(items)
 
   const safeItems = useMemo(
     () => items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
