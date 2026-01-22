@@ -8,7 +8,7 @@
 
 import PageView from './page-view'
 import { Header } from '@/components/layout/app-shell/header'
-import { normalizeParams } from '@/features/cluster/utils/normalize-params'
+import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'

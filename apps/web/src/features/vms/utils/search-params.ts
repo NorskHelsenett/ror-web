@@ -2,10 +2,10 @@ export interface VmPageParams {
   page: number
   limit: number
   sort?: string
-  order: 'asc' | 'desc'
+  order?: 'asc' | 'desc'
   view: 'grid' | 'list'
   filters?: 'open'
-  skip: number
+  skip?: number
 }
 
 export interface VmSearchParams {
@@ -23,8 +23,8 @@ export const parseVmSearchParams = (searchParams: VmSearchParams): VmPageParams 
   // const sort = typeof searchParams.sort === 'string' ? searchParams.sort : undefined
   const order: 'asc' | 'desc' = searchParams.order === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = searchParams.view === 'list' ? 'list' : 'grid'
-  const filters = searchParams.filters === 'open' ? ('open' as const) : undefined
-  const skip = (page - 1) * limit
+  //const filters = searchParams.filters === 'open' ? ('open' as const) : undefined
+  //const skip = (page - 1) * limit
 
   return {
     page,
@@ -32,8 +32,8 @@ export const parseVmSearchParams = (searchParams: VmSearchParams): VmPageParams 
     // sort,
     order,
     view,
-    filters,
-    skip,
+    // filters,
+    // skip,
   }
 }
 
@@ -56,9 +56,9 @@ export const buildVmSearchParams = (params: Partial<VmPageParams>): URLSearchPar
   if (params.view && params.view === 'list') {
     searchParams.set('view', params.view)
   }
-  if (params.filters) {
-    searchParams.set('filters', params.filters)
-  }
+  // if (params.filters) {
+  //   searchParams.set('filters', params.filters)
+  // }
 
   return searchParams
 }

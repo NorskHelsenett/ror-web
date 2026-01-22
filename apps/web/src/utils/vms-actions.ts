@@ -10,14 +10,6 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
 
 export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) {
-  console.log('🔄 [loadMoreVMs] Loading more VMs with params:', {
-    offset,
-    limit,
-    sort,
-    order,
-    timestamp: new Date().toISOString(),
-  })
-
   const api = await getRorApi()
 
   const params = new URLSearchParams()

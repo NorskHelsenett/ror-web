@@ -4,7 +4,7 @@ export async function fetchBackupJobs(
     page: number
     limit: number
     sort?: string
-    order: 'asc' | 'desc'
+    order?: 'asc' | 'desc'
   }
 ) {
   const skip = (params.page - 1) * params.limit

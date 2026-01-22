@@ -12,7 +12,7 @@ export interface NormalizeParamsResult {
   view: 'grid' | 'list'
   page: number
   limit: number
-  order: 'asc' | 'desc'
+  order?: 'asc' | 'desc'
   sort?: string
   filters?: string
 }
@@ -41,8 +41,8 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
   const order: 'asc' | 'desc' = get('order') === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = get('view') === 'list' ? 'list' : 'grid'
   //const sort = get('sort')
-  const filters = get('filters') === 'open' ? 'open' : undefined
+  // const filters = get('filters') === 'open' ? 'open' : undefined
 
-  return { view, page, limit, order, filters }
+  return { page, limit, order, view }
   // return { view, page, limit, order, sort, filters }
 }
