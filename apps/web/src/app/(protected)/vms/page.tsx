@@ -33,51 +33,39 @@ export default async function VMPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  // Fetch ALL VMs without limit for console logging
-  // const allVmsParams = new URLSearchParams()
-  // allVmsParams.set('limit', '10000') // Set a very high limit to get all VMs
-  // allVmsParams.set('offset', '0')
-
-  // Params for backup jobs/runs: page, limit, order (required by fetchBackupJobs/fetchBackupRuns)
-  const backupQueryParams = { page: 1, limit: 50, order: 'asc' as const }
-
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchVms(api, backupQueryParams),
-    fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
+    fetchVms(api, params),
+    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
-
-  // const allVmsResponse = await api.virtualMachine.list(allVmsParams)
-  // const allVms = allVmsResponse?.resources ?? []
-
-  // console.log('[VMPage] ALL VMs fetched from API (without pagination limit):', {
-  //   totalVmsCount: allVms.length,
-  //   vmsWithPagination: vms.length,
-  //   firstTenVms: allVms.slice(0, 10).map((vm, index) => ({
-  //     index: index + 1,
-  //     name: vm.metadata?.name ?? 'unnamed',
-  //     uid: vm.metadata?.uid,
-  //     hostname: vm.virtualmachine?.status?.operatingSystem?.hostName,
-  //   })),
-  //   lastFiveVms: allVms.slice(-5).map((vm, index) => ({
-  //     index: allVms.length - 4 + index,
-  //     name: vm.metadata?.name ?? 'unnamed',
-  //     uid: vm.metadata?.uid,
-  //     hostname: vm.virtualmachine?.status?.operatingSystem?.hostName,
-  //   })),
-  // })
 
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
 
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
+  const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
+
+  const [twofetchedVms, twofetchedBackupJobs, twofetchedBackupRuns] = await Promise.all([
+    fetchVms(api, backupQueryParams),
+    fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
+  ])
+
+  const twoVms = twofetchedVms.vms
+  const twobackupJobs = twofetchedBackupJobs.backupJobs || []
+  const twobackupRuns = twofetchedBackupRuns.backupRuns || []
+  const twoVmsWithBackup = mapBackupToVM(twoVms, twobackupJobs, twobackupRuns)
+
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={backupQueryParams} />
+      <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'>
+        <PageView vms={vmsWithBackup} params={params} />
+        <PageView vms={twoVmsWithBackup} params={backupQueryParams} />
+      </div>
     </div>
   )
 }

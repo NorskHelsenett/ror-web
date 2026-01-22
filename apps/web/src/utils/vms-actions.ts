@@ -15,8 +15,8 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   const params = new URLSearchParams()
   params.set('limit', String(limit))
   params.set('offset', String(offset))
-  // if (sort) params.set('sort', sort)
-  // if (order) params.set('order', order)
+  if (sort) params.set('sort', sort)
+  if (order) params.set('order', order)
 
   // Fetch VMs and backup data in parallel
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([

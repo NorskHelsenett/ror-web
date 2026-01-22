@@ -21,7 +21,7 @@
 import { Option } from '@/components/shadcn/multiselect'
 import {
   getVmOperatingSystemId,
-  getVmUniqueKey,
+  getVmExternalId,
   getVmName,
   getVmVersion,
   getVmOperatingSystem,
@@ -60,13 +60,14 @@ import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
+  //filter state
   const filtersOpen = params.filters === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
     pageSize: 50,
-    getItemId: getVmUniqueKey,
+    getItemId: getVmExternalId,
     getItemsKey: getVmsKey,
     loadMore: async (offset, limit) => {
       const res = await loadMoreVMs({
@@ -75,16 +76,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         order: params.order,
         sort: params.sort,
       })
+      console.log(items)
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
-  console.log(items)
-
-  const safeItems = useMemo(
-    () => items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
-    [items]
-  )
+  const safeItems = useMemo(() => {
+    const filtered = items.filter((c) => c.virtualmachine?.spec && typeof c.virtualmachine.spec === 'object')
+    return filtered
+  }, [items])
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getVmPowerState(vm) },
@@ -188,8 +188,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     if (!searchResults?.length) {
       result = sortedItems
     } else {
-      const ids = new Set(searchResults.map(getVmUniqueKey))
-      result = sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+      const ids = new Set(searchResults.map(getVmExternalId))
+      result = sortedItems.filter((c) => ids.has(getVmExternalId(c)))
     }
     return result
   }, [sortedItems, searchResults])
@@ -210,12 +210,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostname', 'powerState', 'family']}
+        searchKeys={['label', 'family']}
         mapItem={(vm) => ({
           ...vm,
-          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-          hostName: getVmHostName(vm),
-          powerState: getVmPowerState(vm),
+          label: getVmHostName(vm),
           family: getVmFamily(vm),
         })}
         getItemsKey={getVmsKey}

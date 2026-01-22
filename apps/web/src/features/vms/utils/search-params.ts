@@ -19,21 +19,21 @@ export interface VmSearchParams {
 
 export const parseVmSearchParams = (searchParams: VmSearchParams): VmPageParams => {
   const page = Number(searchParams.page ?? '1') || 1
-  const limit = Number(searchParams.limit ?? '50') || 50
-  // const sort = typeof searchParams.sort === 'string' ? searchParams.sort : undefined
+  const limit = Number(searchParams.limit ?? '25') || 25
+  const sort = typeof searchParams.sort === 'string' ? searchParams.sort : undefined
   const order: 'asc' | 'desc' = searchParams.order === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = searchParams.view === 'list' ? 'list' : 'grid'
-  //const filters = searchParams.filters === 'open' ? ('open' as const) : undefined
-  //const skip = (page - 1) * limit
+  const filters = searchParams.filters === 'open' ? ('open' as const) : undefined
+  const skip = (page - 1) * limit
 
   return {
     page,
     limit,
-    // sort,
+    sort,
     order,
     view,
-    // filters,
-    // skip,
+    filters,
+    skip,
   }
 }
 
@@ -47,18 +47,18 @@ export const buildVmSearchParams = (params: Partial<VmPageParams>): URLSearchPar
   if (params.limit && params.limit !== 10) {
     searchParams.set('limit', params.limit.toString())
   }
-  // if (params.sort) {
-  //   searchParams.set('sort', params.sort)
-  // }
+  if (params.sort) {
+    searchParams.set('sort', params.sort)
+  }
   if (params.order && params.order === 'desc') {
     searchParams.set('order', params.order)
   }
   if (params.view && params.view === 'list') {
     searchParams.set('view', params.view)
   }
-  // if (params.filters) {
-  //   searchParams.set('filters', params.filters)
-  // }
+  if (params.filters) {
+    searchParams.set('filters', params.filters)
+  }
 
   return searchParams
 }

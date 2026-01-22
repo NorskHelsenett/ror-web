@@ -1,14 +1,14 @@
 'use client'
 
 import { useVMContext } from '@/context/vm-context'
-import { getStatusCpuUsage, getSpecCpuTotal, getVmUniqueKey } from '../utils/vms'
+import { getStatusCpuUsage, getSpecCpuTotal, getVmExternalId } from '../utils/vms'
 import { CpuUsageLineChart } from './cpu-usage-line-chart'
 import { Card, CardContent } from '@/components/shadcn/card'
 
 export const DetailedCPUUsage = () => {
   const { vm } = useVMContext()
   const currentCpuUsage = getStatusCpuUsage(vm)
-  const vmId = getVmUniqueKey(vm)
+  const vmId = getVmExternalId(vm)
 
   if (!vm) {
     return (

@@ -340,24 +340,26 @@ export const getProvider = (vm: VirtualMachine) => {
 export const getTags = (vm: VirtualMachine) => {
   return vm?.virtualmachine?.status?.tags || {}
 }
-export const getVmUniqueKey = (vm: VirtualMachine) => {
-  const hostname = getVmHostName(vm)
-  const uid = vm?.metadata?.uid
-  // If both hostname and uid are available, combine them; else use whichever is available
-  if (hostname && hostname !== 'Unknown VM' && uid) {
-    return `${hostname}-${uid}`
-  }
-  if (uid) {
-    return uid
-  }
-  // Fallback: at least use hostname (may be 'Unknown VM')
-  return hostname
-}
-export const getVmsKey = (vms: VirtualMachine[] = []) => (Array.isArray(vms) ? vms.map(getVmUniqueKey).join('|') : '')
+// export const getVmUniqueKey = (vm: VirtualMachine) => {
+
+//   const hostname = getVmHostName(vm)
+//   const uid = vm?.metadata?.uid
+//   // If both hostname and uid are available, combine them; else use whichever is available
+//   if (hostname && hostname !== 'Unknown VM' && uid) {
+//     return `${hostname}-${uid}`
+//   }
+//   if (uid) {
+//     return uid
+//   }
+//   // Fallback: at least use hostname (may be 'Unknown VM')
+//   return hostname
+// }
 
 export const getVmExternalId = (vm: VirtualMachine) => {
-  return vm?.virtualmachine?.externalId
+  return vm?.virtualmachine?.externalId || ''
 }
+
+export const getVmsKey = (vms: VirtualMachine[] = []) => (Array.isArray(vms) ? vms.map(getVmExternalId).join('|') : '')
 
 /**
  * Power state priority order for sorting
