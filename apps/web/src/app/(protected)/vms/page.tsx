@@ -39,12 +39,12 @@ export default async function VMPage({
   // allVmsParams.set('offset', '0')
 
   // Params for backup jobs/runs: page, limit, order (required by fetchBackupJobs/fetchBackupRuns)
-  //const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
+  const backupQueryParams = { page: 1, limit: 50, order: 'asc' as const }
 
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchVms(api, params),
-    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
+    fetchVms(api, backupQueryParams),
+    fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
@@ -77,7 +77,7 @@ export default async function VMPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} />
+      <PageView vms={vmsWithBackup} params={backupQueryParams} />
     </div>
   )
 }
