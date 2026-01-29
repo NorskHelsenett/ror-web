@@ -38,7 +38,8 @@ export default async function VMPage({
   const fetchParams = {
     page: params.page,
     limit: params.limit,
-    sort: params.sort,
+    // Don't include sort to match working version
+    ...(params.sort ? { sort: params.sort } : {}),
     order: params.order,
   }
 
