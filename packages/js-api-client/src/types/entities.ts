@@ -22,6 +22,7 @@ import type { PriceResponseSchema, PriceSchema } from '../schemas/price'
 import type { DatacenterResponseSchema, DatacenterSchema } from '../schemas/datacenter'
 import type { BackupJobSchema } from '../schemas/backup-job'
 import type { BackupRunSchema } from '../schemas/backup-run'
+import type { ProjectResponseSchema, ProjectSchema } from '../schemas/project'
 
 // "Cluster" matches the v1 resource
 export type Cluster = z.infer<typeof ClusterSchema>
@@ -47,13 +48,12 @@ export type Node = z.infer<typeof NodeSchema>
 export type NodeResponse = z.infer<typeof NodeResponseSchema>
 export type Price = z.infer<typeof PriceSchema>
 export type PriceResponse = z.infer<typeof PriceResponseSchema>
+export type Project = z.infer<typeof ProjectSchema>
+export type ProjectResponse = z.infer<typeof ProjectResponseSchema>
 export type Pod = z.infer<typeof PodSchema>
 export type PodResponse = z.infer<typeof PodResponseSchema>
 export type ReplicaSet = z.infer<typeof ReplicaSetSchema>
 export type ReplicaSetResponse = z.infer<typeof ReplicaSetResponseSchema>
-// Delete if no errors
-// export type Replicaset = z.infer<typeof ReplicaSetSchema>
-// export type ReplicasetResponse = z.infer<typeof ReplicaSetResponseSchema>
 export type RorMetaData = z.infer<typeof RorMetaDataSchema>
 export type RorMetaDataResponse = z.infer<typeof RorMetaDataResponseSchema>
 export type Service = z.infer<typeof ServiceSchema>

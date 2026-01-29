@@ -1,0 +1,41 @@
+services:
+  dex:
+    image: ${DOCKER_MIRROR}dexidp/dex:v2.42.1-alpine
+    restart: always
+    volumes:
+      - ${ROR_ASSETS_PATH:-./volumes-for-compose}:/configs
+      - ${DOCKER_VOLUME_PATH:-../ror/hacks/data}/dex/dbs:/dbs
+    command: dex serve /configs/dex-config-default.yaml
+    depends_on:
+      init-dex-db:
+        condition: service_completed_successfully
+    ports:
+      - "6554:6554"
+      - "6556:6556"
+      - "6557:6557"
+      - "6558:6558"
+
+  init-dex-db:
+    image: ${DOCKER_MIRROR}busybox
+    volumes:
+      - ${DOCKER_VOLUME_PATH:-../ror/hacks/data}/dex/dbs:/dbs
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "touch /dbs/dex.db && chmod 766 /dbs/dex.db && chmod 777 /dbs && echo 'dex.db file created.'",
+      ]
+    restart: "no"
+
+  mocc:
+    image: ghcr.io/jonasbg/mocc:latest
+    container_name: ${COMPOSE_PROJECT_NAME}-mocc
+    restart: unless-stopped
+    ports:
+      - "6006:6006"
+    environment:
+      - PORT=6006
+    volumes:
+      - ${ROR_ASSETS_PATH:-./volumes-for-compose}/users.yaml:/config/users.yaml:ro
+volumes:
+  data: {}

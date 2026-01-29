@@ -91,7 +91,7 @@ export const ClusterControls = ({
 
         {toggleSortParams && (
           <Link href={toggleSortParams.url}>
-            <Button variant='outline' className='border-[var(--input)]'>
+            <Button variant='outline' className='border-(--input)'>
               {toggleSortParams.isDesc ? (
                 <span className='flex gap-1 items-center'>
                   <ArrowDownWideNarrow className='w-4 h-4' />

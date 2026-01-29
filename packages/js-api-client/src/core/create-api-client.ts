@@ -16,6 +16,7 @@ import { createDatacentersService } from '../services/datacenters'
 import { createVirtualMachineService } from '../services/vm'
 import { createBackupJobService } from '../services/backup-job'
 import { createBackupRunService } from '../services/backup-run'
+import { createProjectService } from '../services/projects'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -53,6 +54,7 @@ export function createApiClient(config: ApiClientConfig) {
     nodes: createNodesService(request),
     pods: createPodsService(request),
     prices: createPriceService(request),
+    projects: createProjectService(request),
     replicaSet: createReplicaSetService(request),
     service: createServiceService(request),
     users: createUsersService(request),

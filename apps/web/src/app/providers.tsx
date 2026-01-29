@@ -26,7 +26,7 @@ export async function Providers({ children }: ProvidersProps) {
       <ColorSchemeProvider>
         <SidebarProvider defaultOpen={defaultOpen}>
           {colorScheme ? <AppSidebar colorScheme={colorScheme} /> : null}
-          <main className='w-full'>{children}</main>
+          <main className='flex-1 min-w-0'>{children}</main>
           <Toaster richColors position='bottom-right' theme={colorScheme} />
         </SidebarProvider>
       </ColorSchemeProvider>

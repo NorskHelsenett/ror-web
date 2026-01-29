@@ -33,6 +33,8 @@ export type {
   PodResponse,
   Price,
   PriceResponse,
+  Project,
+  ProjectResponse,
   User,
   ReplicaSet,
   ReplicaSetResponse,

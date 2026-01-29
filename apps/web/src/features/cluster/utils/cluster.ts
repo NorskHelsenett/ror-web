@@ -70,6 +70,14 @@ export const getClusterId = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.clusterId || 'Unknown Cluster'
 
 /**
+ * Retrieves the cluster UID from a given KubernetesCluster object.
+ *
+ * @param cluster - The KubernetesCluster object from which to extract the cluster ID.
+ * @returns The cluster UID as a string, or 'Unknown Cluster' if the ID is not available.
+ */
+export const getClusterUid = (cluster: KubernetesCluster): string => cluster?.metadata.uid || 'Unknown Cluster'
+
+/**
  * Retrieves the name of a Kubernetes cluster from the provided cluster object.
  *
  * @param cluster - The Kubernetes cluster object to extract the name from.

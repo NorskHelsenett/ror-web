@@ -68,9 +68,18 @@ export const priceForCluster = (
 
 // -----
 
-export const renderTagsYaml = (tags: Record<string, string>) => {
-  return Object.entries(tags)
-    .map(([key, value]) => `    ${key}: ${value}`)
+export const renderTagsYaml = (tags: { key: string; value: string }[]) => {
+  const safe = Array.isArray(tags) ? tags : []
+  if (safe.length === 0) return ''
+
+  const quote = (v: string) => {
+    if (/[:#\n\r\t]/.test(v) || v.trim() !== v || v === '') return JSON.stringify(v)
+    return v
+  }
+
+  return safe
+    .filter((t) => t?.key?.trim() && t?.value?.trim())
+    .map((t) => `    ${t.key.trim()}: ${quote(t.value.trim())}`)
     .join('\n')
 }
 

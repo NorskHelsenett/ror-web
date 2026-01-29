@@ -1,0 +1,99 @@
+# The base path of dex and the external name of the OpenID Connect service.
+# This is the canonical URL that all clients MUST use to refer to dex. If a
+# path is provided, dex's HTTP service will listen at a non-root URL.
+issuer: http://localhost:6556/dex
+
+# See the storage document at Documentation/storage.md for further information.
+storage:
+  type: sqlite3
+  config:
+    file: dbs/dex.db
+
+# Configuration for the HTTP endpoints.
+web:
+  http: 0.0.0.0:6556
+  allowedOrigins:
+    - "http://localhost:10000"
+    - "http://127.0.0.1:10000"
+    - "http://localhost:11000"
+    - "http://127.0.0.1:11000"
+    - "http://localhost:11100"
+    - "http://127.0.0.1:11100"
+
+grpc:
+  addr: 0.0.0.0:6557
+
+logger:
+  level: "debug"
+  format: "json"
+
+oauth2:
+  responseTypes: ["code", "token", "id_token"]
+  skipApprovalScreen: true
+
+staticClients:
+- id: ror.sky.test.nhn.no
+  name: ror.sky.test.nhn.no
+  redirectURIs:
+  - https://ror.sky.test.nhn.no/auth/callback
+  - http://localhost:11000/auth/callback
+  - http://127.0.0.1:11000/auth/callback
+  - http://localhost:11100/api/auth/callback/dex
+  - http://127.0.0.1:11100/api/auth/callback/dex
+  secret: VQEj6sMwgxPsa8t9
+  scopes: [openid profile email groups offline_access]
+- id: rorwebapp
+  name: rorwebapp
+  redirectURIs:
+  - https://ror.sky.test.nhn.no/auth/callback
+  - http://localhost:11000/auth/callback
+  - http://127.0.0.1:11000/auth/callback
+  - http://localhost:11100/api/auth/callback/dex
+  - http://127.0.0.1:11100/api/auth/callback/dex
+  secret: VQEj6sMwgxPsa8t9
+  scopes: [openid profile email groups offline_access]
+- id: ror-cli
+  name: 'ROR CLI'
+  redirectURIs:
+  - /device/callback
+  public: true
+  scopes: [openid profile email groups offline_access]
+
+
+connectors:
+# - type: ldap
+#   name: OpenLDAP
+#   id: ldap
+#   config:
+#     host: openldap:389
+#     insecureNoSSL: true
+#     bindDN: cn=admin,dc=ror,dc=dev
+#     bindPW: admin
+#     usernamePrompt: Email Address
+#     userSearch:
+#       baseDN: ou=People,dc=ror,dc=dev
+#       filter: "(objectClass=person)"
+#       username: mail
+#       idAttr: DN
+#       emailAttr: mail
+#       nameAttr: cn
+#     groupSearch:
+#       baseDN: ou=Groups,dc=ror,dc=dev
+#       filter: "(objectClass=groupOfNames)"
+#       userMatchers:
+#       - userAttr: DN
+#         groupAttr: member
+#       nameAttr: cn
+- type: oidc
+  id: mocc
+  name: Mocc
+  config:
+    issuer: http://host.docker.internal:6006
+    providerDiscoveryOverrides:
+      AuthURL: http://localhost:6006/authorize
+    clientID: ror.sky.test.nhn.no
+    redirectURI: http://localhost:6556/dex/callback
+    groupsClaim: groups
+    scopes: [openid, profile, email, groups]
+    InsecureEnableGroups: true
+

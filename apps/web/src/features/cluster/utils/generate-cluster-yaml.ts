@@ -15,7 +15,7 @@ export function buildClusterYaml(v: CreateClusterForm) {
   const wpName = s(v.wpName)
   const wpNumber = v.wpNumber ?? 1
   const wpClass = v.wpClass
-  const tags = v.tags ?? {}
+  const tags = Array.isArray(v.tags) ? v.tags : []
 
   return `
 apiVersion: vitistack.io/v1alpha1
