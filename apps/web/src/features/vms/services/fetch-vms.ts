@@ -12,7 +12,9 @@ export async function fetchVms(
   const listParams = new URLSearchParams()
   listParams.set('limit', String(params.limit))
   listParams.set('offset', String(skip))
-  if (params.sort) listParams.set('sort', params.sort)
+  listParams.set('sort', params.sort ?? 'id')
+
+  // if (params.sort) listParams.set('sort', params.sort)
 
   const virtualmachines = await api.virtualMachine.list(listParams)
   const vms = virtualmachines?.resources ?? []

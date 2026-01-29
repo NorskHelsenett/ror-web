@@ -24,7 +24,6 @@ import {
   getVmExternalId,
   getVmName,
   getVmVersion,
-  getVmOperatingSystem,
   getVmPowerState,
   getVmHostName,
   PageViewProps,
@@ -76,7 +75,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         order: params.order,
         sort: params.sort,
       })
-      console.log(items)
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })

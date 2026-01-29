@@ -38,7 +38,6 @@ export default async function VMPage({
   const fetchParams = {
     page: params.page,
     limit: params.limit,
-    // Don't include sort to match working version
     ...(params.sort ? { sort: params.sort } : {}),
     order: params.order,
   }
@@ -70,10 +69,10 @@ export default async function VMPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      {/* <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'> */}
-      <PageView vms={vmsWithBackup} params={params} />
-      {/* <PageView vms={twoVmsWithBackup} params={backupQueryParams} /> */}
-      {/* </div> */}
+      <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'>
+        <PageView vms={vmsWithBackup} params={params} />
+        <PageView vms={twoVmsWithBackup} params={backupQueryParams} />
+      </div>
     </div>
   )
 }
