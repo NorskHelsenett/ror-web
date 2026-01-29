@@ -54,25 +54,25 @@ export default async function VMPage({
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
   //option that works
-  const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
-  const [twofetchedVms, twofetchedBackupJobs, twofetchedBackupRuns] = await Promise.all([
-    fetchVms(api, backupQueryParams),
-    fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
-  ])
+  // const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
+  // const [twofetchedVms, twofetchedBackupJobs, twofetchedBackupRuns] = await Promise.all([
+  //   fetchVms(api, backupQueryParams),
+  //   fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
+  //   fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
+  // ])
 
-  const twoVms = twofetchedVms.vms
-  const twobackupJobs = twofetchedBackupJobs.backupJobs || []
-  const twobackupRuns = twofetchedBackupRuns.backupRuns || []
-  const twoVmsWithBackup = mapBackupToVM(twoVms, twobackupJobs, twobackupRuns)
+  // const twoVms = twofetchedVms.vms
+  // const twobackupJobs = twofetchedBackupJobs.backupJobs || []
+  // const twobackupRuns = twofetchedBackupRuns.backupRuns || []
+  // const twoVmsWithBackup = mapBackupToVM(twoVms, twobackupJobs, twobackupRuns)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'>
-        <PageView vms={vmsWithBackup} params={params} />
-        <PageView vms={twoVmsWithBackup} params={backupQueryParams} />
-      </div>
+      {/* <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'> */}
+      <PageView vms={vmsWithBackup} params={params} />
+      {/* <PageView vms={twoVmsWithBackup} params={backupQueryParams} /> */}
+      {/* </div> */}
     </div>
   )
 }
