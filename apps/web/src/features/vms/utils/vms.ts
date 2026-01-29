@@ -1,4 +1,4 @@
-import type { VirtualMachine, User } from '@ror/js-api-client'
+import type { VirtualMachine, User, BackupJob, BackupRun } from '@ror/js-api-client'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { Params } from '@/types/resources-page'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
@@ -25,6 +25,8 @@ export interface PageViewProps {
   user?: User
   vms: VirtualMachine[] | VMWithBackupStatus[]
   params: Params
+  backupJobs?: BackupJob[]
+  backupRuns?: BackupRun[]
 }
 
 export interface Network {

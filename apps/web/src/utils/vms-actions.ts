@@ -18,23 +18,28 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   if (sort) params.set('sort', sort)
   if (order) params.set('order', order)
 
-  // Fetch VMs and backup data in parallel
-  const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([
-    api.virtualMachine.list(params),
-    fetchBackupJobs(api, { page: 1, limit: 1000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, { page: 1, limit: 1000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
-  ])
-
-  const vms: VirtualMachine[] | VMWithBackupStatus[] = vmRes?.resources ?? []
-  const backupJobs = backupJobsRes.backupJobs || []
-  const backupRuns = backupRunsRes.backupRuns || []
-
-  // Enhance VMs with backup status
-  const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
+  // Only fetch VMs - backup data should be fetched once and passed from client
+  const vmRes = await api.virtualMachine.list(params)
+  const vms: VirtualMachine[] = vmRes?.resources ?? []
 
   return {
-    items: vmsWithBackup,
+    items: vms,
     hasMore: vms.length === limit,
     nextOffset: vms.length === limit ? offset + limit : null,
+  }
+}
+
+// New action: Fetch all backup data once
+export async function fetchAllBackupData() {
+  const api = await getRorApi()
+
+  const [backupJobsRes, backupRunsRes] = await Promise.all([
+    fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
+  ])
+
+  return {
+    backupJobs: backupJobsRes.backupJobs || [],
+    backupRuns: backupRunsRes.backupRuns || [],
   }
 }

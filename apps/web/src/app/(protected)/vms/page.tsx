@@ -30,7 +30,6 @@ export default async function VMPage({
 }) {
   const api = await getRorApi()
 
-  //option that does not work
   const sp = await searchParams
   const params = normalizeParams(sp)
 
@@ -42,37 +41,25 @@ export default async function VMPage({
     order: params.order,
   }
 
+  // Fetch initial VMs and ALL backup data in parallel
+  // Backup data is fetched once and will be used for all VMs (initial + infinite scroll)
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, fetchParams),
-    fetchBackupJobs(api, fetchParams).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, fetchParams).catch(() => ({ backupRuns: [] })),
+    fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
+
+  // Map backup data to initial VMs
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
-
-  //option that works
-  // const backupQueryParams = { page: 1, limit: 10000, order: 'asc' as const }
-  // const [twofetchedVms, twofetchedBackupJobs, twofetchedBackupRuns] = await Promise.all([
-  //   fetchVms(api, backupQueryParams),
-  //   fetchBackupJobs(api, backupQueryParams).catch(() => ({ backupJobs: [] })),
-  //   fetchBackupRuns(api, backupQueryParams).catch(() => ({ backupRuns: [] })),
-  // ])
-
-  // const twoVms = twofetchedVms.vms
-  // const twobackupJobs = twofetchedBackupJobs.backupJobs || []
-  // const twobackupRuns = twofetchedBackupRuns.backupRuns || []
-  // const twoVmsWithBackup = mapBackupToVM(twoVms, twobackupJobs, twobackupRuns)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      {/* <div className='grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-2'> */}
-      <PageView vms={vmsWithBackup} params={params} />
-      {/* <PageView vms={twoVmsWithBackup} params={backupQueryParams} /> */}
-      {/* </div> */}
+      <PageView vms={vmsWithBackup} params={params} backupJobs={backupJobs} backupRuns={backupRuns} />
     </div>
   )
 }

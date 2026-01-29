@@ -57,8 +57,9 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
+import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 
-export const PageView = ({ className, vms, params }: PageViewProps) => {
+export const PageView = ({ className, vms, params, backupJobs = [], backupRuns = [] }: PageViewProps) => {
   //filter state
   const filtersOpen = params.filters === 'open'
 
@@ -75,7 +76,9 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         order: params.order,
         sort: params.sort,
       })
-      return { items: res.items ?? [], hasMore: res.hasMore }
+      // Map backup data to newly loaded VMs
+      const vmsWithBackup = mapBackupToVM(res.items ?? [], backupJobs, backupRuns)
+      return { items: vmsWithBackup, hasMore: res.hasMore }
     },
   })
 
