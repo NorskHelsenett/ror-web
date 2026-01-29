@@ -25,8 +25,6 @@ export interface PageViewProps {
   user?: User
   vms: VirtualMachine[] | VMWithBackupStatus[]
   params: Params
-  backupJobs?: BackupJob[]
-  backupRuns?: BackupRun[]
 }
 
 export interface Network {

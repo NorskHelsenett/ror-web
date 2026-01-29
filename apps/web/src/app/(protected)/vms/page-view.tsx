@@ -57,10 +57,8 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
-import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 
-export const PageView = ({ className, vms, params, backupJobs = [], backupRuns = [] }: PageViewProps) => {
-  //filter state
+export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
@@ -73,19 +71,14 @@ export const PageView = ({ className, vms, params, backupJobs = [], backupRuns =
       const res = await loadMoreVMs({
         offset,
         limit,
-        order: params.order,
         sort: params.sort,
+        order: params.order,
       })
-      // Map backup data to newly loaded VMs
-      const vmsWithBackup = mapBackupToVM(res.items ?? [], backupJobs, backupRuns)
-      return { items: vmsWithBackup, hasMore: res.hasMore }
+      return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
-  const safeItems = useMemo(() => {
-    const filtered = items.filter((c) => c.virtualmachine?.spec && typeof c.virtualmachine.spec === 'object')
-    return filtered
-  }, [items])
+  const safeItems = useMemo(() => items.filter((c) => c.virtualmachine?.externalId), [items])
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getVmPowerState(vm) },
@@ -185,14 +178,9 @@ export const PageView = ({ className, vms, params, backupJobs = [], backupRuns =
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
   const displayedItems = useMemo(() => {
-    let result
-    if (!searchResults?.length) {
-      result = sortedItems
-    } else {
-      const ids = new Set(searchResults.map(getVmExternalId))
-      result = sortedItems.filter((c) => ids.has(getVmExternalId(c)))
-    }
-    return result
+    if (!searchResults?.length) return sortedItems
+    const ids = new Set(searchResults.map(getVmExternalId))
+    return sortedItems.filter((c) => ids.has(getVmExternalId(c)))
   }, [sortedItems, searchResults])
 
   const renderControls = () => (
@@ -211,10 +199,12 @@ export const PageView = ({ className, vms, params, backupJobs = [], backupRuns =
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'family']}
+        searchKeys={['label', 'hostname', 'powerState', 'family']}
         mapItem={(vm) => ({
           ...vm,
-          label: getVmHostName(vm),
+          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
+          hostName: getVmHostName(vm),
+          powerState: getVmPowerState(vm),
           family: getVmFamily(vm),
         })}
         getItemsKey={getVmsKey}

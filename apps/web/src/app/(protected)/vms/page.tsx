@@ -41,8 +41,10 @@ export default async function VMPage({
     order: params.order,
   }
 
+  const anotherFetchThatWorks = { page: 1, limit: 100000, order: 'asc' as const }
   // Fetch initial VMs and ALL backup data in parallel
   // Backup data is fetched once and will be used for all VMs (initial + infinite scroll)
+
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, fetchParams),
     fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
@@ -59,7 +61,7 @@ export default async function VMPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} backupJobs={backupJobs} backupRuns={backupRuns} />
+      <PageView vms={vms} params={params} />
     </div>
   )
 }
