@@ -15,7 +15,9 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   const params = new URLSearchParams()
   params.set('limit', String(limit))
   params.set('offset', String(offset))
-  if (sort) params.set('sort', sort)
+  params.set('sort', 'externalId')
+  //if (sort) params.set('sort', sort)
+
   if (order) params.set('order', order)
 
   // Fetch VMs and backup data in parallel
@@ -35,6 +37,6 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   return {
     items: vmsWithBackup,
     hasMore: vms.length === limit,
-    nextOffset: vms.length === limit ? offset + limit : null,
+    nextOffset: offset + vms.length,
   }
 }
