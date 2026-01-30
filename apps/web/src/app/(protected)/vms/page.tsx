@@ -33,22 +33,10 @@ export default async function VMPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  // Extract only the properties needed for fetch functions
-  const fetchParams = {
-    page: params.page,
-    limit: params.limit,
-    ...(params.sort ? { sort: params.sort } : {}),
-    order: params.order,
-  }
-
-  const anotherFetchThatWorks = { page: 1, limit: 100000, order: 'asc' as const }
-  // Fetch initial VMs and ALL backup data in parallel
-  // Backup data is fetched once and will be used for all VMs (initial + infinite scroll)
-
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchVms(api, fetchParams),
-    fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
+    fetchVms(api, params),
+    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
@@ -61,7 +49,7 @@ export default async function VMPage({
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vms} params={params} />
+      <PageView vms={vmsWithBackup} params={params} />
     </div>
   )
 }

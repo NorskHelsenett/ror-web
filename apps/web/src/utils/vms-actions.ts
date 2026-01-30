@@ -33,7 +33,7 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
   return {
-    items: vms,
+    items: vmsWithBackup,
     hasMore: vms.length === limit,
     nextOffset: vms.length === limit ? offset + limit : null,
   }
