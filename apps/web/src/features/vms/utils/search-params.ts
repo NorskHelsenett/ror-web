@@ -19,7 +19,7 @@ export interface VmSearchParams {
 
 export const parseVmSearchParams = (searchParams: VmSearchParams): VmPageParams => {
   const page = Number(searchParams.page ?? '1') || 1
-  const limit = Number(searchParams.limit ?? '75') || 75
+  const limit = Number(searchParams.limit ?? '25') || 25
   const sort = typeof searchParams.sort === 'string' ? searchParams.sort : undefined
   const order: 'asc' | 'desc' = searchParams.order === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = searchParams.view === 'list' ? 'list' : 'grid'
