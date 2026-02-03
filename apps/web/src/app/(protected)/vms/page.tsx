@@ -43,8 +43,17 @@ export default async function VMPage({
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
 
+  // DEBUG: Check what the API actually returned
+  console.log('========== PAGE.TSX DEBUG ==========')
+  console.log(`Params: limit=${params.limit}, page=${params.page}`)
+  console.log(`VMs fetched from API: ${vms.length}`)
+
   // Map backup data to initial VMs
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
+
+  console.log(`VMs after backup mapping: ${vmsWithBackup.length}`)
+  console.log(`Passing ${vmsWithBackup.length} VMs to PageView`)
+  console.log('====================================')
 
   return (
     <div className='w-full flex flex-col'>
