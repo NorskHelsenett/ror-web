@@ -9,6 +9,9 @@
   "packageManager": "npm@11.3.0",
   "scripts": {
     "dev": "turbo dev",
+    "dev:web": "npm --workspace @ror/web run dev",
+    "dev:services": "docker compose up",
+    "dev:all": "bash scripts/dev-with-compose.sh",
     "build": "turbo build",
     "lint": "turbo lint",
     "clean": "turbo clean && rm -rf node_modules && rm -rf .turbo",
