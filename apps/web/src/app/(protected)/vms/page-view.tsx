@@ -61,8 +61,8 @@ import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
 
-  console.log('========== PAGE-VIEW.TSX DEBUG ==========')
-  console.log(`PageView received ${vms.length} VMs from page.tsx`)
+  // console.log('========== PAGE-VIEW.TSX DEBUG ==========')
+  // console.log(`PageView received ${vms.length} VMs from page.tsx`)
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
@@ -75,22 +75,21 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         offset,
         limit,
         sort: params.sort,
-        order: params.order,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
-  console.log(`useInfiniteLoader items: ${items.length}`)
+  // console.log(`useInfiniteLoader items: ${items.length}`)
 
   const safeItems = useMemo(() => {
     const filtered = items.filter((c) => c.virtualmachine?.externalId)
-    console.log(`After safeItems filter: ${filtered.length} (removed ${items.length - filtered.length})`)
+    // console.log(`After safeItems filter: ${filtered.length} (removed ${items.length - filtered.length})`)
     return filtered
   }, [items])
 
-  console.log(`safeItems: ${safeItems.length}`)
-  console.log('=========================================')
+  // console.log(`safeItems: ${safeItems.length}`)
+  // console.log('=========================================')
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getVmPowerState(vm) },
@@ -214,8 +213,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         searchKeys={['label', 'hostname', 'powerState', 'family']}
         mapItem={(vm) => ({
           ...vm,
-          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-          hostName: getVmHostName(vm),
+          label: getVmHostName(vm),
           powerState: getVmPowerState(vm),
           family: getVmFamily(vm),
         })}
