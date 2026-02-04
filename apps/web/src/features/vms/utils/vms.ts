@@ -92,19 +92,19 @@ export interface MetricsData {
   }>
 }
 
-export const getVmOperatingSystemId = (vm: VirtualMachine): string => {
+export const getVmOperatingSystemId = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.id || 'unknown-id'
 }
 
-export const getVmHostName = (vm: VirtualMachine): string => {
+export const getVmHostName = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.hostName || 'Unknown VM'
 }
 
-export const getVmPowerState = (vm: VirtualMachine): string => {
+export const getVmPowerState = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.powerState || 'undefined'
 }
 
-export const getVmName = (vm: VirtualMachine): string => {
+export const getVmName = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return (
     vm.virtualmachine?.status?.operatingSystem?.name ||
     vm.virtualmachine?.spec?.name ||
@@ -113,63 +113,63 @@ export const getVmName = (vm: VirtualMachine): string => {
   )
 }
 
-export const getVmFamily = (vm: VirtualMachine): string => {
+export const getVmFamily = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.family || 'Unknown'
 }
 
-export const getVmArchitecture = (vm: VirtualMachine): string => {
+export const getVmArchitecture = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.architecture || 'Unknown'
 }
 
-export const getVmVersion = (vm: VirtualMachine): string => {
+export const getVmVersion = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.version || 'Unknown'
 }
 
-export const getVmToolVersion = (vm: VirtualMachine): string => {
+export const getVmToolVersion = (vm: VirtualMachine | VMWithBackupStatus): string => {
   return vm.virtualmachine?.status?.operatingSystem?.toolVersion || 'Unknown'
 }
 
-export const getVmDisks = (vm: VirtualMachine) => {
+export const getVmDisks = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm.virtualmachine?.status?.disks || []
 }
 
-export const getVmDiskSizes = (vm: VirtualMachine): number[] => {
+export const getVmDiskSizes = (vm: VirtualMachine | VMWithBackupStatus): number[] => {
   const disks = getVmDisks(vm)
   return disks.map((disk) => disk.sizeBytes || 0)
 }
 
-export const getVmDiskUsages = (vm: VirtualMachine): number[] => {
+export const getVmDiskUsages = (vm: VirtualMachine | VMWithBackupStatus): number[] => {
   const disks = getVmDisks(vm)
   return disks.map((disk) => disk.usageBytes || 0)
 }
 
-export const getSpecSockets = (vm: VirtualMachine): number | undefined => {
+export const getSpecSockets = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   return vm?.virtualmachine?.spec?.cpu?.sockets ?? undefined
 }
 
-export const getSpecCoresPerSocket = (vm: VirtualMachine): number | undefined => {
+export const getSpecCoresPerSocket = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   return vm?.virtualmachine?.spec?.cpu?.coresPerSocket ?? undefined
 }
 
-export const getStatusCpuUsage = (vm: VirtualMachine): number | undefined => {
+export const getStatusCpuUsage = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   return vm?.virtualmachine?.status?.cpu?.usage ?? undefined
 }
 
-export const getSpecMemory = (vm: VirtualMachine): number | undefined => {
+export const getSpecMemory = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   return vm?.virtualmachine?.spec?.memory?.sizeBytes ?? undefined
 }
 
-export const getStatusMemoryUsage = (vm: VirtualMachine): number | undefined => {
+export const getStatusMemoryUsage = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   return vm?.virtualmachine?.status?.memory?.usage ?? undefined
 }
 
-export const getSpecCpuTotal = (vm: VirtualMachine): number | undefined => {
+export const getSpecCpuTotal = (vm: VirtualMachine | VMWithBackupStatus): number | undefined => {
   const coresPerSocket = vm?.virtualmachine?.spec?.cpu?.coresPerSocket ?? 0
   const sockets = vm?.virtualmachine?.spec?.cpu?.sockets ?? 0
   return coresPerSocket && sockets ? coresPerSocket * sockets : undefined
 }
 
-export const getNetworks = (vm: VirtualMachine): Network[] => {
+export const getNetworks = (vm: VirtualMachine | VMWithBackupStatus): Network[] => {
   const networks = vm?.virtualmachine?.status?.networks ?? []
   return networks.map((networkitems) => ({
     dns: networkitems?.dns ?? undefined,
@@ -186,23 +186,23 @@ export const getNetworkId = (network: Network): string => {
   return network?.id ?? 'unknown-id'
 }
 
-export const getVmOperatingSystem = (vm: VirtualMachine) => {
+export const getVmOperatingSystem = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.operatingSystem
 }
 
-export const getVmSpec = (vm: VirtualMachine) => {
+export const getVmSpec = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.spec
 }
 
-export const getTeamValue = (vm: VirtualMachine) => {
+export const getTeamValue = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags?.team?.value
 }
 
-export const getTeamDescription = (vm: VirtualMachine) => {
+export const getTeamDescription = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags?.team?.description
 }
 
-export const getTeam = (vm: VirtualMachine): VirtualMachineTeam | null => {
+export const getTeam = (vm: VirtualMachine | VMWithBackupStatus): VirtualMachineTeam | null => {
   const team = vm?.virtualmachine?.status?.tags?.team
   if (!team) return null
 
@@ -215,10 +215,10 @@ export const getTeam = (vm: VirtualMachine): VirtualMachineTeam | null => {
 
 /**
  * Extract unique team descriptions from an array of VMs
- * @param vms Array of VirtualMachine objects
+ * @param vms Array of VirtualMachine or VMWithBackupStatus objects
  * @returns Array of unique team descriptions, filtered to remove empty values
  */
-export const getUniqueTeamDescriptions = (vms: VirtualMachine[]): string[] => {
+export const getUniqueTeamDescriptions = (vms: (VirtualMachine | VMWithBackupStatus)[]): string[] => {
   const teamDescriptions = new Set<string>()
 
   vms.forEach((vm) => {
@@ -233,10 +233,10 @@ export const getUniqueTeamDescriptions = (vms: VirtualMachine[]): string[] => {
 
 /**
  * Extract unique team objects from an array of VMs
- * @param vms Array of VirtualMachine objects
+ * @param vms Array of VirtualMachine or VMWithBackupStatus objects
  * @returns Array of unique VirtualMachineTeam objects
  */
-export const getUniqueTeams = (vms: VirtualMachine[]): VirtualMachineTeam[] => {
+export const getUniqueTeams = (vms: (VirtualMachine | VMWithBackupStatus)[]): VirtualMachineTeam[] => {
   const teamsMap = new Map<string, VirtualMachineTeam>()
 
   vms.forEach((vm) => {
@@ -256,10 +256,10 @@ export const getUniqueTeams = (vms: VirtualMachine[]): VirtualMachineTeam[] => {
 
 /**
  * Get the best available team identifier (description or value)
- * @param vm VirtualMachine object
+ * @param vm VirtualMachine or VMWithBackupStatus object
  * @returns Team description if available, otherwise team value, or 'No Team' if neither exists
  */
-export const getTeamIdentifier = (vm: VirtualMachine): string => {
+export const getTeamIdentifier = (vm: VirtualMachine | VMWithBackupStatus): string => {
   const teamDescription = getTeamDescription(vm)
   const teamValue = getTeamValue(vm)
 
@@ -276,11 +276,14 @@ export const getTeamIdentifier = (vm: VirtualMachine): string => {
 
 /**
  * Filter VMs by team identifier (description or value)
- * @param vms Array of VirtualMachine objects
+ * @param vms Array of VirtualMachine or VMWithBackupStatus objects
  * @param teamIdentifier The team identifier to filter by
  * @returns Array of VMs that belong to the specified team
  */
-export const filterVmsByTeamIdentifier = (vms: VirtualMachine[], teamIdentifier: string): VirtualMachine[] => {
+export const filterVmsByTeamIdentifier = (
+  vms: (VirtualMachine | VMWithBackupStatus)[],
+  teamIdentifier: string
+): (VirtualMachine | VMWithBackupStatus)[] => {
   if (!teamIdentifier || !teamIdentifier.trim()) {
     return vms
   }
@@ -293,12 +296,15 @@ export const filterVmsByTeamIdentifier = (vms: VirtualMachine[], teamIdentifier:
 
 /**
  * Filter VMs by team description
- * @param vms Array of VirtualMachine objects
+ * @param vms Array of VirtualMachine or VMWithBackupStatus objects
  * @param teamDescription The team description to filter by
  * @returns Array of VMs that belong to the specified team
  * @deprecated Use filterVmsByTeamIdentifier instead for better fallback handling
  */
-export const filterVmsByTeamDescription = (vms: VirtualMachine[], teamDescription: string): VirtualMachine[] => {
+export const filterVmsByTeamDescription = (
+  vms: (VirtualMachine | VMWithBackupStatus)[],
+  teamDescription: string
+): (VirtualMachine | VMWithBackupStatus)[] => {
   if (!teamDescription || !teamDescription.trim()) {
     return vms
   }
@@ -309,39 +315,39 @@ export const filterVmsByTeamDescription = (vms: VirtualMachine[], teamDescriptio
   })
 }
 
-export const getAdGroup = (vm: VirtualMachine) => {
+export const getAdGroup = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags?._AdGroup?.value
 }
 
-export const serviceIdDescription = (vm: VirtualMachine) => {
+export const serviceIdDescription = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags?.serviceId?.description
 }
 
-export const serviceIdValue = (vm: VirtualMachine) => {
+export const serviceIdValue = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags?.serviceId?.value
 }
 
-export const getVmMetadataName = (vm: VirtualMachine) => {
+export const getVmMetadataName = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.metadata?.name
 }
 
-export const getLastUpdated = (vm: VirtualMachine) => {
+export const getLastUpdated = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.lastUpdated
 }
 
-export const getLocation = (vm: VirtualMachine) => {
+export const getLocation = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.location
 }
 
-export const getProvider = (vm: VirtualMachine) => {
+export const getProvider = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.provider
 }
 
-export const getTags = (vm: VirtualMachine) => {
+export const getTags = (vm: VirtualMachine | VMWithBackupStatus) => {
   return vm?.virtualmachine?.status?.tags || {}
 }
 
-export const getVmExternalId = (vm: VirtualMachine): string => {
+export const getVmExternalId = (vm: VirtualMachine | VMWithBackupStatus): string => {
   const id = vm.virtualmachine?.externalId
   if (!id) {
     throw new Error('VM missing externalId')
@@ -349,7 +355,8 @@ export const getVmExternalId = (vm: VirtualMachine): string => {
   return id
 }
 
-export const getVmsKey = (vms: VirtualMachine[] = []) => (Array.isArray(vms) ? vms.map(getVmExternalId).join('|') : '')
+export const getVmsKey = (vms: (VirtualMachine | VMWithBackupStatus)[] = []) =>
+  Array.isArray(vms) ? vms.map(getVmExternalId).join('|') : ''
 
 /**
  * Power state priority order for sorting
@@ -367,7 +374,10 @@ const PowerStatePrirority: Record<string, number> = {
  * @param b Second VM to compare
  * @returns Comparison result for sorting
  */
-export const comparePowerState = (a: VirtualMachine, b: VirtualMachine): number => {
+export const comparePowerState = (
+  a: VirtualMachine | VMWithBackupStatus,
+  b: VirtualMachine | VMWithBackupStatus
+): number => {
   const aPowerState = getVmPowerState(a)
   const bPowerState = getVmPowerState(b)
 

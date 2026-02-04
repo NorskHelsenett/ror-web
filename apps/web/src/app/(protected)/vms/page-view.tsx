@@ -61,14 +61,6 @@ import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
 
-  // console.log('========== PAGE-VIEW.TSX DEBUG ==========')
-  // console.log(`PageView received ${vms.length} VMs from page.tsx`)
-  // console.log({
-  //   message: 'This is before the useInfiniteLoader',
-  //   first: vms[0]?.virtualmachine?.externalId && vms[0]?.virtualmachine?.status?.operatingSystem?.hostName,
-  //   last: vms[vms.length-1]?.virtualmachine?.externalId && vms[vms.length-1]?.virtualmachine?.status?.operatingSystem?.hostName
-  // })
-
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
@@ -81,26 +73,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         limit,
         sort: params.sort,
       })
-      // console.log({
-      //   message: 'loadMore response received on frontend',
-      //   offset: offset,
-      //   limit: limit,
-      //   itemsReceived: res.items?.length ?? 0,
-      //   first: res.items?.[0]?.virtualmachine?.status?.operatingSystem?.hostName ?? 'N/A',
-      //   last: res.items?.[res.items.length - 1]?.virtualmachine?.status?.operatingSystem?.hostName ?? 'N/A'
-      // })
+
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
 
-  // console.log(`useInfiniteLoader items: ${items.length}`)
-
   const safeItems = useMemo(() => {
     return items.filter((vm) => vm.virtualmachine?.externalId)
   }, [items])
-
-  // console.log(`safeItems: ${safeItems.length}`)
-  // console.log('=========================================')
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getVmPowerState(vm) },
