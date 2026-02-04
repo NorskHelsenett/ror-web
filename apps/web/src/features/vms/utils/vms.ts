@@ -341,8 +341,12 @@ export const getTags = (vm: VirtualMachine) => {
   return vm?.virtualmachine?.status?.tags || {}
 }
 
-export const getVmExternalId = (vm: VirtualMachine) => {
-  return vm?.virtualmachine?.externalId || vm?.metadata?.uid || vm?.metadata?.name || 'Unknown VM'
+export const getVmExternalId = (vm: VirtualMachine): string => {
+  const id = vm.virtualmachine?.externalId
+  if (!id) {
+    throw new Error('VM missing externalId')
+  }
+  return id
 }
 
 export const getVmsKey = (vms: VirtualMachine[] = []) => (Array.isArray(vms) ? vms.map(getVmExternalId).join('|') : '')

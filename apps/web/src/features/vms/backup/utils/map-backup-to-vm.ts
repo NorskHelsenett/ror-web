@@ -34,6 +34,14 @@ export function mapBackupToVM(
 
     const lastBackupInfo = getVMLastBackupInfo(relatedJobs, backupRuns, relatedRuns)
 
+    if (!vmExternalId) {
+      console.error('VM missing externalId during backup mapping', vm)
+    }
+
+    if (typeof vmExternalId !== 'string') {
+      console.error('Invalid externalId type', vmExternalId, vm)
+    }
+
     return {
       ...vm,
       backupStatus: {
