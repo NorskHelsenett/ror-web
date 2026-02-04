@@ -37,7 +37,8 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
     typeof parameters[key] === 'string' ? (parameters[key] as string) : undefined
 
   const page = Number(get('page') ?? '1') || 1
-  const limit = Number(get('limit') ?? '500') || 500
+  //This limit is what could be 10000 to bypass the issue with the loader
+  const limit = Number(get('limit') ?? '50') || 50
   const sort = get('sort')
   const order: 'asc' | 'desc' = get('order') === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = get('view') === 'list' ? 'list' : 'grid'

@@ -18,7 +18,6 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   if (sort) params.set('sort', sort)
 
   if (order) params.set('order', order)
-
   // Fetch VMs and backup data in parallel
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([
     api.virtualMachine.list(params),
@@ -36,6 +35,6 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   return {
     items: vmsWithBackup,
     hasMore: vms.length === limit,
-    nextOffset: vms.length === limit ? offset + limit : null,
+    nextOffset: offset + vms.length,
   }
 }

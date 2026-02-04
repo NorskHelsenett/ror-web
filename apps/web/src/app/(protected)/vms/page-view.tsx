@@ -63,6 +63,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   // console.log('========== PAGE-VIEW.TSX DEBUG ==========')
   // console.log(`PageView received ${vms.length} VMs from page.tsx`)
+  // console.log({
+  //   message: 'This is before the useInfiniteLoader',
+  //   first: vms[0]?.virtualmachine?.externalId && vms[0]?.virtualmachine?.status?.operatingSystem?.hostName,
+  //   last: vms[vms.length-1]?.virtualmachine?.externalId && vms[vms.length-1]?.virtualmachine?.status?.operatingSystem?.hostName
+  // })
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
@@ -76,6 +81,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         limit,
         sort: params.sort,
       })
+      // console.log({
+      //   message: 'loadMore response received on frontend',
+      //   offset: offset,
+      //   limit: limit,
+      //   itemsReceived: res.items?.length ?? 0,
+      //   first: res.items?.[0]?.virtualmachine?.status?.operatingSystem?.hostName ?? 'N/A',
+      //   last: res.items?.[res.items.length - 1]?.virtualmachine?.status?.operatingSystem?.hostName ?? 'N/A'
+      // })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
@@ -83,9 +96,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   // console.log(`useInfiniteLoader items: ${items.length}`)
 
   const safeItems = useMemo(() => {
-    const filtered = items.filter((c) => c.virtualmachine?.externalId)
-    // console.log(`After safeItems filter: ${filtered.length} (removed ${items.length - filtered.length})`)
-    return filtered
+    return items.filter((vm) => vm.virtualmachine?.externalId)
   }, [items])
 
   // console.log(`safeItems: ${safeItems.length}`)
