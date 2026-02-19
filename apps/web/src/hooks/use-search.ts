@@ -4,8 +4,8 @@
  * Generic hook for fuzzy searching any dataset with Fuse.js.
  */
 
-import { useMemo } from 'react'
 import Fuse, { FuseOptionKey } from 'fuse.js'
+import { useMemo, useState, useEffect, useTransition } from 'react'
 
 /**
  * Options for configuring the useSearch hook.
@@ -17,8 +17,7 @@ import Fuse, { FuseOptionKey } from 'fuse.js'
  * @property {(item: T) => Record<string, any>} [mapItem] - A function to transform an item before searching.
  */
 export interface UseSearchOptions<T, M = T> {
-  threshold?: number
-  keys?: FuseOptionKey<M>[]
+  keys?: (keyof M)[]
   mapItem?: (item: T) => M
 }
 /**
@@ -31,21 +30,39 @@ export interface UseSearchOptions<T, M = T> {
  * @param options - Optional configuration for the search.
  * @returns An array of items that match the search query.
  */
-export function useSearch<T, M = T>(items: T[], query: string, options: UseSearchOptions<T, M> = {}): T[] {
-  const { threshold = 0.3, keys = [], mapItem } = options
+export function useSearch<T, M = T>(items: T[], query: string, options: UseSearchOptions<T, M> = {}) {
+  const { keys = [], mapItem } = options
 
-  const { fuse, sourceItems } = useMemo(() => {
-    const sourceItems = mapItem
+  const [results, setResults] = useState<T[]>(items)
+  const [isPending, startTransition] = useTransition()
+
+  const sourceItems = useMemo(() => {
+    return mapItem
       ? items.map((item) => ({ original: item, mapped: mapItem(item) }))
       : items.map((i) => ({ original: i, mapped: i as unknown as M }))
-    const fuse = new Fuse<M>(
-      sourceItems.map((i) => i.mapped),
-      { keys, threshold }
-    )
-    return { fuse, sourceItems }
-  }, [items, keys, threshold, mapItem])
+  }, [items, mapItem])
 
-  if (!query.trim()) return items
-  const results = fuse.search(query.trim())
-  return results.map((r) => sourceItems[r.refIndex].original)
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults(items)
+      return
+    }
+
+    const normalizedQuery = query.trim().toLowerCase()
+
+    startTransition(() => {
+      const filtered = sourceItems
+        .filter(({ mapped }) =>
+          keys.some((key) => {
+            const value = String((mapped as any)[key] ?? '').toLowerCase()
+            return value.startsWith(normalizedQuery)
+          })
+        )
+        .map((item) => item.original)
+
+      setResults(filtered)
+    })
+  }, [query, sourceItems, items, keys])
+
+  return { results, isSearching: isPending }
 }

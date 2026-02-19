@@ -53,7 +53,7 @@ export function ResourceSearch<T>({
 }: ResourceSearchProps<T>) {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, 120)
-  const results = useSearch(items, debouncedQuery, { keys, mapItem, threshold })
+  const { results, isSearching } = useSearch(items, debouncedQuery, { keys, mapItem })
 
   const lastSentKeyRef = useRef('')
 
@@ -66,13 +66,22 @@ export function ResourceSearch<T>({
   }, [results, onResultsChange, getItemsKey])
 
   return (
-    <Input
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      aria-label={searchText || 'Search...'}
-      placeholder={searchText || 'Search...'}
-      icon={<Search className='w-4 h-4' />}
-      iconPosition='left'
-    />
+    <div className='relative'>
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        aria-label={searchText || 'Search...'}
+        placeholder={searchText || 'Search...'}
+        icon={<Search className='w-4 h-4' />}
+        iconPosition='left'
+        className='pr-8'
+      />
+
+      {isSearching && (
+        <div className='absolute right-2 top-1/2 -translate-y-1/2'>
+          <div className='h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent' />
+        </div>
+      )}
+    </div>
   )
 }
