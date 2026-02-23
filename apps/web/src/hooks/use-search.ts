@@ -45,7 +45,21 @@ export function useSearch<T, M = T>(items: T[], query: string, options: UseSearc
     return { fuse, sourceItems }
   }, [items, keys, threshold, mapItem])
 
-  if (!query.trim()) return items
-  const results = fuse.search(query.trim())
+  const trimmed = query.trim()
+  if (!trimmed) return items
+
+  // If query looks like a hostname (contains dash or number structure)
+  if (trimmed.includes('-')) {
+    return sourceItems
+      .filter((i) => {
+        const value =
+          typeof i.mapped === 'object' && i.mapped !== null && 'label' in i.mapped ? (i.mapped as any).label : i.mapped
+        return String(value).toLowerCase() === trimmed.toLowerCase()
+      })
+      .map((i) => i.original)
+  }
+
+  // Otherwise use fuzzy search
+  const results = fuse.search(trimmed)
   return results.map((r) => sourceItems[r.refIndex].original)
 }

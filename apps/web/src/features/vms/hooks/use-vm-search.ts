@@ -21,14 +21,24 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
       family: getVmFamily(vm),
       location: getLocation(vm),
       fullLocation: getSpecificLocation(getLocation(vm) || ''),
-      // location: getSpecificLocation(getSpecificLocation),
     }))
 
     return new Fuse(flat, {
-      keys: ['label', 'powerState', 'family', 'location'],
-      threshold: 0.0,
+      keys: ['label', 'powerState', 'family', 'location', 'fullLocation'],
+      threshold: 0.1,
+      //ignoreLocation: true,
+      shouldSort: true,
+      //minMatchCharLength: 6,
+      //distance: 50,
+      findAllMatches: false,
+      useExtendedSearch: true,
     })
   }, [items])
 
-  return query ? fuse.search(query).map((r) => r.item) : items
+  const trimmedQuery = query.trim()
+  if (!trimmedQuery) return items
+
+  // For exact prefix matching, use extended search syntax
+  const searchQuery = `^${trimmedQuery}`
+  return fuse.search(searchQuery).map((r) => r.item)
 }
