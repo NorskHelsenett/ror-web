@@ -29,6 +29,18 @@ export const disksColumns: ColumnDef<VirtualMachineDisks>[] = [
     },
   },
   {
+    header: 'Free space (GB)',
+    accessorKey: 'freeBytes',
+    cell: ({ row }) => {
+      const size = row.getValue('sizeBytes')
+      const usage = row.getValue('usageBytes')
+      if (size != null && usage != null) {
+        return ((Number(size) - Number(usage)) / 1024 ** 3).toFixed(2)
+      }
+      return '-'
+    },
+  },
+  {
     header: 'Mounted',
     accessorKey: 'isMounted',
     cell: ({ getValue }) => (getValue() ? 'Yes' : 'No'),

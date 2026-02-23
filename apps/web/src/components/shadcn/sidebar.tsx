@@ -402,7 +402,6 @@ SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<'button'> & { asChild?: boolean }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
-
     return (
       <Comp
         ref={ref}
@@ -490,6 +489,7 @@ const SidebarMenuButton = React.forwardRef<
   ) => {
     const Comp = asChild ? Slot : 'button'
     const { isMobile, state } = useSidebar()
+    const [open, setOpen] = React.useState(false)
 
     const button = (
       <Comp
@@ -499,6 +499,10 @@ const SidebarMenuButton = React.forwardRef<
         data-size={size}
         data-active={isActive}
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        onClick={(e) => {
+          props.onClick?.(e as React.MouseEvent<HTMLButtonElement>)
+        }}
+        onMouseEnter={() => state === 'collapsed' && setOpen(true)}
         {...props}
       />
     )
@@ -508,13 +512,15 @@ const SidebarMenuButton = React.forwardRef<
     }
 
     return (
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>{button}</PopoverTrigger>
         <PopoverContent
           side='right'
           align='start'
           hidden={state !== 'collapsed' || isMobile}
           className='min-w-[12rem] p-2'
+          onMouseLeave={() => setOpen(false)}
+          onMouseDown={() => setOpen(false)}
         >
           {popoverContent.items.length === 1 ? (
             'url' in popoverContent.items[0] ? (
@@ -525,13 +531,11 @@ const SidebarMenuButton = React.forwardRef<
                 {popoverContent.items[0].title}
               </Link>
             ) : (
-              <span className='block px-2 pt-1 pb-1'>{popoverContent.items[0].title}</span>
+              <span className='block px-2 mt-1 pb-1'>{popoverContent.items[0].title}</span>
             )
           ) : (
             <div>
-              <span className='ml-2'>{popoverContent.title}</span>
-              <hr />
-              <div className='mt-2'>
+              <div>
                 {popoverContent.items.map((item) => (
                   <div key={item.title}>
                     {'url' in item ? (

@@ -20,6 +20,7 @@ export interface PageViewProps {
   backupJobs: BackupJob[]
   backupRuns?: BackupRun[]
   params: Params
+  backupJobId?: string | null
 }
 
 export const getBackupJobActiveTargets = (backupJob: BackupJob): BackupActiveTarget[] => {
@@ -39,6 +40,14 @@ export const getBackupJobActiveTargets = (backupJob: BackupJob): BackupActiveTar
 
 export const getBackupJobExternalId = (backupActiveTarget: BackupActiveTarget) => {
   return backupActiveTarget?.externalId ?? 'No backupJob External ID'
+}
+
+export const getBackupJobName = (backupJob: BackupJob) => {
+  return backupJob?.backupjob?.status?.resourceBackupJobSpec?.name ?? 'Unknown backup job name'
+}
+
+export const getBackupStatus = (backupJob: BackupJob) => {
+  return backupJob?.backupjob?.status?.resourceBackupJobSpec?.status ?? 'Unknown'
 }
 
 export const getLastBackupRun = (backupJob: BackupJob) => {

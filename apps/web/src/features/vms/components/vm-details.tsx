@@ -154,7 +154,7 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
           <CardTitle>Team</CardTitle>
         </ShadcnCardHeader>
         <CardContent>
-          <span className='font-medium'>
+          <span className='text-md'>
             {teamName} ({teamValue})
           </span>
         </CardContent>
@@ -168,7 +168,7 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
         <CardTitle>Location</CardTitle>
       </ShadcnCardHeader>
       <CardContent>
-        <span className='font-medium'>{location}</span>
+        <span className='text-md'>{location}</span>
       </CardContent>
     </Card>
   )
@@ -179,24 +179,27 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
         <CardTitle>Last updated</CardTitle>
       </ShadcnCardHeader>
       <CardContent>
-        <span className='font-medium'>{lastUpdated}</span>
+        <span className='text-md'>{lastUpdated}</span>
       </CardContent>
     </Card>
   )
 
   const TagCards = () => (
-    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+    <Card className='bg-slate-50 dark:bg-slate-900/50 max-w-lg'>
       <ShadcnCardHeader>
         <CardTitle>Available tags</CardTitle>
       </ShadcnCardHeader>
       <CardContent>
         <div className='flex flex-col gap-3'>
-          {tagKey.map((key) => (
-            <div key={key} className='flex justify-between items-start'>
-              <span className='text-sm text-muted-foreground font-medium'>{key}:</span>
-              <span className='text-sm text-right max-w-[60%]'>
-                {tags[key].description || tags[key].value || 'Missing..'}
-              </span>
+          {tagKey.map((key, index) => (
+            <div key={key}>
+              <div className='flex justify-between items-start'>
+                <span className='text-sm text-muted-foreground font-medium'>{key}:</span>
+                <span className='text-sm text-right max-w-[60%]'>
+                  {tags[key].description || tags[key].value || 'Missing..'}
+                </span>
+              </div>
+              {index < tagKey.length - 1 && <div className='border-t border-gray-200 dark:border-gray-700 my-1' />}
             </div>
           ))}
         </div>
@@ -205,43 +208,45 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
   )
 
   const InfoCard = () => (
-    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+    <Card className='bg-slate-50 dark:bg-slate-900/50 max-w-lg'>
       <ShadcnCardHeader>
         <CardTitle>Operating System</CardTitle>
       </ShadcnCardHeader>
       <CardContent>
-        <div className='grid grid-cols-1 gap-4'>
-          <div className='flex flex-col gap-3'>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>ID:</span>
-              <span className='font-xs'>{id}</span>
-            </div>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>OS Version:</span>
-              <span className='font-xs'>{name}</span>
-            </div>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>Version:</span>
-              <span className='font-xs'>{version}</span>
-            </div>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>Hostname:</span>
-              <span className='font-xs'>{hostName}</span>
-            </div>
+        <div className='flex flex-col gap-3'>
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>ID:</span>
+            <span className='text-sm'>{id}</span>
           </div>
-          <div className='flex flex-col gap-3'>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>VMware Tools:</span>
-              <span className='font-xs'>{toolVersion}</span>
-            </div>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>Architecture:</span>
-              <span className='font-xs'>{architecture}</span>
-            </div>
-            <div className='flex justify-between items-center'>
-              <span className='text-sm text-muted-foreground'>Family:</span>
-              <span className='font-xs'>{family}</span>
-            </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>OS Version:</span>
+            <span className='text-sm'>{name}</span>
+          </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>Version:</span>
+            <span className='text-sm'>{version}</span>
+          </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>Hostname:</span>
+            <span className='text-sm'>{hostName}</span>
+          </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>VMware Tools:</span>
+            <span className='text-sm'>{toolVersion}</span>
+          </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>Architecture:</span>
+            <span className='text-sm'>{architecture}</span>
+          </div>
+          <div className='border-t border-gray-200 dark:border-gray-700' />
+          <div className='flex justify-between items-start'>
+            <span className='text-sm text-muted-foreground'>Family:</span>
+            <span className='text-sm'>{family}</span>
           </div>
         </div>
       </CardContent>
@@ -249,7 +254,7 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
   )
 
   const ControlPanelCard = () => (
-    <Card className='bg-slate-50 dark:bg-slate-900/50'>
+    <Card className='bg-slate-50 dark:bg-slate-900/50 max-w-lg'>
       <ShadcnCardHeader>
         <CardTitle>Control Panel</CardTitle>
       </ShadcnCardHeader>
@@ -257,7 +262,7 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
         <div className='flex flex-col gap-4 '>
           <div className='flex justify-between items-center '>
             <span className='text-sm text-muted-foreground'>Power State:</span>
-            <span className='font-medium'>
+            <span className='text-md'>
               {powerState === 'poweredOn' ? 'On' : powerState === 'poweredOff' ? 'Off' : 'Unknown'}
             </span>
           </div>

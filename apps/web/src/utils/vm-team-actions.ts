@@ -22,11 +22,8 @@ import { Option } from '@/components/shadcn/multiselect'
 export async function fetchAllTeamOptions(): Promise<Option[]> {
   try {
     const api = await getRorApi()
-
-    // Fetch a large number of VMs to get comprehensive team data
-    // We use a high limit to get as many VMs as possible in one request
     const params = new URLSearchParams()
-    params.set('limit', '2000') // Adjust this based on your expected VM count
+    params.set('limit', '4000')
     params.set('offset', '0')
 
     const vmRes = await api.virtualMachine.list(params)
@@ -48,7 +45,7 @@ export async function fetchAllDetailedTeamOptions(): Promise<Option[]> {
     const api = await getRorApi()
 
     const params = new URLSearchParams()
-    params.set('limit', '2000')
+    params.set('limit', '4000')
     params.set('offset', '0')
 
     const vmRes = await api.virtualMachine.list(params)

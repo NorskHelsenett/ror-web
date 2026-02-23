@@ -11,8 +11,12 @@ export default function VMDisksPage() {
   const { vm } = useVMContext()
   const disks = getVmDisks(vm)
 
+  if (disks.length === 0) {
+    return <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>No disks available on this VM</div>
+  }
+
   return (
-    <Tabs defaultValue={disks.length > 0 ? 'progressbar' : 'table'} className='w-full'>
+    <Tabs defaultValue={disks.length > 0 ? 'progressbar' : 'table'} className='w-full space-y-4'>
       <TabsList className='grid w-full grid-cols-2'>
         <TabsTrigger value='progressbar' disabled={disks.length === 0}>
           Advanced view

@@ -39,7 +39,7 @@ export const DiskProgressBars = ({ items }: { items: VirtualMachineDisks[] }) =>
     })
 
   return (
-    <div className='border border-border rounded-lg p-4 bg-background mb-6'>
+    <div className='border border-border rounded-lg p-4 bg-background mb-6 max-w-[1400px] mx-auto'>
       <h3 className='text-lg font-semibold mb-4'>All disks usage</h3>
 
       {/* Critical Disk Space Warning (less than 5% free) */}
@@ -103,7 +103,6 @@ export const DiskProgressBars = ({ items }: { items: VirtualMachineDisks[] }) =>
       )}
 
       {/* Individual Disk Progress Bars */}
-
       <div className='space-y-4'>
         {items.map((disk, index) => {
           const size = disk.sizeBytes ? Number(disk.sizeBytes) / 1024 ** 3 : 0

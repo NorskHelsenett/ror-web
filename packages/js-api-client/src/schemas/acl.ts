@@ -7,6 +7,7 @@ export const AclSchema = z
     version: z.number().optional().nullable(),
     group: z.string().optional().nullable(),
     scope: z.string().optional().nullable(),
+    subject: z.string().optional().nullable(),
     access: z
       .object({
         read: z.boolean().optional().nullable(),

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card'
+import copy from 'clipboard-copy'
 import { Badge } from '@/components/shadcn/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/shadcn/tabs'
 import type { BackupJob, BackupRun } from '@ror/js-api-client'
@@ -9,6 +10,7 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import {
   getBackupJobId,
   getBackupJobLocation,
+  getBackupJobName,
   getBackupJobRetentionDuration,
   getBackupJobRetentionUnit,
   getBackupJobStartTime,
@@ -23,6 +25,8 @@ import {
 } from '@/features/vms/backup/utils/backup-run'
 import { formatDistance, format, isAfter } from 'date-fns'
 import { Clock, Calendar, HardDrive, AlertTriangle, CheckCircle, XCircle, LoaderCircle, Loader } from 'lucide-react'
+import { CopyButton } from '@/components/ui/copy-button'
+import Link from 'next/link'
 
 interface BackupOverviewProps {
   vm: VMWithBackupStatus
@@ -89,12 +93,44 @@ const BackupJobCard: React.FC<{ job: BackupJob; index: number; backupRuns: Backu
   return (
     <Card key={getBackupJobId(job) || index}>
       <CardHeader>
-        <CardTitle className='text-lg flex items-center justify-between'>
-          <span>Backup Job</span>
-          <Badge variant='outline' className='font-mono text-sm'>
-            {getBackupJobId(job) || 'N/A'}
-          </Badge>
-        </CardTitle>
+        <div className='space-y-2'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400'>
+              <HardDrive className='w-4 h-4' />
+              <span className='font-medium uppercase tracking-wide'>Backup Job</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Badge variant='outline' className='font-mono text-xs '>
+                <Link href={`/vms/backup/backup-jobs?backupJobId=${getBackupJobId(job)}`}>
+                  <Badge
+                    variant='default'
+                    className='text-gray-800 dark:text-gray-200 font-mono text-xs cursor-pointer hover:underline dark:hover:underline transition-colors bg-transparent border-0 p-0'
+                  >
+                    {getBackupJobId(job)}
+                  </Badge>
+                </Link>
+
+                <CopyButton
+                  className='bg-transparent p-0 border-0 text-gray-400 transition-colors'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    void copy(getBackupJobId(job))
+                  }}
+                />
+              </Badge>
+            </div>
+          </div>
+          <CardTitle className='text-xl font-semibold flex items-center gap-1'>
+            {getBackupJobName(job)}
+            <CopyButton
+              className='bg-transparent p-0 border-0 text-gray-400 transition-colors'
+              onClick={(e) => {
+                e.preventDefault()
+                void copy(getBackupJobName(job))
+              }}
+            />
+          </CardTitle>
+        </div>
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -155,9 +191,25 @@ const BackupRunCard: React.FC<{ run: BackupRun; isLatest: boolean }> = ({ run, i
               <Badge className='bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300 text-sm'>Latest</Badge>
             )}
           </div>
-          <div className='flex items-center space-x-2'>
-            <Badge variant='outline' className='font-mono text-sm'>
-              {getBackupRunId(run) || 'N/A'}
+          <div className='flex items-center space-x-2 '>
+            <Badge variant='outline' className='font-mono text-xs'>
+              <Link href={`/vms/backup/backup-runs?backupRunId=${getBackupRunId(run)}`}>
+                <Badge
+                  variant='default'
+                  className='text-gray-800 dark:text-gray-200 font-mono text-xs cursor-pointer hover:underline dark:hover:underline transition-colors bg-transparent border-0 p-0'
+                >
+                  {getBackupRunId(run)}
+                </Badge>
+              </Link>
+              <div className='flex items-center gap-2'>
+                <CopyButton
+                  className='bg-transparent p-0 border-0 text-gray-400 transition-colors'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    void copy(getBackupRunId(run))
+                  }}
+                />
+              </div>
             </Badge>
           </div>
         </CardTitle>
@@ -168,12 +220,22 @@ const BackupRunCard: React.FC<{ run: BackupRun; isLatest: boolean }> = ({ run, i
           <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>Status</span>
           <Badge className={getStatusColor(status)}>{status}</Badge>
         </div>
+        <div className='pt-2 border-t'></div>
         {backupJobId && (
           <div className='space-y-1'>
             <label className='text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 flex items-center space-x-1'>
               Backup job ID
             </label>
-            <span className='text-sm font-medium'>{backupJobId}</span>
+            <span className='text-sm font-medium items-center text-gray-900 dark:text-gray-100 flex gap-2'>
+              {backupJobId}
+              <CopyButton
+                className='bg-transparent p-0 border-0 text-gray-400 transition-colors'
+                onClick={(e) => {
+                  e.preventDefault()
+                  void copy(backupJobId)
+                }}
+              />
+            </span>
           </div>
         )}
         {startTime && (

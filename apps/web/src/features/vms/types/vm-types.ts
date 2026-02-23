@@ -4,6 +4,7 @@ export type VMCardData =
   | 'name'
   | 'powerState'
   | 'architecture'
+  | 'location'
   | 'family'
   | 'version'
   | 'toolVersion'

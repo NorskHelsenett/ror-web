@@ -45,7 +45,7 @@ const BackupInfoItem = ({ icon, label, value }: BackupInfoItemProps) => {
 }
 
 const NoBackupDisplay = () => (
-  <div className='mt-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50'>
+  <div className='mt-1 p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50'>
     <h5 className='font-semibold text-sm text-gray-700 dark:text-gray-300 tracking-wide '>Backup status</h5>
     <div className='flex items-center justify-center'>
       <div className='text-center space-y-2'>
@@ -172,7 +172,7 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
   const isConfigured = activeBackupStatus.hasConfiguredBackup
 
   const containerStyles = cn(
-    'mt-4 p-3 rounded-md relative overflow-hidden',
+    'mt-1 p-3 rounded-md relative overflow-hidden',
     isConfigured
       ? 'border-2 border-blue-400 bg-blue-50 dark:bg-blue-900/20'
       : isActive
@@ -249,7 +249,7 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
         ) : isConfigured ? (
           <div className='text-center py-2'>
             <p className='text-sm text-blue-700 dark:text-blue-300 font-medium'>Backup job configured</p>
-            <p className='text-xs text-gray-600 dark:text-gray-400 mt-1'>No backup runs executed yet</p>
+            <p className='text-xs text-gray-600 dark:text-gray-400 mt-1 mb-1'>No backup runs executed yet</p>
           </div>
         ) : (
           <div className='text-center py-2'>

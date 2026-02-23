@@ -262,7 +262,7 @@ export const getUniqueTeams = (vms: VirtualMachine[]): VirtualMachineTeam[] => {
 /**
  * Get the best available team identifier (description or value)
  * @param vm VirtualMachine object
- * @returns Team description if available, otherwise team value, or 'No Team' if neither exists
+ * @returns Team description if available, otherwise team value, or 'Unknown' if neither exists
  */
 export const getTeamIdentifier = (vm: VirtualMachine): string => {
   const teamDescription = getTeamDescription(vm)
@@ -276,7 +276,7 @@ export const getTeamIdentifier = (vm: VirtualMachine): string => {
     return teamValue.trim()
   }
 
-  return 'No Team'
+  return 'Unknown'
 }
 
 /**

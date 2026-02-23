@@ -21,6 +21,7 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
       family: getVmFamily(vm),
       location: getLocation(vm),
       fullLocation: getSpecificLocation(getLocation(vm) || ''),
+      // location: getSpecificLocation(getSpecificLocation),
     }))
 
     return new Fuse(flat, {
