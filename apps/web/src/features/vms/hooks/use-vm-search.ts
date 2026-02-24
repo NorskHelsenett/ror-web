@@ -26,7 +26,7 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
 
     return new Fuse(flat, {
       keys: ['label', 'powerState', 'family', 'location', 'fullLocation'],
-      threshold: 0.3,
+      threshold: 0.1,
       ignoreLocation: true,
       shouldSort: true,
       minMatchCharLength: 1,
@@ -38,6 +38,23 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
   const trimmedQuery = query.trim()
   if (!trimmedQuery) return items
 
+  // For very specific searches (longer queries), use exact match
+  if (trimmedQuery.length > 15) {
+    // Use exact token match for long hostnames
+    const searchQuery = `=${trimmedQuery}`
+    const results = fuse.search(searchQuery)
+
+    // If exact match found, return only that
+    if (results.length > 0) {
+      return results.map((r) => r.item)
+    }
+
+    // Fall back to prefix if no exact match
+    const prefixQuery = `^${trimmedQuery}`
+    return fuse.search(prefixQuery).map((r) => r.item)
+  }
+
+  // For shorter queries, use prefix matching
   const searchQuery = `^${trimmedQuery}`
   return fuse.search(searchQuery).map((r) => r.item)
 }

@@ -185,13 +185,16 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const { results: searchResults, isLoadingMore: isSearchLoadingMore } = useVmSearchWithLoading({
     initialItems: sortedItems,
     query: debouncedSearchQuery,
-    pageSize: 300,
+    pageSize: 50,
     sort: params.sort,
     order: params.order,
   })
 
   const displayedItems = useMemo(() => {
-    return debouncedSearchQuery.trim() ? searchResults : sortedItems
+    if (debouncedSearchQuery.trim()) {
+      return searchResults
+    }
+    return sortedItems
   }, [sortedItems, searchResults, debouncedSearchQuery])
 
   const pathname = usePathname()
@@ -256,9 +259,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const GridView = () => {
     return (
       <div>
-        {displayedItems.length === 0 && debouncedSearchQuery && !isSearchLoadingMore && (
-          <div className='text-center py-8 text-muted-foreground'>No VMs found matching "{debouncedSearchQuery}"</div>
-        )}
+        {/* {displayedItems.length === 0 && searchQuery.trim() && !isSearchLoadingMore && (
+          <div className='text-center py-8 text-muted-foreground'>
+            No VMs found matching "{searchQuery}"
+          </div>
+        )} */}
         {isSearchLoadingMore && displayedItems.length === 0 && (
           <div className='text-center py-8 text-muted-foreground'>Searching through all VMs...</div>
         )}
@@ -293,9 +298,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         {isSearchLoadingMore && displayedItems.length === 0 && (
           <div className='text-center py-4 text-muted-foreground'>Searching through all VMs...</div>
         )}
-        {displayedItems.length === 0 && debouncedSearchQuery && !isSearchLoadingMore && (
-          <div className='text-center py-8 text-muted-foreground'>No VMs found matching "{debouncedSearchQuery}"</div>
-        )}
+        {/* {displayedItems.length === 0 && searchQuery.trim() && !isSearchLoadingMore && (
+          <div className='text-center py-8 text-muted-foreground'>
+            No VMs found matching "{searchQuery}"
+          </div>
+        )} */}
         {displayedItems.length > 0 && (
           <DataTable
             data={displayedItems}

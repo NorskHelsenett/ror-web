@@ -15,7 +15,7 @@ interface UseVmSearchWithLoadingOptions {
 export function useVmSearchWithLoading({
   initialItems,
   query,
-  pageSize = 300,
+  pageSize = 50,
   sort,
   order,
 }: UseVmSearchWithLoadingOptions) {
