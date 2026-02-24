@@ -182,10 +182,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   // Search with auto-loading for unloaded VMs
   const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
 
-  const { results: searchResults, isLoadingMore: isSearchLoadingMore } = useVmSearchWithLoading({
+  const {
+    results: searchResults,
+    allLoadedItems,
+    isLoadingMore: isSearchLoadingMore,
+    isFullyLoaded,
+  } = useVmSearchWithLoading({
     initialItems: sortedItems,
     query: debouncedSearchQuery,
-    pageSize: 50,
+    pageSize: 100,
     sort: params.sort,
     order: params.order,
   })
@@ -252,7 +257,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         allItems={items}
         filteredItems={filteredItems}
       />
-      {isSearchLoadingMore && <span className='text-sm text-muted-foreground animate-pulse'>Loading more VMs...</span>}
+      {isSearchLoadingMore && !isFullyLoaded && (
+        <span className='text-sm text-muted-foreground animate-pulse'>
+          Loading all VMs to search... ({allLoadedItems.length} loaded)
+        </span>
+      )}
     </div>
   )
 

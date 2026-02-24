@@ -15,7 +15,7 @@ interface UseVmSearchWithLoadingOptions {
 export function useVmSearchWithLoading({
   initialItems,
   query,
-  pageSize = 50,
+  pageSize = 100,
   sort,
   order,
 }: UseVmSearchWithLoadingOptions) {
@@ -23,21 +23,22 @@ export function useVmSearchWithLoading({
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [offset, setOffset] = useState(initialItems.length)
+  const [hasLoadedAll, setHasLoadedAll] = useState(false)
 
   const trimmedQuery = query.trim()
   const searchResults = useVmSearch(allItems, trimmedQuery)
 
   const loadingRef = useRef(false)
   const queryRef = useRef('')
-  const searchAttemptedRef = useRef(false)
 
   useEffect(() => {
+    // When query changes, reset everything
     if (queryRef.current !== trimmedQuery) {
-      const previousQuery = queryRef.current
       queryRef.current = trimmedQuery
-      searchAttemptedRef.current = false
+      setHasLoadedAll(false)
 
       if (!trimmedQuery) {
+        // Query cleared - reset to initial state
         setAllItems(initialItems)
         setOffset(initialItems.length)
         setHasMore(true)
@@ -46,27 +47,23 @@ export function useVmSearchWithLoading({
         return
       }
 
-      if (!trimmedQuery.startsWith(previousQuery) || searchResults.length === 0) {
-        setAllItems(initialItems)
-        setOffset(initialItems.length)
-        setHasMore(true)
-        loadingRef.current = false
-      }
+      // New search query - reset to initial items and start loading all
+      setAllItems(initialItems)
+      setOffset(initialItems.length)
+      setHasMore(true)
+      loadingRef.current = false
     }
-  }, [trimmedQuery, initialItems, searchResults.length])
+  }, [trimmedQuery, initialItems])
 
+  // Load ALL VMs when searching to ensure we find everything
   useEffect(() => {
-    const shouldLoad =
-      trimmedQuery && (searchResults.length === 0 || !searchAttemptedRef.current) && hasMore && !loadingRef.current
-
-    if (!shouldLoad) {
+    if (!trimmedQuery || hasLoadedAll || !hasMore || loadingRef.current) {
       return
     }
 
-    const loadMore = async () => {
+    const loadAllVMs = async () => {
       loadingRef.current = true
       setIsLoadingMore(true)
-      searchAttemptedRef.current = true
 
       try {
         const result = await loadMoreVMs({
@@ -80,23 +77,30 @@ export function useVmSearchWithLoading({
           setAllItems((prev) => [...prev, ...result.items])
           setOffset((prev) => prev + result.items.length)
           setHasMore(result.hasMore)
+
+          // If no more data, mark as fully loaded
+          if (!result.hasMore) {
+            setHasLoadedAll(true)
+          }
         }
       } catch (error) {
         console.error('Failed to load more VMs:', error)
         setHasMore(false)
+        setHasLoadedAll(true)
       } finally {
         loadingRef.current = false
         setIsLoadingMore(false)
       }
     }
 
-    loadMore()
-  }, [trimmedQuery, searchResults.length, hasMore, offset, pageSize, sort, order])
+    loadAllVMs()
+  }, [trimmedQuery, hasLoadedAll, hasMore, offset, pageSize, sort, order])
 
   return {
     results: searchResults,
     allLoadedItems: allItems,
     isLoadingMore,
     hasMore: trimmedQuery ? hasMore : true,
+    isFullyLoaded: hasLoadedAll,
   }
 }
