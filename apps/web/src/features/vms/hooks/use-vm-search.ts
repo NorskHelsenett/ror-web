@@ -29,7 +29,7 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
       threshold: 0.1,
       ignoreLocation: true,
       shouldSort: true,
-      minMatchCharLength: 1,
+      minMatchCharLength: 5,
       distance: 100,
       useExtendedSearch: true,
     })

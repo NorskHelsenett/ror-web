@@ -24,7 +24,7 @@ export function ResourceSearch<T>({
   searchText,
   keys,
   mapItem,
-  threshold = 0.3,
+  threshold = 0.1,
   getItemsKey,
 }: ResourceSearchProps<T>) {
   const [query, setQuery] = useState('')
