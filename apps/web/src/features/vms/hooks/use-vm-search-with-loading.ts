@@ -15,7 +15,7 @@ interface UseVmSearchWithLoadingOptions {
 export function useVmSearchWithLoading({
   initialItems,
   query,
-  pageSize = 100,
+  pageSize = 300,
   sort,
   order,
 }: UseVmSearchWithLoadingOptions) {
@@ -26,19 +26,19 @@ export function useVmSearchWithLoading({
   const [hasLoadedAll, setHasLoadedAll] = useState(false)
 
   const trimmedQuery = query.trim()
+
+  // Re-search and re-sort EVERY time allItems changes
   const searchResults = useVmSearch(allItems, trimmedQuery)
 
   const loadingRef = useRef(false)
   const queryRef = useRef('')
 
   useEffect(() => {
-    // When query changes, reset everything
     if (queryRef.current !== trimmedQuery) {
       queryRef.current = trimmedQuery
       setHasLoadedAll(false)
 
       if (!trimmedQuery) {
-        // Query cleared - reset to initial state
         setAllItems(initialItems)
         setOffset(initialItems.length)
         setHasMore(true)
@@ -47,7 +47,7 @@ export function useVmSearchWithLoading({
         return
       }
 
-      // New search query - reset to initial items and start loading all
+      // New search - reset and start loading
       setAllItems(initialItems)
       setOffset(initialItems.length)
       setHasMore(true)
@@ -55,7 +55,7 @@ export function useVmSearchWithLoading({
     }
   }, [trimmedQuery, initialItems])
 
-  // Load ALL VMs when searching to ensure we find everything
+  // Load ALL VMs when searching
   useEffect(() => {
     if (!trimmedQuery || hasLoadedAll || !hasMore || loadingRef.current) {
       return
@@ -74,11 +74,11 @@ export function useVmSearchWithLoading({
         })
 
         if (queryRef.current === trimmedQuery) {
+          // Append new items - useVmSearch will automatically re-run and re-sort
           setAllItems((prev) => [...prev, ...result.items])
           setOffset((prev) => prev + result.items.length)
           setHasMore(result.hasMore)
 
-          // If no more data, mark as fully loaded
           if (!result.hasMore) {
             setHasLoadedAll(true)
           }
@@ -97,10 +97,11 @@ export function useVmSearchWithLoading({
   }, [trimmedQuery, hasLoadedAll, hasMore, offset, pageSize, sort, order])
 
   return {
-    results: searchResults,
+    results: searchResults, // Always re-sorted by Fuse.js after each batch
     allLoadedItems: allItems,
     isLoadingMore,
     hasMore: trimmedQuery ? hasMore : true,
     isFullyLoaded: hasLoadedAll,
+    totalLoaded: allItems.length,
   }
 }

@@ -184,13 +184,12 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const {
     results: searchResults,
-    allLoadedItems,
     isLoadingMore: isSearchLoadingMore,
     isFullyLoaded,
   } = useVmSearchWithLoading({
     initialItems: sortedItems,
     query: debouncedSearchQuery,
-    pageSize: 100,
+    pageSize: 300,
     sort: params.sort,
     order: params.order,
   })
@@ -258,9 +257,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         filteredItems={filteredItems}
       />
       {isSearchLoadingMore && !isFullyLoaded && (
-        <span className='text-sm text-muted-foreground animate-pulse'>
-          Loading all VMs to search... ({allLoadedItems.length} loaded)
-        </span>
+        <span className='text-sm text-muted-foreground animate-pulse'>Loading all VMs to search...</span>
       )}
     </div>
   )
