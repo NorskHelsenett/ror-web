@@ -25,6 +25,7 @@ import {
   getDatacenter,
   getProvider,
   getClusterById,
+  getClusterUid,
 } from '../utils/cluster'
 
 const columnHelper = createColumnHelper<KubernetesCluster>()
@@ -54,7 +55,7 @@ export function getClustersTableColumns(
       sortingFn: 'text',
       cell: (info) => (
         <Link
-          href={routes.app.cluster.getHref(getClusterId(info.row.original))}
+          href={routes.app.cluster.getHref(getClusterUid(info.row.original))}
           className='text-blue-600 dark:text-blue-500 underline'
           onClick={() =>
             localStorage.setItem(
