@@ -218,42 +218,38 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
-      <div className='flex items-center gap-2'>
-        <ResourceControls
-          safeItems={safeItems}
-          searchText='Find VMs...'
-          selectedDisplayData={selectedDisplayData}
-          onDisplayChange={onDisplayChange}
-          onSearchResultsChange={() => {}} // Handled by useVmSearchWithLoading
-          onSearchQueryChange={setSearchQuery}
-          displayDataOptions={displayDataOptions}
-          params={params}
-          toggleSortParams={toggleSortParams}
-          filtersOpen={filtersOpen}
-          toggleParams={toggleParams}
-          handleRefreshFilters={handleRefreshFilters}
-          domain='vms'
-          sortingOptions={sortingOptions}
-          searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
-          mapItem={(vm) => ({
-            ...vm,
-            label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-            hostName: getVmHostName(vm),
-            powerState: getVmPowerState(vm),
-            family: getVmFamily(vm),
-            location: getLocation(vm),
-            fullLocation: getSpecificLocation(getLocation(vm) || ''),
-          })}
-          getItemsKey={getVmsKey}
-          exportAsCSV={exportVmsAsCSV}
-          exportAsExcel={exportVmsAsExcel}
-          allItems={items}
-          filteredItems={filteredItems}
-        />
-        {isSearchLoadingMore && (
-          <span className='text-sm text-muted-foreground animate-pulse'>Loading more VMs...</span>
-        )}
-      </div>
+      <ResourceControls
+        safeItems={safeItems}
+        searchText='Find VMs...'
+        selectedDisplayData={selectedDisplayData}
+        onDisplayChange={onDisplayChange}
+        onSearchResultsChange={() => {}} // Handled by useVmSearchWithLoading
+        onSearchQueryChange={setSearchQuery}
+        displayDataOptions={displayDataOptions}
+        params={params}
+        toggleSortParams={toggleSortParams}
+        filtersOpen={filtersOpen}
+        toggleParams={toggleParams}
+        handleRefreshFilters={handleRefreshFilters}
+        domain='vms'
+        sortingOptions={sortingOptions}
+        searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
+        mapItem={(vm) => ({
+          ...vm,
+          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
+          hostName: getVmHostName(vm),
+          powerState: getVmPowerState(vm),
+          family: getVmFamily(vm),
+          location: getLocation(vm),
+          fullLocation: getSpecificLocation(getLocation(vm) || ''),
+        })}
+        getItemsKey={getVmsKey}
+        exportAsCSV={exportVmsAsCSV}
+        exportAsExcel={exportVmsAsExcel}
+        allItems={items}
+        filteredItems={filteredItems}
+      />
+      {isSearchLoadingMore && <span className='text-sm text-muted-foreground animate-pulse'>Loading more VMs...</span>}
     </div>
   )
 
@@ -297,13 +293,18 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         {isSearchLoadingMore && displayedItems.length === 0 && (
           <div className='text-center py-4 text-muted-foreground'>Searching through all VMs...</div>
         )}
-        <DataTable
-          data={displayedItems}
-          columns={getVMTableColumns(selectedDisplayData)}
-          hasMore={!debouncedSearchQuery && hasMore}
-          isLoading={isLoading}
-          sentinelRef={!debouncedSearchQuery ? sentinelRef : undefined}
-        />
+        {displayedItems.length === 0 && debouncedSearchQuery && !isSearchLoadingMore && (
+          <div className='text-center py-8 text-muted-foreground'>No VMs found matching "{debouncedSearchQuery}"</div>
+        )}
+        {displayedItems.length > 0 && (
+          <DataTable
+            data={displayedItems}
+            columns={getVMTableColumns(selectedDisplayData)}
+            hasMore={!debouncedSearchQuery && hasMore}
+            isLoading={isLoading}
+            sentinelRef={!debouncedSearchQuery ? sentinelRef : undefined}
+          />
+        )}
       </div>
     )
   }

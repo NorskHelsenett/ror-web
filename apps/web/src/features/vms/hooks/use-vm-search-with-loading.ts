@@ -29,11 +29,13 @@ export function useVmSearchWithLoading({
 
   const loadingRef = useRef(false)
   const queryRef = useRef('')
+  const searchAttemptedRef = useRef(false)
 
   useEffect(() => {
-    // Reset when query changes or clears
     if (queryRef.current !== trimmedQuery) {
+      const previousQuery = queryRef.current
       queryRef.current = trimmedQuery
+      searchAttemptedRef.current = false
 
       if (!trimmedQuery) {
         setAllItems(initialItems)
@@ -43,18 +45,28 @@ export function useVmSearchWithLoading({
         loadingRef.current = false
         return
       }
+
+      if (!trimmedQuery.startsWith(previousQuery) || searchResults.length === 0) {
+        setAllItems(initialItems)
+        setOffset(initialItems.length)
+        setHasMore(true)
+        loadingRef.current = false
+      }
     }
-  }, [trimmedQuery, initialItems])
+  }, [trimmedQuery, initialItems, searchResults.length])
 
   useEffect(() => {
-    // Only trigger if we have a query, no results, more data available, and not already loading
-    if (!trimmedQuery || searchResults.length > 0 || !hasMore || loadingRef.current) {
+    const shouldLoad =
+      trimmedQuery && (searchResults.length === 0 || !searchAttemptedRef.current) && hasMore && !loadingRef.current
+
+    if (!shouldLoad) {
       return
     }
 
     const loadMore = async () => {
       loadingRef.current = true
       setIsLoadingMore(true)
+      searchAttemptedRef.current = true
 
       try {
         const result = await loadMoreVMs({
@@ -64,7 +76,6 @@ export function useVmSearchWithLoading({
           order,
         })
 
-        // Only update if query hasn't changed
         if (queryRef.current === trimmedQuery) {
           setAllItems((prev) => [...prev, ...result.items])
           setOffset((prev) => prev + result.items.length)
