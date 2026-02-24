@@ -2,16 +2,19 @@ import { authGuard } from '@/features/auth/utils/auth-guard'
 import { getRorApi } from '@/services/ror-api'
 import { localizeDate } from '@/utils/time-and-date'
 import { Acl } from '@ror/js-api-client'
-import { CodeSnippet } from '@ror/react/components/code-snippet'
-import { DefinitionDescription, DefinitionList, DefinitionTerm } from '@ror/react/components/definition-list'
-import { Layer } from '@ror/react/components/layer'
 import { Tile } from '@ror/react/components/tile'
 import { jwtDecode } from 'jwt-decode'
-import { Fragment } from 'react'
+import { Copy, Eye, EyeClosed } from 'lucide-react'
+import { CopyButton } from '@/components/ui/copy-button'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function ProfilePage() {
+type ProfilePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>
+}
+
+export default async function ProfilePage({ searchParams }: ProfilePageProps) {
   const session = await authGuard()
   const api = await getRorApi()
   const decodedAuthToken = jwtDecode(session.accessToken)
@@ -28,6 +31,8 @@ export default async function ProfilePage() {
       aclsNotBeingUsed.push(acl)
     }
   }
+  const sp = (await searchParams) ?? {}
+  const showToken = sp.showToken === '1'
 
   return (
     <div className='p-10'>
@@ -36,7 +41,7 @@ export default async function ProfilePage() {
         <p className='text-(--r-text-secondary)'>{self.user.email}</p>
       </header>
 
-      <div className='mt-10 grid grid-cols-12 gap-8 max-w-240'>
+      <div className='mt-10 grid grid-cols-14 gap-8 max-w-240'>
         <div className='col-span-8'>
           <Tile className='p-5'>
             <h3 className='r-heading-03 mb-4'>Groups that grant access in ROR</h3>
@@ -84,36 +89,57 @@ export default async function ProfilePage() {
             </ul>
           </Tile>
         </div>
-        <div className='col-span-4'>
+        <div className='col-span-6'>
           <Tile className='p-5'>
-            <h3 className='r-heading-03 mb-8'>Access token</h3>
-            <DefinitionList className='justify-between'>
-              <DefinitionTerm>Audience</DefinitionTerm>
-              <DefinitionDescription>{decodedAuthToken.aud}</DefinitionDescription>
-              <DefinitionTerm>Issuer</DefinitionTerm>
-              <DefinitionDescription>{decodedAuthToken.iss}</DefinitionDescription>
-              {decodedAuthToken.exp ? (
-                <Fragment>
-                  <DefinitionTerm>Expires</DefinitionTerm>
-                  <DefinitionDescription>{localizeDate(new Date(decodedAuthToken.exp * 1000))}</DefinitionDescription>
-                </Fragment>
-              ) : null}
-              {decodedAuthToken.iat ? (
-                <Fragment>
-                  <DefinitionTerm>Issued</DefinitionTerm>
-                  <DefinitionDescription>{localizeDate(new Date(decodedAuthToken.iat * 1000))}</DefinitionDescription>
-                </Fragment>
-              ) : null}
-            </DefinitionList>
+            <h3 className='r-heading-03 mb-4'>Access token</h3>
+            <div>
+              <span className='w-1/3 font-bold'>Audience</span>
+              <span className='w-2/3'>{decodedAuthToken.aud}</span>
+            </div>
+            <div>
+              <span className='w-1/3 font-bold'>Issuer</span>
+              <span className='w-2/3'>{decodedAuthToken.iss}</span>
+            </div>
+            {decodedAuthToken.exp && (
+              <div>
+                <span className='w-1/3 font-bold'>Expires</span>
+                <span className='w-2/3'>{localizeDate(new Date(decodedAuthToken.exp * 1000))}</span>
+              </div>
+            )}
+            {decodedAuthToken.iat && (
+              <div>
+                <span className='w-1/3 font-bold'>Issued</span>
+                <span className='w-2/3'>{localizeDate(new Date(decodedAuthToken.iat * 1000))}</span>
+              </div>
+            )}
             <hr className='my-4' />
-            <h3 className='font-semibold text-sm mb-2'>Your access token</h3>
-            <Layer level={1}>
-              <CodeSnippet type='single'>{session.accessToken}</CodeSnippet>
-            </Layer>
-            <h3 className='font-semibold text-sm mb-2 mt-4'>Your access token (with Bearer)</h3>
-            <Layer level={1}>
-              <CodeSnippet type='single'>{`Bearer ${session.accessToken}`}</CodeSnippet>
-            </Layer>
+            <h4>Copy access token</h4>
+            <CopyButton className='bg-blue-600 min-w-fit p-2 text-sm my-2'>
+              <Copy className='mr-2' />
+              Access token
+            </CopyButton>
+            <CopyButton className='bg-blue-600 min-w-fit p-2 text-sm'>
+              <Copy className='mr-2' />
+              Access token with Bearer
+            </CopyButton>
+            <hr className='my-4' />
+            <div className='flex items-center'>
+              <h4>See access token</h4>
+
+              <Link
+                className='ml-auto inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-accent'
+                href={showToken ? '?showToken=0' : '?showToken=1'}
+                aria-label={showToken ? 'Hide access token' : 'Show access token'}
+              >
+                {showToken ? <Eye className='h-4 w-4' /> : <EyeClosed className='h-4 w-4' />}
+              </Link>
+            </div>
+
+            <p className={showToken ? 'w-full whitespace-normal break-all' : 'w-full overflow-hidden'}>
+              {showToken
+                ? session.accessToken
+                : '**********************************************************************************'}
+            </p>
           </Tile>
         </div>
       </div>
