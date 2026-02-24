@@ -49,6 +49,8 @@ interface ResourceControlsProps<T> {
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
   onSearchResultsChange: (results: T[]) => void
+  onSearchQueryChange?: (query: string) => void
+
   displayDataOptions: Option[]
   handleRefreshFilters: () => void
   toggleParams: string
@@ -76,7 +78,7 @@ interface ResourceControlsProps<T> {
  * @param selectedDisplayData - The currently selected display data option values.
  * @param onDisplayChange - Callback invoked when the display data selection changes.
  * @param onSearchResultsChange - Callback invoked when the search results change.
- * @param displayDataOptions - The available options for display data selection.
+ * @param onSearchQueryChange - Callback invoked when the search query changes.
  * @param handleRefreshFilters - Callback invoked to reset or refresh filters.
  * @param toggleParams - The URL or parameters used to toggle the filter panel.
  * @param toggleSortParams - Object containing sorting toggle information and URL.
@@ -98,6 +100,7 @@ export function ResourceControls<T>({
   selectedDisplayData,
   onDisplayChange,
   onSearchResultsChange,
+  onSearchQueryChange,
   displayDataOptions,
   handleRefreshFilters,
   toggleParams,
@@ -120,6 +123,7 @@ export function ResourceControls<T>({
         <ResourceSearch<T>
           items={safeItems}
           onResultsChange={onSearchResultsChange}
+          onQueryChange={onSearchQueryChange}
           searchText={searchText}
           keys={searchKeys}
           mapItem={mapItem}

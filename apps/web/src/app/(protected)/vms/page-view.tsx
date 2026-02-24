@@ -61,8 +61,13 @@ import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 
+import { useVmSearchWithLoading } from '@/features/vms/hooks/use-vm-search-with-loading'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
+
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300)
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
@@ -155,24 +160,39 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     VirtualMachine | VMWithBackupStatus
   >(safeItems, filterDefinitions)
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<VMCardData>('vms')
-  const [searchResults, setSearchResults] = useState<(VirtualMachine | VMWithBackupStatus)[]>(safeItems)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
+  // const [searchResults, setSearchResults] = useState<(VirtualMachine | VMWithBackupStatus)[]>(safeItems)
 
-  // Handler for display data changes
+  // // Handler for display data changes
+  // const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
+
+  // const lastSafeKeyRef = useRef('')
+  // useEffect(() => {
+  //   const nextKey = getVmsKey(safeItems)
+  //   if (nextKey !== lastSafeKeyRef.current) {
+  //     lastSafeKeyRef.current = nextKey
+  //     setSearchResults((prev) => {
+  //       const prevKey = getVmsKey(prev)
+  //       const isSearching = prev.length != safeItems.length
+  //       return isSearching || prevKey === nextKey ? prev : safeItems
+  //     })
+  //   }
+  // }, [safeItems])
+
+  // Search with auto-loading for unloaded VMs
   const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
 
-  const lastSafeKeyRef = useRef('')
-  useEffect(() => {
-    const nextKey = getVmsKey(safeItems)
-    if (nextKey !== lastSafeKeyRef.current) {
-      lastSafeKeyRef.current = nextKey
-      setSearchResults((prev) => {
-        const prevKey = getVmsKey(prev)
-        const isSearching = prev.length != safeItems.length
-        return isSearching || prevKey === nextKey ? prev : safeItems
-      })
-    }
-  }, [safeItems])
+  const { results: searchResults, isLoadingMore: isSearchLoadingMore } = useVmSearchWithLoading({
+    initialItems: sortedItems,
+    query: debouncedSearchQuery,
+    pageSize: 300,
+    sort: params.sort,
+    order: params.order,
+  })
+
+  const displayedItems = useMemo(() => {
+    return debouncedSearchQuery.trim() ? searchResults : sortedItems
+  }, [sortedItems, searchResults, debouncedSearchQuery])
 
   const pathname = usePathname()
   const router = useRouter()
@@ -190,48 +210,62 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const toggleParams = useMemo(() => buildToggledParams(params, 'filters', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
-  const displayedItems = useMemo(() => {
-    if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getVmUniqueKey))
-    return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
-  }, [sortedItems, searchResults])
+  // const displayedItems = useMemo(() => {
+  //   if (!searchResults?.length) return sortedItems
+  //   const ids = new Set(searchResults.map(getVmUniqueKey))
+  //   return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+  // }, [sortedItems, searchResults])
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
-      <ResourceControls
-        safeItems={safeItems}
-        searchText='Find VMs...'
-        selectedDisplayData={selectedDisplayData}
-        onDisplayChange={onDisplayChange}
-        onSearchResultsChange={setSearchResults}
-        displayDataOptions={displayDataOptions}
-        params={params}
-        toggleSortParams={toggleSortParams}
-        filtersOpen={filtersOpen}
-        toggleParams={toggleParams}
-        handleRefreshFilters={handleRefreshFilters}
-        domain='vms'
-        sortingOptions={sortingOptions}
-        searchKeys={['label', 'powerState', 'family', 'location', 'fullLocation']}
-        mapItem={(vm) => ({
-          ...vm,
-          label: getVmHostName(vm),
-          powerState: getVmPowerState(vm),
-          family: getVmFamily(vm),
-          location: getLocation(vm),
-          fullLocation: getSpecificLocation(getLocation(vm) || ''),
-        })}
-        getItemsKey={getVmsKey}
-        exportAsCSV={exportVmsAsCSV}
-        exportAsExcel={exportVmsAsExcel}
-        allItems={items}
-        filteredItems={filteredItems}
-      />
+      <div className='flex items-center gap-2'>
+        <ResourceControls
+          safeItems={safeItems}
+          searchText='Find VMs...'
+          selectedDisplayData={selectedDisplayData}
+          onDisplayChange={onDisplayChange}
+          onSearchResultsChange={() => {}} // Handled by useVmSearchWithLoading
+          onSearchQueryChange={setSearchQuery}
+          displayDataOptions={displayDataOptions}
+          params={params}
+          toggleSortParams={toggleSortParams}
+          filtersOpen={filtersOpen}
+          toggleParams={toggleParams}
+          handleRefreshFilters={handleRefreshFilters}
+          domain='vms'
+          sortingOptions={sortingOptions}
+          searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
+          mapItem={(vm) => ({
+            ...vm,
+            label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
+            hostName: getVmHostName(vm),
+            powerState: getVmPowerState(vm),
+            family: getVmFamily(vm),
+            location: getLocation(vm),
+            fullLocation: getSpecificLocation(getLocation(vm) || ''),
+          })}
+          getItemsKey={getVmsKey}
+          exportAsCSV={exportVmsAsCSV}
+          exportAsExcel={exportVmsAsExcel}
+          allItems={items}
+          filteredItems={filteredItems}
+        />
+        {isSearchLoadingMore && (
+          <span className='text-sm text-muted-foreground animate-pulse'>Loading more VMs...</span>
+        )}
+      </div>
     </div>
   )
+
   const GridView = () => {
     return (
       <div>
+        {displayedItems.length === 0 && debouncedSearchQuery && !isSearchLoadingMore && (
+          <div className='text-center py-8 text-muted-foreground'>No VMs found matching "{debouncedSearchQuery}"</div>
+        )}
+        {isSearchLoadingMore && displayedItems.length === 0 && (
+          <div className='text-center py-8 text-muted-foreground'>Searching through all VMs...</div>
+        )}
         <div className='flex flex-row flex-wrap gap-6'>
           {displayedItems.map((vm, vmIdx) => (
             <div key={getVmHostName(vm) || vmIdx}>
@@ -247,10 +281,12 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
               />
             </div>
           ))}
-          <div ref={sentinelRef} className='h-px w-full' />
+          {!debouncedSearchQuery && <div ref={sentinelRef} className='h-px w-full' />}
         </div>
-        {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
-        {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>}
+        {!debouncedSearchQuery && isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
+        {!debouncedSearchQuery && !hasMore && (
+          <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>
+        )}
       </div>
     )
   }
@@ -258,12 +294,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const TableView = () => {
     return (
       <div>
+        {isSearchLoadingMore && displayedItems.length === 0 && (
+          <div className='text-center py-4 text-muted-foreground'>Searching through all VMs...</div>
+        )}
         <DataTable
           data={displayedItems}
           columns={getVMTableColumns(selectedDisplayData)}
-          hasMore={hasMore}
+          hasMore={!debouncedSearchQuery && hasMore}
           isLoading={isLoading}
-          sentinelRef={sentinelRef}
+          sentinelRef={!debouncedSearchQuery ? sentinelRef : undefined}
         />
       </div>
     )

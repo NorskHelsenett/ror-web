@@ -38,7 +38,6 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
   const trimmedQuery = query.trim()
   if (!trimmedQuery) return items
 
-  // Always use prefix search - this ensures "mtrd-" only matches items starting with "mtrd-"
   const searchQuery = `^${trimmedQuery}`
   return fuse.search(searchQuery).map((r) => r.item)
 }
