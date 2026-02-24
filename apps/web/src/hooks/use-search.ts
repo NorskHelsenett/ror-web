@@ -21,6 +21,7 @@ export interface UseSearchOptions<T, M = T> {
   keys?: FuseOptionKey<M>[]
   mapItem?: (item: T) => M
 }
+
 /**
  * Custom hook for searching and filtering an array of items using fuzzy matching.
  *
@@ -38,9 +39,18 @@ export function useSearch<T, M = T>(items: T[], query: string, options: UseSearc
     const sourceItems = mapItem
       ? items.map((item) => ({ original: item, mapped: mapItem(item) }))
       : items.map((i) => ({ original: i, mapped: i as unknown as M }))
+
     const fuse = new Fuse<M>(
       sourceItems.map((i) => i.mapped),
-      { keys, threshold }
+      {
+        keys,
+        threshold,
+        ignoreLocation: true,
+        shouldSort: true,
+        distance: 100,
+        minMatchCharLength: 1,
+        useExtendedSearch: true,
+      }
     )
     return { fuse, sourceItems }
   }, [items, keys, threshold, mapItem])
@@ -48,18 +58,9 @@ export function useSearch<T, M = T>(items: T[], query: string, options: UseSearc
   const trimmed = query.trim()
   if (!trimmed) return items
 
-  // If query looks like a hostname (contains dash or number structure)
-  if (trimmed.includes('-')) {
-    return sourceItems
-      .filter((i) => {
-        const value =
-          typeof i.mapped === 'object' && i.mapped !== null && 'label' in i.mapped ? (i.mapped as any).label : i.mapped
-        return String(value).toLowerCase() === trimmed.toLowerCase()
-      })
-      .map((i) => i.original)
-  }
-
-  // Otherwise use fuzzy search
-  const results = fuse.search(trimmed)
+  // Always use prefix search with extended search
+  // This ensures "mtrd-" only matches items starting with "mtrd-"
+  const searchQuery = `^${trimmed}`
+  const results = fuse.search(searchQuery)
   return results.map((r) => sourceItems[r.refIndex].original)
 }

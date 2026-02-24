@@ -212,11 +212,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
+        searchKeys={['label', 'powerState', 'family', 'location', 'fullLocation']}
         mapItem={(vm) => ({
           ...vm,
-          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-          hostName: getVmHostName(vm),
+          label: getVmHostName(vm),
           powerState: getVmPowerState(vm),
           family: getVmFamily(vm),
           location: getLocation(vm),
@@ -230,7 +229,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       />
     </div>
   )
-
   const GridView = () => {
     return (
       <div>

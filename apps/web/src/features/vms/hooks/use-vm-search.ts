@@ -12,6 +12,7 @@ export const getSpecificLocation = (location: string | undefined): string => {
   }
   return location ? locationMap[location] || location : ''
 }
+
 export const useVmSearch = (items: VirtualMachine[], query: string) => {
   const fuse = useMemo(() => {
     const flat = items.map((vm) => ({
@@ -25,12 +26,11 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
 
     return new Fuse(flat, {
       keys: ['label', 'powerState', 'family', 'location', 'fullLocation'],
-      threshold: 0.1,
-      //ignoreLocation: true,
+      threshold: 0.3,
+      ignoreLocation: true,
       shouldSort: true,
-      //minMatchCharLength: 6,
-      //distance: 50,
-      findAllMatches: false,
+      minMatchCharLength: 1,
+      distance: 100,
       useExtendedSearch: true,
     })
   }, [items])
@@ -38,7 +38,7 @@ export const useVmSearch = (items: VirtualMachine[], query: string) => {
   const trimmedQuery = query.trim()
   if (!trimmedQuery) return items
 
-  // For exact prefix matching, use extended search syntax
+  // Always use prefix search - this ensures "mtrd-" only matches items starting with "mtrd-"
   const searchQuery = `^${trimmedQuery}`
   return fuse.search(searchQuery).map((r) => r.item)
 }
