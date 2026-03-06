@@ -57,12 +57,14 @@ export function useInfiniteLoader<T>({
   useEffect(() => {
     const nextKey = getItemsKey(initial)
     if (nextKey !== lastKeyRef.current) {
+      // Always reset — key check was preventing updates when search returned same-sized array
       lastKeyRef.current = nextKey
       setItems(initial)
-      setHasMore(true)
-      runIdRef.current++ // invalidate in-flight requests
+      setHasMore(initial.length >= pageSize) // reset hasMore based on new data
+      runIdRef.current++
+      inFlightRef.current = false
     }
-  }, [initial, getItemsKey])
+  }, [initial])
 
   // Reset when the sorting order changes
   useEffect(() => {

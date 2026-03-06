@@ -77,6 +77,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         limit,
         sort: params.sort,
         order: params.order,
+        search: params.search,
+        filters: params.filters,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -157,13 +159,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   >(safeItems, filterDefinitions)
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<VMCardData>('vms')
   const [searchResults, setSearchResults] = useState<(VirtualMachine | VMWithBackupStatus)[]>(safeItems)
-  const [isSearchLoading, setIsSearchLoading] = useState(false)
 
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
   useEffect(() => {
     setSearchResults(safeItems)
-    setIsSearchLoading(false)
   }, [vms])
 
   // Handler for display data changes
@@ -198,7 +198,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       else next.delete('search')
 
       next.delete('page')
-      setIsSearchLoading(true)
       router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
     [pathname, router, searchParams]
@@ -279,29 +278,25 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const GridView = () => {
     return (
       <div>
-        {isSearchLoading && <div style={{ textAlign: 'center', padding: 16 }}>Searching...</div>}
         <div className='flex flex-row flex-wrap gap-6'>
-          {!isSearchLoading &&
-            displayedItems.map((vm, vmIdx) => (
-              <div key={getVmHostName(vm) || vmIdx}>
-                <VMCard
-                  vm={vm}
-                  vmDisplayData={
-                    selectedDisplayData.length > 0
-                      ? selectedDisplayData
-                      : displayDataOptions
-                          .filter((opt) => !['version'].includes(opt.value))
-                          .map((opt) => opt.value as VMCardData) || []
-                  }
-                />
-              </div>
-            ))}
+          {displayedItems.map((vm, vmIdx) => (
+            <div key={getVmHostName(vm) || vmIdx}>
+              <VMCard
+                vm={vm}
+                vmDisplayData={
+                  selectedDisplayData.length > 0
+                    ? selectedDisplayData
+                    : displayDataOptions
+                        .filter((opt) => !['version'].includes(opt.value))
+                        .map((opt) => opt.value as VMCardData) || []
+                }
+              />
+            </div>
+          ))}
           <div ref={sentinelRef} className='h-px w-full' />
         </div>
-        {!isSearchLoading && isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading more...</div>}
-        {!isSearchLoading && !hasMore && (
-          <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>
-        )}
+        {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
+        {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>}
       </div>
     )
   }
@@ -309,16 +304,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const TableView = () => {
     return (
       <div>
-        {isSearchLoading && <div style={{ textAlign: 'center', padding: 16 }}>Searching...</div>}
-        {!isSearchLoading && (
-          <DataTable
-            data={displayedItems}
-            columns={getVMTableColumns(selectedDisplayData)}
-            hasMore={hasMore}
-            isLoading={isLoading}
-            sentinelRef={sentinelRef}
-          />
-        )}
+        <DataTable
+          data={displayedItems}
+          columns={getVMTableColumns(selectedDisplayData)}
+          hasMore={hasMore}
+          isLoading={isLoading}
+          sentinelRef={sentinelRef}
+        />
       </div>
     )
   }
