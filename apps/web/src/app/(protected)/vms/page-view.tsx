@@ -169,18 +169,18 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
 
-  // const lastSafeKeyRef = useRef('')
-  // useEffect(() => {
-  //   const nextKey = getVmsKey(safeItems)
-  //   if (nextKey !== lastSafeKeyRef.current) {
-  //     lastSafeKeyRef.current = nextKey
-  //     setSearchResults((prev) => {
-  //       const prevKey = getVmsKey(prev)
-  //       const isSearching = prev.length != safeItems.length
-  //       return isSearching || prevKey === nextKey ? prev : safeItems
-  //     })
-  //   }
-  // }, [safeItems])
+  const lastSafeKeyRef = useRef('')
+  useEffect(() => {
+    const nextKey = getVmsKey(safeItems)
+    if (nextKey !== lastSafeKeyRef.current) {
+      lastSafeKeyRef.current = nextKey
+      setSearchResults((prev) => {
+        const prevKey = getVmsKey(prev)
+        const isSearching = prev.length != safeItems.length
+        return isSearching || prevKey === nextKey ? prev : safeItems
+      })
+    }
+  }, [safeItems])
 
   const pathname = usePathname()
   const router = useRouter()

@@ -5,6 +5,7 @@ import type { VirtualMachine } from '@ror/js-api-client'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
+import { buildVmSearchFilter } from '@/features/vms/utils/regex-search'
 
 type LoadMoreOpts = {
   offset: number
@@ -22,8 +23,13 @@ export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMo
   params.set('offset', String(offset))
   if (sort) params.set('sort', sort)
   if (order) params.set('order', order)
-  if (search) params.set('search', search)
-  //if (filters) params.set('filters', filters)
+
+  const searchQuery = search?.trim() || undefined
+  if (searchQuery) {
+    const filters = buildVmSearchFilter(searchQuery)
+    console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
+    if (filters) params.set('filters', filters)
+  }
 
   // Fetch VMs and backup data in parallel
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([
