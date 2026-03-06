@@ -158,6 +158,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const [searchResults, setSearchResults] = useState<(VirtualMachine | VMWithBackupStatus)[]>(safeItems)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
+  useEffect(() => {
+    setSearchResults(safeItems)
+  }, [vms])
+
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
 
@@ -193,14 +197,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       'virtualmachine.status.location',
     ]
 
-    return JSON.stringify(
-      searchableFields.map((field) => ({
-        field,
+    return JSON.stringify([
+      {
+        field: 'virtualmachine.spec.name',
         value: `^${safe}`,
         type: 'string',
         operator: 'regexp',
-      }))
-    )
+      },
+    ])
   }, [])
 
   const updateFiltersInUrl = useCallback(
@@ -223,8 +227,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   )
 
   const handleSearchResultsChange = useCallback(
-    (results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
-      setSearchResults(results)
+    (_results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
       if (typeof searchQuery === 'string') {
         updateFiltersInUrl(searchQuery)
       }
@@ -246,11 +249,25 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const toggleParams = useMemo(() => buildToggledParams(params, 'filters', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
+  // const displayedItems = useMemo(() => {
+  //   if (!searchResults?.length) return sortedItems
+  //   const ids = new Set(searchResults.map(getVmUniqueKey))
+  //   return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+  // }, [sortedItems, searchResults])
   const displayedItems = useMemo(() => {
-    if (!searchResults?.length) return sortedItems
     const ids = new Set(searchResults.map(getVmUniqueKey))
     return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
   }, [sortedItems, searchResults])
+  //const displayedItems = sortedItems
+
+  useEffect(() => {
+    console.log('[PageView] params.search:', searchParams.get('search'))
+    console.log('[PageView] vms received:', vms.length)
+    console.log(
+      '[PageView] vms names:',
+      vms.map((vm) => vm?.virtualmachine?.spec?.name ?? vm?.metadata?.name)
+    )
+  }, [vms, searchParams])
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>

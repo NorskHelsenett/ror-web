@@ -6,9 +6,16 @@ import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 
-type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
+type LoadMoreOpts = {
+  offset: number
+  limit: number
+  sort?: string
+  order?: 'asc' | 'desc'
+  search?: string
+  filters?: string
+}
 
-export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) {
+export async function loadMoreVMs({ offset, limit, sort, order, search, filters }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -16,6 +23,8 @@ export async function loadMoreVMs({ offset, limit, sort, order }: LoadMoreOpts) 
   params.set('offset', String(offset))
   if (sort) params.set('sort', sort)
   if (order) params.set('order', order)
+  if (search) params.set('search', search)
+  if (filters) params.set('filters', filters)
 
   // Fetch VMs and backup data in parallel
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([

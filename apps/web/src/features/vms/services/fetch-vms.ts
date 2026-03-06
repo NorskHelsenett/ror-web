@@ -22,23 +22,23 @@ export async function fetchVms(
     const safe = escapeRegExp(search)
 
     // Map UI/search keys -> API field paths (replace with exact paths from your API model)
-    const apiSearchFields = [
-      'virtualmachine.spec.name', // label/name
-      'virtualmachine.spec.hostname', // hostName
-      'virtualmachine.status.powerState', // powerState
-      'virtualmachine.spec.family', // family
-      'virtualmachine.status.location', // location
-      // 'cluster.fullPath',                  // fullLocation
-    ]
+    // const apiSearchFields = [
+    //   'virtualmachine.spec.name', // label/name
+    //   'virtualmachine.spec.hostname', // hostName
+    //   'virtualmachine.status.powerState', // powerState
+    //   'virtualmachine.spec.family', // family
+    //   'virtualmachine.status.location', // location
+    //   // 'cluster.fullPath',                  // fullLocation
+    // ]
 
-    const filters = JSON.stringify(
-      apiSearchFields.map((field) => ({
-        field,
+    const filters = JSON.stringify([
+      {
+        field: 'virtualmachine.spec.name',
         value: `^${safe}`,
         type: 'string',
         operator: 'regexp',
-      }))
-    )
+      },
+    ])
 
     console.log('[fetchVms] filters:', filters)
     listParams.set('filters', filters)
