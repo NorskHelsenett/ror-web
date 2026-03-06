@@ -60,9 +60,10 @@ export function useInfiniteLoader<T>({
       // Always reset — key check was preventing updates when search returned same-sized array
       lastKeyRef.current = nextKey
       setItems(initial)
-      setHasMore(initial.length >= pageSize) // reset hasMore based on new data
+      setHasMore(true) // always reset to true — let loadMore determine if there's more
       runIdRef.current++
       inFlightRef.current = false
+      console.log('[useInfiniteLoader] reset — initial items:', initial.length)
     }
   }, [initial])
 
