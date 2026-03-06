@@ -21,6 +21,8 @@ export interface Params {
   sort?: string
   order?: 'asc' | 'desc'
   filters?: string
+  filterPanel?: string
+  search?: string
 }
 
 /**

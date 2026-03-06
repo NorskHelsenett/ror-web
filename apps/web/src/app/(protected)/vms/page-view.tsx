@@ -62,7 +62,7 @@ import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
-  const filtersOpen = params.filters === 'open'
+  const filtersOpen = params.filterPanel === 'open'
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
@@ -156,10 +156,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   >(safeItems, filterDefinitions)
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<VMCardData>('vms')
   const [searchResults, setSearchResults] = useState<(VirtualMachine | VMWithBackupStatus)[]>(safeItems)
+  const [isSearchLoading, setIsSearchLoading] = useState(false)
+
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
   useEffect(() => {
     setSearchResults(safeItems)
+    setIsSearchLoading(false)
   }, [vms])
 
   // Handler for display data changes
@@ -189,13 +192,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     if (!q) return undefined
 
     const safe = escapeRegExp(q)
-    const searchableFields = [
-      'vm.virtualmachine.spec.name', // label/name
-      'virtualmachine.spec.hostname', // hostName
-      'virtualmachine.status.powerState', // powerState
-      'virtualmachine.spec.family', // family
-      'virtualmachine.status.location',
-    ]
+    // const searchableFields = [
+    //   'vm.virtualmachine.spec.name', // label/name
+    //   'virtualmachine.spec.hostname', // hostName
+    //   'virtualmachine.status.powerState', // powerState
+    //   'virtualmachine.spec.family', // family
+    //   'virtualmachine.status.location',
+    // ]
 
     return JSON.stringify([
       {
@@ -221,6 +224,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       else next.delete('search')
 
       next.delete('page')
+      setIsSearchLoading(true)
       router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
     [pathname, router, searchParams, buildSearchFilter]
@@ -246,7 +250,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   // ---------- Toggle/Sort params ----------
-  const toggleParams = useMemo(() => buildToggledParams(params, 'filters', 'open', 'vms').url, [params])
+  const toggleParams = useMemo(() => buildToggledParams(params, 'filterPanel', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
   // const displayedItems = useMemo(() => {
@@ -307,25 +311,29 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const GridView = () => {
     return (
       <div>
+        {isSearchLoading && <div style={{ textAlign: 'center', padding: 16 }}>Searching...</div>}
         <div className='flex flex-row flex-wrap gap-6'>
-          {displayedItems.map((vm, vmIdx) => (
-            <div key={getVmHostName(vm) || vmIdx}>
-              <VMCard
-                vm={vm}
-                vmDisplayData={
-                  selectedDisplayData.length > 0
-                    ? selectedDisplayData
-                    : displayDataOptions
-                        .filter((opt) => !['version'].includes(opt.value))
-                        .map((opt) => opt.value as VMCardData) || []
-                }
-              />
-            </div>
-          ))}
+          {!isSearchLoading &&
+            displayedItems.map((vm, vmIdx) => (
+              <div key={getVmHostName(vm) || vmIdx}>
+                <VMCard
+                  vm={vm}
+                  vmDisplayData={
+                    selectedDisplayData.length > 0
+                      ? selectedDisplayData
+                      : displayDataOptions
+                          .filter((opt) => !['version'].includes(opt.value))
+                          .map((opt) => opt.value as VMCardData) || []
+                  }
+                />
+              </div>
+            ))}
           <div ref={sentinelRef} className='h-px w-full' />
         </div>
-        {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
-        {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>}
+        {!isSearchLoading && isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading more...</div>}
+        {!isSearchLoading && !hasMore && (
+          <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>
+        )}
       </div>
     )
   }
@@ -333,13 +341,16 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const TableView = () => {
     return (
       <div>
-        <DataTable
-          data={displayedItems}
-          columns={getVMTableColumns(selectedDisplayData)}
-          hasMore={hasMore}
-          isLoading={isLoading}
-          sentinelRef={sentinelRef}
-        />
+        {isSearchLoading && <div style={{ textAlign: 'center', padding: 16 }}>Searching...</div>}
+        {!isSearchLoading && (
+          <DataTable
+            data={displayedItems}
+            columns={getVMTableColumns(selectedDisplayData)}
+            hasMore={hasMore}
+            isLoading={isLoading}
+            sentinelRef={sentinelRef}
+          />
+        )}
       </div>
     )
   }
