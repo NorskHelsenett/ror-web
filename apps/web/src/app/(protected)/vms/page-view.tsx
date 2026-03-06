@@ -189,7 +189,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
       const next = new URLSearchParams(searchParams.toString())
-      const q = searchQuery.trim()
+      const q = (searchQuery ?? '').trim()
 
       console.log('[VM search] query:', q)
       console.log('[VM search] filter param preview:', buildVmSearchFilter(q))

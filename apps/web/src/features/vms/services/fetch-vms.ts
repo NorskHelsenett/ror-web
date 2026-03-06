@@ -17,7 +17,7 @@ export async function fetchVms(
   listParams.set('limit', String(params.limit))
   listParams.set('offset', String(skip))
   if (params.sort) listParams.set('sort', params.sort)
-  const search = params.search?.trim()
+  const search = params.search?.trim() || undefined
 
   if (search) {
     const filters = buildVmSearchFilter(search)
