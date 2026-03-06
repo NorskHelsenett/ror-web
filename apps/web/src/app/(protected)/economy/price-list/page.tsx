@@ -11,8 +11,9 @@ import React from 'react'
 import { Header } from '@/components/layout/app-shell/header'
 import { getRorApi } from '@/services/ror-api'
 import { Price } from '@/types/prices'
-import { pricesColumns } from '@/features/economy/components/prices-columns'
+import { getPricesTableColumns, pricesColumns } from '@/features/economy/components/prices-columns'
 import { DataTable } from '@/components/ui/data-table/data-table'
+import { PricesTable } from '@/features/economy/components/prices-table'
 
 /**
  * Renders the Price List page, fetching price data from the API and displaying it in a data table.
@@ -33,7 +34,7 @@ const PriceListPage = async () => {
     <div className='w-full flex flex-col'>
       <Header title='Price list' />
       <div className='mx-6 my-8'>
-        <DataTable columns={pricesColumns} data={items} />
+        <PricesTable data={items} />
       </div>
     </div>
   )

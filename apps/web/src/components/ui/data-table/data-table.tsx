@@ -68,7 +68,7 @@ export interface DataTableProps<TData> extends Omit<TableProps, 'gridTemplateCol
 }
 
 export function DataTable<TData>(props: DataTableProps<TData>) {
-  const { cellPadding, title, subtitle, columns, data, expandable = false } = props
+  const { cellPadding, title, subtitle, columns = [], data = [], expandable = false } = props
 
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -88,11 +88,12 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
     getRowCanExpand: () => expandable,
   })
 
-  const numberOfColumns = table.getAllColumns().length
-  const gridTemplateColumns = table
-    .getVisibleLeafColumns()
-    .map((col) => `${col.getSize()}px`)
-    .join(' ')
+  const numberOfColumns = table.getAllColumns().length ?? 0
+  const gridTemplateColumns =
+    table
+      .getVisibleLeafColumns()
+      .map((col) => `${col.getSize()}px`)
+      .join(' ') ?? ''
   const gridTemplateColumnsExpandable =
     numberOfColumns <= 1
       ? numberOfColumns === 1
