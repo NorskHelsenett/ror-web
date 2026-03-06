@@ -49,7 +49,7 @@ import { useDisplayData } from '@/hooks/use-display-data'
 import { ResourceControls } from '@/components/ui/resource-controls'
 import { exportVmsAsCSV, exportVmsAsExcel } from '@/features/vms/utils/export-helpers'
 import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useFilters } from '@/hooks/use-filters'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { DataTable } from '@/components/ui/data-table'
@@ -176,6 +176,56 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+  const buildSearchFilter = useCallback((searchQuery: string) => {
+    const q = searchQuery.trim()
+    if (!q) return undefined
+
+    const safe = escapeRegExp(q)
+    const searchableFields = ['virtualmachine.spec.name', 'powerState', 'family', 'location', 'fullLocation']
+
+    return JSON.stringify(
+      searchableFields.map((field) => ({
+        field,
+        value: `^${safe}`,
+        type: 'string',
+        operator: 'regexp',
+      }))
+    )
+  }, [])
+
+  const updateFiltersInUrl = useCallback(
+    (searchQuery: string) => {
+      const next = new URLSearchParams(searchParams.toString())
+      const q = searchQuery.trim()
+
+      // Debug log: how the filter param would look
+      const filterPreview = buildSearchFilter(q)
+      console.log('[VM search] query:', q)
+      console.log('[VM search] filter param preview:', filterPreview)
+
+      if (q) next.set('search', q)
+      else next.delete('search')
+
+      next.delete('page')
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+    },
+    [pathname, router, searchParams, buildSearchFilter]
+  )
+
+  const handleSearchResultsChange = useCallback(
+    (results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
+      setSearchResults(results)
+      if (typeof searchQuery === 'string') {
+        updateFiltersInUrl(searchQuery)
+      }
+    },
+    [updateFiltersInUrl]
+  )
+
   const clearUrl = useCallback(() => {
     router.replace(pathname, { scroll: false })
   }, [pathname, router])
@@ -203,7 +253,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         searchText='Find VMs...'
         selectedDisplayData={selectedDisplayData}
         onDisplayChange={onDisplayChange}
-        onSearchResultsChange={setSearchResults}
+        onSearchResultsChange={handleSearchResultsChange}
         displayDataOptions={displayDataOptions}
         params={params}
         toggleSortParams={toggleSortParams}
@@ -212,7 +262,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
+        searchKeys={['label', 'hostName', 'powerState', 'family', 'location', 'fullLocation']}
         mapItem={(vm) => ({
           ...vm,
           label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,

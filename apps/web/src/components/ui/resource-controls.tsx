@@ -48,7 +48,7 @@ interface ResourceControlsProps<T> {
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
-  onSearchResultsChange: (results: T[]) => void
+  onSearchResultsChange?: (results: T[], searchQuery?: string) => void
   displayDataOptions: Option[]
   handleRefreshFilters: () => void
   toggleParams: string
