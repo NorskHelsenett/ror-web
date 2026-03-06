@@ -60,6 +60,7 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
+import { buildVmSearchFilter } from '@/features/vms/utils/regex-search'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
@@ -185,40 +186,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-  const buildSearchFilter = useCallback((searchQuery: string) => {
-    const q = searchQuery.trim()
-    if (!q) return undefined
-
-    const safe = escapeRegExp(q)
-    // const searchableFields = [
-    //   'vm.virtualmachine.spec.name', // label/name
-    //   'virtualmachine.spec.hostname', // hostName
-    //   'virtualmachine.status.powerState', // powerState
-    //   'virtualmachine.spec.family', // family
-    //   'virtualmachine.status.location',
-    // ]
-
-    return JSON.stringify([
-      {
-        field: 'virtualmachine.spec.name',
-        value: `^${safe}`,
-        type: 'string',
-        operator: 'regexp',
-      },
-    ])
-  }, [])
-
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
       const next = new URLSearchParams(searchParams.toString())
       const q = searchQuery.trim()
 
-      // Debug log: how the filter param would look
-      const filterPreview = buildSearchFilter(q)
       console.log('[VM search] query:', q)
-      console.log('[VM search] filter param preview:', filterPreview)
+      console.log('[VM search] filter param preview:', buildVmSearchFilter(q))
 
       if (q) next.set('search', q)
       else next.delete('search')
@@ -227,7 +201,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       setIsSearchLoading(true)
       router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
-    [pathname, router, searchParams, buildSearchFilter]
+    [pathname, router, searchParams]
   )
 
   const handleSearchResultsChange = useCallback(
@@ -253,16 +227,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const toggleParams = useMemo(() => buildToggledParams(params, 'filterPanel', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
-  // const displayedItems = useMemo(() => {
-  //   if (!searchResults?.length) return sortedItems
-  //   const ids = new Set(searchResults.map(getVmUniqueKey))
-  //   return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
-  // }, [sortedItems, searchResults])
   const displayedItems = useMemo(() => {
     const ids = new Set(searchResults.map(getVmUniqueKey))
     return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
   }, [sortedItems, searchResults])
-  //const displayedItems = sortedItems
 
   useEffect(() => {
     console.log('[PageView] params.search:', searchParams.get('search'))
