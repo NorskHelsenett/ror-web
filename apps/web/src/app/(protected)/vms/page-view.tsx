@@ -185,7 +185,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     if (!q) return undefined
 
     const safe = escapeRegExp(q)
-    const searchableFields = ['virtualmachine.spec.name', 'powerState', 'family', 'location', 'fullLocation']
+    const searchableFields = [
+      'vm.virtualmachine.spec.name', // label/name
+      'virtualmachine.spec.hostname', // hostName
+      'virtualmachine.status.powerState', // powerState
+      'virtualmachine.spec.family', // family
+      'virtualmachine.status.location',
+    ]
 
     return JSON.stringify(
       searchableFields.map((field) => ({
@@ -262,7 +268,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostName', 'powerState', 'family', 'location', 'fullLocation']}
+        searchKeys={['label', 'hostName', 'powerState', 'family', 'location']}
         mapItem={(vm) => ({
           ...vm,
           label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
