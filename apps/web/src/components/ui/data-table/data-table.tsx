@@ -11,9 +11,16 @@ import {
   TableHeader,
 } from '@ror/react/components/table'
 import type { TableProps } from '@ror/react/components/table'
-import { flexRender, getCoreRowModel, getExpandedRowModel, useReactTable } from '@tanstack/react-table'
+import {
+  flexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table'
 import type { ColumnDef, PaginationState, Row } from '@tanstack/react-table'
-import { Fragment, useId } from 'react'
+import { Fragment, useId, useState } from 'react'
 
 /**
  * DataTableColumnDef is a type that represents a column definition for a DataTable.
@@ -63,6 +70,8 @@ export interface DataTableProps<TData> extends Omit<TableProps, 'gridTemplateCol
 export function DataTable<TData>(props: DataTableProps<TData>) {
   const { cellPadding, title, subtitle, columns, data, expandable = false } = props
 
+  const [sorting, setSorting] = useState<SortingState>([])
+
   const tableTitleId = useId()
   const tableSubtitleId = useId()
 
@@ -70,6 +79,11 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => expandable,
   })
