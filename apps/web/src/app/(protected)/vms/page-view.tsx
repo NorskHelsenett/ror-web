@@ -78,7 +78,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         sort: params.sort,
         order: params.order,
         search: params.search,
-        filters: params.filters,
+        //filters: params.filters,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -162,25 +162,25 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
-  useEffect(() => {
-    setSearchResults(safeItems)
-  }, [vms])
+  // useEffect(() => {
+  //   setSearchResults(safeItems)
+  // }, [vms])
 
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) => setSelectedDisplayData(selected.map((i) => i.value as VMCardData))
 
-  const lastSafeKeyRef = useRef('')
-  useEffect(() => {
-    const nextKey = getVmsKey(safeItems)
-    if (nextKey !== lastSafeKeyRef.current) {
-      lastSafeKeyRef.current = nextKey
-      setSearchResults((prev) => {
-        const prevKey = getVmsKey(prev)
-        const isSearching = prev.length != safeItems.length
-        return isSearching || prevKey === nextKey ? prev : safeItems
-      })
-    }
-  }, [safeItems])
+  // const lastSafeKeyRef = useRef('')
+  // useEffect(() => {
+  //   const nextKey = getVmsKey(safeItems)
+  //   if (nextKey !== lastSafeKeyRef.current) {
+  //     lastSafeKeyRef.current = nextKey
+  //     setSearchResults((prev) => {
+  //       const prevKey = getVmsKey(prev)
+  //       const isSearching = prev.length != safeItems.length
+  //       return isSearching || prevKey === nextKey ? prev : safeItems
+  //     })
+  //   }
+  // }, [safeItems])
 
   const pathname = usePathname()
   const router = useRouter()
@@ -226,10 +226,12 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const toggleParams = useMemo(() => buildToggledParams(params, 'filterPanel', 'open', 'vms').url, [params])
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
-  const displayedItems = useMemo(() => {
-    const ids = new Set(searchResults.map(getVmUniqueKey))
-    return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
-  }, [sortedItems, searchResults])
+  // const displayedItems = useMemo(() => {
+  //   const ids = new Set(searchResults.map(getVmUniqueKey))
+  //   return sortedItems.filter((c) => ids.has(getVmUniqueKey(c)))
+  // }, [sortedItems, searchResults])
+
+  const displayedItems = sortedItems
 
   useEffect(() => {
     console.log('[PageView] params.search:', searchParams.get('search'))

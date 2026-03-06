@@ -45,11 +45,10 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
   const view: 'grid' | 'list' = get('view') === 'list' ? 'list' : 'grid'
 
   const rawFilters = get('filters')
-  const filterPanel = get('filterPanel') === 'open' ? 'open' : undefined // separate param
+  const filterPanel = get('filterPanel') === 'open' ? 'open' : undefined
 
   const filters = rawFilters && rawFilters !== 'open' ? rawFilters : undefined
   const search = get('search')?.trim() || undefined
-  //[{"field":"virtualmachine.spec.name","value":"^${searchquery}","type":"string","operator":"regexp"}]
 
   return { view, page, limit, sort, order, filters, filterPanel, search }
 }

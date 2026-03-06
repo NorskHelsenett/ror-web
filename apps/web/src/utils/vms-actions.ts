@@ -12,10 +12,9 @@ type LoadMoreOpts = {
   sort?: string
   order?: 'asc' | 'desc'
   search?: string
-  filters?: string
 }
 
-export async function loadMoreVMs({ offset, limit, sort, order, search, filters }: LoadMoreOpts) {
+export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -24,13 +23,13 @@ export async function loadMoreVMs({ offset, limit, sort, order, search, filters 
   if (sort) params.set('sort', sort)
   if (order) params.set('order', order)
   if (search) params.set('search', search)
-  if (filters) params.set('filters', filters)
+  //if (filters) params.set('filters', filters)
 
   // Fetch VMs and backup data in parallel
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([
     api.virtualMachine.list(params),
-    fetchBackupJobs(api, { page: 1, limit: 1000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, { page: 1, limit: 1000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
+    fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms: VirtualMachine[] = vmRes?.resources ?? []
