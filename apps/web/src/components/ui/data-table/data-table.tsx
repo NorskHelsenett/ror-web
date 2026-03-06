@@ -89,7 +89,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
   })
 
   const numberOfColumns = table.getAllColumns().length
-  const gridTemplateColumns = `repeat(${numberOfColumns}, minmax(120px, auto))`
+  const gridTemplateColumns = table
+    .getVisibleLeafColumns()
+    .map((col) => `${col.getSize()}px`)
+    .join(' ')
   const gridTemplateColumnsExpandable =
     numberOfColumns <= 1
       ? numberOfColumns === 1
