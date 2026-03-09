@@ -11,8 +11,6 @@ import React from 'react'
 import { Header } from '@/components/layout/app-shell/header'
 import { getRorApi } from '@/services/ror-api'
 import { Price } from '@/types/prices'
-import { getPricesTableColumns, pricesColumns } from '@/features/economy/components/prices-columns'
-import { DataTable } from '@/components/ui/data-table/data-table'
 import { PricesTable } from '@/features/economy/components/prices-table'
 
 /**
