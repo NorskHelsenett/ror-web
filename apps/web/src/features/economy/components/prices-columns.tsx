@@ -5,7 +5,7 @@
  * Each column specifies a header label and an accessor function to extract the corresponding value from a `Price` object.
  */
 
-// 'use client'
+'use client'
 
 import { createColumnHelper } from '@tanstack/react-table'
 import { Price } from '@/types/prices'
