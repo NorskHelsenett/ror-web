@@ -35,11 +35,12 @@ export default async function BackupRunPage({
   const [fetchedBackupRuns] = await Promise.all([fetchBackupRuns(api, params)])
 
   const backupRuns = fetchedBackupRuns.backupRuns || []
+  const backupRunId = sp?.backupRunId as string | undefined
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Backup runs' />
-      <PageView backupRuns={backupRuns} params={params} backupJobId={backupJobId} />
+      <PageView backupRuns={backupRuns} params={params} backupJobId={backupJobId} backupRunId={backupRunId} />
     </div>
   )
 }

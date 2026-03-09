@@ -2,12 +2,15 @@ export interface CreateClusterForm {
   name: string
   project: string
   environment: string
+  serialNumber: string
+  fullname: string
+  clusterId: string
   cp: number
   wpName: string
   wpNumber: number
   wpClass: string
   network: string
-  tags: Record<string, string>
+  tags: { key: string; value: string }[]
   tempProvider: Provider
   tempRegion: Region
   provider: Provider

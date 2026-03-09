@@ -31,12 +31,15 @@ import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
 
-export const PageView = ({ className, backupRuns, params, backupJobId }: PageViewProps) => {
+export const PageView = ({ className, backupRuns, params, backupJobId, backupRunId }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
   const [isPending, startTransition] = useTransition()
   const [isServerSearching, setIsServerSearching] = useState(false)
   const searchAbortControllerRef = useRef<AbortController | null>(null)
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const router = useRouter()
+  const pathname = usePathname()
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupRun>({
     initial: backupRuns,
@@ -74,7 +77,7 @@ export const PageView = ({ className, backupRuns, params, backupJobId }: PageVie
   const [searchResults, setSearchResults] = useState<BackupRun[]>(safeItems)
   const [serverSearchResults, setServerSearchResults] = useState<BackupRun[]>([])
   // Initialize search query from backupJobId parameter
-  const [searchQuery, setSearchQuery] = useState(backupJobId || '')
+  const [searchQuery, setSearchQuery] = useState(backupJobId || backupRunId || '')
   const debouncedQuery = useDebouncedValue(searchQuery, 800)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
@@ -204,8 +207,6 @@ export const PageView = ({ className, backupRuns, params, backupJobId }: PageVie
     }
   }, [safeItems, debouncedQuery])
 
-  const pathname = usePathname()
-  const router = useRouter()
   const clearUrl = useCallback(() => {
     router.replace(pathname, { scroll: false })
   }, [pathname, router])

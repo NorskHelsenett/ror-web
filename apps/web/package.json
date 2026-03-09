@@ -14,6 +14,7 @@
     "format:fix": "prettier . --write --cache --cache-location='node_modules/.cache/.prettiercache' --log-level=warn"
   },
   "dependencies": {
+    "@base-ui/react": "1.1.0",
     "@evilmartians/harmony": "^1.4.0",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",
@@ -49,10 +50,12 @@
     "jwt-decode": "4.0.0",
     "lucide-react": "0.503.0",
     "motion": "12.23.26",
-    "next": "15.2.8",
+    "next": "15.4.10",
     "next-auth": "4.24.11",
     "next-runtime-env": "^3.0.0",
     "radash": "12.1.0",
+    "radix-ui": "1.4.3",
+    "react-day-picker": "9.13.2",
     "react-grid-layout": "1.5.1",
     "react-hook-form": "7.56.1",
     "react-icons": "^5.2.1",

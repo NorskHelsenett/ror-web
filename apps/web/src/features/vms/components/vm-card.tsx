@@ -16,7 +16,6 @@ import { cn } from '@/utils/clsxm'
 import Link from 'next/link'
 import { vmCardPowerStatus } from '@/features/vms/utils/env-colors'
 import {
-  getTeamValue,
   getVmArchitecture,
   getVmFamily,
   getVmHostName,
@@ -26,7 +25,6 @@ import {
   getVmToolVersion,
   getVmVersion,
   VMCardProps,
-  getTeamDescription,
   getSpecMemory,
   getStatusMemoryUsage,
   getStatusCpuUsage,
@@ -34,6 +32,8 @@ import {
   getSpecSockets,
   getSpecCoresPerSocket,
   getVmDisks,
+  getTeamIdentifier,
+  getLocation,
 } from '@/features/vms/utils/vms'
 import { changePowerStateValues } from '../types/powerState'
 import { BackupStatusDisplay } from '@/features/vms/backup/components'
@@ -41,6 +41,9 @@ import { Badge } from '@/components/shadcn/badge'
 import { PowerStatusIcon } from './power-status-icon'
 import { routes } from '@/config/routes'
 import { MetricCell } from './metrics-cell'
+import { Dot } from 'lucide-react'
+import { TooltipContent, TooltipTrigger, Tooltip } from '@/components/shadcn/tooltip'
+import { VersionLogoWithTooltip } from '../utils/versions-logo'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -73,17 +76,15 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
   const architecture = getVmArchitecture(vm)
   const toolVersion = getVmToolVersion(vm)
   const powerState = getVmPowerState(vm)
-
-  const teamValue = getTeamValue(vm)
-  const teamDescription = getTeamDescription(vm)
+  const location = getLocation(vm)
 
   const envColor = vmCardPowerStatus[powerState ?? 'undefined'] ?? vmCardPowerStatus['undefined']
 
-  const Info = ({ label, value }: { label: string; value: string | number }) => {
+  const Info = ({ label, value }: { label: string; value: string | number | React.ReactNode }) => {
     return (
-      <div>
-        <p className='font-bold'>{label}</p>
-        <p>{value}</p>
+      <div className='flex justify-between gap-4 mb-1'>
+        <p className='font-bold whitespace-nowrap'>{label}</p>
+        <p className='text-sm break-words text-right'>{value}</p>
       </div>
     )
   }
@@ -91,21 +92,35 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
   const PowerState = () => {
     return vmDisplayData?.includes('powerState') ? (
       <div className='flex items-center gap-5'>
-        <p className='font-bold'>Power</p>
-        <Badge variant='outline' className='px-1.5 text-base-muted'>
-          <PowerStatusIcon status={powerState} className='mr-2' />
-          {changePowerStateValues[powerState ?? 'Undefined'].charAt(0).toUpperCase() +
-            changePowerStateValues[powerState ?? 'Undefined'].slice(1)}
-        </Badge>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant='outline' className='px-1.5 text-base-muted'>
+              <PowerStatusIcon status={powerState} className='mr-2' />
+              {changePowerStateValues[powerState ?? 'Undefined'].charAt(0).toUpperCase() +
+                changePowerStateValues[powerState ?? 'Undefined'].slice(1)}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Power state: {changePowerStateValues[powerState ?? 'Undefined']}</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     ) : null
   }
 
-  const teamFallback = () => {
-    if (teamDescription == '') {
-      return teamValue
-    }
-    return teamDescription
+  const Location = () => {
+    return vmDisplayData?.includes('location') && location ? (
+      <div className='flex items-center gap-5'>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p>{location?.split(' ').join(' · ')}</p>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Location: {location}</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    ) : null
   }
 
   const MetricsSection = () => {
@@ -168,7 +183,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
               />
             </div>
           )}
-          {showDiskUsage && diskData.length > 0 && (
+          {showDiskUsage && (
             <div className='flex items-center justify-between'>
               <span className='font-bold'>Disks</span>
               <MetricCell
@@ -182,6 +197,16 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
         </div>
       </div>
     )
+  }
+
+  const basicItems: React.ReactNode[] = []
+
+  if (vmDisplayData?.includes('powerState') && powerState) {
+    basicItems.push(<PowerState />)
+  }
+
+  if (vmDisplayData?.includes('location') && location) {
+    basicItems.push(<Location />)
   }
 
   return (
@@ -199,34 +224,43 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
         onKeyDown={(e) => e.key === 'Enter' && localStorage.setItem('selectedVm', JSON.stringify(vm))}
       >
         <CardHeader className='m-0 mb-4 p-0 w-full relative'>
-          <CardTitle className={cn('text-sm rounded-t-xl px-6 py-2 flex', envColor[0], envColor[1])}>
+          <CardTitle className={cn(' text-sm rounded-t-xl px-6 py-2 flex justify-between', envColor[0], envColor[1])}>
             {hostName.toLowerCase()}
           </CardTitle>
         </CardHeader>
         <CardContent className='text-sm flex flex-col gap-3 '>
+          <section className='flex items-center gap-2'>
+            {basicItems.map((item, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <Dot />}
+                {item}
+              </React.Fragment>
+            ))}
+          </section>
+          <div className='border-b border-gray-700 mt-1'></div>
           {vmDisplayData?.includes('team') && (
-            <div>
-              <div className='grid grid-cols-2 gap-4 mb-2'>
-                <p className='font-bold'>Team</p>
-                <p className='text-md'>{teamFallback()}</p>
+            <div className='rounded-lg bg-primary/10 dark:bg-primary/20 p-2 mb-1  '>
+              <div className='flex justify-between items-center gap-2'>
+                <span className='text-xs font-semibold text-muted-foreground uppercase tracking-wide'>Team</span>
+                <span className='text-xs font-bold break-words  text-right'>{getTeamIdentifier(vm)}</span>
               </div>
-              <div className='border-b border-gray-700 mt-1'></div>
             </div>
           )}
-          <section className='grid grid-cols-2 gap-4 '>
-            {vmDisplayData?.includes('name') && <Info label='OS-version' value={name ?? 'N/A'} />}
+          <MetricsSection />
+          <div className='border-b border-gray-700 '></div>
+          <section>
             {vmDisplayData?.includes('id') && <Info label='ID' value={id ?? 'N/A'} />}
+            {vmDisplayData?.includes('name') && <Info label='OS-version' value={name ?? 'N/A'} />}
             {vmDisplayData?.includes('architecture') && <Info label='Architecture' value={architecture ?? 'N/A'} />}
-            {vmDisplayData?.includes('family') && <Info label='Family' value={family ?? 'N/A'} />}
-            {vmDisplayData?.includes('version') && <Info label='Version' value={version ?? 'N/A'} />}
             {vmDisplayData?.includes('toolVersion') && (
               <Info label='VMware Tools version' value={toolVersion ?? 'N/A'} />
             )}
+            {vmDisplayData?.includes('version') && <Info label='Version' value={version ?? 'N/A'} />}
+            {vmDisplayData?.includes('family') && family && (
+              <Info label='Family' value={<VersionLogoWithTooltip version={family} />} />
+            )}
           </section>
-          <PowerState />
           <div className='border-b border-gray-700 mt-1'></div>
-          <MetricsSection />
-          <div className='border-b border-gray-700 mt-1 mb-2'></div>
           {vmDisplayData?.includes('activeBackup') && <BackupStatusDisplay vm={vm} />}
         </CardContent>
       </Card>

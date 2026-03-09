@@ -42,7 +42,7 @@ export const createKubernetesClusterService = (request: (requestOptions: Request
   },
   list: async (otherParams: URLSearchParams) => {
     const params = new URLSearchParams(otherParams)
-    params.set('apiversion', 'general.ror.internal/v1alpha1')
+    params.set('apiversion', 'vitistack.io/v1alpha1')
     params.set('kind', 'KubernetesCluster')
 
     const responseSchema = z.object({
@@ -58,11 +58,20 @@ export const createKubernetesClusterService = (request: (requestOptions: Request
   },
   id: async (id: string) => {
     try {
-      const response = await request({
+      const responseArray = await request({
         method: 'GET',
         path: `/v2/resources/uid/${id}`,
       })
-      return validateResponse(response, KubernetesClusterSchema)
+
+      if (!Array.isArray(responseArray)) {
+        throw new Error('Expected array response from /uid endpoint')
+      }
+
+      if (responseArray.length !== 1) {
+        throw new Error(`Expected exactly 1 cluster for uid=${id}, got ${responseArray.length}`)
+      }
+
+      return validateResponse(responseArray[0], KubernetesClusterSchema)
     } catch (error) {
       console.error('Error fetching cluster by ID:', error)
       throw error

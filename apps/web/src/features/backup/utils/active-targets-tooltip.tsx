@@ -1,5 +1,7 @@
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/shadcn/tooltip'
+import { CopyButton } from '@/components/ui/copy-button'
 import Link from 'next/link'
+import copy from 'clipboard-copy'
 
 interface IdItem {
   id: string
@@ -62,5 +64,15 @@ export const ActiveTargetsTooltip = ({
   ids: (string | IdItem)[]
   triggerElement?: React.ReactNode
 }) => {
-  return <IdListTooltip ids={ids} label='Active Targets' triggerElement={triggerElement} />
+  const copyActiveTargets = (e?: React.MouseEvent) => {
+    e?.preventDefault()
+    void copy(ids.map((id) => (typeof id === 'string' ? id : id.id)).join('\n'))
+  }
+
+  return (
+    <>
+      <IdListTooltip ids={ids} label='Active Targets' triggerElement={triggerElement} />
+      <CopyButton onClick={copyActiveTargets} />
+    </>
+  )
 }

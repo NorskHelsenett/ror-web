@@ -6,16 +6,15 @@ import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { KubernetesCluster } from '@ror/js-api-client'
 import { Layer } from '@ror/react'
-import { ExternalLink } from 'lucide-react'
+import { Dot, ExternalLink } from 'lucide-react'
 import { User } from 'next-auth'
 import Link from 'next/link'
 import { CodeSnippet } from '../../../components/ui/code-snippet'
 import { ClusterCardDisplayData } from '../types/display-data'
-import { ResourceType } from '../types/resource'
 import {
-  getClusterId,
   getClusterName,
   getClusterResource,
+  getClusterUid,
   getDatacenter,
   getEnvironment,
   getHealthCondition,
@@ -29,16 +28,18 @@ import {
   getVersions,
 } from '../utils/cluster'
 import { envColors, getHighDifferenceEnvironmentColors } from '../utils/env-colors'
-import { formatResource } from '../utils/formats'
 import { HealthCircle } from './health-circle'
 import { Environment } from '../types/environment'
 import { routes } from '@/config/routes'
+import { Progress } from '@/components/shadcn/progress'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
+import { negativeColors } from '@/utils/scale-colors'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='card'
-      className={cn('bg-[var(--r-layer)] text-card-foreground flex flex-col rounded-xl py-6 shadow-sm', className)}
+      className={cn('bg-(--r-layer) text-card-foreground flex flex-col rounded-xl py-6 shadow-sm', className)}
       {...props}
     />
   )
@@ -74,7 +75,7 @@ interface ClusterCardProps {
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps) => {
-  const clusterId = getClusterId(cluster)
+  const clusterUid = getClusterUid(cluster)
   const clusterName = getClusterName(cluster)
   const env = getEnvironment(cluster)
   const tools = getTools(cluster)
@@ -177,18 +178,34 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
 
   const ResourceCard = ({
     label,
-    type,
     resource,
   }: {
     label: string
-    type: ResourceType
     resource: { capacity?: string; used?: string; percentage?: number | null }
-  }) => (
-    <div>
-      <p className='font-bold'>{label}</p>
-      <p>{formatResource(type, resource)}</p>
-    </div>
-  )
+  }) => {
+    const barColor = negativeColors(resource.percentage ?? 0).join(' ')
+
+    return (
+      <div>
+        <p className='font-bold'>{label}</p>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className='flex items-center'>
+              <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1' />
+              <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
+                {resource.percentage == null ? '—' : `${resource.percentage}%`}
+              </span>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Used: {resource.used ? resource.used : 'data missing'}</p>
+            <p>Capacity: {resource.capacity ? resource.capacity : 'data missing'}</p>
+            <p>Percentage: {resource.percentage ? resource.percentage + '%' : 'data missing'}</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    )
+  }
 
   const Info = ({ label, value }: { label: string; value: string | number }) => {
     return (
@@ -216,22 +233,27 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
     ) : null
   }
 
-  const Environment = () => {
-    return displayData?.includes('environment') ? (
-      <div>
-        <p className='font-bold'>Environment</p>
-        <p>
-          <Pill variant={envColors[(env ?? 'undefined') as Environment]} className='px-3'>
-            {(env ?? 'Undefined').charAt(0).toUpperCase() + (env ?? 'Undefined').slice(1)}
-          </Pill>
-        </p>
-      </div>
-    ) : null
+  const basicItems: React.ReactNode[] = []
+
+  if (displayData?.includes('datacenterProvider') && provider) {
+    basicItems.push(<span key='provider'>{provider}</span>)
+  }
+
+  if (displayData?.includes('datacenterName') && datacenter) {
+    basicItems.push(<span key='datacenter'>{datacenter}</span>)
+  }
+
+  if (displayData?.includes('environment')) {
+    basicItems.push(
+      <Pill key='environment' variant={envColors[(env ?? 'undefined') as Environment]} className='px-3'>
+        {(env ?? 'Undefined').charAt(0).toUpperCase() + (env ?? 'Undefined').slice(1)}
+      </Pill>
+    )
   }
 
   return (
     <Link
-      href={routes.app.cluster.getHref(clusterId)}
+      href={routes.app.cluster.getHref(clusterUid)}
       onClick={() => localStorage.setItem('selectedCluster', JSON.stringify(cluster))}
     >
       <Card
@@ -247,28 +269,45 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
           <CardTitle className={cn('text-2xl rounded-t-xl px-6 py-2 flex', envColor[0], envColor[1])}>
             {(clusterName || 'Unnamed Cluster') as string}
           </CardTitle>
-          <HealthCircle className='ml-auto mr-4 mt-[-24px] w-[52px] h-[52px] ' healthCondition={healthCondition} />
+          <HealthCircle className='ml-auto mr-4 -mt-6 w-13 h-13 ' healthCondition={healthCondition} />
         </CardHeader>
 
         <CardContent className='text-sm flex flex-col gap-3'>
-          <Tools />
-          <CodeSnippetLogins />
+          <section className='flex items-center gap-2'>
+            {basicItems.map((item, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <Dot />}
+                {item}
+              </React.Fragment>
+            ))}
+          </section>
+
+          <hr />
+
           <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
             {resourceFields.map(
               ({ key, label, resource }) =>
                 displayData?.includes(key as ClusterCardDisplayData) && (
-                  <ResourceCard key={key} label={label} type={key as ResourceType} resource={resource} />
+                  <ResourceCard key={key} label={label} resource={resource} />
                 )
             )}
-
             {displayData?.includes('nodes') && (
-              <Info
-                label='Nodes'
-                value={`${nodesAmount} (${nodePoolsAmount} node pool${nodePoolsAmount > 1 ? 's' : ''})`}
-              />
+              <Info label='Nodes' value={`${nodesAmount} (${nodePoolsAmount} pool${nodePoolsAmount > 1 ? 's' : ''})`} />
             )}
             {displayData?.includes('monthlyPrice') && <Info label='Monthly price' value={`${prices.monthly} kr`} />}
             {displayData?.includes('yearlyPrice') && <Info label='Yearly price' value={`${prices.yearly} kr`} />}
+          </section>
+
+          <hr />
+
+          <section className='flex flex-col gap-2'>
+            <Tools />
+            <CodeSnippetLogins />
+          </section>
+
+          <hr />
+
+          <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
             {displayData?.includes('agentVersion') && <Info label='ROR agent version' value={versions.agent.version} />}
             {displayData?.includes('kubernetesVersion') && (
               <Info label='Kubernetes version' value={versions.kubernetes.version} />
@@ -276,11 +315,11 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
             {displayData?.includes('toolingVersion') && (
               <Info label='NHN tooling version' value={versions.nhnTooling.version} />
             )}
-            {displayData?.includes('datacenterName') && <Info label='Datacenter' value={datacenter} />}
-            {displayData?.includes('datacenterProvider') && <Info label='Datacenter provider' value={provider} />}
-            <Environment />
-            <ServiceTags />
           </section>
+
+          <hr />
+
+          <ServiceTags />
         </CardContent>
       </Card>
     </Link>

@@ -47,5 +47,6 @@ export function useSearch<T, M = T>(items: T[], query: string, options: UseSearc
 
   if (!query.trim()) return items
   const results = fuse.search(query.trim())
+
   return results.map((r) => sourceItems[r.refIndex].original)
 }

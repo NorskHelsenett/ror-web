@@ -30,7 +30,7 @@ function PowerIcon({ state }: { state: string }) {
 
 export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
   const { vm } = useVMContext()
-  const hostname = getVmHostName(vm) || 'Unknown VM'
+  const hostname = getVmHostName(vm)
   const powerstate = getVmPowerState(vm) || 'undefined'
   const [lightmode, darkmode] = vmCardPowerStatus[powerstate] || ['bg-gray-200', 'dark:bg-gray-600']
 

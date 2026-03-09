@@ -69,16 +69,19 @@ export const v2ResourcesHandlers = [
 
     // Find a cluster resource with the matching clusterId
     const cluster = clustersVersion2.resources.find(
-      (res) => res.kind === 'KubernetesCluster' && res.kubernetescluster?.spec?.data.clusterId === id
+      (res) => res.kind === 'KubernetesCluster' && res.metadata.uid === id
     )
 
+    const clusterInArray = []
+    clusterInArray.push(cluster)
+
     // Return 404 if not found
-    if (!cluster) {
+    if (!clusterInArray) {
       return HttpResponse.json({ message: 'Not found' }, { status: 404 })
     }
 
     // Return the found cluster resource
-    return HttpResponse.json(cluster)
+    return HttpResponse.json(clusterInArray)
   }),
 
   http.put<{ id: string }, Resource | NotFound, Resource | NotFound>(

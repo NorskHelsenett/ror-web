@@ -1,7 +1,7 @@
 export const mockVms = {
   resources: Array.from({ length: 104 }, (_, i) => {
     const idx = i + 1
-    const teamsDescription = ['Monitorering', 'stamnett', '']
+    const teamsDescription = ['Driftsteam 1 Fagapplikasjoner SHDIR', 'stamnett', '']
     const teamsValue = ['mon', 'stam']
     const osFamily = ['Windows', 'Linux']
     const osName = ['Windows', 'Red Hat Enterprise Linux']
@@ -9,7 +9,7 @@ export const mockVms = {
     const allDisks = [
       {
         id: `disk-${idx}`,
-        name: `Mock-Virtual-machine-disk-${idx}-vmdk`,
+        name: `Mock-Virtual-machine-disk-${idx}-vmdk/disk-name-${idx}`,
         sizeBytes: 78843545600,
         type: 'persistent',
         usageBytes: 0,
@@ -17,7 +17,7 @@ export const mockVms = {
       },
       {
         id: `disk-${idx + 1}`,
-        name: `Mock-Virtual-machine-disk-${idx + 1}-vmdk`,
+        name: `Mock-Virtual-machine-disk-${idx + 1}-vmdk/disk-name-${idx + 1}`,
         sizeBytes: 35843545600,
         type: 'persistent',
         usageBytes: 15843545600,
@@ -25,13 +25,16 @@ export const mockVms = {
       },
       {
         id: `disk-${idx + 2}`,
-        name: `Mock-Virtual-machine-disk-${idx + 2}-vmdk`,
+        name: `Mock-Virtual-machine-disk-${idx + 2}-vmdk/disk-name-${idx + 2}`,
         sizeBytes: 54843545600,
         type: 'persistent',
         usageBytes: 44843545600,
         isMounted: true,
       },
     ]
+    const names = [`mtrd-posl-${idx}`, `mtrd3-posl-${idx}`, `trd1-dc-nam-01-intern-${idx}`]
+    const locations = ['OSL NAM01', 'OSL3 NAM03', 'TRD NAM01', 'TRD3 NAM03']
+    const location = locations[idx % 4]
     const disks = allDisks.slice(0, diskCount)
     const memorySizes = [4294967296, 8589934592] // 4GB, 8GB in bytes
     const memorySize = memorySizes[idx % 2]
@@ -47,7 +50,7 @@ export const mockVms = {
       kind: 'VirtualMachine',
       apiVersion: 'general.ror.internal/v1alpha1',
       metadata: {
-        name: `Mock-Virtual-machine-${idx}`,
+        name: names[idx % names.length],
         uid: `mock-uid-${idx}`,
       },
       rormeta: {
@@ -65,7 +68,7 @@ export const mockVms = {
             coresPerSocket: CoresPerSocket,
             sockets: 4,
           },
-          name: `Mock-Virtual-machine-${idx}`,
+          name: names[idx % names.length],
           disks: null,
           memory: {
             sizeBytes: memorySize,
@@ -73,7 +76,7 @@ export const mockVms = {
         },
         status: {
           lastUpdated: '2025-09-23T07:52:41Z',
-          location: 'OSL3 NAM02',
+          location: location,
           cpu: {
             coresPerSocket: CoresPerSocket,
             sockets: 4,
@@ -107,11 +110,11 @@ export const mockVms = {
             },
           ],
           operatingSystem: {
-            id: `mock${idx}`,
+            id: `windows2022srvNext_64Guest`,
             name: osName[idx % 5],
             family: osFamily[idx % 2],
             version: '5.4.0-208-generic',
-            hostName: `Mock-Virtual-machine-${idx}`,
+            hostName: names[idx % names.length],
             powerState: idx % 3 === 0 ? 'poweredOn' : idx % 3 === 1 ? 'poweredOff' : 'undefined',
             toolVersion: '11360',
             architecture: 'X86',

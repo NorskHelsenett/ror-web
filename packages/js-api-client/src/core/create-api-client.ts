@@ -16,6 +16,9 @@ import { createDatacentersService } from '../services/datacenters'
 import { createVirtualMachineService } from '../services/vm'
 import { createBackupJobService } from '../services/backup-job'
 import { createBackupRunService } from '../services/backup-run'
+import { createProjectService } from '../services/projects'
+import { createAclService } from '../services/acls'
+import { createApiKeyService } from '../services/api-keys'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -44,6 +47,8 @@ export function createApiClient(config: ApiClientConfig) {
    * Create our different services
    */
   const services = {
+    acl: createAclService(request),
+    apiKey: createApiKeyService(request),
     configuration: createConfigurationService(request),
     daemonSet: createDaemonSetService(request),
     datacenter: createDatacentersService(request),
@@ -53,6 +58,7 @@ export function createApiClient(config: ApiClientConfig) {
     nodes: createNodesService(request),
     pods: createPodsService(request),
     prices: createPriceService(request),
+    projects: createProjectService(request),
     replicaSet: createReplicaSetService(request),
     service: createServiceService(request),
     users: createUsersService(request),

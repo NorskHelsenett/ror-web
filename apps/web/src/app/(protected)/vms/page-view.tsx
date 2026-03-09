@@ -37,6 +37,7 @@ import {
   getVmDiskSizes,
   getSpecMemory,
   getSpecCpuTotal,
+  getLocation,
 } from '@/features/vms/utils/vms'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
@@ -59,6 +60,7 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { useSearchParams } from 'next/navigation'
+import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const searchParams = useSearchParams()
@@ -103,6 +105,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const filterDefinitions = [
     { key: 'Power States', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getVmPowerState(vm) },
+    {
+      key: 'Location',
+      extractor: (vm: VirtualMachine | VMWithBackupStatus) => {
+        const location = getLocation(vm)
+        return location?.split(' ')[0]
+      },
+    },
     { key: 'Teams', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getTeamIdentifier(vm) },
     {
       key: 'Backup',
@@ -231,13 +240,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostname', 'powerState', 'family']}
+        searchKeys={['label', 'hostname', 'powerState', 'family', 'location', 'fullLocation']}
         mapItem={(vm) => ({
           ...vm,
           label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
           hostName: getVmHostName(vm),
           powerState: getVmPowerState(vm),
           family: getVmFamily(vm),
+          location: getLocation(vm),
+          fullLocation: getSpecificLocation(getLocation(vm) || ''),
         })}
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}

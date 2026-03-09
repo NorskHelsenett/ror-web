@@ -28,9 +28,12 @@ import { RotateCw, Search } from 'lucide-react'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { Button } from '@/components/shadcn/button'
 
-export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
+export const PageView = ({ className, backupJobs, params, backupJobId }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
   const [isPending, startTransition] = useTransition()
+
+  const pathname = usePathname()
+  const router = useRouter()
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,
@@ -65,7 +68,7 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
   const { setSelectedDisplayData } = useDisplayData<BackupJobColumnsData>('backup-jobs')
   const [searchResults, setSearchResults] = useState<BackupJob[]>(safeItems)
   const [serverSearchResults, setServerSearchResults] = useState<BackupJob[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState(backupJobId || '')
   const debouncedQuery = useDebouncedValue(searchQuery, 120)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
@@ -140,8 +143,6 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     }
   }, [safeItems, debouncedQuery])
 
-  const pathname = usePathname()
-  const router = useRouter()
   const clearUrl = useCallback(() => {
     router.replace(pathname, { scroll: false })
   }, [pathname, router])

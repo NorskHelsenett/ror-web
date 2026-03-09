@@ -1,6 +1,4 @@
-@import '@evilmartians/harmony/tailwind.css';
 @import 'tailwindcss';
-@import 'tw-animate-css';
 /*---break---
  */
 @custom-variant dark (&:is(.dark *));
@@ -9,6 +7,13 @@
  * Configure theme variables for tailwind
  */
 @theme {
+  /* Breakpoints */
+  --breakpoint-xs: 22.5rem;
+  --breakpoint-3xl: 112rem;
+  --breakpoint-4xl: 128rem;
+  --breakpoint-5xl: 144rem;
+  --breakpoint-6xl: 160rem;
+
   /* TODO: find better solution for spacing tokens */
   /* Override spacing to use our spacing tokens from @ror/styles */
   /* --spacing: inherit; /* for reference purposed this used to be 0.25rem/4px */
@@ -87,6 +92,9 @@
 
   --animate-collapse-up: collapse-up 300ms ease-in;
 }
+
+@import '@evilmartians/harmony/tailwind.css';
+@import 'tw-animate-css';
 
 /**
 * Create custom utility classes making use of our different tokens from @ror/styles

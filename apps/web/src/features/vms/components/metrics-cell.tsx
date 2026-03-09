@@ -142,55 +142,38 @@ export function MetricCell({
         if (diskData && diskData.length > 1) {
           const colors = getDiskColors(diskData.length)
           return (
-            <div className='text-sm space-y-2'>
+            <div className='text-xs space-y-2'>
               <div className='grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0 border-b border-border pb-2'>
-                <span>
-                  <strong>Total Usage:</strong>
-                </span>
+                <span>Total Usage:</span>
                 <span className='text-right'>
                   <strong>{formatValue(metricValue)}</strong>
                 </span>
-                <span>
-                  <strong>Total Size:</strong>
-                </span>
+                <span>Total Size:</span>
                 <span className='text-right'>
                   <strong>{formatValue(metricLimit)}</strong>
                 </span>
-                <span>
-                  <strong>Free Space:</strong>
-                </span>
+                <span>Free Space:</span>
                 <span className='text-right'>
                   <strong>{formatValue(freeSpace)}</strong>
                 </span>
               </div>
               <div className='space-y-1.5'>
-                <div className='text-xs font-medium text-muted-foreground'>All Disks:</div>
                 {diskData.map((disk, idx) => {
-                  const diskFree = disk.diskSize - (disk.diskUsage || 0)
-                  const diskPercentage = disk.diskSize > 0 ? ((disk.diskUsage || 0) / disk.diskSize) * 100 : 0
+                  // const diskFree = disk.diskSize - (disk.diskUsage || 0)
+                  // const diskPercentage = disk.diskSize > 0 ? ((disk.diskUsage || 0) / disk.diskSize) * 100 : 0
                   const diskId = 'id' in disk ? disk.id : undefined
-                  const diskName = 'name' in disk ? disk.name : undefined
+                  const diskName = 'name' in disk ? disk.name?.split('/').pop() || disk.name : undefined
                   const diskMounted = 'isMounted' in disk ? disk.isMounted : undefined
 
                   return (
                     <div key={diskId || idx} className='grid grid-cols-[auto_1fr_auto] gap-x-2 items-center text-xs'>
-                      <div className={`w-2 h-2 rounded-sm ${colors[idx]}`}></div>
-                      <div className='truncate'>
-                        {diskName || `Disk ${idx + 1}`}
-                        {diskMounted !== undefined && (
-                          <span
-                            className={`ml-1 text-[10px] ${diskMounted ? 'text-green-600' : 'text-muted-foreground'}`}
-                          >
-                            {diskMounted ? '(mounted)' : '(unmounted)'}
-                          </span>
-                        )}
-                      </div>
+                      <div
+                        className={`w-2 h-2 rounded-sm ${colors[idx]} ${diskMounted ? 'shadow-[0_0_4px_1px_rgba(70,130,246,0.6)] animate-pulse' : ''}`}
+                      ></div>
+                      <div className='truncate'>{diskName || `Disk ${idx + 1}`}</div>
                       <div className='text-right space-y-0.5'>
                         <div>
                           {formatValue(disk.diskUsage)} / {formatValue(disk.diskSize)}
-                        </div>
-                        <div className='text-[10px] text-muted-foreground'>
-                          {diskPercentage.toFixed(1)}% used, {formatValue(diskFree)} free
                         </div>
                       </div>
                     </div>
@@ -201,7 +184,13 @@ export function MetricCell({
           )
         } else {
           return (
-            <div className='text-sm grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
+            <div className='text-xs grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
+              <span>
+                <strong>Number of disks: </strong>{' '}
+              </span>
+              <span className='text-right'>
+                <strong>{diskData?.length}</strong>
+              </span>
               <span>Usage:</span>
               <span className='text-right'>{formatValue(metricValue)}</span>
               <span>Size:</span>
@@ -213,18 +202,24 @@ export function MetricCell({
         }
       } else if (type === 'memory') {
         return (
-          <div className='text-sm grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
+          <div className='text-xs grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
             <span>Usage:</span>
-            <span className='text-right'>{formatValue(metricValue)}</span>
+            <span className='text-right'>
+              <strong>{formatValue(metricValue)}</strong>
+            </span>
             <span>Size:</span>
-            <span className='text-right'>{formatValue(metricLimit)}</span>
+            <span className='text-right'>
+              <strong>{formatValue(metricLimit)}</strong>
+            </span>
             <span>Free space:</span>
-            <span className='text-right'>{formatValue(freeSpace)}</span>
+            <span className='text-right'>
+              <strong>{formatValue(freeSpace)}</strong>
+            </span>
           </div>
         )
       } else {
         return (
-          <div className='text-sm grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
+          <div className='text-xs grid grid-cols-2 gap-x-3 gap-y-0.5 min-w-0'>
             <span>
               <b>Total cores:</b>
             </span>
@@ -232,23 +227,31 @@ export function MetricCell({
               <b>{metricLimit || 0}</b>
             </span>
             <span>Sockets:</span>
-            <span className='text-right'>{sockets}</span>
+            <span className='text-right'>
+              <strong>{sockets}</strong>
+            </span>
             <span>Cores per socket:</span>
-            <span className='text-right'>{coresPerSocket}</span>
+            <span className='text-right'>
+              <strong>{coresPerSocket}</strong>
+            </span>
             <span>Usage:</span>
-            <span className='text-right'>{formatValue(metricValue)}</span>
+            <span className='text-right'>
+              <strong>{formatValue(metricValue)}</strong>
+            </span>
             <span>{limitLabel}:</span>
-            <span className='text-right'>{formatValue(metricLimit)}</span>
+            <span className='text-right'>
+              <strong>{formatValue(metricLimit)}</strong>
+            </span>
           </div>
         )
       }
     }
 
     return (
-      <div className='flex items-center justify-center gap-1'>
+      <div className='flex items-center justify-center -gap-2'>
         <Tooltip>
           <TooltipTrigger asChild>
-            <div className='w-14 h-2 relative'>
+            <div className='w-25 h-2 relative'>
               <div className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden'>
                 {type === 'disk' && diskData && diskData.length > 1 && metricLimit ? (
                   <div className='flex h-full'>

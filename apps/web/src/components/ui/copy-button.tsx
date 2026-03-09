@@ -42,8 +42,13 @@ export interface CopyButtonProps {
    * You can specify a child to be rendered inside the button as a replacement for the default copy icon
    */
   children?: ReactNode
+
+  /**
+   * Value that should be copied
+   */
+  value?: string
 }
-export function CopyButton({ onClick, className, children, size = 'md' }: CopyButtonProps) {
+export function CopyButton({ onClick, className, children, size = 'md', value }: CopyButtonProps) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Clean up timeout on unmount
@@ -54,12 +59,27 @@ export function CopyButton({ onClick, className, children, size = 'md' }: CopyBu
     }
   }, [])
 
-  function handleOnClick(e: React.MouseEvent<HTMLButtonElement>) {
-    toast.info('Copied to clipboard')
+  async function handleOnClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     e.preventDefault()
     onClick?.(e)
+
+    if (!value) {
+      return
+    }
+
+    if (!navigator || !navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+      toast.error('Clipboard is not supported in this environment')
+      return
+    }
+
+    try {
+      await navigator.clipboard.writeText(value)
+      toast.info('Copied to clipboard')
+    } catch {
+      toast.error('Failed to copy to clipboard')
+    }
   }
 
   const classes = clsx('r-copy-btn', 'no-drag', className)
