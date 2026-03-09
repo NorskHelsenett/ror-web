@@ -51,7 +51,7 @@ export function getPricesTableColumns(): DataTableColumnDef<Price>[] {
       enableSorting: true,
       sortingFn: 'text',
     }),
-    columnHelper.accessor((price) => getPriceValue(price) + ' nok', {
+    columnHelper.accessor((price) => getPriceValue(price), {
       id: 'pricePerNode',
       size: 164,
       header: ({ column }) => {
@@ -68,6 +68,7 @@ export function getPricesTableColumns(): DataTableColumnDef<Price>[] {
           </Button>
         )
       },
+      cell: ({ getValue }) => `${getValue()} nok`,
       enableSorting: true,
       sortingFn: 'basic',
     }),

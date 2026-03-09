@@ -88,7 +88,6 @@ export function getClustersTableColumns(
       id: 'health',
       size: 80,
       header: () => <p className='text-sm'>Status</p>,
-      enableSorting: true,
       cell: (info) => <HealthCircle className='w-12 h-12 scale-90' healthCondition={info.getValue()} />,
     }),
     columnHelper.accessor(getEnvironment, {
@@ -179,7 +178,6 @@ export function getClustersTableColumns(
         id: 'gpu',
         size: 124,
         header: () => <p className='text-sm'>GPU</p>,
-        enableSorting: true,
         cell: (info) => {
           const res = info.getValue()
           return (
@@ -194,7 +192,6 @@ export function getClustersTableColumns(
         id: 'disk',
         size: 124,
         header: () => <p className='text-sm'>Disk</p>,
-        enableSorting: true,
         cell: (info) => {
           const res = info.getValue()
           return (
@@ -266,7 +263,6 @@ export function getClustersTableColumns(
         id: 'agentVersion',
         size: 156,
         header: () => <p className='text-sm'>Agent version</p>,
-        enableSorting: true,
         cell: (info) => <span>{info.getValue().agent.version}</span>,
       }),
     isVisible('kubernetesVersion') &&
@@ -274,7 +270,6 @@ export function getClustersTableColumns(
         id: 'kubernetesVersion',
         size: 168,
         header: () => <p className='text-sm'>Kubernetes version</p>,
-        enableSorting: true,
         cell: (info) => <span>{info.getValue().kubernetes.version}</span>,
       }),
     isVisible('toolingVersion') &&
@@ -282,7 +277,6 @@ export function getClustersTableColumns(
         id: 'toolingVersion',
         size: 156,
         header: () => <p className='text-sm'>Tooling version</p>,
-        enableSorting: true,
         cell: (info) => <span>{info.getValue().nhnTooling.version}</span>,
       }),
     isVisible('argocd') &&

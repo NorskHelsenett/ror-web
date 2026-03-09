@@ -31,7 +31,7 @@ const PriceListPage = async () => {
   return (
     <div className='w-full flex flex-col'>
       <Header title='Price list' />
-      <div className='mx-6 my-8'>
+      <div className='mx-13 my-8'>
         <PricesTable data={items} />
       </div>
     </div>
