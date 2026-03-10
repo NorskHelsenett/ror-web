@@ -142,7 +142,7 @@ export function ResourceControls<T>({
 
         {toggleSortParams && (
           <Link href={toggleSortParams.url}>
-            <Button variant='outline' className='border-[var(--input)]'>
+            <Button variant='outline' className='border-(--input)'>
               {toggleSortParams.isDesc ? (
                 <span className='flex gap-1 items-center'>
                   <ArrowDownWideNarrow className='w-4 h-4' />
@@ -163,10 +163,10 @@ export function ResourceControls<T>({
           pressed={filtersOpen}
           variant='outline'
           className='[@container(max-width:1000px)]:hidden'
-          aria-label='Open filters'
+          aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
         >
           <Link href={toggleParams}>
-            <Funnel aria-hidden='true' />
+            <Funnel aria-hidden className='-mr-1' /> {filtersOpen ? 'Close' : 'Open'} filters
           </Link>
         </Toggle>
       </div>
@@ -177,7 +177,7 @@ export function ResourceControls<T>({
           pressed={filtersOpen}
           variant='outline'
           className='[@container(min-width:1001px)]:hidden'
-          aria-label='Open filters'
+          aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
         >
           <Link href={toggleParams}>
             <Funnel aria-hidden='true' />

@@ -7,7 +7,7 @@
 
 'use client'
 
-import { ColumnDef } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 import { Price } from '@/types/prices'
 import {
   getPriceCpu,
@@ -15,9 +15,13 @@ import {
   getPriceMachineClass,
   getPriceMemory,
   getPriceProvider,
-  getPriceTo,
   getPriceValue,
 } from '../utils/price'
+import { DataTableColumnDef } from '@/components/ui/data-table'
+import { Button } from '@/components/shadcn/button'
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
+
+const columnHelper = createColumnHelper<Price>()
 
 /**
  * Column definitions for displaying price information in a table.
@@ -25,45 +29,168 @@ import {
  * Each column is configured with a header label and an accessor function
  * that extracts the corresponding value from a `Price` object.
  */
-export const pricesColumns: ColumnDef<Price>[] = [
-  {
-    header: 'Machine class',
-    accessorFn: getPriceMachineClass,
-  },
-  {
-    header: 'Price per node',
-    accessorFn: (price) => getPriceValue(price) + ' nok',
-  },
-  {
-    header: 'CPU',
-    accessorFn: getPriceCpu,
-  },
-  {
-    header: 'Memory',
-    accessorFn: getPriceMemory,
-  },
-  {
-    header: 'Provider',
-    accessorFn: getPriceProvider,
-  },
-  {
-    header: 'From',
-    accessorFn: (price) => new Date(getPriceFrom(price)),
-    cell: (info) =>
-      info.getValue<Date>().toLocaleDateString('nb-NO', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }),
-  },
-  {
-    header: 'To',
-    accessorFn: (price) => new Date(getPriceTo(price)),
-    cell: (info) =>
-      info.getValue<Date>().toLocaleDateString('nb-NO', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }),
-  },
-]
+export function getPricesTableColumns(): DataTableColumnDef<Price>[] {
+  return [
+    columnHelper.accessor(getPriceMachineClass, {
+      id: 'machineClass',
+      size: 256,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Machine class
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: true,
+      sortingFn: 'text',
+    }),
+    columnHelper.accessor((price) => getPriceValue(price), {
+      id: 'pricePerNode',
+      size: 164,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Price per node
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      cell: ({ getValue }) => `${getValue()} nok`,
+      enableSorting: true,
+      sortingFn: 'basic',
+    }),
+    columnHelper.accessor(getPriceCpu, {
+      id: 'cpu',
+      size: 96,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            CPU
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: true,
+      sortingFn: 'basic',
+    }),
+    columnHelper.accessor(getPriceMemory, {
+      id: 'memory',
+      size: 120,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Memory
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: true,
+      sortingFn: 'basic',
+    }),
+    columnHelper.accessor(getPriceProvider, {
+      id: 'provider',
+      size: 124,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Provider
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: true,
+      sortingFn: 'text',
+    }),
+    columnHelper.accessor(
+      (price) => {
+        const raw = getPriceFrom(price)
+        return raw ? new Date(raw) : null
+      },
+      {
+        id: 'from',
+        size: 108,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              From
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
+        sortingFn: 'datetime',
+        cell: (info) => {
+          const val = info.getValue<Date | null>()
+          return val ? val.toLocaleDateString('nb-NO', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—'
+        },
+      }
+    ),
+    columnHelper.accessor(
+      (price) => {
+        const raw = getPriceFrom(price)
+        return raw ? new Date(raw) : null
+      },
+      {
+        id: 'to',
+        size: 116,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              To
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
+        sortingFn: 'datetime',
+        cell: (info) => {
+          const val = info.getValue<Date | null>()
+          return val ? val.toLocaleDateString('nb-NO', { year: 'numeric', month: '2-digit', day: '2-digit' }) : '—'
+        },
+      }
+    ),
+  ]
+}

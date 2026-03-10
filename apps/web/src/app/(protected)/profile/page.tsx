@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { ApiKeysTile } from '@/features/api-keys/components/api-keys-tile'
 import { ApiKeysTileLoading } from '@/features/api-keys/components/api-keys-tile-loading'
+import { GroupsWithoutPermissions } from '@/features/acls/components/groups-without-permissions'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,7 +26,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
 
   const acls: string[] = self.user.groups
   const aclsBeingUsed: Acl[] = []
-  const aclsNotBeingUsed = []
+  const aclsNotBeingUsed: string[] = []
 
   for (const acl of acls) {
     const res = await api.acl.getByName(acl)
@@ -49,7 +50,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       <div className='mt-10 grid grid-cols-14 gap-8 max-w-480'>
         <div className='col-span-8'>
           <Tile className='p-5'>
-            <h3 className='r-heading-03 mb-4'>Groups that grant access in ROR</h3>
+            <h3 className='r-heading-03 mb-4'>Groups with permissions in ROR</h3>
             <div className={'overflow-hidden rounded-lg border'}>
               <table className='w-full table table-auto'>
                 <thead>
@@ -83,15 +84,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
               </table>
             </div>
 
-            <hr className='my-2' />
-            <h3 className='r-heading-03 mb-4'>Groups that does not grant access in ROR</h3>
-            <ul className='list-disc list-inside'>
-              {aclsNotBeingUsed.map((acl) => (
-                <li key={acl} className='mb-1'>
-                  {acl}
-                </li>
-              ))}
-            </ul>
+            <hr className='my-4' />
+            <GroupsWithoutPermissions acls={aclsNotBeingUsed} />
           </Tile>
         </div>
         <div className='col-span-6'>

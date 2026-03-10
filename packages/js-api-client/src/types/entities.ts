@@ -31,6 +31,8 @@ import type {
   CreateApiKeyResponseSchema,
 } from '../schemas/api-key'
 
+import { VirtualMachineVulnerabilityInfo, CVE } from '../schemas/vm-vulnerability-info'
+
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
 export type ApiKey = z.infer<typeof ApiKeySchema>
@@ -82,3 +84,6 @@ export type VirtualMachineTeam = z.infer<typeof VirtualMachineTag>
 //BackupJob and BackupRun matches the v2 resource
 export type BackupJob = z.infer<typeof BackupJobSchema>
 export type BackupRun = z.infer<typeof BackupRunSchema>
+
+export type VirtualMachineVulnerabilityInfoType = z.infer<typeof VirtualMachineVulnerabilityInfo>
+export type CVEType = z.infer<typeof CVE>
