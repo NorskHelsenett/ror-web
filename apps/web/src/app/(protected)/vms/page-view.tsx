@@ -60,7 +60,6 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
-import { buildVmSearchFilter } from '@/features/vms/utils/regex-search'
 
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
@@ -72,13 +71,13 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     getItemId: getVmUniqueKey,
     getItemsKey: getVmsKey,
     loadMore: async (offset, limit) => {
+      const currentSearch = new URLSearchParams(window.location.search).get('search')?.trim() || undefined
       const res = await loadMoreVMs({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
-        search: params.search,
-        //filters: params.filters,
+        search: currentSearch,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -191,9 +190,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       const next = new URLSearchParams(searchParams.toString())
       const q = (searchQuery ?? '').trim()
 
-      console.log('[VM search] query:', q)
-      console.log('[VM search] filter param preview:', buildVmSearchFilter(q))
-
       if (q) next.set('search', q)
       else next.delete('search')
 
@@ -233,14 +229,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
 
   const displayedItems = sortedItems
 
-  useEffect(() => {
-    console.log('[PageView] params.search:', searchParams.get('search'))
-    console.log('[PageView] vms received:', vms.length)
-    console.log(
-      '[PageView] vms names:',
-      vms.map((vm) => vm?.virtualmachine?.spec?.name ?? vm?.metadata?.name)
-    )
-  }, [vms, searchParams])
+  // useEffect(() => {
+  //   console.log('[PageView] params.search:', searchParams.get('search'))
+  //   console.log('[PageView] vms received:', vms.length)
+  //   console.log(
+  //     '[PageView] vms names:',
+  //     vms.map((vm) => vm?.virtualmachine?.spec?.name ?? vm?.metadata?.name)
+  //   )
+  // }, [vms, searchParams])
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
