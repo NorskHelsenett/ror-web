@@ -55,6 +55,7 @@
     "@opentelemetry/api-logs": "0.207.0",
     "@swc/helpers": "0.5.17",
     "@types/xlsx": "0.0.35",
+    "ae-cvss-calculator": "1.0.11",
     "an-array-of-english-words": "2.0.0",
     "date-fns": "4.1.0",
     "fuse.js": "7.1.0",

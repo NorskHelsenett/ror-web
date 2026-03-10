@@ -142,6 +142,10 @@ export const routes = {
       label: 'Backup',
       getHref: (id: string) => `/vms/${id}/backup`,
     },
+    vmVulnerabilities: {
+      label: 'Vulnerabilities',
+      getHref: (id: string) => `/vms/${id}/vulnerabilities`,
+    },
     backupRuns: {
       label: 'Backup runs',
       getHref: () => `/vms/backup/backup-runs`,

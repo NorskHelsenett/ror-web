@@ -44,8 +44,11 @@ import { DetailedMemoryUsage } from './detailed-memory-usage'
 import { Badge } from '@/components/shadcn/badge'
 import Link from 'next/link'
 
+import { VulnerabilityCard } from './vm-vulnerability-info-card'
+
 export const VMDetails = ({ user }: VMDetailsProps) => {
   const { vm } = useVMContext()
+
   const cpuSockets = getSpecSockets(vm) || 0
   const cpuCoresPerSocket = getSpecCoresPerSocket(vm) || 0
   const disks = getVmDisks(vm)
@@ -355,6 +358,9 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
           <InfoCard />
           <TagCards />
         </div>
+      </div>
+      <div className='grid grid-cols-1 md:grid-cols-1'>
+        <VulnerabilityCard vmid={vm?.metadata?.uid} />
       </div>
     </div>
   )
