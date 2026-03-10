@@ -205,21 +205,8 @@ export function getClustersTableColumns(
       columnHelper.accessor(getNodePools, {
         id: 'nodes',
         size: 160,
-        header: ({ column }) => {
-          return (
-            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-              Num of nodes
-              {column.getIsSorted() === 'asc' ? (
-                <ArrowDown className='h-4 w-4' />
-              ) : column.getIsSorted() === 'desc' ? (
-                <ArrowUp className='h-4 w-4' />
-              ) : (
-                <ArrowUpDown className='h-4 w-4' />
-              )}
-            </Button>
-          )
-        },
-        enableSorting: true,
+        header: () => <p className='text-sm'>Num of nodes</p>,
+        enableSorting: false,
         cell: (info) => {
           const nodePools = info.getValue()
           const nodeAmount = nodePools?.reduce((total, nodePool) => total + (nodePool.replicas || 0), 0) || 0
