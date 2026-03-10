@@ -2,7 +2,8 @@
 
 import { CreateVmForm } from '@/features/vms/types/create-vm'
 import { useCallback, useState } from 'react'
-import { Controller, Form, Path } from 'react-hook-form'
+import { Controller, Path } from 'react-hook-form'
+import { Form } from '@/components/shadcn/form'
 import { useCreateVmForm } from '@/features/vms/hooks/use-create-vm-form'
 import { addTag, removeTag } from '@/features/cluster/utils/tags'
 import { useRouter } from 'next/navigation'
@@ -436,7 +437,7 @@ export const PageView = () => {
     {
       title: 'Config',
       wizardContent: (
-        <div className='flex flex-row gap-24 justify-center'>
+        <div className={cn('flex gap-24 w-fit mx-auto', 'flex-col gap-4', 'sm:flex-row sm:gap-24')}>
           <ProviderInput />
           <RegionInput />
           <DatacenterInput />
