@@ -31,7 +31,7 @@ import { CodeSnippet } from '@ror/react'
 import { buildVmYaml } from '@/features/vms/utils/generate-vm-yaml'
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/shadcn/tooltip'
-import { NorwayMap } from '@/features/vms/components/create-vm/norway-map'
+import { cn } from '@/utils/clsxm'
 
 const stepFields: Array<Array<Path<CreateVmForm>>> = [
   ['name', 'project'],
@@ -46,6 +46,8 @@ export const PageView = () => {
   const [tagKey, setTagKey] = useState('')
   const [tagValue, setTagValue] = useState('')
   const [yamlOpen, setYamlOpen] = useState(false)
+
+  const form = useCreateVmForm()
 
   const {
     register,
@@ -206,28 +208,6 @@ export const PageView = () => {
     )
   }, [errors.serviceId, register])
 
-  // const SizeInput = useCallback(() => {
-  //   return (
-  //     <FormSection title='Size' error={errors.size && errors.size.message}>
-  //       <Controller
-  //         control={control}
-  //         name='size'
-  //         defaultValue={20}
-  //         render={({ field }) => (
-  //           <SliderWithInput
-  //             value={field.value || 20}
-  //             onValueChange={field.onChange}
-  //             min={10}
-  //             max={500}
-  //             step={10}
-  //             label='GB'
-  //           />
-  //         )}
-  //       />
-  //     </FormSection>
-  //   )
-  // }, [errors.size, control])
-
   const SizeInput = useCallback(() => {
     return (
       <FormSection
@@ -365,95 +345,69 @@ export const PageView = () => {
     )
   }, [control, errors.extensions])
 
+  const SummaryTableRow = ({ title, content }: { title: string; content: string | number }) => (
+    <tr>
+      <td className='font-semibold py-1 pr-4'>{title}</td>
+      <td>{content}</td>
+    </tr>
+  )
+
+  const selectedValuesSummary = (values?: Record<string, string>) => {
+    const selectedValues = Object.keys(values ?? {})
+    return selectedValues.length > 0 ? selectedValues.join(', ') : 'None selected'
+  }
+
   const Summary = () => {
     return (
-      <>
-        <h3 className='mx-auto w-fit'>Summary</h3>
-        <table>
-          <tbody>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Name</td>
-              <td>{nameWatch || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Project</td>
-              <td>{projectWatch || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Workspace</td>
-              <td>{workspaceWatch || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Service ID</td>
-              <td>{serviceIdWatch || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Region</td>
-              <td>{regionWatch || 'N/A'}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>VM Size</td>
-              <td>{sizeWatch} </td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Image</td>
-              <td>{imageWatch}</td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Extensions</td>
-              <td>
-                {extensionsWatch && Object.keys(extensionsWatch).length > 0
-                  ? Object.keys(extensionsWatch).join(', ')
-                  : 'None selected'}
-              </td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Security baseline</td>
-              <td>
-                {securityBaselineWatch && Object.keys(securityBaselineWatch).length > 0
-                  ? Object.keys(securityBaselineWatch).join(', ')
-                  : 'None selected'}
-              </td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>OS config</td>
-              <td>
-                {osConfigWatch && Object.keys(osConfigWatch).length > 0
-                  ? Object.keys(osConfigWatch).join(', ')
-                  : 'None selected'}
-              </td>
-            </tr>
-            <tr>
-              <td className='font-semibold py-1 pr-4'>Tags</td>
-              <td>
-                {Object.entries(tagsWatch).length === 0 ? (
-                  <span className='italic opacity-70'>No tags</span>
-                ) : (
-                  Object.entries(tagsWatch).map(([key, value]) => (
-                    <p key={key}>
-                      {key}: {value}
-                    </p>
-                  ))
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </>
+      <div className='w-fit'>
+        <h3 className={cn('mx-auto w-fit text-3xl', 'sm:text-3xl', 'md:text-5xl')}>Summary</h3>
+        <div className={cn('border rounded-lg p-4 overflow-hidden my-4', 'w-full', 'sm:w-96')}>
+          <table className={cn('border-separate border-spacing-0 w-full', 'text-sm', 'sm:text-md')}>
+            <tbody>
+              <SummaryTableRow title='Name' content={nameWatch || 'N/A'} />
+              <SummaryTableRow title='Project' content={projectWatch || 'N/A'} />
+              <SummaryTableRow title='Workspace' content={workspaceWatch || 'N/A'} />
+              <SummaryTableRow title='Service ID' content={serviceIdWatch || 'N/A'} />
+              <SummaryTableRow title='Region' content={regionWatch || 'N/A'} />
+              <SummaryTableRow title='VM size' content={sizeWatch || 'N/A'} />
+              <SummaryTableRow title='Image' content={imageWatch || 'N/A'} />
+              <SummaryTableRow title='Extensions' content={selectedValuesSummary(extensionsWatch)} />
+              <SummaryTableRow title='Security baseline' content={selectedValuesSummary(securityBaselineWatch)} />
+              <SummaryTableRow title='OS config' content={selectedValuesSummary(osConfigWatch)} />
+              <tr>
+                <td className='font-semibold pt-1 pb-3 pr-4 align-top'>Tags</td>
+                <td>
+                  {Object.entries(tagsWatch ?? {}).length === 0 ? (
+                    <span className='italic opacity-70'>No tags</span>
+                  ) : (
+                    Object.entries(tagsWatch ?? {}).map(([key, value]) => (
+                      <p key={key}>
+                        {key}: {value}
+                      </p>
+                    ))
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     )
   }
 
   const VmYaml = () => {
     return (
-      <section>
+      <section className='w-fit mx-auto'>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <Button type='button' onClick={() => setYamlOpen(!yamlOpen)}>
+          <Button type='button' className={cn('text-xs', 'sm:text-sm')} onClick={() => setYamlOpen(!yamlOpen)}>
             {yamlOpen ? 'Close YAML' : 'View YAML'}
           </Button>
-          <Button type='button' className='mx-2' onClick={copyYaml}>
+          <Button type='button' className={cn('mx-2', 'text-xs', 'sm:text-sm')} onClick={copyYaml}>
             Copy YAML
           </Button>
-          <Button type='submit'>Create VM</Button>
+          <Button type='submit' className={cn('text-xs', 'sm:text-sm')}>
+            Create VM
+          </Button>
           {yamlOpen && (
             <CodeSnippet
               type='multi'
@@ -469,14 +423,6 @@ export const PageView = () => {
   }
 
   const content: WizardContentType[] = [
-    {
-      title: 'Map',
-      wizardContent: (
-        <div className='flex flex-row gap-24 justify-center'>
-          <NorwayMap />
-        </div>
-      ),
-    },
     {
       title: 'Basic',
       wizardContent: (
@@ -522,7 +468,7 @@ export const PageView = () => {
       wizardContent: (
         <div className='w-fit mx-auto'>
           <TagsSection
-            tags={tagsWatch ?? {}}
+            tags={Object.entries(tagsWatch ?? {}).map(([key, value]) => ({ key, value }))}
             tagKey={tagKey}
             tagValue={tagValue}
             setTagKey={setTagKey}
@@ -544,5 +490,9 @@ export const PageView = () => {
     },
   ]
 
-  return <Wizard<CreateVmForm> content={content} trigger={trigger} stepFields={stepFields} />
+  return (
+    <Form {...form}>
+      <Wizard<CreateVmForm> content={content} trigger={trigger} stepFields={stepFields} summary={<Summary />} />
+    </Form>
+  )
 }

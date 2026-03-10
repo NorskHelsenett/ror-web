@@ -15,6 +15,7 @@ export function buildVmYaml(v: CreateVmForm) {
   const securityBaseline = v.securityBaseline ?? {}
   const osConfig = v.osConfig ?? {}
   const tags = v.tags ?? {}
+  const tagsArray = Object.entries(tags).map(([key, value]) => ({ key, value }))
 
   // Convert extensions, securityBaseline, and osConfig to arrays for YAML output
   const extensionsList = Object.keys(extensions)
@@ -63,7 +64,7 @@ export function buildVmYaml(v: CreateVmForm) {
     metadata:
     name: ${name}
     namespace: ${workspace}
-    ${renderTagsYaml(tags)}
+    ${renderTagsYaml(tagsArray)}
     labels:
         cluster.vitistack.io/cluster-name: ${project}
         vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
