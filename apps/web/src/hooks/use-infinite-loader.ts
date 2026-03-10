@@ -61,6 +61,7 @@ export function useInfiniteLoader<T>({
       lastKeyRef.current = nextKey
       setItems(initial)
       setHasMore(true) // always reset to true — let loadMore determine if there's more
+      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
       runIdRef.current++
       inFlightRef.current = false
       console.log('[useInfiniteLoader] reset — initial items:', initial.length)
