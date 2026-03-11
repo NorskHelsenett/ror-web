@@ -32,7 +32,7 @@ export interface NormalizeParamsResult {
  * - `limit`: The number of items per page (defaults to 10).
  * - `sort`: The sort field, if provided.
  * - `order`: Either 'asc' or 'desc' (defaults to 'asc').
- * - `filters`: The filter value if set to 'open', otherwise undefined.
+ * - `filtersPanel`: Indicates if the filter panel is open (defaults to undefined).
  */
 export function normalizeParams(parameters: Record<string, string | string[] | undefined>): NormalizeParamsResult {
   const get = (key: string): string | undefined =>
@@ -44,10 +44,10 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
   const order: 'asc' | 'desc' = get('order') === 'desc' ? 'desc' : 'asc'
   const view: 'grid' | 'list' = get('view') === 'list' ? 'list' : 'grid'
 
-  const rawFilters = get('filters')
+  const rawFiltersPanel = get('filters')
   const filterPanel = get('filterPanel') === 'open' ? 'open' : undefined
 
-  const filters = rawFilters && rawFilters !== 'open' ? rawFilters : undefined
+  const filters = rawFiltersPanel && rawFiltersPanel !== 'open' ? rawFiltersPanel : undefined
   const search = get('search')?.trim() || undefined
 
   return { view, page, limit, sort, order, filters, filterPanel, search }

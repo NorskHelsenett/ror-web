@@ -317,9 +317,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
           <div ref={sentinelRef} className='h-px w-full' />
         </div>
         {isLoading && !isSearching && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
-        {(!hasMore || isSearching) && (
-          <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>
-        )}
+        {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All VMs are loaded.</div>}
       </div>
     )
   }

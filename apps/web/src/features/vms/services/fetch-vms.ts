@@ -21,7 +21,6 @@ export async function fetchVms(
 
   if (search) {
     const filters = buildVmSearchFilter(search)
-    console.log('[fetchVms] filters:', filters)
     if (filters) listParams.set('filters', filters)
   } else if (params.filters) {
     listParams.set('filters', params.filters)

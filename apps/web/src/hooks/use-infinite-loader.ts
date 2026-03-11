@@ -64,9 +64,8 @@ export function useInfiniteLoader<T>({
       setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
       runIdRef.current++
       inFlightRef.current = false
-      console.log('[useInfiniteLoader] reset — initial items:', initial.length)
     }
-  }, [initial])
+  }, [initial, getItemsKey])
 
   // Reset when the sorting order changes
   useEffect(() => {
