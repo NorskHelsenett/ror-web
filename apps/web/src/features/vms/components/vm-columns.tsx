@@ -17,7 +17,7 @@ import {
   getTeamIdentifier,
   getVmArchitecture,
   getVmDisks,
-  getVmHostName,
+  getVmName,
   getVmOperatingSystemId,
   getVmPowerState,
   getVmToolVersion,
@@ -47,23 +47,23 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
   }
 
   return [
-    columnHelper.accessor((row) => getVmHostName(row) ?? 'Unnamed VM', {
-      id: 'hostName',
-      header: 'Hostname',
+    columnHelper.accessor((row) => getVmName(row), {
+      id: 'name',
+      header: 'Name',
       enableSorting: true,
       sortingFn: 'text',
       size: 300,
       cell: (info) => {
-        const hostname = String(info.getValue() ?? '')
+        const name = String(info.getValue() ?? '')
         const vm = info.row.original
-        const vmHostName = getVmHostName(vm) || ''
+        const vmName = getVmName(vm) || ''
         return (
           <Link
-            href={routes.app.vm.getHref(vmHostName.toLowerCase())}
+            href={routes.app.vm.getHref(vmName.toLowerCase())}
             className='pr-2 text-blue-600 dark:text-blue-500 underline break-all'
             onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}
           >
-            {hostname.toLowerCase()}
+            {name.toLowerCase()}
           </Link>
         )
       },

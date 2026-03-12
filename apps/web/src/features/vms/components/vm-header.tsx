@@ -13,7 +13,7 @@ import { navigationItemObject } from '@/app/(protected)/vms/[id]/layout'
 import { useVMContext } from '@/context/vm-context'
 import { Power, PowerOff, TriangleAlert } from 'lucide-react'
 import { vmCardPowerStatus } from '../utils/env-colors'
-import { getVmHostName, getVmPowerState } from '../utils/vms'
+import { getVmName, getVmPowerState } from '../utils/vms'
 import { ResourceHeader } from '@/components/ui/resource-header'
 import { changePowerStateValues } from '../types/powerState'
 
@@ -30,7 +30,7 @@ function PowerIcon({ state }: { state: string }) {
 
 export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
   const { vm } = useVMContext()
-  const hostname = getVmHostName(vm)
+  const name = getVmName(vm)
   const powerstate = getVmPowerState(vm) || 'undefined'
   const [lightmode, darkmode] = vmCardPowerStatus[powerstate] || ['bg-gray-200', 'dark:bg-gray-600']
 
@@ -51,7 +51,7 @@ export const VMHeader = ({ className, tabs }: VMHeaderProps) => {
   return (
     <ResourceHeader
       className={className}
-      title={hostname.toLowerCase()}
+      title={name.toLowerCase()}
       tabs={tabs}
       rightContent={rightContent}
       lightmodeColor={lightmode}

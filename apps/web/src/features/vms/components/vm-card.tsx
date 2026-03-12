@@ -225,7 +225,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
       >
         <CardHeader className='m-0 mb-4 p-0 w-full relative'>
           <CardTitle className={cn(' text-sm rounded-t-xl px-6 py-2 flex justify-between', envColor[0], envColor[1])}>
-            {hostName.toLowerCase()}
+            {name.toLowerCase()}
           </CardTitle>
         </CardHeader>
         <CardContent className='text-sm flex flex-col gap-3 '>
