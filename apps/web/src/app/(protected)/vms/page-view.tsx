@@ -42,7 +42,7 @@ import {
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -66,6 +66,22 @@ type ResourceType = 'virtualmachine' | 'machine'
 
 export const PageView = ({ className, vms, machines, params }: PageViewProps) => {
   const [resourceType, setResourceType] = useState<ResourceType>('virtualmachine')
+  const searchParams = useSearchParams()
+  const isCreating = searchParams.get('creating-vm') === 'true'
+  const [showCreatingBanner, setShowCreatingBanner] = useState(isCreating)
+  const [dots, setDots] = useState('.')
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDots((prev) => {
+        if (prev === '...') return '.'
+        return prev + '.'
+      })
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [])
+
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
 
@@ -170,7 +186,6 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
 
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams()
   const isSearching = searchParams.get('search')?.trim() || undefined
 
   const updateFiltersInUrl = useCallback(
@@ -206,6 +221,17 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
     clearUrl()
     setSearchResetKey((k) => k + 1)
   }, [resetFilters, setSelectedDisplayData, clearUrl])
+
+  useEffect(() => {
+    if (!isCreating) return
+
+    const timer = setTimeout(() => {
+      setShowCreatingBanner(false)
+      router.replace(pathname, { scroll: false })
+    }, 10000)
+
+    return () => clearTimeout(timer)
+  }, [isCreating, pathname, router])
 
   // ---------- Toggle/Sort params ----------
   const toggleParams = useMemo(() => buildToggledParams(params, 'filterPanel', 'open', 'vms').url, [params])
@@ -418,11 +444,19 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
         {renderResourceToggle()}
       </div>
 
-      <NotReadyMessage className='mx-12 my-6'>
-        Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
-        expect finished functionality or that all data is present. The development team is working hard on delivering a
-        complete product as quick as possible :)
-      </NotReadyMessage>
+      {showCreatingBanner && (
+        <div className='mx-12 my-6 border-3 rounded-md bg-blue-400 dark:bg-blue-500 border-blue-600 dark:border-blue-700 text-black px-4 py-2'>
+          VM is being created {dots}
+        </div>
+      )}
+
+      {!showCreatingBanner && (
+        <NotReadyMessage className='mx-12 my-6'>
+          Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
+          expect finished functionality or that all data is present. The development team is working hard on delivering
+          a complete product as quick as possible :)
+        </NotReadyMessage>
+      )}
 
       <section className='px-12 my-8'>
         {resourceType === 'machine' ? <MachineView /> : params.view === 'list' ? <TableView /> : <GridView />}

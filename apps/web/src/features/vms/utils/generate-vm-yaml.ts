@@ -1,0 +1,116 @@
+import type { CreateVmForm } from '../types/create-vm'
+import { convertToVitiMachineClass, renderTagsYaml } from '@/features/cluster/config/create-cluster-helpers'
+
+const s = (v: unknown) => (v == null ? '' : String(v))
+
+export function buildVmYaml(v: CreateVmForm) {
+  const name = s(v.name)
+  const project = s(v.project)
+  const workspace = s(v.workspace)
+  const region = s(v.region)
+  const serviceId = s(v.serviceId)
+  const size = s(v.size)
+  const image = s(v.image)
+  const extensions = v.extensions ?? {}
+  const securityBaseline = v.securityBaseline ?? {}
+  const osConfig = v.osConfig ?? {}
+  const tags = v.tags ?? {}
+  const tagsArray = Object.entries(tags).map(([key, value]) => ({ key, value }))
+
+  // Convert extensions, securityBaseline, and osConfig to arrays for YAML output
+  const extensionsList = Object.keys(extensions)
+  const securityBaselineList = Object.keys(securityBaseline)
+  const osConfigList = Object.keys(osConfig)
+
+  const smallTemplate = `resources:
+        cpu:
+            cores: ${1}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "2Gi"
+    disks:
+    - name: "root"
+        size: "20Gi"
+        storageClass: "default"`
+
+  const mediumTemplate = `resources:
+        cpu:
+            cores: ${2}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "4Gi"
+    disks:
+    - name: "root"
+        size: "40Gi"
+        storageClass: "default"`
+
+  const largeTemplate = `resources:
+        cpu:
+            cores: ${4}
+            threads: ${1}
+            sockets: ${1}
+        memory:
+            size: "8Gi"
+    disks:
+    - name: "root"
+        size: "80Gi"
+        storageClass: "default"`
+
+  return `
+    apiVersion: vitistack.io/v1alpha1
+    kind: Machine
+    metadata:
+    name: ${name}
+    namespace: ${workspace}
+    ${renderTagsYaml(tagsArray)}
+    labels:
+        cluster.vitistack.io/cluster-name: ${project}
+        vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
+        vitistack.io/service-id: ${serviceId} 
+        vitistack.io/region: ${region}
+    spec:
+        template: ${size}
+
+        ${size === 'small' ? smallTemplate : size === 'medium' ? mediumTemplate : size === 'large' ? largeTemplate : ''}
+            accessMode: "ReadWriteOnce"
+            volumeMode: "Filesystem"
+        networks:
+        - name: "default"
+            networkName: "default-network"
+            model: "virtio"
+
+        bootOrder: 
+        - "disk"
+
+        cloudInit:
+            userData: |
+            networkData: |
+            secretRef:
+                name: "secretName"
+                key: "secretKey"
+
+        domain:
+            machine:
+                type: "${image === 'windows9Server64Guest' ? 'pc-q35' : 'pc-i440fx'}"
+            features:
+                acpi: true
+                apic: true
+                hyperv: true
+            firmware:
+            bootloader:
+                efi: true
+                secureBoot: false
+
+    status:
+        phase: "Succeeded"
+        conditions: "ListConditions"
+        vmName: ${name}
+        vmiName: ${name}-vmi
+        ipAddress: "4523423523423"
+        nodeName: "nodeName"
+        lastUpdated: "2023-10-01T12:00:00Z"
+        resourceVersion: "123456789"
+`.trim()
+}

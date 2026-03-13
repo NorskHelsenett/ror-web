@@ -32,7 +32,7 @@ export interface ChooseButtonProps {
 }
 
 export interface FormSectionProps {
-  title: string
+  title: string | React.ReactNode
   error?: string
   children: React.ReactNode
   className?: string
