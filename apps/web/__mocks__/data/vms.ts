@@ -114,7 +114,7 @@ export const mockVms = {
             name: osName[idx % 5],
             family: osFamily[idx % 2],
             version: '5.4.0-208-generic',
-            hostName: names[idx % names.length],
+            hostName: 'host' + names[idx % names.length],
             powerState: idx % 3 === 0 ? 'poweredOn' : idx % 3 === 1 ? 'poweredOff' : 'undefined',
             toolVersion: '11360',
             architecture: 'X86',

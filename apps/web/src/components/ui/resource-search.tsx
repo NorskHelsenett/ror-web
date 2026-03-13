@@ -11,7 +11,7 @@ import { useSearch } from '@/hooks/use-search'
  *
  * @template T - The type of items to be searched.
  * @property {T[]} items - The array of items to search through.
- * @property {(results: T[]) => void} [onResultsChange] - Optional callback invoked when the search results change.
+ * @property {(results: T[], searchQuery?: string) => void} [onResultsChange] - Optional callback invoked when the search results change.
  * @property {string} [searchText] - Optional initial search text.
  * @property {string[]} keys - The keys of the item objects to use for searching.
  * @property {(item: T) => Record<string, unknown>} [mapItem] - Optional function to map an item to a searchable object.
@@ -20,7 +20,7 @@ import { useSearch } from '@/hooks/use-search'
  */
 export interface ResourceSearchProps<T> {
   items: T[]
-  onResultsChange?: (results: T[]) => void
+  onResultsChange?: (results: T[], searchQuery?: string) => void
   searchText?: string
   keys: string[]
   mapItem?: (item: T) => Record<string, unknown>
@@ -58,12 +58,14 @@ export function ResourceSearch<T>({
   const lastSentKeyRef = useRef('')
 
   useEffect(() => {
-    const nextKey = getItemsKey ? getItemsKey(results) : JSON.stringify(results)
+    const resultsKey = getItemsKey ? getItemsKey(results) : JSON.stringify(results)
+    const nextKey = `${debouncedQuery}::${resultsKey}`
+
     if (nextKey !== lastSentKeyRef.current) {
-      onResultsChange?.(results)
+      onResultsChange?.(results, debouncedQuery)
       lastSentKeyRef.current = nextKey
     }
-  }, [results, onResultsChange, getItemsKey])
+  }, [results, debouncedQuery, onResultsChange, getItemsKey])
 
   return (
     <Input

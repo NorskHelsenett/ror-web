@@ -46,8 +46,33 @@ export const v2ResourcesHandlers = [
       case 'VirtualMachine': {
         const limit = Number(url.searchParams.get('limit') || 50)
         const offset = Number(url.searchParams.get('offset') || 0)
-        const allVMs = mockVms.resources
-        return HttpResponse.json({ resources: allVMs.slice(offset, offset + limit) })
+        const filtersParam = url.searchParams.get('filters')
+        let filteredVMs = mockVms.resources as ResourceVm[]
+
+        if (filtersParam) {
+          try {
+            const filters = JSON.parse(filtersParam) as {
+              field: string
+              value: string
+              type: string
+              operator: string
+            }[]
+
+            for (const filter of filters) {
+              if (filter.operator === 'regexp' && filter.field === 'virtualmachine.spec.name') {
+                const regex = new RegExp(filter.value, 'i')
+                filteredVMs = filteredVMs.filter((vm) => {
+                  const name = vm.virtualmachine?.spec?.name ?? ''
+                  return regex.test(name)
+                })
+              }
+            }
+          } catch {
+            // Ignore malformed filters
+          }
+        }
+
+        return HttpResponse.json({ resources: filteredVMs.slice(offset, offset + limit) })
       }
       case 'VirtualMachineVulnerabilityInfo': {
         let resources = mockVmVulnerabilityInfo.resources
