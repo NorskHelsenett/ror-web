@@ -1,6 +1,6 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible'
 import {
-  Boxes,
+  // Boxes,
   ChartColumn,
   ChevronRight,
   CircleDollarSign,
@@ -59,17 +59,17 @@ const sections: Section[] = [
   //       }
   //     ]
   //   },
-  {
-    title: 'Clusters',
-    icon: Boxes,
-    isActive: true,
-    items: [
-      {
-        title: 'Clusters',
-        url: routes.app.clusters.getHref(),
-      },
-    ],
-  },
+  // {
+  //   title: 'Clusters',
+  //   icon: Boxes,
+  //   isActive: true,
+  //   items: [
+  //     {
+  //       title: 'Clusters',
+  //       url: routes.app.clusters.getHref(),
+  //     },
+  //   ],
+  // },
   vmsEnabled && {
     title: 'Virtual machines',
     icon: Monitor,
