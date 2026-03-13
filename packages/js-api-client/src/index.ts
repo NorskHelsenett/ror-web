@@ -54,6 +54,7 @@ export type {
   VirtualMachineNetworks,
   VirtualMachineDisks,
   VirtualMachineTeam,
+  Machine,
   BackupJob,
   BackupRun,
   VirtualMachineVulnerabilityInfoType,

@@ -61,8 +61,11 @@ import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 
+type ResourceType = 'virtualmachine' | 'machine'
+
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
+  const [resourceType, setResourceType] = useState<ResourceType>('virtualmachine')
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
@@ -271,6 +274,33 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     )
   }
 
+  const renderResourceToggle = () => (
+    <div className='flex items-center gap-1 rounded-md border bg-muted p-1'>
+      <button
+        onClick={() => setResourceType('virtualmachine')}
+        className={cn(
+          'rounded px-3 py-1 text-sm font-medium transition-colors',
+          resourceType === 'virtualmachine'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        )}
+      >
+        Virtual Machines
+      </button>
+      <button
+        onClick={() => setResourceType('machine')}
+        className={cn(
+          'rounded px-3 py-1 text-sm font-medium transition-colors',
+          resourceType === 'machine'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        )}
+      >
+        Machines
+      </button>
+    </div>
+  )
+
   return (
     <div className={cn(className, '@container')}>
       <div className={cn('border-b', filtersOpen && 'pb-2')}>
@@ -289,6 +319,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         expect finished functionality or that all data is present. The development team is working hard on delivering a
         complete product as quick as possible :)
       </NotReadyMessage>
+      {renderResourceToggle()}
+
       <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>
     </div>
   )
