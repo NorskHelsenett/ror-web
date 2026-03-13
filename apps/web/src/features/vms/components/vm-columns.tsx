@@ -17,7 +17,7 @@ import {
   getTeamIdentifier,
   getVmArchitecture,
   getVmDisks,
-  getVmHostName,
+  getVmName,
   getVmOperatingSystemId,
   getVmPowerState,
   getVmToolVersion,
@@ -47,44 +47,27 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
   }
 
   return [
-    columnHelper.accessor((row) => getVmHostName(row) ?? 'Unnamed VM', {
-      id: 'hostName',
-      header: 'Hostname',
+    columnHelper.accessor((row) => getVmName(row), {
+      id: 'name',
+      header: 'Name',
       enableSorting: true,
       sortingFn: 'text',
+      size: 300,
       cell: (info) => {
-        const hostname = String(info.getValue() ?? '')
+        const name = String(info.getValue() ?? '')
         const vm = info.row.original
-        const vmHostName = getVmHostName(vm) || ''
+        const vmName = getVmName(vm) || ''
         return (
           <Link
-            href={routes.app.vm.getHref(vmHostName.toLowerCase())}
-            className='pr-2 text-blue-600 dark:text-blue-500 underline'
+            href={routes.app.vm.getHref(vmName.toLowerCase())}
+            className='pr-2 text-blue-600 dark:text-blue-500 underline break-all'
             onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}
           >
-            {hostname.toLowerCase()}
+            {name.toLowerCase()}
           </Link>
         )
       },
     }),
-    isVisible('id') &&
-      columnHelper.accessor(
-        (row) => {
-          const osID = getVmOperatingSystemId(row)
-          return osID
-        },
-        {
-          id: 'id',
-          header: 'ID',
-          enableSorting: true,
-          sortingFn: 'text',
-          cell: (info) => {
-            const osID = info.getValue()
-            return <span>{osID}</span>
-          },
-        }
-      ),
-
     isVisible('team') &&
       columnHelper.accessor(
         (row) => {
@@ -96,17 +79,38 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
           header: 'Team',
           enableSorting: true,
           sortingFn: 'text',
+          size: 300,
           cell: (info) => {
             const teamIdentifier = info.getValue()
-            return <span>{teamIdentifier}</span>
+            return <span className='break-words'>{teamIdentifier}</span>
           },
         }
       ),
+    isVisible('id') &&
+      columnHelper.accessor(
+        (row) => {
+          const osID = getVmOperatingSystemId(row)
+          return osID
+        },
+        {
+          id: 'id',
+          header: 'ID',
+          enableSorting: true,
+          sortingFn: 'text',
+          size: 210,
+          cell: (info) => {
+            const osID = info.getValue()
+            return <span className='break-all'>{osID}</span>
+          },
+        }
+      ),
+
     isVisible('powerState') &&
       columnHelper.accessor((row) => getVmPowerState(row) ?? '', {
         id: 'powerState',
         header: 'Power',
         enableSorting: false,
+        size: 200,
         cell: (info) => {
           const osID = changePowerStateValues[info.getValue()]
           return (
@@ -123,6 +127,7 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'disk-usage',
         header: 'Disks usage',
         enableSorting: false,
+        size: 230,
         cell: (info) => {
           const disks = info.getValue()
           const diskData = disks.map((disk, idx) => ({
@@ -148,6 +153,7 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'memory',
         header: 'Memory',
         enableSorting: false,
+        size: 230,
         cell: (info) => {
           const memorySizeBytes = info.getValue()
           const memoryUsage = getStatusMemoryUsage(info.row.original)
@@ -168,6 +174,7 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'cpu',
         header: 'CPU',
         enableSorting: false,
+        size: 230,
         cell: (info) => {
           const cpuUsage = info.getValue()
           const cpuTotal = getSpecCpuTotal(info.row.original)
@@ -192,9 +199,10 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'version',
         header: 'Version',
         enableSorting: false,
+        size: 200,
         cell: (info) => {
           const version = info.getValue()
-          return <span>{version}</span>
+          return <span className='break-all'>{version}</span>
         },
       }),
     isVisible('architecture') &&
@@ -202,9 +210,10 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'architecture',
         header: 'Architecture',
         enableSorting: false,
+        size: 200,
         cell: (info) => {
           const architecture = info.getValue()
-          return <span>{architecture}</span>
+          return <span className='break-all'>{architecture}</span>
         },
       }),
     isVisible('toolVersion') &&
@@ -212,9 +221,10 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'toolVersion',
         header: 'VMware Tools version',
         enableSorting: false,
+        size: 180,
         cell: (info) => {
           const toolVersion = info.getValue()
-          return <span>{toolVersion}</span>
+          return <span className='break-all'>{toolVersion}</span>
         },
       }),
     isVisible('family') &&
@@ -228,6 +238,7 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
           header: 'Family',
           enableSorting: true,
           sortingFn: 'text',
+          size: 150,
           cell: (info) => {
             const name = info.getValue()
             return <VersionLogoWithTooltip version={name} />
@@ -239,6 +250,7 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
         id: 'activeBackup',
         header: 'Backup',
         enableSorting: true,
+        size: 150,
         cell: (info) => {
           return <BackupStatusTableDisplay vm={info.row.original} />
         },

@@ -1,6 +1,6 @@
 import { Pill } from '@/components/shadcn/pill'
 import { CopyButton } from '@ror/react'
-import { CopyIcon, ExternalLink } from 'lucide-react'
+import { ArrowDown, ArrowUp, ArrowUpDown, CopyIcon, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { createColumnHelper } from '@tanstack/react-table'
 import copy from 'clipboard-copy'
@@ -8,7 +8,6 @@ import type { DataTableColumnDef } from '@/components/ui/data-table'
 import type { KubernetesCluster } from '@ror/js-api-client'
 import type { User } from 'next-auth'
 import { routes } from '@/config/routes'
-import { HealthStatus } from './health-status'
 import { envColors } from '../utils/env-colors'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
@@ -26,7 +25,10 @@ import {
   getProvider,
   getClusterById,
   getClusterUid,
+  getHealthCondition,
 } from '../utils/cluster'
+import { Button } from '@/components/shadcn/button'
+import { HealthCircle } from './health-circle'
 
 const columnHelper = createColumnHelper<KubernetesCluster>()
 
@@ -50,7 +52,21 @@ export function getClustersTableColumns(
   return [
     columnHelper.accessor(getClusterName, {
       id: 'clusterName',
-      header: 'Name',
+      size: 150,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Name
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
       enableSorting: true,
       sortingFn: 'text',
       cell: (info) => (
@@ -68,17 +84,30 @@ export function getClustersTableColumns(
         </Link>
       ),
     }),
-    columnHelper.accessor(() => 1, {
-      // TODO: `1` with real health data later
+    columnHelper.accessor(getHealthCondition, {
       id: 'health',
-      header: 'Status',
-      enableSorting: false,
-      cell: (info) => <HealthStatus status={info.getValue()} />,
+      size: 80,
+      header: () => <p className='text-sm'>Status</p>,
+      cell: (info) => <HealthCircle className='w-12 h-12 scale-90' healthCondition={info.getValue()} />,
     }),
     columnHelper.accessor(getEnvironment, {
       id: 'environment',
-      header: 'Environment',
-      enableSorting: false,
+      size: 152,
+      header: ({ column }) => {
+        return (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Environment
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        )
+      },
+      enableSorting: true,
       cell: (info) => {
         const env = info.getValue()
         return (
@@ -91,13 +120,27 @@ export function getClustersTableColumns(
     isVisible('cpu') &&
       columnHelper.accessor((row) => getClusterResource(row, 'cpu'), {
         id: 'cpu',
-        header: 'CPU',
-        enableSorting: false,
+        size: 124,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              CPU
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
         cell: (info) => {
           const res = info.getValue()
           return (
             <span>
-              {res.used || 0} ({res.capacity || 0} core{res.capacity && res.capacity === '1' ? '' : 's'})
+              {res.used || 0} (of {res.capacity || 0})
             </span>
           )
         },
@@ -105,13 +148,27 @@ export function getClustersTableColumns(
     isVisible('memory') &&
       columnHelper.accessor((row) => getClusterResource(row, 'memory'), {
         id: 'memory',
-        header: 'Memory',
-        enableSorting: false,
+        size: 124,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              Memory
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
         cell: (info) => {
           const res = info.getValue()
           return (
             <span>
-              {res.used} ({res.capacity})
+              {res.used || 0} (of {res.capacity || 0})
             </span>
           )
         },
@@ -119,8 +176,8 @@ export function getClustersTableColumns(
     isVisible('gpu') &&
       columnHelper.accessor((row) => getClusterResource(row, 'gpu'), {
         id: 'gpu',
-        header: 'GPU',
-        enableSorting: false,
+        size: 124,
+        header: () => <p className='text-sm'>GPU</p>,
         cell: (info) => {
           const res = info.getValue()
           return (
@@ -133,13 +190,13 @@ export function getClustersTableColumns(
     isVisible('disk') &&
       columnHelper.accessor((row) => getClusterResource(row, 'disk'), {
         id: 'disk',
-        header: 'Disk',
-        enableSorting: false,
+        size: 124,
+        header: () => <p className='text-sm'>Disk</p>,
         cell: (info) => {
           const res = info.getValue()
           return (
             <span>
-              {res.used} ({res.capacity})
+              {res.used || 0} (of {res.capacity || 0})
             </span>
           )
         },
@@ -147,57 +204,72 @@ export function getClustersTableColumns(
     isVisible('nodes') &&
       columnHelper.accessor(getNodePools, {
         id: 'nodes',
-        header: 'Num of nodes',
+        size: 160,
+        header: () => <p className='text-sm'>Num of nodes</p>,
         enableSorting: false,
         cell: (info) => {
           const nodePools = info.getValue()
           const nodeAmount = nodePools?.reduce((total, nodePool) => total + (nodePool.replicas || 0), 0) || 0
           return (
             <span>
-              {nodeAmount} ({nodePools.length} node pool{nodePools.length === 1 ? '' : 's'})
+              {nodeAmount} ({nodePools.length} pool{nodePools.length === 1 ? '' : 's'})
             </span>
           )
         },
       }),
-    isVisible('monthlyPrice') &&
+    (isVisible('monthlyPrice') || isVisible('yearlyPrice')) &&
       columnHelper.accessor(getPrices, {
         id: 'monthlyPrice',
-        header: 'Monthly price',
-        enableSorting: false,
-        cell: (info) => <span>{info.getValue().monthly} kr</span>,
-      }),
-    isVisible('yearlyPrice') &&
-      columnHelper.accessor(getPrices, {
-        id: 'yearlyPrice',
-        header: 'Yearly price',
-        enableSorting: false,
-        cell: (info) => <span>{info.getValue().yearly} kr</span>,
+        size: 196,
+        header: ({ column }) => (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Price
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        ),
+        enableSorting: true,
+        cell: (info) => {
+          const { monthly, yearly } = info.getValue()
+          return (
+            <span>
+              Monthly: {monthly} kr
+              <br />
+              Yearly: {yearly} kr
+            </span>
+          )
+        },
       }),
     isVisible('agentVersion') &&
       columnHelper.accessor(getVersions, {
         id: 'agentVersion',
-        header: 'Agent version',
-        enableSorting: false,
+        size: 156,
+        header: () => <p className='text-sm'>Agent version</p>,
         cell: (info) => <span>{info.getValue().agent.version}</span>,
       }),
     isVisible('kubernetesVersion') &&
       columnHelper.accessor(getVersions, {
         id: 'kubernetesVersion',
-        header: 'Kubernetes version',
-        enableSorting: false,
+        size: 168,
+        header: () => <p className='text-sm'>Kubernetes version</p>,
         cell: (info) => <span>{info.getValue().kubernetes.version}</span>,
       }),
     isVisible('toolingVersion') &&
       columnHelper.accessor(getVersions, {
         id: 'toolingVersion',
-        header: 'Tooling version',
-        enableSorting: false,
+        size: 156,
+        header: () => <p className='text-sm'>Tooling version</p>,
         cell: (info) => <span>{info.getValue().nhnTooling.version}</span>,
       }),
     isVisible('argocd') &&
       columnHelper.display({
         id: 'argocd',
-        header: 'ArgoCD',
+        header: () => <p className='text-sm'>ArgoCD</p>,
         cell: (info) => {
           const { argo } = getTools(info.row.original)
           return argo ? (
@@ -217,7 +289,7 @@ export function getClustersTableColumns(
     isVisible('grafana') &&
       columnHelper.display({
         id: 'grafana',
-        header: 'Grafana',
+        header: () => <p className='text-sm'>Grafana</p>,
         cell: (info) => {
           const { grafana } = getTools(info.row.original)
           return grafana ? (
@@ -237,7 +309,7 @@ export function getClustersTableColumns(
     isVisible('rorcli') &&
       columnHelper.display({
         id: 'rorcli',
-        header: 'ROR CLI',
+        header: () => <p className='text-sm'>ROR CLI</p>,
         cell: (info) => (
           <CopyButton onClick={() => copy(getRorLogin(info.row.original))}>
             <CopyIcon />
@@ -247,7 +319,7 @@ export function getClustersTableColumns(
     isVisible('kubectl') &&
       columnHelper.display({
         id: 'kubectl',
-        header: 'Kubectl',
+        header: () => <p className='text-sm'>Kubectl</p>,
         cell: (info) => (
           <CopyButton onClick={() => copy(getKubectlLogin(info.row.original, user?.email ?? ''))}>
             <CopyIcon />
@@ -257,15 +329,41 @@ export function getClustersTableColumns(
     isVisible('datacenterName') &&
       columnHelper.accessor(getDatacenter, {
         id: 'datacenterName',
-        header: 'Datacenter',
-        enableSorting: false,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              Datacenter
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
         cell: (info) => <span>{info.getValue() || 'Unknown'}</span>,
       }),
     isVisible('datacenterProvider') &&
       columnHelper.accessor(getProvider, {
         id: 'datacenterProvider',
-        header: 'Provider',
-        enableSorting: false,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              Provider
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
         cell: (info) => <span>{info.getValue() || 'Unknown'}</span>,
       }),
   ].filter(Boolean) as DataTableColumnDef<KubernetesCluster>[]

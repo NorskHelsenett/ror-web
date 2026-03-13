@@ -56,6 +56,8 @@ export type {
   VirtualMachineTeam,
   BackupJob,
   BackupRun,
+  VirtualMachineVulnerabilityInfoType,
+  CVEType,
 } from './types/entities'
 
 export { CreateApiKeyRequestSchema } from './schemas/api-key'

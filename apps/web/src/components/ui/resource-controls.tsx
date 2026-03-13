@@ -48,7 +48,7 @@ interface ResourceControlsProps<T> {
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
-  onSearchResultsChange: (results: T[]) => void
+  onSearchResultsChange?: (results: T[], searchQuery?: string) => void
   displayDataOptions: Option[]
   handleRefreshFilters: () => void
   toggleParams: string
@@ -64,6 +64,7 @@ interface ResourceControlsProps<T> {
   exportAsExcel: (items: T[], filename: string) => void
   filteredItems: T[]
   allItems: T[]
+  searchResetKey?: number
 }
 
 /**
@@ -113,11 +114,13 @@ export function ResourceControls<T>({
   exportAsExcel,
   filteredItems,
   allItems,
+  searchResetKey,
 }: ResourceControlsProps<T>) {
   return (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
         <ResourceSearch<T>
+          key={searchResetKey}
           items={safeItems}
           onResultsChange={onSearchResultsChange}
           searchText={searchText}

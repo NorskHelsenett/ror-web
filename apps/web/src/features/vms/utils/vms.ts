@@ -97,12 +97,7 @@ export const getVmOperatingSystemId = (vm: VirtualMachine): string => {
 }
 
 export const getVmHostName = (vm: VirtualMachine): string => {
-  return (
-    vm.virtualmachine?.status?.operatingSystem?.hostName ||
-    vm.metadata?.name ||
-    vm.virtualmachine?.spec?.name ||
-    'Unknown VM'
-  )
+  return vm.virtualmachine?.status?.operatingSystem?.hostName || 'Unknown VM'
 }
 
 export const getVmPowerState = (vm: VirtualMachine): string => {
@@ -110,12 +105,7 @@ export const getVmPowerState = (vm: VirtualMachine): string => {
 }
 
 export const getVmName = (vm: VirtualMachine): string => {
-  return (
-    vm.virtualmachine?.status?.operatingSystem?.name ||
-    vm.virtualmachine?.spec?.name ||
-    vm.metadata?.name ||
-    'unnamed-vm'
-  )
+  return vm.virtualmachine?.spec?.name || vm.metadata?.name || 'unnamed-vm'
 }
 
 export const getVmFamily = (vm: VirtualMachine): string => {

@@ -13,6 +13,8 @@
  * @property sort - The field by which to sort the clusters.
  * @property order - The sort direction, either 'asc' (ascending) or 'desc' (descending).
  * @property filters - A string representing applied filters.
+ * @property filterPanel - A string representing the state of the filter panel.
+ * @property search - A string representing the search query.
  */
 export interface Params {
   view?: 'grid' | 'list'
@@ -21,6 +23,8 @@ export interface Params {
   sort?: string
   order?: 'asc' | 'desc'
   filters?: string
+  filterPanel?: string
+  search?: string
 }
 
 /**
