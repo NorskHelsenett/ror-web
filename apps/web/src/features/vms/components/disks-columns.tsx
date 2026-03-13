@@ -7,10 +7,12 @@ export const disksColumns: ColumnDef<VirtualMachineDisks>[] = [
   {
     header: 'Name',
     accessorKey: 'name',
+    size: 300,
   },
   {
     header: 'Id',
     accessorKey: 'id',
+    size: 300,
   },
   {
     header: 'Size (GB)',

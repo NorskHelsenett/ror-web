@@ -57,10 +57,13 @@ export function useInfiniteLoader<T>({
   useEffect(() => {
     const nextKey = getItemsKey(initial)
     if (nextKey !== lastKeyRef.current) {
+      // Always reset — key check was preventing updates when search returned same-sized array
       lastKeyRef.current = nextKey
       setItems(initial)
-      setHasMore(true)
-      runIdRef.current++ // invalidate in-flight requests
+      setHasMore(true) // always reset to true — let loadMore determine if there's more
+      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
+      runIdRef.current++
+      inFlightRef.current = false
     }
   }, [initial, getItemsKey])
 

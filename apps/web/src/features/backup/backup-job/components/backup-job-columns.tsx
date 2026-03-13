@@ -35,6 +35,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         header: 'Name',
         enableSorting: true,
         sortingFn: 'text',
+        size: 300,
         cell: (info) => {
           const name = info.getValue()
           return React.createElement(
@@ -73,6 +74,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         header: 'ID',
         enableSorting: true,
         sortingFn: 'text',
+        size: 300,
         cell: (info) => {
           const id = info.getValue()
 
@@ -108,6 +110,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         header: 'Source',
         enableSorting: true,
         sortingFn: 'text',
+        size: 250,
         cell: (info) => {
           const source = info.getValue()
           return source
@@ -157,6 +160,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         id: 'activeTargets',
         header: 'Active targets',
         enableSorting: false,
+        size: 250,
         cell: (info) => {
           const activeTargets = info.getValue()
           const targetCount = activeTargets.length
@@ -182,6 +186,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
         id: 'backupRunIds',
         header: 'Backup run IDs',
         enableSorting: false,
+        size: 250,
         cell: (info) => {
           const backupRunIds = info.getValue()
           if (!backupRunIds || backupRunIds.length === 0) {

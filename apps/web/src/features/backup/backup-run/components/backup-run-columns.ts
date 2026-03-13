@@ -36,6 +36,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'ID',
         enableSorting: true,
         sortingFn: 'text',
+        size: 300,
         cell: (info) => {
           const id = info.getValue()
           const copyIdValue = (e?: React.MouseEvent) => {
@@ -70,6 +71,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'Source',
         enableSorting: true,
         sortingFn: 'text',
+        size: 250,
         cell: (info) => {
           const source = info.getValue()
           return source
@@ -86,6 +88,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'Start time',
         enableSorting: true,
         sortingFn: 'text',
+        size: 210,
         cell: (info) => {
           const startTime = info.getValue()
           return formatDateTime(startTime)
@@ -102,6 +105,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'End time',
         enableSorting: true,
         sortingFn: 'text',
+        size: 210,
         cell: (info) => {
           const endTime = info.getValue()
           return formatDateTime(endTime)
@@ -118,6 +122,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'Expiry time',
         enableSorting: true,
         sortingFn: 'text',
+        size: 210,
         cell: (info) => {
           const expiryTime = info.getValue()
           return formatDateTime(expiryTime)
@@ -133,6 +138,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         id: 'activeTargets',
         header: 'Active targets',
         enableSorting: false,
+        size: 250,
         cell: (info) => {
           const activeTargets = info.getValue()
           const targetCount = activeTargets.length
@@ -159,6 +165,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         header: 'Backup job ID',
         enableSorting: true,
         sortingFn: 'text',
+        size: 335,
         cell: (info) => {
           const backupJobId = info.getValue()
           const copyIdValue = (e?: React.MouseEvent) => {
