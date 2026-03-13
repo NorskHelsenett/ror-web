@@ -7,6 +7,8 @@
  * @property sort - (Optional) The field by which to sort the results.
  * @property order - The sort order, either 'asc' (ascending) or 'desc' (descending).
  * @property filters - (Optional) A string representing applied filters.
+ * @property filterPanel - (Optional) A string representing the state of the filter panel.
+ * @property search - (Optional) A string representing the search query.
  */
 export interface NormalizeParamsResult {
   view: 'grid' | 'list'
