@@ -110,5 +110,15 @@ export const createMachineService = (request: (requestOptions: RequestOptions) =
 
     return validateResponse(response, ResourceMachineResponseSchema)
   },
-  createMachine: async (machineSpec: MachineSpec) => {},
+  createMachine: async (machineSpec: MachineSpec) => {
+    const response = await request({
+      method: 'PUT',
+      path: '/v2/resources',
+      body: machineSpec,
+    })
+
+    return validateResponse(response, ResourceMachineResponseSchema)
+  },
+
+  //todo: add update and delete methods
 })

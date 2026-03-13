@@ -20,6 +20,7 @@ import { createProjectService } from '../services/projects'
 import { createVirtualMachineVulnerabilityService as createVirtualMachineVulnerabilityInfoService } from '../services/vm-vulnerability-info'
 import { createAclService } from '../services/acls'
 import { createApiKeyService } from '../services/api-keys'
+import { createMachineService } from '../services/machine'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -65,6 +66,7 @@ export function createApiClient(config: ApiClientConfig) {
     users: createUsersService(request),
     vulnerabilityReport: createVulnerabilityReportService(request),
     virtualMachine: createVirtualMachineService(request),
+    machine: createMachineService(request),
     virtualMachineVulnerabilityInfo: createVirtualMachineVulnerabilityInfoService(request),
     backupJob: createBackupJobService(request),
     backupRun: createBackupRunService(request),
