@@ -12,6 +12,7 @@ import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
+import { fetchMachines } from '@/features/machine/services/fetch-machines'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
@@ -33,22 +34,25 @@ export default async function VMPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
+  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns, fetchedMachines] = await Promise.all([
     fetchVms(api, params),
     fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
     fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
+    fetchMachines(api, params),
   ])
 
   const vms = fetchedVms.vms
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
 
+  const machines = fetchedMachines.machines
+
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} />
+      <PageView vms={vmsWithBackup} machines={machines} params={params} />
     </div>
   )
 }

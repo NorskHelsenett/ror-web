@@ -8,6 +8,7 @@ import { mockVms } from '../data/vms'
 import { mockVmVulnerabilityInfo } from '../data/vms-vulnerability-info'
 import { mockBackupJobs } from '../data/backup-job'
 import { mockBackupRuns } from '../data/backup-run'
+import { mockMachines } from '../data/machines'
 
 type Resource = (typeof clustersVersion2.resources)[number]
 type NotFound = { message: string }
@@ -73,6 +74,12 @@ export const v2ResourcesHandlers = [
         }
 
         return HttpResponse.json({ resources: filteredVMs.slice(offset, offset + limit) })
+      }
+      case 'Machine': {
+        const limit = Number(url.searchParams.get('limit') || 50)
+        const offset = Number(url.searchParams.get('offset') || 0)
+        const allMachines = mockMachines.resources
+        return HttpResponse.json({ resources: allMachines.slice(offset, offset + limit) })
       }
       case 'VirtualMachineVulnerabilityInfo': {
         let resources = mockVmVulnerabilityInfo.resources

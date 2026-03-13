@@ -64,7 +64,7 @@ import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 
 type ResourceType = 'virtualmachine' | 'machine'
 
-export const PageView = ({ className, vms, params }: PageViewProps) => {
+export const PageView = ({ className, vms, machines, params }: PageViewProps) => {
   const [resourceType, setResourceType] = useState<ResourceType>('virtualmachine')
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
@@ -339,6 +339,41 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     )
   }
 
+  const MachineView = () => (
+    <div className='flex flex-col gap-4'>
+      {machines.length === 0 ? (
+        <p className='text-muted-foreground text-sm'>No machines found.</p>
+      ) : (
+        <div className='rounded-md border'>
+          <table className='w-full text-sm'>
+            <thead>
+              <tr className='border-b bg-muted/50'>
+                <th className='px-4 py-3 text-left font-medium'>Name</th>
+                <th className='px-4 py-3 text-left font-medium'>Provider</th>
+                <th className='px-4 py-3 text-left font-medium'>Region</th>
+                <th className='px-4 py-3 text-left font-medium'>Condition type</th>
+                <th className='px-4 py-3 text-left font-medium'>CPU</th>
+                <th className='px-4 py-3 text-left font-medium'>Memory (GB)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {machines.map((machine, idx) => (
+                <tr key={machine.metadata?.name ?? idx} className='border-b last:border-0 hover:bg-muted/30'>
+                  <td className='px-4 py-3 font-mono text-xs'>{machine.metadata?.name ?? '—'}</td>
+                  <td className='px-4 py-3'>{machine.machine?.status?.provider ?? '—'}</td>
+                  <td className='px-4 py-3'>{machine.machine?.status?.region ?? '—'}</td>
+                  <td className='px-4 py-3'>{machine.machine?.status?.conditions?.[0]?.type ?? '—'}</td>
+                  <td className='px-4 py-3'>{machine.machine?.status?.cpus ?? '—'}</td>
+                  <td className='px-4 py-3'>{machine.machine?.status?.memory ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  )
+
   const renderResourceToggle = () => (
     <div className='flex items-center gap-1 rounded-md border bg-muted p-1'>
       <button
@@ -362,6 +397,9 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         )}
       >
         Machines
+        {machines.length > 0 && (
+          <span className='ml-2 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs text-primary'>{machines.length}</span>
+        )}
       </button>
     </div>
   )
@@ -377,6 +415,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
           selectedFilters={selectedFilters}
           setSelectedFilters={setSelectedFilters}
         />
+        {renderResourceToggle()}
       </div>
 
       <NotReadyMessage className='mx-12 my-6'>
@@ -384,9 +423,10 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         expect finished functionality or that all data is present. The development team is working hard on delivering a
         complete product as quick as possible :)
       </NotReadyMessage>
-      {renderResourceToggle()}
 
-      <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>
+      <section className='px-12 my-8'>
+        {resourceType === 'machine' ? <MachineView /> : params.view === 'list' ? <TableView /> : <GridView />}
+      </section>
     </div>
   )
 }
