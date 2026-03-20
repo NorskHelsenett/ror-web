@@ -20,10 +20,6 @@ const healthVisuals: Record<HealthStatus, { icon: React.ReactNode; colors: strin
     icon: <CircleCheck />,
     colors: ['bg-cyan-500', 'dark:bg-cyan-600'],
   },
-  working: {
-    icon: <CircleCheck />,
-    colors: ['bg-cyan-500', 'dark:bg-cyan-600'],
-  },
   warning: {
     icon: <TriangleAlert />,
     colors: ['bg-orange-500', 'dark:bg-orange-600'],
@@ -51,15 +47,7 @@ const healthVisuals: Record<HealthStatus, { icon: React.ReactNode; colors: strin
  */
 interface HealthCircleProps {
   className?: string
-  healthCondition:
-    | {
-        message?: string | null | undefined
-        type?: string | null | undefined
-        status?: HealthStatus | null | undefined
-        lastTransitionTime?: string | null | undefined
-        reason?: string | null | undefined
-      }
-    | undefined
+  healthCondition: string
 }
 
 /**
@@ -71,13 +59,13 @@ interface HealthCircleProps {
  * @param {string} [props.healthCondition.status] - The status of the health condition (e.g., 'healthy', 'warning', 'critical', etc.).
  */
 export const HealthCircle = ({ className, healthCondition }: HealthCircleProps) => {
-  const status = healthCondition?.status ?? 'unknown'
+  const status = (healthCondition ?? 'unknown') as HealthStatus
   const { colors, icon } = healthVisuals[status] ?? healthVisuals.unknown
 
   return (
     <div
       className={cn(
-        'flex items-center justify-center rounded-full border-[4px] border-neutral-100',
+        'flex items-center justify-center rounded-full border-4 border-neutral-100',
         'w-10 h-10',
         className
       )}

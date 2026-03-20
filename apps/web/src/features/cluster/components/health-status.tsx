@@ -9,7 +9,7 @@ import type { IconIndicatorProps } from '@ror/react/components/icon-indicator'
  * @property size - Optional size for the icon indicator, inherited from IconIndicatorProps.
  */
 interface HealthStatusProps {
-  status: number
+  status: string
   className?: string
   size?: IconIndicatorProps['size']
 }
@@ -18,23 +18,24 @@ interface HealthStatusProps {
  * Renders a health status indicator based on the provided status code.
  *
  * @param status - The health status code:
- *   - `1`: Operational
- *   - `2`: Unhealthy
- *   - `3`: Smelly
- *   - `0` or any other value: Unknown status
+ *   - `ok`: Operational
+ *   - `unhealthy`: Unhealthy
+ *   - `smelly`: Smelly
+ *   - `unknown` or any other value: Unknown status
  * @param size - The size of the indicator icon.
  * @param className - Optional CSS class for custom styling.
  * @returns A React element displaying the corresponding health status indicator.
  */
 export function HealthStatus({ status, size, className }: HealthStatusProps) {
   switch (status) {
-    case 1:
+    case 'ok':
       return <IconIndicator kind='normal' label='Operational' size={size} className={className} />
-    case 2:
+    case 'warning':
       return <IconIndicator kind='caution-minor' label='Unhealthy' size={size} className={className} />
-    case 3:
+    case 'error':
       return <IconIndicator kind='caution-major' label='Smelly' size={size} className={className} />
-    case 0:
+    case 'unknown':
+      return <IconIndicator kind='unknown' label='Unknown status' size={size} className={className} />
     default:
       return <IconIndicator kind='unknown' label='Unknown status' size={size} className={className} />
   }

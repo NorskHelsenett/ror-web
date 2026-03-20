@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
-import type { KubernetesCluster } from '@ror/js-api-client'
+import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { Layer } from '@ror/react'
 import { Dot, ExternalLink } from 'lucide-react'
 import { User } from 'next-auth'
@@ -12,20 +12,30 @@ import Link from 'next/link'
 import { CodeSnippet } from '../../../components/ui/code-snippet'
 import { ClusterCardDisplayData } from '../types/display-data'
 import {
-  getClusterName,
-  getClusterResource,
-  getClusterUid,
-  getDatacenter,
-  getEnvironment,
-  getHealthCondition,
-  getKubectlLogin,
-  getNodePools,
-  getPrices,
-  getProvider,
-  getRorLogin,
-  getRormetaTags,
-  getTools,
-  getVersions,
+  getArgocdUrlView,
+  getAZView,
+  getClusterIdView,
+  getClusterNameView,
+  getClusterUidView,
+  getCountryView,
+  getCreatedView,
+  getEnvironmentView,
+  getGrafanaUrlView,
+  getKubernetesVersionView,
+  getLastSeenView,
+  getNhnToolVersionView,
+  getNodePoolsView,
+  getNodesView,
+  getPriceMonthView,
+  getPriceYearView,
+  getProviderView,
+  getRegionView,
+  getRorAgentVersionView,
+  getRorLoginView,
+  getServiceIdView,
+  getStatusView,
+  getTagsView,
+  getWorkspaceView,
 } from '../utils/cluster'
 import { envColors, getHighDifferenceEnvironmentColors } from '../utils/env-colors'
 import { HealthCircle } from './health-circle'
@@ -57,10 +67,12 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot='card-content' className={cn('px-6', className)} {...props} />
 }
 
+const missingText = 'Missing ...'
+
 interface ClusterCardProps {
   className?: string
   user?: User
-  cluster: KubernetesCluster
+  cluster: ClusterListViewRowType
   displayData?: ClusterCardDisplayData[]
 }
 
@@ -75,32 +87,40 @@ interface ClusterCardProps {
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps) => {
-  const clusterUid = getClusterUid(cluster)
-  const clusterName = getClusterName(cluster)
-  const env = getEnvironment(cluster)
-  const tools = getTools(cluster)
-  const cpu = getClusterResource(cluster, 'cpu')
-  const memory = getClusterResource(cluster, 'memory')
-  const gpu = getClusterResource(cluster, 'gpu')
-  const disk = getClusterResource(cluster, 'disk')
-  const nodePools = getNodePools(cluster)
-  const nodePoolsAmount = nodePools?.length || 0
-  const nodesAmount = nodePools?.reduce((total, nodePool) => total + (nodePool.replicas || 0), 0) || 0
-  const prices = getPrices(cluster)
-  const healthCondition = getHealthCondition(cluster)
-  const versions = getVersions(cluster)
-  const datacenter = getDatacenter(cluster)
-  const rorLogin = getRorLogin(cluster)
-  const kubectlLogin = getKubectlLogin(cluster, user?.email || '<user-email missing>')
-  const serviceTags = getRormetaTags(cluster)
+  // const clusterUid = getClusterUid(cluster)
+  const clusterName = getClusterNameView(cluster) || missingText
+  const env = getEnvironmentView(cluster) || missingText
+  const argocdUrl = getArgocdUrlView(cluster)
+  const grafanaUrl = getGrafanaUrlView(cluster)
+  // const cpu = getClusterResource(cluster, 'cpu')
+  // const memory = getClusterResource(cluster, 'memory')
+  // const gpu = getClusterResource(cluster, 'gpu')
+  // const disk = getClusterResource(cluster, 'disk')
+  const nodePools = getNodePoolsView(cluster) || 0
+  const nodesAmount = getNodesView(cluster)
+  const monthlyPrices = getPriceMonthView(cluster)
+  const yearlyPrices = getPriceYearView(cluster)
+  const healthCondition = getStatusView(cluster)
+  const rorAgentVersion = getRorAgentVersionView(cluster) || missingText
+  const kubernetesVersion = getKubernetesVersionView(cluster) || missingText
+  const nhnToolingVersion = getNhnToolVersionView(cluster) || missingText
+  // const datacenter = getDatacenter(cluster)
+  const rorLogin = getRorLoginView(cluster)
+  // const kubectlLogin = getKubectlLogin(cluster, user?.email || '<user-email missing>')
+  const serviceId = getServiceIdView(cluster) || missingText
+  const serviceTags = getTagsView(cluster) || []
   const envColor = getHighDifferenceEnvironmentColors(env as Environment)
-  const provider = getProvider(cluster)
+  const provider = getProviderView(cluster) || missingText
+  const az = getAZView(cluster) || missingText
+  const region = getRegionView(cluster) || missingText
+  const country = getCountryView(cluster) || missingText
+  const workspace = getWorkspaceView(cluster) || missingText
 
   const Argo = () => {
-    return tools.argo ? (
+    return argocdUrl ? (
       <a
         onClick={(e) => e.stopPropagation()}
-        href={`https://${tools.argo}`}
+        href={`https://${argocdUrl}`}
         target='_blank'
         rel='noopener noreferrer'
         className='flex gap-2 font-bold text-blue-500 w-fit'
@@ -117,10 +137,10 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
   }
 
   const Grafana = () => {
-    return tools.grafana ? (
+    return grafanaUrl ? (
       <a
         onClick={(e) => e.stopPropagation()}
-        href={`https://${tools.grafana}`}
+        href={`https://${grafanaUrl}`}
         target='_blank'
         rel='noopener noreferrer'
         className='flex gap-2 font-bold text-blue-500 w-fit'
@@ -156,56 +176,47 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
             </Layer>
           </div>
         )}
-
-        {displayData?.includes('kubectl') && (
-          <div>
-            <p className='font-bold'>Kubectl</p>
-            <Layer level={2}>
-              <CodeSnippet type='single'>{kubectlLogin}</CodeSnippet>
-            </Layer>
-          </div>
-        )}
       </section>
     )
   }
 
-  const resourceFields = [
-    { key: 'cpu', label: 'CPU', resource: cpu },
-    { key: 'memory', label: 'Memory', resource: memory },
-    { key: 'gpu', label: 'GPU', resource: gpu },
-    { key: 'disk', label: 'Disk', resource: disk },
-  ]
+  // const resourceFields = [
+  //   { key: 'cpu', label: 'CPU', resource: cpu },
+  //   { key: 'memory', label: 'Memory', resource: memory },
+  //   { key: 'gpu', label: 'GPU', resource: gpu },
+  //   { key: 'disk', label: 'Disk', resource: disk },
+  // ]
 
-  const ResourceCard = ({
-    label,
-    resource,
-  }: {
-    label: string
-    resource: { capacity?: string; used?: string; percentage?: number | null }
-  }) => {
-    const barColor = negativeColors(resource.percentage ?? 0).join(' ')
+  // const ResourceCard = ({
+  //   label,
+  //   resource,
+  // }: {
+  //   label: string
+  //   resource: { capacity?: string; used?: string; percentage?: number | null }
+  // }) => {
+  //   const barColor = negativeColors(resource.percentage ?? 0).join(' ')
 
-    return (
-      <div>
-        <p className='font-bold'>{label}</p>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className='flex items-center'>
-              <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1' />
-              <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
-                {resource.percentage == null ? '—' : `${resource.percentage}%`}
-              </span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Used: {resource.used ? resource.used : 'data missing'}</p>
-            <p>Capacity: {resource.capacity ? resource.capacity : 'data missing'}</p>
-            <p>Percentage: {resource.percentage ? resource.percentage + '%' : 'data missing'}</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    )
-  }
+  //   return (
+  //     <div>
+  //       <p className='font-bold'>{label}</p>
+  //       <Tooltip>
+  //         <TooltipTrigger asChild>
+  //           <div className='flex items-center'>
+  //             <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1' />
+  //             <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
+  //               {resource.percentage == null ? '—' : `${resource.percentage}%`}
+  //             </span>
+  //           </div>
+  //         </TooltipTrigger>
+  //         <TooltipContent>
+  //           <p>Used: {resource.used ? resource.used : 'data missing'}</p>
+  //           <p>Capacity: {resource.capacity ? resource.capacity : 'data missing'}</p>
+  //           <p>Percentage: {resource.percentage ? resource.percentage + '%' : 'data missing'}</p>
+  //         </TooltipContent>
+  //       </Tooltip>
+  //     </div>
+  //   )
+  // }
 
   const Info = ({ label, value }: { label: string; value: string | number }) => {
     return (
@@ -221,13 +232,13 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
       <div>
         <p className='font-bold'>Service tags</p>
         <p className='flex flex-wrap gap-1'>
-          {serviceTags.map(
+          {/* {serviceTags.map(
             ({ key, value, properties }: { key: string; value: string; properties: Record<string, string> }) => (
               <Pill key={key} style={{ backgroundColor: properties.color }}>
                 {value}
               </Pill>
             )
-          )}
+          )} */}
         </p>
       </div>
     ) : null
@@ -239,9 +250,9 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
     basicItems.push(<span key='provider'>{provider}</span>)
   }
 
-  if (displayData?.includes('datacenterName') && datacenter) {
-    basicItems.push(<span key='datacenter'>{datacenter}</span>)
-  }
+  // if (displayData?.includes('datacenterName') && datacenter) {
+  //   basicItems.push(<span key='datacenter'>{datacenter}</span>)
+  // }
 
   if (displayData?.includes('environment')) {
     basicItems.push(
@@ -251,9 +262,11 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
     )
   }
 
+  basicItems.push(<span key='az'>{az}</span>)
+
   return (
     <Link
-      href={routes.app.cluster.getHref(clusterUid)}
+      href={routes.app.cluster.getHref(getClusterUidView(cluster))}
       onClick={() => localStorage.setItem('selectedCluster', JSON.stringify(cluster))}
     >
       <Card
@@ -285,17 +298,17 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
           <hr />
 
           <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-            {resourceFields.map(
+            {/* {resourceFields.map(
               ({ key, label, resource }) =>
                 displayData?.includes(key as ClusterCardDisplayData) && (
                   <ResourceCard key={key} label={label} resource={resource} />
                 )
-            )}
+            )} */}
             {displayData?.includes('nodes') && (
-              <Info label='Nodes' value={`${nodesAmount} (${nodePoolsAmount} pool${nodePoolsAmount > 1 ? 's' : ''})`} />
+              <Info label='Nodes' value={`${nodesAmount} (${nodePools} pool${nodePools !== 1 ? 's' : ''})`} />
             )}
-            {displayData?.includes('monthlyPrice') && <Info label='Monthly price' value={`${prices.monthly} kr`} />}
-            {displayData?.includes('yearlyPrice') && <Info label='Yearly price' value={`${prices.yearly} kr`} />}
+            {displayData?.includes('monthlyPrice') && <Info label='Monthly price' value={`${monthlyPrices} kr`} />}
+            {displayData?.includes('yearlyPrice') && <Info label='Yearly price' value={`${yearlyPrices} kr`} />}
           </section>
 
           <hr />
@@ -308,18 +321,27 @@ const ClusterCard = ({ className, user, cluster, displayData }: ClusterCardProps
           <hr />
 
           <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-            {displayData?.includes('agentVersion') && <Info label='ROR agent version' value={versions.agent.version} />}
+            {displayData?.includes('agentVersion') && <Info label='ROR agent version' value={rorAgentVersion} />}
             {displayData?.includes('kubernetesVersion') && (
-              <Info label='Kubernetes version' value={versions.kubernetes.version} />
+              <Info label='Kubernetes version' value={kubernetesVersion} />
             )}
-            {displayData?.includes('toolingVersion') && (
-              <Info label='NHN tooling version' value={versions.nhnTooling.version} />
-            )}
+            {displayData?.includes('toolingVersion') && <Info label='NHN tooling version' value={nhnToolingVersion} />}
           </section>
 
           <hr />
 
+          <div className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
+            <Info label='Service ID' value={serviceId} />
+          </div>
           <ServiceTags />
+
+          <hr />
+
+          <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
+            <Info label='Region' value={region} />
+            <Info label='Country' value={country} />
+            <Info label='Workspace' value={workspace} />
+          </section>
         </CardContent>
       </Card>
     </Link>

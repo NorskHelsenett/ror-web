@@ -5,7 +5,19 @@
  */
 
 import { exportAsCSV, exportAsExcel } from '@/utils/export-utils'
-import type { KubernetesCluster } from '@ror/js-api-client'
+import type { ClusterListViewRowType } from '@ror/js-api-client'
+import {
+  getClusterIdView,
+  getClusterNameView,
+  getEnvironmentView,
+  getKubernetesVersionView,
+  getNodePoolsView,
+  getPriceMonthView,
+  getPriceYearView,
+  getProviderView,
+  getRorAgentVersionView,
+  getServiceIdView,
+} from './cluster'
 
 /**
  * Extracts and formats exportable information from a KubernetesCluster object.
@@ -14,70 +26,44 @@ import type { KubernetesCluster } from '@ror/js-api-client'
  * @returns An object with selected cluster properties including IDs, names, resource percentages,
  *          pricing, versions, node pool count, and service tags.
  */
-const exportableFromCluster = (c: KubernetesCluster) => {
-  const spec = c.kubernetescluster?.spec
-  const data = spec?.data ?? {}
-  const workers = spec?.topology?.workers?.nodePools ?? []
-
-  const state = c.kubernetescluster?.status?.state ?? {}
-  const cluster = state.cluster ?? {}
-  const resources = cluster.resources ?? {}
-  const price = cluster.price ?? {}
-  const versions = state.versions ?? []
-
-  const versionByName = (name: string) =>
-    (versions as { name?: string | null; version?: string | null }[]).find((v) => v?.name === name)?.version ?? null
-  const tagsArr = (c as unknown as { rormeta?: { tags?: { key?: string; value?: string }[] } }).rormeta?.tags ?? []
-
-  const serviceTags = Array.isArray(tagsArr)
-    ? tagsArr
-        .map((t) => t?.value ?? t?.key ?? '')
-        .filter(Boolean)
-        .join(' ')
-    : ''
-
-  const nodePoolCount =
-    Array.isArray(workers) && workers.length > 0
-      ? workers.length
-      : Array.isArray(cluster.nodepools)
-        ? cluster.nodepools.length
-        : null
-
+const exportableFromCluster = (cluster: ClusterListViewRowType) => {
   return {
-    clusterId: data.clusterId ?? '',
-    clusterName: c.metadata?.name ?? '',
-    datacenter: data.datacenter ?? '',
-    provider: data.provider ?? '',
-    environment: data.environment ?? '',
-    nodePoolCount,
-    cpu: resources?.cpu?.percentage ?? null,
-    memory: resources?.memory?.percentage ?? null,
-    gpu: resources?.gpu?.percentage ?? null,
-    disk: resources?.disk?.percentage ?? null,
-    monthlyPrice: price?.monthly ?? null,
-    yearlyPrice: price?.yearly ?? null,
-    kubernetesVersion: versionByName('kubernetes'),
-    agentVersion: versionByName('agent'),
-    serviceTags,
+    clusterId: getClusterIdView(cluster),
+    clusterName: getClusterNameView(cluster),
+    provider: getProviderView(cluster),
+    environment: getEnvironmentView(cluster),
+    nodePoolCount: getNodePoolsView(cluster),
+    // TODO: Set up resources
+    // cpu: resources?.cpu?.percentage ?? null,
+    // memory: resources?.memory?.percentage ?? null,
+    // gpu: resources?.gpu?.percentage ?? null,
+    // disk: resources?.disk?.percentage ?? null,
+    monthlyPrice: getPriceMonthView(cluster),
+    yearlyPrice: getPriceYearView(cluster),
+    kubernetesVersion: getKubernetesVersionView(cluster),
+    agentVersion: getRorAgentVersionView(cluster),
+    serviceId: getServiceIdView(cluster),
+    // TODO: Fix tags
+    // serviceTags: getTagsView(cluster)
   }
 }
 
 /**
  * Exports an array of Kubernetes clusters as a CSV file.
  *
- * @param clusters - The list of KubernetesCluster objects to export.
+ * @param clusters - The list of ClusterListViewRowType objects to export.
  * @param filename - The desired name for the exported CSV file.
  * @returns A promise or result from the exportAsCSV function, which handles the CSV generation and download.
  */
-export const exportClustersAsCSV = (clusters: KubernetesCluster[], filename: string) =>
+export const exportClustersAsCSV = (clusters: ClusterListViewRowType[], filename: string) =>
   exportAsCSV(clusters, filename, exportableFromCluster)
 
 /**
  * Exports an array of Kubernetes clusters as an Excel file.
  *
- * @param clusters - The list of KubernetesCluster objects to export.
+ * @param clusters - The list of ClusterListViewRowType objects to export.
  * @param filename - The desired name for the exported Excel file.
  * @returns A promise or result from the exportAsExcel function, representing the export operation.
  */
-export const exportClustersAsExcel = (clusters: KubernetesCluster[], filename: string) =>
+export const exportClustersAsExcel = (clusters: ClusterListViewRowType[], filename: string) =>
   exportAsExcel(clusters, filename, exportableFromCluster, 'Clusters')

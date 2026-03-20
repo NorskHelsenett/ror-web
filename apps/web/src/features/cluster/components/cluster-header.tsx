@@ -11,7 +11,7 @@ import { HealthCircle } from './health-circle'
 import { navigationItemObject } from '@/app/(protected)/clusters/[id]/layout'
 import { useClusterContext } from '@/context/cluster-context'
 import { getEnvironmentColors } from '../utils/env-colors'
-import { getClusterName, getEnvironment, getHealthCondition } from '../utils/cluster'
+import { getClusterName, getEnvironment, getHealthCondition, getStatusView } from '../utils/cluster'
 import { ResourceHeader } from '@/components/ui/resource-header'
 
 interface ClusterHeaderProps {
@@ -29,7 +29,7 @@ export const ClusterHeader = ({ className, tabs }: ClusterHeaderProps) => {
   const { cluster } = useClusterContext()
   const environment = getEnvironment(cluster)
   const [lightmode, darkmode] = getEnvironmentColors(environment)
-  const healthCondition = getHealthCondition(cluster)
+  const healthCondition = getStatusView(cluster)
   const clusterName = getClusterName(cluster)
 
   const rightContent = (
@@ -43,9 +43,7 @@ export const ClusterHeader = ({ className, tabs }: ClusterHeaderProps) => {
         <p className='text-lg flex'>
           <span className='hidden xl:block'>Status:&nbsp;</span>
           <span className='hidden md:block'>
-            {healthCondition?.status
-              ? healthCondition.status.charAt(0).toUpperCase() + healthCondition.status.slice(1)
-              : 'Unknown'}
+            {healthCondition ? healthCondition.charAt(0).toUpperCase() + healthCondition.slice(1) : 'Unknown'}
           </span>
         </p>
       </div>
