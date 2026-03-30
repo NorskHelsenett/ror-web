@@ -197,7 +197,7 @@ export function ResourceControls<T>({
         )}
 
         {domain === 'vms' && (
-          <Link href={`/vms/new-vm`}>
+          <Link href={`/vms/new-machine`}>
             <Button>
               <Plus />
               Create VM

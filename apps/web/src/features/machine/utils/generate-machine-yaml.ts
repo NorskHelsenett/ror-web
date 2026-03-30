@@ -1,58 +1,47 @@
-import type { CreateVmForm } from '../types/create-vm'
+import type { CreateMachineForm } from '../types/create-machine'
 import { convertToVitiMachineClass, renderTagsYaml } from '@/features/cluster/config/create-cluster-helpers'
 
 const s = (v: unknown) => (v == null ? '' : String(v))
 
-export function buildVmYaml(v: CreateVmForm) {
+export const buildMachineYaml = (v: CreateMachineForm) => {
   const name = s(v.name)
-  const project = s(v.project)
-  const workspace = s(v.workspace)
-  const region = s(v.region)
-  const serviceId = s(v.serviceId)
+  const machineClass = s(v.machineClass)
+  const machineType = s(v.machineType)
   const size = s(v.size)
-  const image = s(v.image)
-  const extensions = v.extensions ?? {}
-  const securityBaseline = v.securityBaseline ?? {}
-  const osConfig = v.osConfig ?? {}
   const tags = v.tags ?? {}
   const tagsArray = Object.entries(tags).map(([key, value]) => ({ key, value }))
 
-  // Convert extensions, securityBaseline, and osConfig to arrays for YAML output
-  const extensionsList = Object.keys(extensions)
-  const securityBaselineList = Object.keys(securityBaseline)
-  const osConfigList = Object.keys(osConfig)
-
   const smallTemplate = `resources:
-        cpu:
-            cores: ${1}
-            threads: ${1}
-            sockets: ${1}
-        memory: 
-            size: "2Gi"
+    cpu:
+        cores: ${1}
+        threads: ${1}
+        sockets: ${1}
+    memory: 
+        size: "2Gi"
     disks:
     - name: "root"
         size: "20Gi"
         storageClass: "default"`
 
   const mediumTemplate = `resources:
-        cpu:
-            cores: ${2}
-            threads: ${1}
-            sockets: ${1}
-        memory:
-            size: "4Gi"
+    cpu:
+        cores: ${2}
+        threads: ${1}
+        sockets: ${1}
+    memory:
+        size: "4Gi"
     disks:
     - name: "root"
         size: "40Gi"
         storageClass: "default"`
 
   const largeTemplate = `resources:
-        cpu:
-            cores: ${4}
-            threads: ${1}
-            sockets: ${1}
-        memory:
-            size: "8Gi"
+    cpu:
+        cores: ${4}
+        threads: ${1}
+        sockets: ${1}
+    memory:
+        size: "8Gi"
     disks:
     - name: "root"
         size: "80Gi"
@@ -62,17 +51,13 @@ export function buildVmYaml(v: CreateVmForm) {
     apiVersion: vitistack.io/v1alpha1
     kind: Machine
     metadata:
-    name: ${name}
-    namespace: ${workspace}
-    ${renderTagsYaml(tagsArray)}
-    labels:
-        cluster.vitistack.io/cluster-name: ${project}
-        vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
-        vitistack.io/service-id: ${serviceId} 
-        vitistack.io/region: ${region}
+        name: ${name}
+        namespace: 'workspace
+        labels:
+            cluster.vitistack.io/cluster-name: 'CLusterName'
+            vitistack.io/machine-template: ${convertToVitiMachineClass(size)}
     spec:
         template: ${size}
-
         ${size === 'small' ? smallTemplate : size === 'medium' ? mediumTemplate : size === 'large' ? largeTemplate : ''}
             accessMode: "ReadWriteOnce"
             volumeMode: "Filesystem"
@@ -93,7 +78,7 @@ export function buildVmYaml(v: CreateVmForm) {
 
         domain:
             machine:
-                type: "${image === 'windows9Server64Guest' ? 'pc-q35' : 'pc-i440fx'}"
+                type: "pc-i440fx"
             features:
                 acpi: true
                 apic: true
@@ -102,6 +87,7 @@ export function buildVmYaml(v: CreateVmForm) {
             bootloader:
                 efi: true
                 secureBoot: false
+        ${renderTagsYaml(tagsArray)}
 
     status:
         phase: "Succeeded"

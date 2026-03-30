@@ -27,9 +27,9 @@ export function CodeSnippet({ type, hideCopyButton = false, className = '', styl
   }
 
   // Tailwind classes for styling
-  const base = 'text-sm font-mono bg-[var(--r-layer)] h-[40px] scrollbar-hide rounded px-2 py-1 text-[10px] rounded-lg'
-  const inlineClass = 'inline overflow-auto'
-  const blockClass = 'w-full overflow-auto'
+  const base = 'text-sm font-mono bg-[var(--r-layer)] scrollbar-hide rounded px-2 py-1 text-[10px] rounded-lg'
+  const inlineClass = 'inline overflow-auto h-[40px]'
+  const blockClass = 'w-full overflow-auto min-h-[20rem] max-h-[var(--code-snippet-multi-max-height,60rem)]'
   const wrapperClass = 'relative'
 
   if (type === 'inline') {

@@ -53,21 +53,86 @@ import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useFilters } from '@/hooks/use-filters'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
+import { Badge } from '@/components/shadcn/badge'
 import { DataTable } from '@/components/ui/data-table'
 import { getVMTableColumns } from '@/features/vms/components/vm-columns'
-import type { VirtualMachine } from '@ror/js-api-client'
+import type { Machine, VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
+import { getMockCreatedMachines, mergeMockCreatedMachines } from '@/features/machine/services/mock-machine-storage'
 
 type ResourceType = 'virtualmachine' | 'machine'
 
+const formatMachineMemory = (memory?: number | null) => {
+  if (typeof memory !== 'number' || Number.isNaN(memory) || memory <= 0) return '—'
+
+  if (memory >= 1024 * 1024) {
+    return `${(memory / 1024 / 1024 / 1024).toFixed(1)} GiB`
+  }
+
+  return `${(memory / 1024).toFixed(1)} GiB`
+}
+
+const formatMachineCpu = (machine: Machine) => {
+  const cpu = machine.machine?.spec?.cpu
+  const cpuCount = machine.machine?.status?.cpus ?? cpu?.cores
+
+  if (!cpuCount) return '—'
+
+  const topology = [cpu?.sockets, cpu?.cores, cpu?.threadsPerCore].every((value) => typeof value === 'number')
+    ? `${cpu?.sockets}S/${cpu?.cores}C/${cpu?.threadsPerCore}T`
+    : null
+
+  return topology ? `${cpuCount} vCPU • ${topology}` : `${cpuCount} vCPU`
+}
+
+const formatMachineStorage = (machine: Machine) => {
+  const disks = machine.machine?.spec?.disks ?? []
+
+  if (disks.length === 0) return '—'
+
+  const totalDiskSize = disks.reduce((sum, disk) => sum + (disk.sizeGB ?? 0), 0)
+  return `${totalDiskSize} GB across ${disks.length} disk${disks.length === 1 ? '' : 's'}`
+}
+
+const MachineStatusBadge = ({ value }: { value?: string | null }) => {
+  const label = value ?? 'Unknown'
+  const v = label.toLowerCase()
+
+  if (v === 'running' || v === 'ready' || v === 'true') {
+    return (
+      <Badge className='border-green-200 bg-green-100 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200'>
+        {label}
+      </Badge>
+    )
+  }
+  if (v === 'provisioning' || v === 'creating' || v === 'pending') {
+    return (
+      <Badge className='border-amber-200 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200'>
+        {label}
+      </Badge>
+    )
+  }
+  if (v === 'stopped' || v === 'false' || v === 'failed') {
+    return (
+      <Badge className='border-red-300 bg-red-100 text-red-700 dark:border-red-700 dark:bg-red-950 dark:text-red-300'>
+        {label}
+      </Badge>
+    )
+  }
+  return <Badge variant='outline'>{label}</Badge>
+}
+
 export const PageView = ({ className, vms, machines, params }: PageViewProps) => {
-  const [resourceType, setResourceType] = useState<ResourceType>('virtualmachine')
   const searchParams = useSearchParams()
+  const [resourceType, setResourceType] = useState<ResourceType>(
+    searchParams.get('resource') === 'machine' ? 'machine' : 'virtualmachine'
+  )
   const isCreating = searchParams.get('creating-vm') === 'true'
+  const [createdMachines, setCreatedMachines] = useState<Machine[]>([])
   const [showCreatingBanner, setShowCreatingBanner] = useState(isCreating)
   const [dots, setDots] = useState('.')
 
@@ -80,6 +145,17 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
     }, 500)
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const syncCreatedMachines = () => {
+      setCreatedMachines(getMockCreatedMachines())
+    }
+
+    syncCreatedMachines()
+    window.addEventListener('storage', syncCreatedMachines)
+
+    return () => window.removeEventListener('storage', syncCreatedMachines)
   }, [])
 
   const filtersOpen = params.filterPanel === 'open'
@@ -238,6 +314,11 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
   const toggleSortParams = useMemo(() => buildSortParams(params, 'vms'), [params])
 
   const displayedItems = sortedItems
+  const displayedMachines = useMemo(
+    () => mergeMockCreatedMachines(machines, createdMachines),
+    [machines, createdMachines]
+  )
+  const creatingResourceLabel = searchParams.get('resource') === 'machine' ? 'Machine' : 'VM'
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -367,34 +448,124 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
 
   const MachineView = () => (
     <div className='flex flex-col gap-4'>
-      {machines.length === 0 ? (
+      {displayedMachines.length === 0 ? (
         <p className='text-muted-foreground text-sm'>No machines found.</p>
       ) : (
-        <div className='rounded-md border'>
-          <table className='w-full text-sm'>
-            <thead>
-              <tr className='border-b bg-muted/50'>
-                <th className='px-4 py-3 text-left font-medium'>Name</th>
-                <th className='px-4 py-3 text-left font-medium'>Provider</th>
-                <th className='px-4 py-3 text-left font-medium'>Region</th>
-                <th className='px-4 py-3 text-left font-medium'>Condition type</th>
-                <th className='px-4 py-3 text-left font-medium'>CPU</th>
-                <th className='px-4 py-3 text-left font-medium'>Memory (GB)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {machines.map((machine, idx) => (
-                <tr key={machine.metadata?.name ?? idx} className='border-b last:border-0 hover:bg-muted/30'>
-                  <td className='px-4 py-3 font-mono text-xs'>{machine.metadata?.name ?? '—'}</td>
-                  <td className='px-4 py-3'>{machine.machine?.status?.provider ?? '—'}</td>
-                  <td className='px-4 py-3'>{machine.machine?.status?.region ?? '—'}</td>
-                  <td className='px-4 py-3'>{machine.machine?.status?.conditions?.[0]?.type ?? '—'}</td>
-                  <td className='px-4 py-3'>{machine.machine?.status?.cpus ?? '—'}</td>
-                  <td className='px-4 py-3'>{machine.machine?.status?.memory ?? '—'}</td>
+        <div className='overflow-hidden rounded-xl border bg-background shadow-sm'>
+          <div className='border-b bg-muted/30 px-5 py-4'></div>
+          <div className='overflow-x-auto'>
+            <table className='w-full min-w-[1100px] text-sm'>
+              <thead>
+                <tr className='border-b bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground'>
+                  <th className='px-5 py-3 text-left font-semibold'>Machine</th>
+                  <th className='px-4 py-3 text-left font-semibold'>Status</th>
+                  <th className='px-4 py-3 text-left font-semibold'>Compute</th>
+                  <th className='px-4 py-3 text-left font-semibold'>Location</th>
+                  <th className='px-4 py-3 text-left font-semibold'>Network</th>
+                  <th className='px-5 py-3 text-left font-semibold'>Metadata</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {displayedMachines.map((machine, idx) => (
+                  <tr
+                    key={machine.metadata?.uid ?? machine.metadata?.name ?? idx}
+                    className={cn(
+                      'border-b align-top transition-colors',
+                      machine.metadata?.namespace === 'mock-machines' && 'bg-primary/5'
+                    )}
+                  >
+                    <td className='px-5 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <div className='flex items-center gap-2'>
+                          <span className='font-mono text-xs text-foreground'>{machine.metadata?.name ?? '—'}</span>
+                          {machine.metadata?.namespace === 'mock-machines' && (
+                            <Badge className='border-blue-200 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-200'>
+                              New
+                            </Badge>
+                          )}
+                        </div>
+                        <div className='text-sm font-medium text-foreground'>
+                          {machine.machine?.spec?.machineClass ?? '—'} / {machine.machine?.spec?.machineType ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Namespace: {machine.metadata?.namespace ?? '—'}
+                        </div>
+                      </div>
+                    </td>
+                    <td className='px-4 py-4'>
+                      <div className='flex flex-col gap-2'>
+                        <div className='flex flex-wrap gap-2'>
+                          <MachineStatusBadge value={machine.machine?.status?.phase} />
+                          <MachineStatusBadge value={machine.machine?.status?.state} />
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Condition: {machine.machine?.status?.conditions?.[0]?.type ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          {machine.machine?.status?.message ?? 'No status message'}
+                        </div>
+                      </div>
+                    </td>
+                    <td className='px-4 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <div className='font-medium text-foreground'>{formatMachineCpu(machine)}</div>
+                        <div className='text-xs text-muted-foreground'>
+                          Memory:{' '}
+                          {formatMachineMemory(machine.machine?.status?.memory ?? machine.machine?.spec?.memory)}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>Storage: {formatMachineStorage(machine)}</div>
+                      </div>
+                    </td>
+                    <td className='px-4 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <div className='font-medium text-foreground'>
+                          {machine.machine?.status?.provider ?? machine.machine?.spec?.provider ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          {machine.machine?.status?.region ?? machine.machine?.spec?.providerConfig?.region ?? '—'}
+                          {' / '}
+                          {machine.machine?.status?.zone ?? machine.machine?.spec?.providerConfig?.zone ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Host: {machine.machine?.status?.hostname ?? '—'}
+                        </div>
+                      </div>
+                    </td>
+                    <td className='px-4 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <div className='font-medium text-foreground'>
+                          {machine.machine?.spec?.network?.vpc ?? '—'} / {machine.machine?.spec?.network?.subnet ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Private IP:{' '}
+                          {machine.machine?.spec?.network?.privateIP ||
+                            machine.machine?.status?.privateIPAddresses?.[0] ||
+                            '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Public IP:{' '}
+                          {machine.machine?.spec?.network?.publicIP ||
+                            machine.machine?.status?.publicIPAddresses?.[0] ||
+                            '—'}
+                        </div>
+                      </div>
+                    </td>
+                    <td className='px-5 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <div className='text-xs text-muted-foreground'>UID: {machine.metadata?.uid ?? '—'}</div>
+                        <div className='text-xs text-muted-foreground'>
+                          Owner: {machine.rormeta?.ownerref?.subject ?? '—'}
+                        </div>
+                        <div className='text-xs text-muted-foreground'>
+                          Backup: {machine.machine?.spec?.backup?.enabled ? 'Enabled' : 'Disabled'}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -423,8 +594,10 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
         )}
       >
         Machines
-        {machines.length > 0 && (
-          <span className='ml-2 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs text-primary'>{machines.length}</span>
+        {displayedMachines.length > 0 && (
+          <span className='ml-2 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs text-primary'>
+            {displayedMachines.length}
+          </span>
         )}
       </button>
     </div>
@@ -446,7 +619,7 @@ export const PageView = ({ className, vms, machines, params }: PageViewProps) =>
 
       {showCreatingBanner && (
         <div className='mx-12 my-6 border-3 rounded-md bg-blue-400 dark:bg-blue-500 border-blue-600 dark:border-blue-700 text-black px-4 py-2'>
-          VM is being created {dots}
+          {creatingResourceLabel} is being created {dots}
         </div>
       )}
 
