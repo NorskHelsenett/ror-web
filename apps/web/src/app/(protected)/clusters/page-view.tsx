@@ -40,6 +40,7 @@ import {
   getClustersKey,
   getClustersViewKey,
   getDatacenter,
+  getDatacenterView,
   getEnvironment,
   getEnvironmentView,
   getNodesView,
@@ -47,6 +48,8 @@ import {
   getPriceYearView,
   getProvider,
   getProviderView,
+  getResourcesCpuView,
+  getResourcesMemoryView,
   getWorkspaceView,
 } from '@/features/cluster/utils/cluster'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
@@ -123,21 +126,21 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
   // Cluster filters, display data and search result
   const filterDefinitions = [
     { key: 'Environments', extractor: getEnvironmentView },
-    // { key: 'Datacenters', extractor: getDatacenter },
+    { key: 'Datacenters', extractor: getDatacenterView },
     { key: 'Workspaces', extractor: getWorkspaceView },
   ]
 
   const definitions: SortDefinition<ClusterListViewRowType>[] = [
     { key: 'clusterName', extractor: getClusterNameView },
-    // { key: 'cpu', extractor: (c) => getClusterResource(c, 'cpu').percentage },
-    // { key: 'memory', extractor: (c) => getClusterResource(c, 'memory').percentage },
+    { key: 'cpu', extractor: getResourcesCpuView },
+    { key: 'memory', extractor: getResourcesMemoryView },
     {
       key: 'nodes',
       extractor: getNodesView,
     },
     { key: 'monthlyPrice', extractor: getPriceMonthView },
     { key: 'yearlyPrice', extractor: getPriceYearView },
-    // { key: 'datacenterName', extractor: (c) => getDatacenter(c) },
+    { key: 'datacenterName', extractor: getDatacenterView },
     { key: 'datacenterProvider', extractor: getProviderView },
     { key: 'environment', extractor: getEnvironmentView },
   ]
