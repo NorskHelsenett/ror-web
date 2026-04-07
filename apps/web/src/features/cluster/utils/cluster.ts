@@ -410,10 +410,10 @@ export const getResourcesMemoryUsedView = (cluster: ClusterListViewRowType): str
   (cluster.resourcesMemoryUsed?.fieldValue || '') + (cluster.resourcesMemoryUsed?.fieldUnit || '')
 
 export const getResourcesCpuUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.resourcesCpuUsedPercent?.fieldValue
+  cluster.resourcesCpuUsedPercent?.fieldValue || undefined
 
 export const getResourcesMemoryUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.resourcesMemoryUsedPercent?.fieldValue
+  cluster.resourcesMemoryUsedPercent?.fieldValue || undefined
 
 export const getResourcesCpuUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
   (cluster.resourcesCpuUsedPercent?.fieldValue || '') + (cluster.resourcesCpuUsedPercent?.fieldUnit || '')

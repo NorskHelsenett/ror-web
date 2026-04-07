@@ -59,7 +59,7 @@ export const ClusterListViewRow = z
     resourcesCpuUsedMilli: ClusterListViewElementNumberFieldUnit.nullish(),
     resourcesMemoryUsed: ClusterListViewElementStringFieldUnit.nullish(),
     resourcesCpuUsedPercent: ClusterListViewElementNumberFieldUnit.nullish(),
-    recourcesMemoryUsedPercent: ClusterListViewElementNumberFieldUnit.nullish(),
+    resourcesMemoryUsedPercent: ClusterListViewElementNumberFieldUnit.nullish(),
     nodes: ClusterListViewElementNumber.nullish(),
     nodePools: ClusterListViewElementNumber.nullish(),
     priceMonth: ClusterListViewElementNumber.nullish(),
