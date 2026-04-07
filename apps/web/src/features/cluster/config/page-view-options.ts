@@ -77,11 +77,15 @@ export const environments: Option[] = environmentValues.map((env) => ({
  * Each option contains a `value` representing the datacenter identifier and a `label` for display purposes.
  */
 export const datacenters: Option[] = [
-  { value: 'trd1-tanzu', label: 'trd1 - tanzu' },
-  { value: 'osl1-tanzu', label: 'osl1 - tanzu' },
-  { value: 'trd1cl02-tanzu', label: 'trd1cl02 - tanzu' },
-  { value: 'norwayeast-aks', label: 'norwayeast - aks' },
-  { value: 'trd1-talos', label: 'trd1 - talos' },
+  { value: 'az1.central.no', label: 'az1.central.no' },
+  { value: 'az1.south.test', label: 'az1.south.test' },
+  { value: 'az1.west.no', label: 'az1.west.no' },
+  { value: 'bgo.west.no', label: 'bgo.west.no' },
+  { value: 'osl1', label: 'osl1' },
+  { value: 'TalosDC TalosAZ', label: 'TalosDC TalosAZ' },
+  { value: 'trd1', label: 'trd1' },
+  { value: 'trd1cl02', label: 'trd1cl02' },
+  { value: 'trd1 TalosAZ', label: 'trd1 TalosAZ' },
 ]
 
 /**
