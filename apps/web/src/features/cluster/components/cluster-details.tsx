@@ -15,7 +15,6 @@ import {
   getCreated,
   getDatacenter,
   getHaClusterPlaneValue,
-  getKubectlLogin,
   getLastObserved,
   getPrices,
   getProject,
@@ -46,7 +45,6 @@ export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
   const lastObserved = getLastObserved(cluster)
   const created = getCreated(cluster)
   const rorLogin = getRorLogin(cluster)
-  const kubectlLogin = getKubectlLogin(cluster, user?.email || '<user-email missing>')
   const versions = getVersions(cluster)
   const project = getProject(cluster)
   const workspace = getWorkspace(cluster)
@@ -151,13 +149,10 @@ export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
           <Layer level={2}>
             <CodeSnippet type='single'>{rorLogin}</CodeSnippet>
           </Layer>
-          <Layer level={2}>
-            <CodeSnippet type='single'>{kubectlLogin}</CodeSnippet>
-          </Layer>
         </div>
       </div>
     ),
-    [tools, rorLogin, kubectlLogin]
+    [tools, rorLogin]
   )
 
   const VersionsCard = useCallback(
