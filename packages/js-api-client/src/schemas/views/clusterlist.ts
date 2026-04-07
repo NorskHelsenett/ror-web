@@ -22,36 +22,50 @@ const ClusterListViewElementNumber = z
   })
   .loose()
 
-const ClusterListViewElementResourcesObject = z
-  .object({
-    fieldValue: z.record(z.string(), z.unknown()).nullish().catch(null),
-  })
-  .loose()
-
 const ClusterListViewElementTagsObject = z
   .object({
     fieldValue: z.record(z.string(), z.unknown()).nullish().catch(null),
   })
   .loose()
 
+const ClusterListViewElementNumberFieldUnit = z
+  .object({
+    fieldValue: z.number().nullish().catch(null),
+    fieldUnit: z.string().nullish().catch(null),
+  })
+  .loose()
+
+const ClusterListViewElementStringFieldUnit = z
+  .object({
+    fieldValue: z.string().nullish().catch(null),
+    fieldUnit: z.string().nullish().catch(null),
+  })
+  .loose()
+
 export const ClusterListViewRow = z
   .object({
+    clusterUid: ClusterListViewElementString.nullish(),
     clusterId: ClusterListViewElementString.nullish(),
     clusterName: ClusterListViewElementString.nullish(),
-    clusterUid: ClusterListViewElementString.nullish(),
     provider: ClusterListViewElementString.nullish(),
+    datacenter: ClusterListViewElementString.nullish(),
     availabilityZone: ClusterListViewElementString.nullish(),
     country: ClusterListViewElementString.nullish(),
     region: ClusterListViewElementString.nullish(),
     workspace: ClusterListViewElementString.nullish(),
     environment: ClusterListViewElementString.nullish(),
-    resources: ClusterListViewElementResourcesObject.nullish(),
+    resourcesCpu: ClusterListViewElementString.nullish(),
+    resourcesMemory: ClusterListViewElementStringFieldUnit.nullish(),
+    resourcesCpuUsedMilli: ClusterListViewElementNumberFieldUnit.nullish(),
+    resourcesMemoryUsed: ClusterListViewElementStringFieldUnit.nullish(),
+    resourcesCpuUsedPercent: ClusterListViewElementNumberFieldUnit.nullish(),
+    recourcesMemoryUsedPercent: ClusterListViewElementNumberFieldUnit.nullish(),
     nodes: ClusterListViewElementNumber.nullish(),
     nodePools: ClusterListViewElementNumber.nullish(),
     priceMonth: ClusterListViewElementNumber.nullish(),
     priceYear: ClusterListViewElementNumber.nullish(),
-    argocdURL: ClusterListViewElementString.nullish(),
-    grafanaURL: ClusterListViewElementString.nullish(),
+    ArgocdURL: ClusterListViewElementString.nullish(),
+    GrafanaURL: ClusterListViewElementString.nullish(),
     rorAgentVersion: ClusterListViewElementString.nullish(),
     kubernetesVersion: ClusterListViewElementString.nullish(),
     nhnToolVersion: ClusterListViewElementString.nullish(),

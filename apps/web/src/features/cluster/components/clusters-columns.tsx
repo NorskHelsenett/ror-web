@@ -213,13 +213,13 @@ export function getClustersTableColumns(
           )
         },
       }),
-    (isVisible('monthlyPrice') || isVisible('yearlyPrice')) &&
+    isVisible('price') &&
       columnHelper.accessor(getPriceMonthView, {
-        id: 'monthlyPrice',
+        id: 'price',
         size: 196,
         header: ({ column }) => (
           <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-            Price
+            Price (month/year)
             {column.getIsSorted() === 'asc' ? (
               <ArrowDown className='h-4 w-4' />
             ) : column.getIsSorted() === 'desc' ? (
@@ -235,9 +235,7 @@ export function getClustersTableColumns(
           const yearly = getPriceYearView(info.row.original)
           return (
             <span>
-              Monthly: {monthly ? `${monthly} kr` : missingText}
-              <br />
-              Yearly: {yearly ? `${yearly} kr` : missingText}
+              {monthly ? `${monthly} kr` : missingText}/{yearly ? `${yearly} kr` : missingText}
             </span>
           )
         },

@@ -378,13 +378,15 @@ export const getClusterById = (id: string, clusters: KubernetesCluster[]): Kuber
 
 // VIEWS
 
-export const getClusterIdView = (cluster: ClusterListViewRowType): string => cluster.clusterId?.fieldValue || ''
-
 export const getClusterUidView = (cluster: ClusterListViewRowType): string => cluster.clusterUid?.fieldValue || ''
+
+export const getClusterIdView = (cluster: ClusterListViewRowType): string => cluster.clusterId?.fieldValue || ''
 
 export const getClusterNameView = (cluster: ClusterListViewRowType): string => cluster.clusterName?.fieldValue || ''
 
 export const getProviderView = (cluster: ClusterListViewRowType): string => cluster.provider?.fieldValue || ''
+
+export const getDatacenterView = (cluster: ClusterListViewRowType): string => cluster.datacenter?.fieldValue || ''
 
 export const getAZView = (cluster: ClusterListViewRowType): string => cluster.availabilityZone?.fieldValue || ''
 
@@ -396,8 +398,28 @@ export const getWorkspaceView = (cluster: ClusterListViewRowType): string => clu
 
 export const getEnvironmentView = (cluster: ClusterListViewRowType): string => cluster.environment?.fieldValue || ''
 
-export const getResourcesView = (cluster: ClusterListViewRowType): Record<string, unknown> | null | undefined =>
-  cluster.resources?.fieldValue || undefined
+export const getResourcesCpuView = (cluster: ClusterListViewRowType): string => cluster.resourcesCpu?.fieldValue || ''
+
+export const getResourcesMemoryView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemory?.fieldValue || '') + (cluster.resourcesMemory?.fieldUnit || '')
+
+export const getResourcesCpuUsedMilliView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesCpuUsedMilli?.fieldValue || '') + (cluster.resourcesCpuUsedMilli?.fieldUnit || '')
+
+export const getResourcesMemoryUsedView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemoryUsed?.fieldValue || '') + (cluster.resourcesMemoryUsed?.fieldUnit || '')
+
+export const getResourcesCpuUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.resourcesCpuUsedPercent?.fieldValue
+
+export const getResourcesMemoryUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.resourcesMemoryUsedPercent?.fieldValue
+
+export const getResourcesCpuUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesCpuUsedPercent?.fieldValue || '') + (cluster.resourcesCpuUsedPercent?.fieldUnit || '')
+
+export const getResourcesMemoryUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemoryUsedPercent?.fieldValue || '') + (cluster.resourcesMemoryUsedPercent?.fieldUnit || '')
 
 export const getNodesView = (cluster: ClusterListViewRowType): number | undefined =>
   cluster.nodes?.fieldValue || undefined
@@ -411,9 +433,9 @@ export const getPriceMonthView = (cluster: ClusterListViewRowType): number | und
 export const getPriceYearView = (cluster: ClusterListViewRowType): number | undefined =>
   cluster.priceYear?.fieldValue || undefined
 
-export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.argocdURL?.fieldValue || ''
+export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.ArgocdURL?.fieldValue || ''
 
-export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.grafanaURL?.fieldValue || ''
+export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.GrafanaURL?.fieldValue || ''
 
 export const getRorAgentVersionView = (cluster: ClusterListViewRowType): string =>
   cluster.rorAgentVersion?.fieldValue || ''

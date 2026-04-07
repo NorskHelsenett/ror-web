@@ -198,7 +198,6 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
           {displayedItems.map((cluster, idx) => (
             <div key={getClusterIdView(cluster) || idx}>
               <ClusterCard
-                user={user}
                 cluster={cluster}
                 displayData={
                   selectedDisplayData?.length > 0
