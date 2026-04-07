@@ -112,8 +112,6 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const memoryUsed = getResourcesMemoryUsedView(cluster) || missingText
   const cpuUsedPercentNumber = getResourcesCpuUsedPercentNumberView(cluster)
   const memoryUsedPercentNumber = getResourcesMemoryUsedPercentNumberView(cluster)
-  const cpuUsedPercent = getResourcesCpuUsedPercentView(cluster) || missingText
-  const memoryUsedPercent = getResourcesMemoryUsedPercentView(cluster) || missingText
   const nodesAmount = getNodesView(cluster) || 0
   const nodePools = getNodePoolsView(cluster) || 0
   const monthlyPrices = getPriceMonthView(cluster)

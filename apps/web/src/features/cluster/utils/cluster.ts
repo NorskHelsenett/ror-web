@@ -433,9 +433,9 @@ export const getPriceMonthView = (cluster: ClusterListViewRowType): number | und
 export const getPriceYearView = (cluster: ClusterListViewRowType): number | undefined =>
   cluster.priceYear?.fieldValue || undefined
 
-export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.ArgocdURL?.fieldValue || ''
+export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.argocdURL?.fieldValue || ''
 
-export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.GrafanaURL?.fieldValue || ''
+export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.grafanaURL?.fieldValue || ''
 
 export const getRorAgentVersionView = (cluster: ClusterListViewRowType): string =>
   cluster.rorAgentVersion?.fieldValue || ''
