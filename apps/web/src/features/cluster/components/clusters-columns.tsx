@@ -12,7 +12,6 @@ import { envColors } from '../utils/env-colors'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getClusterNameView,
-  getClusterIdView,
   getEnvironmentView,
   getNodePoolsView,
   getNodesView,

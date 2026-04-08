@@ -7,23 +7,18 @@ import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { Layer } from '@ror/react'
 import { Dot, ExternalLink } from 'lucide-react'
-import { User } from 'next-auth'
-import Link from 'next/link'
 import { CodeSnippet } from '../../../components/ui/code-snippet'
 import { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
   getAZView,
-  getClusterIdView,
   getClusterNameView,
   getClusterUidView,
   getCountryView,
-  getCreatedView,
   getDatacenterView,
   getEnvironmentView,
   getGrafanaUrlView,
   getKubernetesVersionView,
-  getLastSeenView,
   getNhnToolVersionView,
   getNodePoolsView,
   getNodesView,
@@ -33,17 +28,14 @@ import {
   getRegionView,
   getResourcesCpuUsedMilliView,
   getResourcesCpuUsedPercentNumberView,
-  getResourcesCpuUsedPercentView,
   getResourcesCpuView,
   getResourcesMemoryUsedPercentNumberView,
-  getResourcesMemoryUsedPercentView,
   getResourcesMemoryUsedView,
   getResourcesMemoryView,
   getRorAgentVersionView,
   getRorLoginView,
   getServiceIdView,
   getStatusView,
-  getTagsView,
   getWorkspaceView,
 } from '../utils/cluster'
 import { envColors, getHighDifferenceEnvironmentColors } from '../utils/env-colors'

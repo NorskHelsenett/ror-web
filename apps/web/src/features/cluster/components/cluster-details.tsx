@@ -6,7 +6,6 @@ import { useClusterContext } from '@/context/cluster-context'
 import { Layer } from '@ror/react'
 import 'gridstack/dist/gridstack.min.css'
 import { ExternalLink } from 'lucide-react'
-import { User } from 'next-auth'
 import { useCallback } from 'react'
 import { standardLayouts } from '../config/cluster-details-layouts'
 import {
@@ -27,12 +26,7 @@ import {
 import { formatObservationDate, formatResource } from '../utils/formats'
 import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
 
-interface ClusterDetailsProps {
-  user?: User
-  className?: string
-}
-
-export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
+export const ClusterDetails = () => {
   const { cluster } = useClusterContext()
 
   const clusterId = getClusterId(cluster)

@@ -33,20 +33,14 @@ import { displayDataOptions, sortingOptions } from '@/features/cluster/config/pa
 import { useDisplayData } from '@/hooks/use-display-data'
 import { ClusterCardDisplayData } from '@/features/cluster/types/display-data'
 import {
-  getClusterId,
   getClusterIdView,
-  getClusterName,
   getClusterNameView,
-  getClustersKey,
   getClustersViewKey,
-  getDatacenter,
   getDatacenterView,
-  getEnvironment,
   getEnvironmentView,
   getNodesView,
   getPriceMonthView,
   getPriceYearView,
-  getProvider,
   getProviderView,
   getResourcesCpuView,
   getResourcesMemoryView,
