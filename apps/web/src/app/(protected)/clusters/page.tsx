@@ -10,7 +10,6 @@ import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
 import { Header } from '@/components/layout/app-shell/header'
 import { normalizeParams } from '@/features/cluster/utils/normalize-params'
-import { authGuard } from '@/features/auth/utils/auth-guard'
 import { PageView } from './page-view'
 import { ClusterListViewRowType } from '@ror/js-api-client'
 
@@ -32,8 +31,6 @@ export default async function ClustersPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const session = await authGuard()
-  const user = session.user
   const api = await getRorApi()
 
   const sp = await searchParams
@@ -51,7 +48,7 @@ export default async function ClustersPage({
     <div className='w-full flex flex-col'>
       <Header title='Clusters' />
 
-      <PageView user={user} clusters={clusters} params={params} />
+      <PageView clusters={clusters} params={params} />
     </div>
   )
 }
