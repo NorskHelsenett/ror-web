@@ -8,7 +8,7 @@ import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { Layer } from '@ror/react'
 import { Dot, ExternalLink } from 'lucide-react'
 import { CodeSnippet } from '../../../components/ui/code-snippet'
-import { ClusterCardDisplayData } from '../types/display-data'
+import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
   getAZView,

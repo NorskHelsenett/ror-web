@@ -6,7 +6,6 @@ import { createColumnHelper } from '@tanstack/react-table'
 import copy from 'clipboard-copy'
 import type { DataTableColumnDef } from '@/components/ui/data-table'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import type { User } from 'next-auth'
 import { routes } from '@/config/routes'
 import { envColors } from '../utils/env-colors'
 import type { ClusterCardDisplayData } from '../types/display-data'
@@ -37,13 +36,10 @@ const columnHelper = createColumnHelper<ClusterListViewRowType>()
  *
  * The columns displayed are dynamically determined based on the provided `selectedDisplayData`.
  *
- * @param user - The current user
  * @param selectedDisplayData - An array of display data identifiers specifying which columns to show.
  * @returns An array of column definitions for the data table, filtered according to the selection.
  */
 export function getClustersTableColumns(
-  clusters: ClusterListViewRowType[],
-  user?: User,
   selectedDisplayData?: ClusterCardDisplayData[]
 ): DataTableColumnDef<ClusterListViewRowType>[] {
   const showAll = !selectedDisplayData || selectedDisplayData.length === 0
@@ -276,7 +272,7 @@ export function getClustersTableColumns(
               ArgoCD <ExternalLink className='w-4 h-4' />
             </a>
           ) : (
-            missingText
+            <span>{missingText}</span>
           )
         },
       }),
@@ -296,7 +292,7 @@ export function getClustersTableColumns(
               Grafana <ExternalLink className='w-4 h-4' />
             </a>
           ) : (
-            missingText
+            <span>{missingText}</span>
           )
         },
       }),
@@ -311,20 +307,10 @@ export function getClustersTableColumns(
               <CopyIcon />
             </CopyButton>
           ) : (
-            { missingText }
+            <span>{missingText}</span>
           )
         },
       }),
-    // isVisible('kubectl') &&
-    //   columnHelper.display({
-    //     id: 'kubectl',
-    //     header: () => <p className='text-sm'>Kubectl</p>,
-    //     cell: (info) => (
-    //       <CopyButton onClick={() => copy(getKubectlLogin(info.row.original, user?.email ?? ''))}>
-    //         <CopyIcon />
-    //       </CopyButton>
-    //     ),
-    //   }),
     // isVisible('datacenterName') &&
     //   columnHelper.accessor(getDatacenter, {
     //     id: 'datacenterName',

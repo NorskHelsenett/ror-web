@@ -32,8 +32,8 @@ import type {
 } from '../schemas/api-key'
 
 import { VirtualMachineVulnerabilityInfo, CVE } from '../schemas/vm-vulnerability-info'
-import type { ClusterListViewSchema } from '../schemas/views/clusterlist'
-import { ClusterListViewRow } from '../schemas/views/clusterlist'
+// import type { ClusterListViewSchema } from '../schemas/views/clusterlist'
+import { ClusterListViewRow, ClusterListViewSchema } from '../schemas/views/clusterlist'
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
