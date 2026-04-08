@@ -292,7 +292,10 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={(e) => {
-        if (e.key === 'Enter') handleCardClick()
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === ' ') e.preventDefault()
+          handleCardClick()
+        }
       }}
     >
       <CardHeader className='m-0 mb-7 p-0 w-full'>
