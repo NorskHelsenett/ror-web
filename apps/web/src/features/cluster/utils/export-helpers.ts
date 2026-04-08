@@ -15,6 +15,7 @@ import {
   getPriceMonthView,
   getPriceYearView,
   getProviderView,
+  getResourcesCpuUsedPercentNumberView,
   getRorAgentVersionView,
   getServiceIdView,
 } from './cluster'
@@ -34,10 +35,10 @@ const exportableFromCluster = (cluster: ClusterListViewRowType) => {
     environment: getEnvironmentView(cluster),
     nodePoolCount: getNodePoolsView(cluster),
     // TODO: Set up resources
-    // cpu: resources?.cpu?.percentage ?? null,
-    // memory: resources?.memory?.percentage ?? null,
-    // gpu: resources?.gpu?.percentage ?? null,
-    // disk: resources?.disk?.percentage ?? null,
+    cpu: getResourcesCpuUsedPercentNumberView(cluster),
+    memory: getResourcesCpuUsedPercentNumberView(cluster),
+    // gpu: getResourcesCpuView,
+    // disk: getResourcesCpuView,
     monthlyPrice: getPriceMonthView(cluster),
     yearlyPrice: getPriceYearView(cluster),
     kubernetesVersion: getKubernetesVersionView(cluster),
