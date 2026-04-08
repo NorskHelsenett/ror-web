@@ -5,9 +5,7 @@ import { AuthenticationError, AuthorizationError, isApiError, NotFoundError, Val
 export function RenderApiError(error: unknown) {
   let errorButtonLink: string
   let errorText: string
-  // TOOD: Change route when clusters are done
-  // const clustersPage = routes.app.clusters.getHref()
-  const clustersPage = routes.app.vms.getHref()
+  const clustersPage = routes.app.clusters.getHref()
   const buttonTextHomepage = 'return to homepage'
 
   if (error instanceof AuthenticationError) {
