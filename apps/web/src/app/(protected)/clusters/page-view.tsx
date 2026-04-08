@@ -51,7 +51,6 @@ import { cn } from '@/utils/clsxm'
 import { loadMoreClusters } from '@/utils/cluster-actions'
 import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { User } from 'next-auth'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getClustersTableColumns } from '@/features/cluster/components/clusters-columns'
@@ -71,7 +70,6 @@ import { SortDefinition, useSorting } from '@/hooks/use-sorting'
  */
 interface PageViewProps {
   className?: string
-  user: User
   clusters: ClusterListViewRowType[]
   params: Params
 }
@@ -81,7 +79,6 @@ interface PageViewProps {
  * infinite loading, and display options (grid or table view).
  *
  * @param className - Optional CSS class name for the root container.
- * @param user - The current user object, used for permissions and display.
  * @param clusters - Initial list of Kubernetes clusters to display.
  * @param params - URL/query parameters controlling filters, sorting, and view mode.
  *
@@ -96,7 +93,7 @@ interface PageViewProps {
  *
  * @returns The rendered page view component.
  */
-export const PageView = ({ className, user, clusters, params }: PageViewProps) => {
+export const PageView = ({ className, clusters, params }: PageViewProps) => {
   // Filter state
   const filtersOpen = params.filters === 'open'
 
