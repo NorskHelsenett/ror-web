@@ -13,9 +13,7 @@ export async function GET(req: NextRequest) {
   const attempt = Number(url.searchParams.get('attempt') || '0') || 0
 
   // Derive a safe callback URL
-  // TODO: Change default route when clusters are done
-  // const defaultAfterLogin = routes.app.clusters.getHref()
-  const defaultAfterLogin = routes.app.vms.getHref()
+  const defaultAfterLogin = routes.app.clusters.getHref()
   // Search for provided callbackUrl, or use default if not present
   let raw = url.searchParams.get('callbackUrl') || defaultAfterLogin
   // Debugging output

@@ -6,14 +6,12 @@
  * Renders the PageView component with fetched data.
  */
 
-import { authGuard } from '@/features/auth/utils/auth-guard'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
 import { Header } from '@/components/layout/app-shell/header'
-import { PageView } from './page-view'
 import { normalizeParams } from '@/features/cluster/utils/normalize-params'
-import { fetchClusters } from '@/features/cluster/services/fetch-clusters'
-import { mergeClustersByName } from '@/features/cluster/utils/merge-clusters'
+import { PageView } from './page-view'
+import { ClusterListViewRowType } from '@ror/js-api-client'
 
 export const metadata: Metadata = {
   title: 'ROR - Clusters',
@@ -33,20 +31,24 @@ export default async function ClustersPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const session = await authGuard()
-  const user = session.user
   const api = await getRorApi()
 
   const sp = await searchParams
   const params = normalizeParams(sp)
+  const skip = (params.page - 1) * params.limit
+  const listParams = new URLSearchParams()
+  listParams.set('limit', String(params.limit))
+  listParams.set('offset', String(skip))
+  if (params.sort) listParams.set('sort', params.sort)
 
-  const { v2Clusters, v1Clusters } = await fetchClusters(api, params)
-  const mergedClusters = mergeClustersByName(v2Clusters, v1Clusters)
+  const clusterList = await api.clusterListView.getClusterList(listParams)
+  const clusters: ClusterListViewRowType[] = clusterList.rows
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Clusters' />
-      <PageView user={user} clusters={mergedClusters} params={params} />
+
+      <PageView clusters={clusters} params={params} />
     </div>
   )
 }

@@ -33,23 +33,24 @@ import { displayDataOptions, sortingOptions } from '@/features/cluster/config/pa
 import { useDisplayData } from '@/hooks/use-display-data'
 import { ClusterCardDisplayData } from '@/features/cluster/types/display-data'
 import {
-  getClusterId,
-  getClusterName,
-  getClusterResource,
-  getClustersKey,
-  getDatacenter,
-  getEnvironment,
-  getNodePools,
-  getPrices,
-  getProvider,
-  getWorkspace,
+  getClusterIdView,
+  getClusterNameView,
+  getClustersViewKey,
+  getDatacenterView,
+  getEnvironmentView,
+  getNodesView,
+  getPriceMonthView,
+  getPriceYearView,
+  getProviderView,
+  getResourcesCpuView,
+  getResourcesMemoryView,
+  getWorkspaceView,
 } from '@/features/cluster/utils/cluster'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { cn } from '@/utils/clsxm'
 import { loadMoreClusters } from '@/utils/cluster-actions'
 import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
-import type { KubernetesCluster } from '@ror/js-api-client'
-import { User } from 'next-auth'
+import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getClustersTableColumns } from '@/features/cluster/components/clusters-columns'
@@ -64,13 +65,12 @@ import { SortDefinition, useSorting } from '@/hooks/use-sorting'
  *
  * @property {string} [className] - Optional CSS class name for custom styling.
  * @property {User} user - The current user object.
- * @property {KubernetesCluster[]} clusters - Array of Kubernetes clusters to display.
+ * @property {ClusterListViewRowType[]} clusters - Array of Kubernetes clusters to display.
  * @property {Params} params - Route or query parameters relevant to the page view.
  */
 interface PageViewProps {
   className?: string
-  user: User
-  clusters: KubernetesCluster[]
+  clusters: ClusterListViewRowType[]
   params: Params
 }
 
@@ -79,7 +79,6 @@ interface PageViewProps {
  * infinite loading, and display options (grid or table view).
  *
  * @param className - Optional CSS class name for the root container.
- * @param user - The current user object, used for permissions and display.
  * @param clusters - Initial list of Kubernetes clusters to display.
  * @param params - URL/query parameters controlling filters, sorting, and view mode.
  *
@@ -94,17 +93,18 @@ interface PageViewProps {
  *
  * @returns The rendered page view component.
  */
-export const PageView = ({ className, user, clusters, params }: PageViewProps) => {
+export const PageView = ({ className, clusters, params }: PageViewProps) => {
   // Filter state
   const filtersOpen = params.filters === 'open'
 
   // Infinite loading of clusters
-  const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<KubernetesCluster>({
+
+  const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<ClusterListViewRowType>({
     initial: clusters,
     sort: params.sort,
     pageSize: 50,
-    getItemId: getClusterId,
-    getItemsKey: getClustersKey,
+    getItemId: getClusterIdView,
+    getItemsKey: getClustersViewKey,
     loadMore: async (offset, limit) => {
       const res = await loadMoreClusters({ offset, limit, sort: params.sort })
       return { items: res.items ?? [], hasMore: res.hasMore }
@@ -112,39 +112,36 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
   })
 
   // Clusters valid after filtering and searching
-  const safeItems = useMemo(
-    () => items.filter((c) => c.kubernetescluster?.spec?.data && typeof c.kubernetescluster.spec.data === 'object'),
-    [items]
-  )
+  const safeItems = useMemo(() => items.filter((c) => c.clusterId?.fieldValue), [items])
 
   // Cluster filters, display data and search result
   const filterDefinitions = [
-    { key: 'Environments', extractor: getEnvironment },
-    { key: 'Datacenters', extractor: getDatacenter },
-    { key: 'Workspaces', extractor: getWorkspace },
+    { key: 'Environments', extractor: getEnvironmentView },
+    { key: 'Datacenters', extractor: getDatacenterView },
+    { key: 'Workspaces', extractor: getWorkspaceView },
   ]
 
-  const definitions: SortDefinition<KubernetesCluster>[] = [
-    { key: 'clusterName', extractor: (c) => getClusterName(c) },
-    { key: 'cpu', extractor: (c) => getClusterResource(c, 'cpu').percentage },
-    { key: 'memory', extractor: (c) => getClusterResource(c, 'memory').percentage },
+  const definitions: SortDefinition<ClusterListViewRowType>[] = [
+    { key: 'clusterName', extractor: getClusterNameView },
+    { key: 'cpu', extractor: getResourcesCpuView },
+    { key: 'memory', extractor: getResourcesMemoryView },
     {
       key: 'nodes',
-      extractor: (c) => getNodePools(c).reduce((total, nodePool) => total + (nodePool.replicas || 0), 0) || 0,
+      extractor: getNodesView,
     },
-    { key: 'monthlyPrice', extractor: (c) => getPrices(c).monthly },
-    { key: 'yearlyPrice', extractor: (c) => getPrices(c).yearly },
-    { key: 'datacenterName', extractor: (c) => getDatacenter(c) },
-    { key: 'datacenterProvider', extractor: (c) => getProvider(c) },
-    { key: 'environment', extractor: (c) => getEnvironment(c) },
+    { key: 'monthlyPrice', extractor: getPriceMonthView },
+    { key: 'yearlyPrice', extractor: getPriceYearView },
+    { key: 'datacenterName', extractor: getDatacenterView },
+    { key: 'datacenterProvider', extractor: getProviderView },
+    { key: 'environment', extractor: getEnvironmentView },
   ]
 
-  const { selectedFilters, setSelectedFilters, filteredItems, resetFilters } = useFilters<KubernetesCluster>(
+  const { selectedFilters, setSelectedFilters, filteredItems, resetFilters } = useFilters<ClusterListViewRowType>(
     safeItems,
     filterDefinitions
   )
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<ClusterCardDisplayData>('clusters')
-  const [searchResults, setSearchResults] = useState<KubernetesCluster[]>(safeItems)
+  const [searchResults, setSearchResults] = useState<ClusterListViewRowType[]>(safeItems)
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
 
   // Handler for display data changes
@@ -154,11 +151,11 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
   // Sync safeItems -> searchResults only if content differs
   const lastSafeKeyRef = useRef('')
   useEffect(() => {
-    const nextKey = getClustersKey(safeItems)
+    const nextKey = getClustersViewKey(safeItems)
     if (nextKey !== lastSafeKeyRef.current) {
       lastSafeKeyRef.current = nextKey
       setSearchResults((prev) => {
-        const prevKey = getClustersKey(prev)
+        const prevKey = getClustersViewKey(prev)
         const isSearching = prev.length !== safeItems.length
         return isSearching || prevKey === nextKey ? prev : safeItems
       })
@@ -183,8 +180,8 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
 
   const displayedItems = useMemo(() => {
     if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getClusterId))
-    return sortedItems.filter((c) => ids.has(getClusterId(c)))
+    const ids = new Set(searchResults.map(getClusterIdView))
+    return sortedItems.filter((c) => ids.has(getClusterIdView(c)))
   }, [sortedItems, searchResults])
 
   // Grid and table view
@@ -193,9 +190,8 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
       <div>
         <div className='flex flex-row flex-wrap gap-6'>
           {displayedItems.map((cluster, idx) => (
-            <div key={getClusterId(cluster) || idx}>
+            <div key={getClusterIdView(cluster) || idx}>
               <ClusterCard
-                user={user}
                 cluster={cluster}
                 displayData={
                   selectedDisplayData?.length > 0
@@ -217,7 +213,7 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
     return (
       <DataTable
         data={displayedItems}
-        columns={getClustersTableColumns(clusters, user, selectedDisplayData)}
+        columns={getClustersTableColumns(selectedDisplayData)}
         hasMore={hasMore}
         isLoading={isLoading}
         sentinelRef={sentinelRef}
@@ -246,12 +242,11 @@ export const PageView = ({ className, user, clusters, params }: PageViewProps) =
             searchKeys={['label', 'datacenterName', 'datacenterProvider', 'environment']}
             mapItem={(cluster) => ({
               ...cluster,
-              label: getClusterName(cluster),
-              datacenterName: getDatacenter(cluster),
-              datacenterProvider: getProvider(cluster),
-              environment: getEnvironment(cluster),
+              label: getClusterNameView(cluster),
+              datacenterProvider: getProviderView(cluster),
+              environment: getEnvironmentView(cluster),
             })}
-            getItemsKey={getClustersKey}
+            getItemsKey={getClustersViewKey}
             exportAsCSV={exportClustersAsCSV}
             exportAsExcel={exportClustersAsExcel}
             allItems={items}

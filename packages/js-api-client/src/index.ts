@@ -58,6 +58,8 @@ export type {
   BackupRun,
   VirtualMachineVulnerabilityInfoType,
   CVEType,
+  ClusterListView,
+  ClusterListViewRowType,
 } from './types/entities'
 
 export { CreateApiKeyRequestSchema } from './schemas/api-key'

@@ -8,6 +8,5 @@ import { redirect } from 'next/navigation'
 export default async function Home() {
   await authGuard()
 
-  // TODO: Change to clusters when clusters are done
-  redirect('/vms')
+  redirect('/clusters')
 }

@@ -8,6 +8,7 @@ import {
   CornerUpLeft,
   Settings2,
   Monitor,
+  Boxes,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -59,17 +60,17 @@ const sections: Section[] = [
   //       }
   //     ]
   //   },
-  // {
-  //   title: 'Clusters',
-  //   icon: Boxes,
-  //   isActive: true,
-  //   items: [
-  //     {
-  //       title: 'Clusters',
-  //       url: routes.app.clusters.getHref(),
-  //     },
-  //   ],
-  // },
+  {
+    title: 'Clusters',
+    icon: Boxes,
+    isActive: true,
+    items: [
+      {
+        title: 'Clusters',
+        url: routes.app.clusters.getHref(),
+      },
+    ],
+  },
   vmsEnabled && {
     title: 'Virtual machines',
     icon: Monitor,
@@ -150,6 +151,10 @@ const sections: Section[] = [
       {
         title: 'Documentation',
         url: 'https://docs.nhn.no/',
+      },
+      {
+        title: 'API Documentation',
+        url: 'https://api.ror.nhn.no/swagger/index.html',
       },
       // {
       //   title: "About",
