@@ -25,7 +25,15 @@ export const displayDataOptions: Option[] = [
   { value: 'datacenterProvider', label: 'Datacenter provider' },
   { value: 'environment', label: 'Environment' },
   { value: 'serviceTags', label: 'Service tags' },
+  { value: 'serviceId', label: 'Service ID' },
+  { value: 'region', label: 'Region' },
+  { value: 'az', label: 'Availability zone' },
+  { value: 'workspace', label: 'Workspace' },
 ]
+
+const OPT_IN_FIELDS: string[] = ['agentVersion', 'kubernetesVersion', 'toolingVersion', 'serviceId', 'region', 'az']
+
+export const defaultDisplayData = displayDataOptions.map((o) => o.value).filter((v) => !OPT_IN_FIELDS.includes(v))
 
 /**
  * An array of sorting options for cluster page views.

@@ -5,9 +5,7 @@ import * as React from 'react'
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { Layer } from '@ror/react'
-import { Dot, ExternalLink } from 'lucide-react'
-import { CodeSnippet } from '../../../components/ui/code-snippet'
+import { Copy, Dot, ExternalLink } from 'lucide-react'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
@@ -46,6 +44,8 @@ import { useRouter } from 'next/navigation'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 import { Progress } from '@/components/shadcn/progress'
 import { negativeColors } from '@/utils/scale-colors'
+import { Button } from '@/components/shadcn/button'
+import { copyToClipboard } from '@/utils/copy-to-clipboard'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -77,6 +77,90 @@ interface ClusterCardProps {
   displayData?: ClusterCardDisplayData[]
 }
 
+function getPriceString(monthly: number | null | undefined, yearly: number | null | undefined): string {
+  const m = monthly ?? (yearly ? yearly / 12 : null)
+  const y = yearly ?? (monthly ? monthly * 12 : null)
+
+  if (!m && !y) return missingText
+  return `${m} kr / ${y} kr`
+}
+
+function displayDataContains(
+  displayData: ClusterCardDisplayData[] | undefined,
+  ...keys: ClusterCardDisplayData[]
+): boolean {
+  return keys.some((k) => displayData?.includes(k))
+}
+
+function Info({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div>
+      <p className='font-bold'>{label}</p>
+      <p>{value}</p>
+    </div>
+  )
+}
+
+interface ResourceCardProps {
+  label: string
+  resource: { capacity?: string; used?: string; percentage?: number | null }
+}
+
+function ResourceCard({ label, resource }: ResourceCardProps) {
+  const barColor = negativeColors(resource.percentage ?? 0).join(' ')
+  return (
+    <div>
+      <p className='font-bold'>{label}</p>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className='flex items-center'>
+            <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1 mr-1' />
+            <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
+              {resource.percentage == null ? '—' : `${resource.percentage.toFixed(0)}%`}
+            </span>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Used: {resource.used ?? 'data missing'}</p>
+          <p>Capacity: {resource.capacity ?? 'data missing'}</p>
+          <p>Percentage: {resource.percentage != null ? `${resource.percentage}%` : 'data missing'}</p>
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  )
+}
+
+const colsMap: Record<number, string> = {
+  0: 'grid-cols-1',
+  1: 'grid-cols-1',
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+}
+
+function externalLinkNum(shows: (...keys: ClusterCardDisplayData[]) => boolean): string {
+  const count = (['argocd', 'grafana', 'rorcli'] as ClusterCardDisplayData[]).filter((k) => shows(k)).length
+  return colsMap[count] ?? 'grid-cols-3'
+}
+
+function ExternalTool({ name, url }: { name: string; url: string | null | undefined }) {
+  if (!url)
+    return (
+      <Button variant='argocd' disabled className='font-bold'>
+        <ExternalLink className='w-5 h-5' /> {name}
+      </Button>
+    )
+  return (
+    <Button variant='argocd' className='font-bold' asChild>
+      <a href={url} target='_blank' rel='noopener noreferrer' onClick={(e) => e.stopPropagation()}>
+        <ExternalLink className='w-5 h-5' /> {name}
+      </a>
+    </Button>
+  )
+}
+
+const infoSectionCls =
+  'flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'
+
 /**
  * Renders a card displaying detailed information about a Kubernetes cluster.
  *
@@ -88,8 +172,6 @@ interface ClusterCardProps {
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
-  // const clusterUid = getClusterUidView(cluster)
-  // const clusterId = getClusterIdView(cluster)
   const clusterName = getClusterNameView(cluster) || missingText
   const provider = getProviderView(cluster) || missingText
   const datacenter = getDatacenterView(cluster) || missingText
@@ -114,158 +196,20 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const kubernetesVersion = getKubernetesVersionView(cluster) || missingText
   const nhnToolingVersion = getNhnToolVersionView(cluster) || missingText
   const serviceId = getServiceIdView(cluster) || missingText
-  // const serviceTags = getTagsView(cluster) || []
   const healthCondition = getStatusView(cluster)
-  // const created = getCreatedView(cluster)
-  // const lastSeen = getLastSeenView(cluster)
+  // TODO: implement tags when view has tags
+  // const serviceTags = getTagsView(cluster) || []
 
   const rorLogin = getRorLoginView(cluster)
   const envColor = getHighDifferenceEnvironmentColors(env as Environment)
 
-  let priceString = ''
-
-  if (monthlyPrices && yearlyPrices) {
-    priceString = monthlyPrices + ' kr/' + yearlyPrices + ' kr'
-  } else if (monthlyPrices && !yearlyPrices) {
-    priceString = monthlyPrices + ' kr/' + monthlyPrices * 12 + ' kr'
-  } else if (!monthlyPrices && yearlyPrices) {
-    priceString = yearlyPrices / 12 + ' kr/' + yearlyPrices * 12 + ' kr'
-  } else {
-    priceString = missingText
-  }
-
-  const Argo = () => {
-    return argocdUrl ? (
-      <a
-        onClick={(e) => e.stopPropagation()}
-        href={`https://${argocdUrl}`}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='flex gap-2 font-bold text-blue-500 w-fit'
-      >
-        <span>ArgoCD</span>
-        <ExternalLink className='w-5 h-5' />
-      </a>
-    ) : (
-      <p className='flex [@container(max-width:360px)]:flex-col'>
-        <span className='font-bold'>ArgoCD &nbsp;</span>
-        <span>missing ...</span>
-      </p>
-    )
-  }
-
-  const Grafana = () => {
-    return grafanaUrl ? (
-      <a
-        onClick={(e) => e.stopPropagation()}
-        href={`https://${grafanaUrl}`}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='flex gap-2 font-bold text-blue-500 w-fit'
-      >
-        <span>Grafana</span>
-        <ExternalLink className='w-5 h-5' />
-      </a>
-    ) : (
-      <p className='flex [@container(max-width:360px)]:flex-col '>
-        <span className='font-bold'>Grafana &nbsp;</span>
-        <span>missing ...</span>
-      </p>
-    )
-  }
-
-  const Tools = () => {
-    return (
-      <section className='grid grid-cols-2'>
-        {displayData?.includes('argocd') && <Argo />}
-        {displayData?.includes('grafana') && <Grafana />}
-      </section>
-    )
-  }
-
-  const CodeSnippetLogins = () => {
-    return (
-      <section className='flex flex-col gap-1.5 [&>div]:gap-0.5'>
-        {displayData?.includes('rorcli') && (
-          <div>
-            <p className='font-bold'>ROR CLI</p>
-            <Layer level={2}>
-              <CodeSnippet type='single'>{rorLogin}</CodeSnippet>
-            </Layer>
-          </div>
-        )}
-      </section>
-    )
-  }
-
-  const ResourceCard = ({
-    label,
-    resource,
-  }: {
-    label: string
-    resource: { capacity?: string; used?: string; percentage?: number | null }
-  }) => {
-    const barColor = negativeColors(resource.percentage ?? 0).join(' ')
-
-    return (
-      <div>
-        <p className='font-bold'>{label}</p>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className='flex items-center'>
-              <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1 mr-1' />
-              <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
-                {resource.percentage == null ? '—' : `${resource.percentage.toFixed(0)}%`}
-              </span>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Used: {resource.used ? resource.used : 'data missing'}</p>
-            <p>Capacity: {resource.capacity ? resource.capacity : 'data missing'}</p>
-            <p>Percentage: {resource.percentage ? resource.percentage + '%' : 'data missing'}</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
-    )
-  }
-
-  const Info = ({ label, value }: { label: string; value: string | number }) => {
-    return (
-      <div>
-        <p className='font-bold'>{label}</p>
-        <p>{value}</p>
-      </div>
-    )
-  }
-
-  const ServiceTags = () => {
-    return displayData?.includes('serviceTags') ? (
-      <div>
-        <p className='font-bold'>Tags</p>
-        <p className='flex flex-wrap gap-1'>
-          {/* {serviceTags.map(
-            ({ key, value, properties }: { key: string; value: string; properties: Record<string, string> }) => (
-              <Pill key={key} style={{ backgroundColor: properties.color }}>
-                {value}
-              </Pill>
-            )
-          )} */}
-        </p>
-      </div>
-    ) : null
-  }
+  const shows = (...keys: ClusterCardDisplayData[]) => displayDataContains(displayData, ...keys)
 
   const basicItems: React.ReactNode[] = []
 
-  if (displayData?.includes('datacenterProvider') && provider) {
-    basicItems.push(<span key='provider'>{provider}</span>)
-  }
+  if (shows('datacenterProvider') && provider) basicItems.push(<span key='provider'>{provider}</span>)
 
-  // if (displayData?.includes('datacenterName') && datacenter) {
-  //   basicItems.push(<span key='datacenter'>{datacenter}</span>)
-  // }
-
-  if (displayData?.includes('environment')) {
+  if (shows('environment')) {
     basicItems.push(
       <Pill key='environment' variant={envColors[(env ?? 'undefined') as Environment]} className='px-3'>
         {(env ?? 'Undefined').charAt(0).toUpperCase() + (env ?? 'Undefined').slice(1)}
@@ -273,7 +217,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
     )
   }
 
-  basicItems.push(<span key='datacenter'>{datacenter}</span>)
+  if (shows('datacenterName')) basicItems.push(<span key='datacenter'>{datacenter}</span>)
 
   const router = useRouter()
 
@@ -306,73 +250,97 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
       </CardHeader>
 
       <CardContent className='text-sm flex flex-col gap-3'>
-        <section className='flex items-center gap-2'>
-          {basicItems.map((item, index) => (
-            <React.Fragment key={index}>
-              {index > 0 && <Dot />}
-              {item}
-            </React.Fragment>
-          ))}
-        </section>
+        {basicItems.length > 0 && (
+          <>
+            <section className='flex items-center gap-2'>
+              {basicItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  {index > 0 && <Dot />}
+                  {item}
+                </React.Fragment>
+              ))}
+            </section>
+            <hr />
+          </>
+        )}
 
-        <hr />
+        {shows('nodes', 'cpu', 'memory', 'price', 'workspace') && (
+          <>
+            <section className={infoSectionCls}>
+              {shows('nodes') && (
+                <Info label='Nodes' value={`${nodesAmount} (${nodePools} pool${nodePools !== 1 ? 's' : ''})`} />
+              )}
+              {shows('cpu') && (
+                <ResourceCard
+                  label={'CPU'}
+                  resource={{
+                    capacity: cpu,
+                    used: cpuUsedMilli,
+                    percentage: cpuUsedPercentNumber,
+                  }}
+                />
+              )}
+              {shows('memory') && (
+                <ResourceCard
+                  label={'Memory'}
+                  resource={{
+                    capacity: memory,
+                    used: memoryUsed,
+                    percentage: memoryUsedPercentNumber,
+                  }}
+                />
+              )}
+              {shows('price') && (
+                <Info label='Price (month/year)' value={getPriceString(monthlyPrices, yearlyPrices)} />
+              )}
+              {shows('workspace') && <Info label='Workspace' value={workspace} />}
+            </section>
+            <hr />
+          </>
+        )}
 
-        <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-          {displayData?.includes('nodes') && (
-            <Info label='Nodes' value={`${nodesAmount} (${nodePools} pool${nodePools !== 1 ? 's' : ''})`} />
-          )}
-          {displayData?.includes('cpu') && (
-            <ResourceCard
-              label={'CPU'}
-              resource={{
-                capacity: cpu,
-                used: cpuUsedMilli,
-                percentage: cpuUsedPercentNumber,
-              }}
-            />
-          )}
-          {displayData?.includes('memory') && (
-            <ResourceCard
-              label={'Memory'}
-              resource={{
-                capacity: memory,
-                used: memoryUsed,
-                percentage: memoryUsedPercentNumber,
-              }}
-            />
-          )}
-          {displayData?.includes('price') && <Info label='Price (month/year)' value={priceString} />}
-        </section>
+        {shows('argocd', 'grafana', 'rorcli') && (
+          <>
+            <section className={cn('grid gap-2', externalLinkNum(shows))}>
+              {shows('argocd') && <ExternalTool name='ArgoCD' url={argocdUrl} />}
+              {shows('grafana') && <ExternalTool name='Grafana' url={grafanaUrl} />}
+              {shows('rorcli') && (
+                <Button
+                  variant='rorcli'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    copyToClipboard(rorLogin)
+                  }}
+                  className='font-bold'
+                >
+                  <Copy /> ROR CLI
+                </Button>
+              )}
+            </section>
+            <hr />
+          </>
+        )}
 
-        <hr />
+        {shows('agentVersion', 'kubernetesVersion', 'toolingVersion') && (
+          <section className={infoSectionCls}>
+            {shows('agentVersion') && <Info label='ROR agent version' value={rorAgentVersion} />}
+            {shows('kubernetesVersion') && <Info label='Kubernetes version' value={kubernetesVersion} />}
+            {shows('toolingVersion') && <Info label='NHN tooling version' value={nhnToolingVersion} />}
+          </section>
+        )}
 
-        <section className='flex flex-col gap-2'>
-          <Tools />
-          <CodeSnippetLogins />
-        </section>
+        {shows('serviceId') && (
+          <section className={infoSectionCls}>
+            <Info label='Service ID' value={serviceId} />
+          </section>
+        )}
 
-        <hr />
-
-        <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-          {displayData?.includes('agentVersion') && <Info label='ROR agent version' value={rorAgentVersion} />}
-          {displayData?.includes('kubernetesVersion') && <Info label='Kubernetes version' value={kubernetesVersion} />}
-          {displayData?.includes('toolingVersion') && <Info label='NHN tooling version' value={nhnToolingVersion} />}
-        </section>
-
-        <hr />
-
-        <div className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-          <Info label='Service ID' value={serviceId} />
-        </div>
-        <ServiceTags />
-
-        <hr />
-
-        <section className='flex flex-col gap-1.5 [&>div]:grid [&>div]:grid-cols-2 [@container(max-width:360px)]:[&>div]:grid-cols-1'>
-          <Info label='Region' value={`${region} (${country})`} />
-          <Info label='Availability zone' value={az} />
-          <Info label='Workspace' value={workspace} />
-        </section>
+        {shows('region', 'az') && (
+          <section className={infoSectionCls}>
+            {shows('region') && <Info label='Region' value={`${region} (${country})`} />}
+            {shows('az') && <Info label='Availability zone' value={az} />}
+          </section>
+        )}
       </CardContent>
     </Card>
   )
