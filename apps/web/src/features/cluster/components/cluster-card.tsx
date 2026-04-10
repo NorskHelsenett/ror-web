@@ -142,15 +142,23 @@ function externalLinkNum(shows: (...keys: ClusterCardDisplayData[]) => boolean):
   return colsMap[count] ?? 'grid-cols-3'
 }
 
-function ExternalTool({ name, url }: { name: string; url: string | null | undefined }) {
+function ExternalTool({
+  name,
+  type,
+  url,
+}: {
+  name: string
+  type: 'argocd' | 'grafana'
+  url: string | null | undefined
+}) {
   if (!url)
     return (
-      <Button variant='argocd' disabled className='font-bold'>
+      <Button variant={type} disabled className='font-bold'>
         <ExternalLink className='w-5 h-5' /> {name}
       </Button>
     )
   return (
-    <Button variant='argocd' className='font-bold' asChild>
+    <Button variant={type} className='font-bold' asChild>
       <a href={url} target='_blank' rel='noopener noreferrer' onClick={(e) => e.stopPropagation()}>
         <ExternalLink className='w-5 h-5' /> {name}
       </a>
@@ -302,8 +310,8 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
         {shows('argocd', 'grafana', 'rorcli') && (
           <>
             <section className={cn('grid gap-2', externalLinkNum(shows))}>
-              {shows('argocd') && <ExternalTool name='ArgoCD' url={argocdUrl} />}
-              {shows('grafana') && <ExternalTool name='Grafana' url={grafanaUrl} />}
+              {shows('argocd') && <ExternalTool name='ArgoCD' type='argocd' url={argocdUrl} />}
+              {shows('grafana') && <ExternalTool name='Grafana' type='grafana' url={grafanaUrl} />}
               {shows('rorcli') && (
                 <Button
                   variant='rorcli'
