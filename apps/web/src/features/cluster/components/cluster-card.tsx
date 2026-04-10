@@ -78,10 +78,10 @@ interface ClusterCardProps {
 }
 
 function getPriceString(monthly: number | null | undefined, yearly: number | null | undefined): string {
-  const m = monthly ?? (yearly ? yearly / 12 : null)
-  const y = yearly ?? (monthly ? monthly * 12 : null)
+  const m = monthly ?? (yearly != null ? yearly / 12 : null)
+  const y = yearly ?? (monthly != null ? monthly * 12 : null)
 
-  if (!m && !y) return missingText
+  if (m == null && y == null) return missingText
   return `${m} kr / ${y} kr`
 }
 
@@ -317,7 +317,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
                   variant='rorcli'
                   onClick={(e) => {
                     e.stopPropagation()
-                    copyToClipboard(rorLogin)
+                    void copyToClipboard(rorLogin).catch(() => {})
                   }}
                   className='font-bold'
                 >
@@ -330,17 +330,23 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
         )}
 
         {shows('agentVersion', 'kubernetesVersion', 'toolingVersion') && (
-          <section className={infoSectionCls}>
-            {shows('agentVersion') && <Info label='ROR agent version' value={rorAgentVersion} />}
-            {shows('kubernetesVersion') && <Info label='Kubernetes version' value={kubernetesVersion} />}
-            {shows('toolingVersion') && <Info label='NHN tooling version' value={nhnToolingVersion} />}
-          </section>
+          <>
+            <section className={infoSectionCls}>
+              {shows('agentVersion') && <Info label='ROR agent version' value={rorAgentVersion} />}
+              {shows('kubernetesVersion') && <Info label='Kubernetes version' value={kubernetesVersion} />}
+              {shows('toolingVersion') && <Info label='NHN tooling version' value={nhnToolingVersion} />}
+            </section>
+            <hr />
+          </>
         )}
 
         {shows('serviceId') && (
-          <section className={infoSectionCls}>
-            <Info label='Service ID' value={serviceId} />
-          </section>
+          <>
+            <section className={infoSectionCls}>
+              <Info label='Service ID' value={serviceId} />
+            </section>
+            <hr />
+          </>
         )}
 
         {shows('region', 'az') && (

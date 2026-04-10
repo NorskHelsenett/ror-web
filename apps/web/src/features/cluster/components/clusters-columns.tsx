@@ -46,7 +46,8 @@ const columnHelper = createColumnHelper<ClusterListViewRowType>()
 export function getClustersTableColumns(
   selectedDisplayData?: ClusterCardDisplayData[]
 ): DataTableColumnDef<ClusterListViewRowType>[] {
-  const isVisible = (id: ClusterCardDisplayData) => !selectedDisplayData || selectedDisplayData.includes(id)
+  const isVisible = (id: ClusterCardDisplayData) =>
+    !selectedDisplayData || selectedDisplayData.length === 0 || selectedDisplayData.includes(id)
 
   return [
     columnHelper.accessor(getClusterNameView, {
