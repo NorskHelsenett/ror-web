@@ -19,3 +19,7 @@ export type ClusterCardDisplayData =
   | 'datacenterProvider'
   | 'environment'
   | 'serviceTags'
+  | 'serviceId'
+  | 'region'
+  | 'az'
+  | 'workspace'

@@ -29,7 +29,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { ClusterCard } from '@/features/cluster/components/cluster-card'
 import { ClusterFilterSection } from '@/features/cluster/components/cluster-filter-section'
-import { displayDataOptions, sortingOptions } from '@/features/cluster/config/page-view-options'
+import { defaultDisplayData, displayDataOptions, sortingOptions } from '@/features/cluster/config/page-view-options'
 import { useDisplayData } from '@/hooks/use-display-data'
 import { ClusterCardDisplayData } from '@/features/cluster/types/display-data'
 import {
@@ -184,42 +184,34 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
     return sortedItems.filter((c) => ids.has(getClusterIdView(c)))
   }, [sortedItems, searchResults])
 
-  // Grid and table view
-  const GridView = () => {
-    return (
-      <div>
-        <div className='flex flex-row flex-wrap gap-6'>
-          {displayedItems.map((cluster, idx) => (
-            <div key={getClusterIdView(cluster) || idx}>
-              <ClusterCard
-                cluster={cluster}
-                displayData={
-                  selectedDisplayData?.length > 0
-                    ? selectedDisplayData
-                    : displayDataOptions?.map((o) => o.value as ClusterCardDisplayData) || []
-                }
-              />
-            </div>
-          ))}
-          <div ref={sentinelRef} className='h-px' />
-        </div>
-        {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
-        {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All clusters are loaded.</div>}
-      </div>
-    )
-  }
+  const effectiveDisplayData = (
+    selectedDisplayData?.length > 0 ? selectedDisplayData : defaultDisplayData
+  ) as ClusterCardDisplayData[]
 
-  const TableView = () => {
-    return (
-      <DataTable
-        data={displayedItems}
-        columns={getClustersTableColumns(selectedDisplayData)}
-        hasMore={hasMore}
-        isLoading={isLoading}
-        sentinelRef={sentinelRef}
-      />
-    )
-  }
+  const GridView = () => (
+    <div>
+      <div className='flex flex-row flex-wrap gap-6'>
+        {displayedItems.map((cluster, idx) => (
+          <div key={getClusterIdView(cluster) || idx}>
+            <ClusterCard cluster={cluster} displayData={effectiveDisplayData} />
+          </div>
+        ))}
+        <div ref={sentinelRef} className='h-px' />
+      </div>
+      {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
+      {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All clusters are loaded.</div>}
+    </div>
+  )
+
+  const TableView = () => (
+    <DataTable
+      data={displayedItems}
+      columns={getClustersTableColumns(effectiveDisplayData)}
+      hasMore={hasMore}
+      isLoading={isLoading}
+      sentinelRef={sentinelRef}
+    />
+  )
 
   return (
     <div className={cn(className, '@container')}>

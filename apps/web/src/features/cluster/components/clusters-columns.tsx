@@ -24,6 +24,10 @@ import {
   getRorLoginView,
   getProviderView,
   getClusterUidView,
+  getServiceIdView,
+  getRegionView,
+  getCountryView,
+  getAZView,
 } from '../utils/cluster'
 import { Button } from '@/components/shadcn/button'
 
@@ -42,8 +46,8 @@ const columnHelper = createColumnHelper<ClusterListViewRowType>()
 export function getClustersTableColumns(
   selectedDisplayData?: ClusterCardDisplayData[]
 ): DataTableColumnDef<ClusterListViewRowType>[] {
-  const showAll = !selectedDisplayData || selectedDisplayData.length === 0
-  const isVisible = (id: ClusterCardDisplayData) => showAll || selectedDisplayData.includes(id)
+  const isVisible = (id: ClusterCardDisplayData) =>
+    !selectedDisplayData || selectedDisplayData.length === 0 || selectedDisplayData.includes(id)
 
   return [
     columnHelper.accessor(getClusterNameView, {
@@ -350,6 +354,31 @@ export function getClustersTableColumns(
         },
         enableSorting: true,
         cell: (info) => <span>{info.getValue() || 'Unknown'}</span>,
+      }),
+    isVisible('serviceId') &&
+      columnHelper.accessor(getServiceIdView, {
+        id: 'serviceId',
+        size: 160,
+        header: () => <p className='text-sm'>Service ID</p>,
+        cell: (info) => <span>{info.getValue() || missingText}</span>,
+      }),
+    isVisible('region') &&
+      columnHelper.accessor(getRegionView, {
+        id: 'region',
+        size: 160,
+        header: () => <p className='text-sm'>Region</p>,
+        cell: (info) => {
+          const region = info.getValue()
+          const country = getCountryView(info.row.original)
+          return <span>{region && country ? `${region} (${country})` : region || missingText}</span>
+        },
+      }),
+    isVisible('az') &&
+      columnHelper.accessor(getAZView, {
+        id: 'az',
+        size: 160,
+        header: () => <p className='text-sm'>Availability zone</p>,
+        cell: (info) => <span>{info.getValue() || missingText}</span>,
       }),
   ].filter(Boolean) as DataTableColumnDef<ClusterListViewRowType>[]
 }
