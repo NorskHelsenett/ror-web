@@ -46,6 +46,7 @@ import { Progress } from '@/components/shadcn/progress'
 import { negativeColors } from '@/utils/scale-colors'
 import { Button } from '@/components/shadcn/button'
 import { copyToClipboard } from '@/utils/copy-to-clipboard'
+import { ResourceBar } from './resource-bar'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -69,7 +70,7 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
   return <div data-slot='card-content' className={cn('px-6', className)} {...props} />
 }
 
-const missingText = 'Missing ... '
+export const missingText = 'Missing ... '
 
 interface ClusterCardProps {
   className?: string
@@ -97,35 +98,6 @@ function Info({ label, value }: { label: string; value: string | number }) {
     <div>
       <p className='font-bold'>{label}</p>
       <p>{value}</p>
-    </div>
-  )
-}
-
-interface ResourceCardProps {
-  label: string
-  resource: { capacity?: string; used?: string; percentage?: number | null }
-}
-
-function ResourceCard({ label, resource }: ResourceCardProps) {
-  const barColor = negativeColors(resource.percentage ?? 0).join(' ')
-  return (
-    <div>
-      <p className='font-bold'>{label}</p>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className='flex items-center'>
-            <Progress value={resource.percentage ?? 0} indicatorColor={barColor} className='flex-1 mr-1' />
-            <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
-              {resource.percentage == null ? '—' : `${resource.percentage.toFixed(0)}%`}
-            </span>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Used: {resource.used ?? 'data missing'}</p>
-          <p>Capacity: {resource.capacity ?? 'data missing'}</p>
-          <p>Percentage: {resource.percentage != null ? `${resource.percentage}%` : 'data missing'}</p>
-        </TooltipContent>
-      </Tooltip>
     </div>
   )
 }
@@ -279,24 +251,16 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
                 <Info label='Nodes' value={`${nodesAmount} (${nodePools} pool${nodePools !== 1 ? 's' : ''})`} />
               )}
               {shows('cpu') && (
-                <ResourceCard
-                  label={'CPU'}
-                  resource={{
-                    capacity: cpu,
-                    used: cpuUsedMilli,
-                    percentage: cpuUsedPercentNumber,
-                  }}
-                />
+                <div>
+                  <p className='font-bold'>CPU</p>
+                  <ResourceBar capacity={cpu} used={cpuUsedMilli} percentage={cpuUsedPercentNumber} />
+                </div>
               )}
               {shows('memory') && (
-                <ResourceCard
-                  label={'Memory'}
-                  resource={{
-                    capacity: memory,
-                    used: memoryUsed,
-                    percentage: memoryUsedPercentNumber,
-                  }}
-                />
+                <div>
+                  <p className='font-bold'>Memory</p>
+                  <ResourceBar capacity={memory} used={memoryUsed} percentage={memoryUsedPercentNumber} />
+                </div>
               )}
               {shows('price') && (
                 <Info label='Price (month/year)' value={getPriceString(monthlyPrices, yearlyPrices)} />
