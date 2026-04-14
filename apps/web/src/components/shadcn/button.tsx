@@ -17,9 +17,12 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        argocd: 'bg-[#4141e1] dark:bg-[#4141e1] shadow-xs hover:bg-[#2c2cc7] dark:hover:bg-[#2c2cc7]',
-        grafana: 'bg-[#ff671d] dark:bg-[#ff671d] shadow-xs hover:bg-[#e05009] dark:hover:bg-[#e05009]',
-        rorcli: 'bg-[#04d607] dark:bg-[#04d607] shadow-xs hover:bg-[#04b306] dark:hover:bg-[#04b306]',
+        argocd:
+          'border-2 bg-[#4141e1]/10 border-[#4141e1] text-[#4141e1] shadow-xs hover:bg-[#2c2cc7] hover:text-white dark:hover:bg-[#2c2cc7]',
+        grafana:
+          'border-2 bg-[#ff671d]/10 border-[#ff671d] text-[#ff671d] shadow-xs hover:bg-[#e05009] hover:text-white dark:hover:bg-[#e05009]',
+        rorcli:
+          'border-2 bg-[#04d607]/10 border-[#04d607] text-[#04d607] shadow-xs hover:bg-[#04b306] hover:text-white dark:hover:bg-[#04b306]',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
