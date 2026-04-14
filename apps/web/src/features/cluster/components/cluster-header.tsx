@@ -11,12 +11,22 @@ import { HealthCircle } from './health-circle'
 import { navigationItemObject } from '@/app/(protected)/clusters/[id]/layout'
 import { useClusterContext } from '@/context/cluster-context'
 import { getEnvironmentColors } from '../utils/env-colors'
-import { getClusterName, getEnvironment, getStatusView } from '../utils/cluster'
+import { getClusterName, getClusterNameView, getEnvironment, getEnvironmentView, getStatusView } from '../utils/cluster'
 import { ResourceHeader } from '@/components/ui/resource-header'
+import { Environment, environmentValues } from '../types/environment'
 
 interface ClusterHeaderProps {
   className?: string
   tabs: navigationItemObject[]
+}
+
+function getEnvironmentForColor(environment: string): Environment {
+  for (const env of environmentValues) {
+    if (environment === env) {
+      return env
+    }
+  }
+  return 'undefined'
 }
 
 /**
@@ -27,10 +37,11 @@ interface ClusterHeaderProps {
  */
 export const ClusterHeader = ({ className, tabs }: ClusterHeaderProps) => {
   const { cluster } = useClusterContext()
-  const environment = getEnvironment(cluster)
-  const [lightmode, darkmode] = getEnvironmentColors(environment)
+  const environment = getEnvironmentView(cluster)
+  const environmentForColor = getEnvironmentForColor(environment)
+  const [lightmode, darkmode] = getEnvironmentColors(environmentForColor)
   const healthCondition = getStatusView(cluster)
-  const clusterName = getClusterName(cluster)
+  const clusterName = getClusterNameView(cluster)
 
   const rightContent = (
     <div className='flex items-center gap-4'>
