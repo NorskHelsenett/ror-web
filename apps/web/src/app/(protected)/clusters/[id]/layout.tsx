@@ -1,18 +1,18 @@
+'use client'
+
 /*
  * FILE OVERVIEW:
  *
  * Layout component that provides shared UI structure and context for all cluster-related pages under the [id] route.
  */
 
-// import { getRorApi } from '@/services/ror-api'
-import { cache, Fragment, ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
-import { getRorApi } from '@/services/ror-api'
 import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
-// import { RenderApiError } from '@/utils/renderApiError'
+import { useClusterLayout } from '@/features/cluster/hooks/use-cluster-layout'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -75,11 +75,6 @@ const createTabNavigationItems = (clusterId: string) => {
   ]
 }
 
-const fetchCluster = cache(async (id: string) => {
-  const api = await getRorApi()
-  return api.kubernetesClusters.id(id)
-})
-
 /**
  * Layout component for the Cluster page.
  *
@@ -94,17 +89,25 @@ const fetchCluster = cache(async (id: string) => {
  * @param children - The child components to be rendered within the layout.
  * @returns The layout for the cluster page, including context and navigation.
  */
-export default async function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
-  const { id } = await params
+export default function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
+  const { id, cluster, isLoading, error } = useClusterLayout({ params })
 
   try {
-    const cluster = await fetchCluster(id)
+    if (isLoading) {
+      return <div>Loading Cluster data...</div>
+    }
+
+    if (error || !cluster) {
+      return (
+        <div className='p-6'>
+          <h1 className='text-2xl font-bold text-red-600'>VM Not Found</h1>
+          <p>{error || 'Could not load VM data. Please go back and select a VM.'}</p>
+        </div>
+      )
+    }
 
     const tabs = createTabNavigationItems(id)
-
-    const clusterContextValue = {
-      cluster,
-    }
+    const clusterContextValue = { cluster }
 
     return (
       <ClusterProvider value={clusterContextValue}>

@@ -1,10 +1,10 @@
 'use client'
 
-import { KubernetesCluster } from '@ror/js-api-client'
+import { ClusterListViewRowType } from '@ror/js-api-client'
 import { createContext, useContext } from 'react'
 
 export interface ClusterContextData {
-  cluster: KubernetesCluster
+  cluster: ClusterListViewRowType
 }
 
 // Create a context
@@ -24,6 +24,7 @@ interface ClusterProviderProps {
   value: ClusterContextData
   children: React.ReactNode
 }
+
 export const ClusterProvider: React.FC<ClusterProviderProps> = ({ value, children }) => {
   return <ClusterContext.Provider value={value}>{children}</ClusterContext.Provider>
 }

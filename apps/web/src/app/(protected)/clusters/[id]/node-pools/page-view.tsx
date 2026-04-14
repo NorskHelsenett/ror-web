@@ -91,36 +91,37 @@ const NodeCard = ({ node }: { node: Node }) => (
  * @returns {JSX.Element} The rendered node pools page view.
  */
 export function PageView({ id, initialNodes }: PageViewProps) {
-  const { cluster } = useClusterContext()
+  // const { cluster } = useClusterContext()
 
-  const nodes = initialNodes
+  // const nodes = initialNodes
 
-  const data = React.useMemo(() => {
-    const statePools = cluster?.kubernetescluster?.status?.state?.cluster?.nodepools ?? []
-    const specPools = cluster?.kubernetescluster?.spec?.topology?.workers?.nodePools ?? []
+  // const data = React.useMemo(() => {
+  //   const statePools = cluster?.kubernetescluster?.status?.state?.cluster?.nodepools ?? []
+  //   const specPools = cluster?.kubernetescluster?.spec?.topology?.workers?.nodePools ?? []
 
-    return statePools.map((pool) => {
-      const spec = specPools.find((s) => s?.name === pool?.name)
-      const replicas = spec?.replicas ?? 0
-      const nodesInPool = getNodesInPool(pool?.nodes, nodes, pool?.name ?? undefined)
+  //   return statePools.map((pool) => {
+  //     const spec = specPools.find((s) => s?.name === pool?.name)
+  //     const replicas = spec?.replicas ?? 0
+  //     const nodesInPool = getNodesInPool(pool?.nodes, nodes, pool?.name ?? undefined)
 
-      return {
-        name: pool?.name ?? 'Data missing',
-        machineClass: pool?.machineClass ?? '',
-        nodeCount: `${pool?.scale ?? 0} / ${replicas}`,
-        cores: Number(pool?.resources?.cpu?.capacity ?? 0),
-        memory: convertMemory(pool?.resources?.memory?.capacity ?? '0'),
-        nodes: nodesInPool,
-        actions: <button className='text-blue-500 hover:underline'>Edit</button>,
-      }
-    })
-  }, [cluster, nodes])
+  //     return {
+  //       name: pool?.name ?? 'Data missing',
+  //       machineClass: pool?.machineClass ?? '',
+  //       nodeCount: `${pool?.scale ?? 0} / ${replicas}`,
+  //       cores: Number(pool?.resources?.cpu?.capacity ?? 0),
+  //       memory: convertMemory(pool?.resources?.memory?.capacity ?? '0'),
+  //       nodes: nodesInPool,
+  //       actions: <button className='text-blue-500 hover:underline'>Edit</button>,
+  //     }
+  //   })
+  // }, [cluster, nodes])
 
-  const columns = useMemo(() => nodePoolsColumns(id), [id])
+  // const columns = useMemo(() => nodePoolsColumns(id), [id])
 
   return (
     <div>
-      <Link href={routes.app.newNodePool.getHref(id)}>
+      <p>WIP</p>
+      {/* <Link href={routes.app.newNodePool.getHref(id)}>
         <Button asChild>
           <span className='flex items-center'>
             <Plus />
@@ -150,7 +151,7 @@ export function PageView({ id, initialNodes }: PageViewProps) {
         />
       ) : (
         <p>Cluster does not have node pools</p>
-      )}
+      )} */}
     </div>
   )
 }
