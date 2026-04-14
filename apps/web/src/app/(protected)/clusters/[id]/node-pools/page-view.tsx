@@ -6,77 +6,50 @@
 
 'use client'
 
-import React, { useMemo } from 'react'
-import { DataTable } from '@/components/ui/data-table'
-import { Button } from '@/components/shadcn/button'
-import { Plus } from 'lucide-react'
-import { TableCell, TableRow } from '@ror/react/components/table/table'
-import type { Node } from '@ror/js-api-client'
-import { routes } from '@/config/routes'
-import { useClusterContext } from '@/context/cluster-context'
-import { getNodesInPool } from '@/utils/get-nodes-in-pool'
-import { convertMemory } from '@/utils/bytes'
-import {
-  getNodeArchitecture,
-  getNodeBootID,
-  getNodeContainerRuntimeVersion,
-  getNodeKernelVersion,
-  getNodeKubeletVersion,
-  getNodeKubeProxyVersion,
-  getNodeOperatingSystem,
-  getNodeMachineID,
-  getNodeSystemUUID,
-  getNodeOsImage,
-  getNodePods,
-  getNodeCpu,
-  getNodeMemory,
-  getNodeEphemeralStorage,
-} from '@/features/cluster/utils/node'
-import { nodePoolsColumns } from '@/features/cluster/components/node-pools-columns'
-import Link from 'next/link'
+import React from 'react'
 
-interface PageViewProps {
-  id: string
-  initialNodes: Node[]
-}
+// interface PageViewProps {
+//   id: string
+//   initialNodes: Node[]
+// }
 
-interface Nodepool {
-  name: string
-  machineClass: string
-  nodeCount: string
-  cores: number
-  memory: string
-  nodes: Node[]
-  actions: React.ReactNode
-}
+// interface Nodepool {
+//   name: string
+//   machineClass: string
+//   nodeCount: string
+//   cores: number
+//   memory: string
+//   nodes: Node[]
+//   actions: React.ReactNode
+// }
 
-const NodeCard = ({ node }: { node: Node }) => (
-  <div className='rounded-lg border p-4 bg-[var(--r-layer)] dark:brightness-125 w-lg flex flex-col gap-2'>
-    <h4 className='text-xl text-wrap font-semibold'>{node.metadata.name}</h4>
-    <hr />
-    {[
-      ['CPU', getNodeCpu(node)],
-      ['Ephemeral Storage', getNodeEphemeralStorage(node)],
-      ['Memory', getNodeMemory(node)],
-      ['Pods', getNodePods(node)],
-      ['Architecture', getNodeArchitecture(node)],
-      ['Boot ID', getNodeBootID(node)],
-      ['Container Runtime', getNodeContainerRuntimeVersion(node)],
-      ['Kernel Version', getNodeKernelVersion(node)],
-      ['KubeProxy Version', getNodeKubeProxyVersion(node)],
-      ['Kubelet Version', getNodeKubeletVersion(node)],
-      ['Machine ID', getNodeMachineID(node)],
-      ['Operating System', getNodeOperatingSystem(node)],
-      ['OS Image', getNodeOsImage(node)],
-      ['System UUID', getNodeSystemUUID(node)],
-    ].map(([label, value]) => (
-      <p key={label} className='flex items-center'>
-        <span className='font-semibold'>{label}:&nbsp;</span>
-        {value || '-'}
-      </p>
-    ))}
-  </div>
-)
+// const NodeCard = ({ node }: { node: Node }) => (
+//   <div className='rounded-lg border p-4 bg-[var(--r-layer)] dark:brightness-125 w-lg flex flex-col gap-2'>
+//     <h4 className='text-xl text-wrap font-semibold'>{node.metadata.name}</h4>
+//     <hr />
+//     {[
+//       ['CPU', getNodeCpu(node)],
+//       ['Ephemeral Storage', getNodeEphemeralStorage(node)],
+//       ['Memory', getNodeMemory(node)],
+//       ['Pods', getNodePods(node)],
+//       ['Architecture', getNodeArchitecture(node)],
+//       ['Boot ID', getNodeBootID(node)],
+//       ['Container Runtime', getNodeContainerRuntimeVersion(node)],
+//       ['Kernel Version', getNodeKernelVersion(node)],
+//       ['KubeProxy Version', getNodeKubeProxyVersion(node)],
+//       ['Kubelet Version', getNodeKubeletVersion(node)],
+//       ['Machine ID', getNodeMachineID(node)],
+//       ['Operating System', getNodeOperatingSystem(node)],
+//       ['OS Image', getNodeOsImage(node)],
+//       ['System UUID', getNodeSystemUUID(node)],
+//     ].map(([label, value]) => (
+//       <p key={label} className='flex items-center'>
+//         <span className='font-semibold'>{label}:&nbsp;</span>
+//         {value || '-'}
+//       </p>
+//     ))}
+//   </div>
+// )
 
 /**
  * Renders the node pools page view for a specific cluster.
@@ -90,7 +63,8 @@ const NodeCard = ({ node }: { node: Node }) => (
  *
  * @returns {JSX.Element} The rendered node pools page view.
  */
-export function PageView({ id, initialNodes }: PageViewProps) {
+// export function PageView({ id, initialNodes }: PageViewProps) {
+export function PageView() {
   // const { cluster } = useClusterContext()
 
   // const nodes = initialNodes

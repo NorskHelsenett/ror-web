@@ -11,7 +11,7 @@ import { HealthCircle } from './health-circle'
 import { navigationItemObject } from '@/app/(protected)/clusters/[id]/layout'
 import { useClusterContext } from '@/context/cluster-context'
 import { getEnvironmentColors } from '../utils/env-colors'
-import { getClusterName, getClusterNameView, getEnvironment, getEnvironmentView, getStatusView } from '../utils/cluster'
+import { getClusterNameView, getEnvironmentView, getStatusView } from '../utils/cluster'
 import { ResourceHeader } from '@/components/ui/resource-header'
 import { Environment, environmentValues } from '../types/environment'
 

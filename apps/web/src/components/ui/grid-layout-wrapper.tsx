@@ -164,7 +164,7 @@ export const GridLayoutWrapper = ({
       grid.destroy(false)
       gridRef.current = null
     }
-  }, [layoutKey, currentBreakpoint])
+  }, [layoutKey, currentBreakpoint, getCurrentLayouts, preferenceKey, standardLayouts, contentMap, onLayoutChange])
 
   useEffect(() => {
     handleResize()
