@@ -21,6 +21,7 @@ import { createVirtualMachineVulnerabilityService as createVirtualMachineVulnera
 import { createAclService } from '../services/acls'
 import { createApiKeyService } from '../services/api-keys'
 import { createMachineService } from '../services/machine'
+import { createClusterListViewService } from '../services/views/clusterlist'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -70,6 +71,8 @@ export function createApiClient(config: ApiClientConfig) {
     virtualMachineVulnerabilityInfo: createVirtualMachineVulnerabilityInfoService(request),
     backupJob: createBackupJobService(request),
     backupRun: createBackupRunService(request),
+    // views
+    clusterListView: createClusterListViewService(request),
   }
 
   return services

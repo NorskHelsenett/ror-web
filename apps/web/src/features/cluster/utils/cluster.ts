@@ -1,4 +1,4 @@
-import { KubernetesCluster } from '@ror/js-api-client'
+import { ClusterListViewRowType, KubernetesCluster } from '@ror/js-api-client'
 import type { HealthStatus } from '../types/health-status'
 import { normalizeHealthStatus } from './health'
 import { ResourceType } from '../types/resource'
@@ -375,3 +375,89 @@ export const getCreationTimestamp = (cluster: KubernetesCluster) => cluster.meta
 export const getClusterById = (id: string, clusters: KubernetesCluster[]): KubernetesCluster | null => {
   return clusters.find((cluster) => getClusterId(cluster) === id) || null
 }
+
+// VIEWS
+
+export const getClusterUidView = (cluster: ClusterListViewRowType): string => cluster.clusterUid?.fieldValue || ''
+
+export const getClusterIdView = (cluster: ClusterListViewRowType): string => cluster.clusterId?.fieldValue || ''
+
+export const getClusterNameView = (cluster: ClusterListViewRowType): string => cluster.clusterName?.fieldValue || ''
+
+export const getProviderView = (cluster: ClusterListViewRowType): string => cluster.provider?.fieldValue || ''
+
+export const getDatacenterView = (cluster: ClusterListViewRowType): string => cluster.datacenter?.fieldValue || ''
+
+export const getAZView = (cluster: ClusterListViewRowType): string => cluster.availabilityZone?.fieldValue || ''
+
+export const getCountryView = (cluster: ClusterListViewRowType): string => cluster.country?.fieldValue || ''
+
+export const getRegionView = (cluster: ClusterListViewRowType): string => cluster.region?.fieldValue || ''
+
+export const getWorkspaceView = (cluster: ClusterListViewRowType): string => cluster.workspace?.fieldValue || ''
+
+export const getEnvironmentView = (cluster: ClusterListViewRowType): string => cluster.environment?.fieldValue || ''
+
+export const getResourcesCpuView = (cluster: ClusterListViewRowType): string => cluster.resourcesCpu?.fieldValue || ''
+
+export const getResourcesMemoryView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemory?.fieldValue || '') + (cluster.resourcesMemory?.fieldUnit || '')
+
+export const getResourcesCpuUsedMilliView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesCpuUsedMilli?.fieldValue || '') + (cluster.resourcesCpuUsedMilli?.fieldUnit || '')
+
+export const getResourcesMemoryUsedView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemoryUsed?.fieldValue || '') + (cluster.resourcesMemoryUsed?.fieldUnit || '')
+
+export const getResourcesCpuUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.resourcesCpuUsedPercent?.fieldValue ?? undefined
+
+export const getResourcesMemoryUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.resourcesMemoryUsedPercent?.fieldValue ?? undefined
+
+export const getResourcesCpuUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesCpuUsedPercent?.fieldValue || '') + (cluster.resourcesCpuUsedPercent?.fieldUnit || '')
+
+export const getResourcesMemoryUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
+  (cluster.resourcesMemoryUsedPercent?.fieldValue || '') + (cluster.resourcesMemoryUsedPercent?.fieldUnit || '')
+
+export const getNodesView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.nodes?.fieldValue || undefined
+
+export const getNodePoolsView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.nodePools?.fieldValue || undefined
+
+export const getPriceMonthView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.priceMonth?.fieldValue || undefined
+
+export const getPriceYearView = (cluster: ClusterListViewRowType): number | undefined =>
+  cluster.priceYear?.fieldValue || undefined
+
+export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.argocdURL?.fieldValue || ''
+
+export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.grafanaURL?.fieldValue || ''
+
+export const getRorAgentVersionView = (cluster: ClusterListViewRowType): string =>
+  cluster.rorAgentVersion?.fieldValue || ''
+
+export const getKubernetesVersionView = (cluster: ClusterListViewRowType): string =>
+  cluster.kubernetesVersion?.fieldValue || ''
+
+export const getNhnToolVersionView = (cluster: ClusterListViewRowType): string =>
+  cluster.nhnToolVersion?.fieldValue || ''
+
+export const getServiceIdView = (cluster: ClusterListViewRowType): string => cluster.serviceID?.fieldValue || ''
+
+export const getTagsView = (cluster: ClusterListViewRowType): Record<string, unknown> | null | undefined =>
+  cluster.tags?.fieldValue || undefined
+
+export const getStatusView = (cluster: ClusterListViewRowType): string => cluster.status?.fieldValue || ''
+
+export const getCreatedView = (cluster: ClusterListViewRowType): string => cluster.created?.fieldValue || ''
+
+export const getLastSeenView = (cluster: ClusterListViewRowType): string => cluster.lastSeen?.fieldValue || ''
+
+export const getClustersViewKey = (clusters: ClusterListViewRowType[] = []): string =>
+  Array.isArray(clusters) ? clusters.map(getClusterIdView).join('|') : ''
+
+export const getRorLoginView = (cluster: ClusterListViewRowType): string => `ror login ${getClusterIdView(cluster)}`

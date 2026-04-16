@@ -6,7 +6,6 @@ import { useClusterContext } from '@/context/cluster-context'
 import { Layer } from '@ror/react'
 import 'gridstack/dist/gridstack.min.css'
 import { ExternalLink } from 'lucide-react'
-import { User } from 'next-auth'
 import { useCallback } from 'react'
 import { standardLayouts } from '../config/cluster-details-layouts'
 import {
@@ -15,7 +14,6 @@ import {
   getCreated,
   getDatacenter,
   getHaClusterPlaneValue,
-  getKubectlLogin,
   getLastObserved,
   getPrices,
   getProject,
@@ -28,12 +26,7 @@ import {
 import { formatObservationDate, formatResource } from '../utils/formats'
 import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
 
-interface ClusterDetailsProps {
-  user?: User
-  className?: string
-}
-
-export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
+export const ClusterDetails = () => {
   const { cluster } = useClusterContext()
 
   const clusterId = getClusterId(cluster)
@@ -46,7 +39,6 @@ export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
   const lastObserved = getLastObserved(cluster)
   const created = getCreated(cluster)
   const rorLogin = getRorLogin(cluster)
-  const kubectlLogin = getKubectlLogin(cluster, user?.email || '<user-email missing>')
   const versions = getVersions(cluster)
   const project = getProject(cluster)
   const workspace = getWorkspace(cluster)
@@ -151,13 +143,10 @@ export const ClusterDetails = ({ user }: ClusterDetailsProps) => {
           <Layer level={2}>
             <CodeSnippet type='single'>{rorLogin}</CodeSnippet>
           </Layer>
-          <Layer level={2}>
-            <CodeSnippet type='single'>{kubectlLogin}</CodeSnippet>
-          </Layer>
         </div>
       </div>
     ),
-    [tools, rorLogin, kubectlLogin]
+    [tools, rorLogin]
   )
 
   const VersionsCard = useCallback(

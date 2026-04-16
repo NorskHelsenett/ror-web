@@ -17,8 +17,7 @@ export const displayDataOptions: Option[] = [
   { value: 'gpu', label: 'GPU usage' },
   { value: 'disk', label: 'Disk usage' },
   { value: 'nodes', label: 'Num of nodes' },
-  { value: 'monthlyPrice', label: 'Monthly price' },
-  { value: 'yearlyPrice', label: 'Yearly price' },
+  { value: 'price', label: 'Price' },
   { value: 'agentVersion', label: 'ROR agent version' },
   { value: 'kubernetesVersion', label: 'Kubernetes version' },
   { value: 'toolingVersion', label: 'NHN tooling version' },
@@ -26,7 +25,15 @@ export const displayDataOptions: Option[] = [
   { value: 'datacenterProvider', label: 'Datacenter provider' },
   { value: 'environment', label: 'Environment' },
   { value: 'serviceTags', label: 'Service tags' },
+  { value: 'serviceId', label: 'Service ID' },
+  { value: 'region', label: 'Region' },
+  { value: 'az', label: 'Availability zone' },
+  { value: 'workspace', label: 'Workspace' },
 ]
+
+const OPT_IN_FIELDS: string[] = ['agentVersion', 'kubernetesVersion', 'toolingVersion', 'serviceId', 'region', 'az']
+
+export const defaultDisplayData = displayDataOptions.map((o) => o.value).filter((v) => !OPT_IN_FIELDS.includes(v))
 
 /**
  * An array of sorting options for cluster page views.
@@ -78,11 +85,15 @@ export const environments: Option[] = environmentValues.map((env) => ({
  * Each option contains a `value` representing the datacenter identifier and a `label` for display purposes.
  */
 export const datacenters: Option[] = [
-  { value: 'trd1-tanzu', label: 'trd1 - tanzu' },
-  { value: 'osl1-tanzu', label: 'osl1 - tanzu' },
-  { value: 'trd1cl02-tanzu', label: 'trd1cl02 - tanzu' },
-  { value: 'norwayeast-aks', label: 'norwayeast - aks' },
-  { value: 'trd1-talos', label: 'trd1 - talos' },
+  { value: 'az1.central.no', label: 'az1.central.no' },
+  { value: 'az1.south.test', label: 'az1.south.test' },
+  { value: 'az1.west.no', label: 'az1.west.no' },
+  { value: 'bgo.west.no', label: 'bgo.west.no' },
+  { value: 'osl1', label: 'osl1' },
+  { value: 'TalosDC TalosAZ', label: 'TalosDC TalosAZ' },
+  { value: 'trd1', label: 'trd1' },
+  { value: 'trd1cl02', label: 'trd1cl02' },
+  { value: 'trd1 TalosAZ', label: 'trd1 TalosAZ' },
 ]
 
 /**
