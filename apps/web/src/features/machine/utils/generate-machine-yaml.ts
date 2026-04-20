@@ -8,7 +8,11 @@ export const buildMachineYaml = (v: CreateMachineForm) => {
   const machineClass = s(v.machineClass)
   const machineType = s(v.machineType)
   const size = s(v.size)
-  const tags = v.tags ?? {}
+  const tags = {
+    ...(v.tags ?? {}),
+    ...(v.serviceId ? { serviceId: v.serviceId } : {}),
+    ...(v.environment ? { environment: v.environment } : {}),
+  }
   const tagsArray = Object.entries(tags).map(([key, value]) => ({ key, value }))
 
   const smallTemplate = `resources:

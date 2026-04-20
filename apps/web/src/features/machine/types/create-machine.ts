@@ -11,6 +11,7 @@ export interface CreateMachineForm {
   name: string
   machineClass: string
   machineType: string
+  serialNumber: string
   size: 'small' | 'medium' | 'large'
   tags?: { [key: string]: string }
   cpu?: MachineCPU
@@ -26,4 +27,7 @@ export interface CreateMachineForm {
   monitoring?: boolean
   backup?: MachineBackup
   cloudInit?: CloudInitConfig
+  //Registered as tags
+  serviceId: string
+  environment: string
 }

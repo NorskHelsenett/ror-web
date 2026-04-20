@@ -8,7 +8,7 @@ import { FormSection } from '@/features/cluster/components/create-cluster/form-s
 import { useCallback, useMemo, useState } from 'react'
 import { addTag, removeTag } from '@/features/cluster/utils/tags'
 import { toast } from 'sonner'
-import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
+import { ChevronDownIcon, ChevronUpIcon, QuestionMarkCircledIcon } from '@radix-ui/react-icons'
 
 import { routes } from '@/config/routes'
 import { buildMachineYaml } from '@/features/machine/utils/generate-machine-yaml'
@@ -19,6 +19,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { TagsSection } from '@/features/cluster/components/create-cluster/tags-section'
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/shadcn/select'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/shadcn/collapsible'
 import { sizes } from '@/features/vms/config/create-vm-values'
 import { cn } from '@/utils/clsxm'
 import { CodeSnippet } from '@/components/ui/code-snippet'
@@ -29,14 +30,25 @@ import { buildMachineSpec } from '@/features/machine/utils/input-helper'
 import { persistMockCreatedMachine } from '@/features/machine/services/mock-machine-storage'
 
 const stepFields: Array<Array<Path<CreateMachineForm>>> = [
-  ['name', 'machineClass', 'machineType'],
+  // ['name', 'machineClass', 'machineType'],
+  ['name', 'machineClass', 'serialNumber', 'serviceId'],
+  ['os', 'providerConfig', 'provider', 'environment'],
   ['size'],
   ['network'],
   [],
   [],
 ]
 
+const serviceIdOptions = [
+  { value: 'hn', label: 'Helsenorge' },
+  { value: 'npe', label: 'NPE Brukerportal' },
+  { value: 'es', label: 'HDIR Esaks' },
+]
+
 export const PageView = () => {
+  const [numberOfMachines, setNumberOfMachines] = useState(1)
+  const [showNumberOfMachines, setShowNumberOfMachines] = useState(false)
+
   const [tagKey, setTagKey] = useState('')
   const [tagValue, setTagValue] = useState('')
   const [yamlOpen, setYamlOpen] = useState(false)
@@ -54,12 +66,23 @@ export const PageView = () => {
     formState: { errors },
   } = form
 
+  const osWatch = watch('os')
+  const providerWatch = watch('provider')
+  const providerConfigWatch = watch('providerConfig')
+
+  const serviceIdWatch = watch('serviceId')
+  const environmentWatch = watch('environment')
   const nameWatch = watch('name')
   const machineClassWatch = watch('machineClass')
   const machineTypeWatch = watch('machineType')
   const networkWatch = watch('network')
   const sizeWatch = watch('size')
   const tagsWatch = watch('tags')
+
+  const serviceIdLabel = useMemo(() => {
+    const selected = serviceIdOptions.find((option) => option.value === serviceIdWatch)
+    return selected?.label ?? 'Select service ID...'
+  }, [serviceIdWatch])
 
   const handleAddTag = () => {
     if (!tagKey.trim() || !tagValue.trim()) return
@@ -96,6 +119,7 @@ export const PageView = () => {
   //Router
   const router = useRouter()
 
+  // ------------------------------ Page 1 ------------------------------------------------------------------------------
   const NameInput = useCallback(() => {
     return (
       <FormSection title='Name' error={errors.name && errors.name.message}>
@@ -104,28 +128,146 @@ export const PageView = () => {
     )
   }, [errors.name, register])
 
+  // const ServiceIdInput = useCallback(() => {
+  //   return (
+  //     <FormSection title='Service ID' error={errors.serviceId && errors.serviceId.message}>
+  //       <Input {...register('serviceId')} placeholder='Enter service ID...' />
+  //     </FormSection>
+  //   )
+  // }, [errors.serviceId, register])
+
+  const ServiceIdInput = useCallback(() => {
+    return (
+      <FormSection title='Service ID' error={errors.serviceId && errors.serviceId.message}>
+        <Controller
+          control={control}
+          name='serviceId'
+          defaultValue=''
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className='w-52'>{field.value || 'Select service ID...'}</SelectTrigger>
+              <SelectContent>
+                {serviceIdOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+                {/* Future: dynamically load available machine classes */}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </FormSection>
+    )
+  }, [errors.serviceId, control])
+
+  // const MachineClassInput = useCallback(() => {
+  //   return (
+  //     <FormSection title='Machine class' error={errors.machineClass && errors.machineClass.message}>
+  //       <Input
+  //         {...register('machineClass', { required: 'Machine Class is required' })}
+  //         placeholder='Enter machine class...'
+  //       />
+  //     </FormSection>
+  //   )
+  // }, [errors.machineClass, register])
+
   const MachineClassInput = useCallback(() => {
     return (
-      <FormSection title='Machine Class' error={errors.machineClass && errors.machineClass.message}>
-        <Input
-          {...register('machineClass', { required: 'Machine Class is required' })}
-          placeholder='Enter machine class...'
+      <FormSection title='Machine class' error={errors.machineClass && errors.machineClass.message}>
+        <Controller
+          control={control}
+          name='machineClass'
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger className='w-52'>{field.value || 'Select machine class...'}</SelectTrigger>
+              <SelectContent>
+                <SelectItem value='small'>Small</SelectItem>
+                <SelectItem value='medium'>Medium</SelectItem>
+                <SelectItem value='large'>Large</SelectItem>
+                {/* Future: dynamically load available machine classes */}
+              </SelectContent>
+            </Select>
+          )}
         />
       </FormSection>
     )
-  }, [errors.machineClass, register])
+  }, [errors.machineClass, control])
 
-  const MachineTypeInput = useCallback(() => {
+  //This will determine if the user will create multiple duplicate machines, and will therefore need to add numbers on the generated name
+  const NumberOfMachines = useCallback(() => {
     return (
-      <FormSection title='Machine Type' error={errors.machineType && errors.machineType.message}>
-        <Input
-          {...register('machineType', { required: 'Machine Type is required' })}
-          placeholder='Enter machine type...'
-        />
-      </FormSection>
-    )
-  }, [errors.machineType, register])
+      <div className='border rounded-lg p-4 mt-2'>
+        <Collapsible open={showNumberOfMachines} onOpenChange={setShowNumberOfMachines}>
+          <div className='mb-1 flex items-center justify-between gap-2'>
+            <p className='text-sm text-muted-foreground'>
+              Do you want to create more than one machine? The machines will be duplicates.
+            </p>
+            <CollapsibleTrigger asChild>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-7 w-7 shrink-0'
+                aria-label={showNumberOfMachines ? 'Collapse number of machines' : 'Expand number of machines'}
+              >
+                {showNumberOfMachines ? <ChevronUpIcon className='h-4 w-4' /> : <ChevronDownIcon className='h-4 w-4' />}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
 
+          <CollapsibleContent className='mt-1'>
+            <div className='grid grid-cols-[1fr_auto] items-center rounded-md '>
+              <p className='text-sm font-medium'>Number of machines</p>
+              <Input
+                type='text'
+                inputMode='numeric'
+                defaultValue='1'
+                onBlur={(e) => {
+                  const parsed = parseInt(e.target.value.replace(/[^0-9]/g, ''))
+                  const valid = isNaN(parsed) || parsed < 1 ? 1 : parsed
+                  e.target.value = String(valid)
+                  setNumberOfMachines(valid)
+                }}
+                placeholder='1'
+                className='w-24'
+              />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      </div>
+    )
+  }, [showNumberOfMachines])
+
+  // const MachineTypeInput = useCallback(() => {
+  //   return (
+  //     <FormSection title='Machine type' error={errors.machineType && errors.machineType.message}>
+  //       <Input
+  //         {...register('machineType', { required: 'Machine Type is required' })}
+  //         placeholder='Enter machine type...'
+  //       />
+  //     </FormSection>
+  //   )
+  // }, [errors.machineType, register])
+
+  const GeneratedName = ({ baseName, serviceId, count }: { baseName: string; serviceId: string; count: number }) => {
+    if (!baseName && !serviceId) return null
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const base = `${baseName}-${serviceId}`
+    const display = count > 1 ? `${base}-(${pad(1)}-${pad(count)})` : base
+    return (
+      <div className='text-center'>
+        <p className='text-sm font-semibold text-muted-foreground mb-1'>
+          Generated machine name{count > 1 ? 's' : ''}:
+        </p>
+        <p className='font-mono text-sm'>{display}</p>
+      </div>
+    )
+  }
+
+  // ------------------------------ Page 2 ------------------------------------------------------------------------------
+
+  // ------------------------------ Page 3 ------------------------------------------------------------------------------
   const SizeInput = useCallback(() => {
     return (
       <FormSection
@@ -206,6 +348,16 @@ export const PageView = () => {
     </tr>
   )
 
+  const vmCount = showNumberOfMachines ? numberOfMachines : 1
+  const generatedNameSummary = useMemo(() => {
+    if (!nameWatch && !serviceIdWatch) return 'N/A'
+
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const base = `${nameWatch}-${serviceIdWatch}`
+
+    return vmCount > 1 ? `${base}-(${pad(1)}-${pad(vmCount)})` : base
+  }, [nameWatch, serviceIdWatch, vmCount])
+
   const Summary = () => {
     return (
       <div className='w-fit'>
@@ -213,7 +365,9 @@ export const PageView = () => {
         <div className={cn('border rounded-lg p-4 overflow-hidden my-4', 'w-full', 'sm:w-96')}>
           <table className={cn('border-separate border-spacing-0 w-full', 'text-sm', 'sm:text-md')}>
             <tbody>
-              <SummaryTableRow title='Name' content={nameWatch || 'N/A'} />
+              {/* <SummaryTableRow title='Name' content={nameWatch || 'N/A'} /> */}
+              <SummaryTableRow title='Generated name' content={generatedNameSummary} />
+              <SummaryTableRow title='Numbers created' content={vmCount} />
               <SummaryTableRow title='Machine class' content={machineClassWatch || 'N/A'} />
               <SummaryTableRow title='Machine type' content={machineTypeWatch || 'N/A'} />
               <SummaryTableRow title='Size' content={sizeWatch || 'N/A'} />
@@ -221,15 +375,14 @@ export const PageView = () => {
               <tr>
                 <td className='font-semibold pt-1 pb-3 pr-4 align-top'>Tags</td>
                 <td>
-                  {Object.entries(tagsWatch ?? {}).length === 0 ? (
-                    <span className='italic opacity-70'>No tags</span>
-                  ) : (
+                  <p>serviceId: {serviceIdLabel}</p>
+                  <p>environment: {environmentWatch || 'N/A'}</p>
+                  {Object.entries(tagsWatch ?? {}).length > 0 &&
                     Object.entries(tagsWatch ?? {}).map(([key, value]) => (
                       <p key={key}>
                         {key}: {value}
                       </p>
-                    ))
-                  )}
+                    ))}
                 </td>
               </tr>
             </tbody>
@@ -275,10 +428,17 @@ export const PageView = () => {
     {
       title: 'Basics',
       wizardContent: (
-        <div className={cn('flex gap-24 w-fit mx-auto', 'flex-col gap-4', 'sm:flex-row sm:gap-24')}>
-          <NameInput />
-          <MachineClassInput />
-          <MachineTypeInput />
+        <div className='flex flex-col gap-6 w-fit mx-auto'>
+          <NumberOfMachines />
+          <div className={cn('flex w-fit', 'flex-col gap-4', 'sm:flex-row sm:gap-12')}>
+            <NameInput />
+            <ServiceIdInput />
+            <MachineClassInput />
+            {/* <MachineTypeInput /> */}
+          </div>
+          <div className='text-center'>
+            <GeneratedName baseName={nameWatch} serviceId={serviceIdWatch} count={vmCount} />
+          </div>
         </div>
       ),
     },

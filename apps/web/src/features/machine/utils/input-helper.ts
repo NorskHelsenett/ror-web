@@ -120,7 +120,11 @@ export const buildMachineSpec = (form: import('../types/create-machine').CreateM
     providerConfig: form.providerConfig,
     sshKeys: form.sshKeys ?? [],
     userData: form.userData,
-    tags: form.tags ?? {},
+    tags: {
+      ...(form.tags ?? {}),
+      ...(form.serviceId ? { serviceId: form.serviceId } : {}),
+      ...(form.environment ? { environment: form.environment } : {}),
+    },
     securityGroups: form.securityGroups ?? [],
     monitoring: form.monitoring ?? false,
     backup: form.backup,
