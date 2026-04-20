@@ -73,7 +73,6 @@ export function getClustersTableColumns(
         <Link
           href={routes.app.cluster.getHref(getClusterUidView(info.row.original))}
           className='text-blue-600 dark:text-blue-500 underline'
-          onClick={() => localStorage.setItem('selectedCluster', JSON.stringify(info.row.original))}
         >
           {info.getValue() || missingText}
         </Link>

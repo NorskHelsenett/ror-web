@@ -199,8 +199,6 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const router = useRouter()
 
   const handleCardClick = () => {
-    localStorage.setItem('selectedCluster', JSON.stringify(cluster))
-    localStorage.setItem('selectedClusterId', JSON.stringify(getClusterUidView(cluster)))
     router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))
   }
 
