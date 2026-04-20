@@ -36,7 +36,7 @@ export default async function VMPage({
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, params),
     fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms

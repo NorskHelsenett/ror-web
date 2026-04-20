@@ -8,24 +8,42 @@ import {
   getBackupRunMappedBackupJobId,
 } from '@/features/vms/backup/utils/backup-run'
 
+const SEARCH_PAGE_SIZE = 500
+const MAX_SEARCH_PAGES = 40
+
+const getPageParams = (offset: number, limit: number) => {
+  const params = new URLSearchParams()
+  params.set('limit', String(limit))
+  params.set('offset', String(offset))
+  params.set('order', 'desc')
+  return params
+}
+
 export async function searchBackupRunById(id: string): Promise<BackupRun | null> {
   try {
     const api = await getRorApi()
 
-    // Search for backup run with specific ID
-    const params = new URLSearchParams()
-    params.set('limit', '1000') // Large limit to catch the specific item
-    params.set('offset', '0')
+    for (let page = 0; page < MAX_SEARCH_PAGES; page++) {
+      const offset = page * SEARCH_PAGE_SIZE
+      const params = getPageParams(offset, SEARCH_PAGE_SIZE)
 
-    const backupRunsRes = await api.backupRun.list(params)
-    const backupRuns: BackupRun[] = backupRunsRes?.resources ?? []
+      const backupRunsRes = await api.backupRun.list(params)
+      const backupRuns: BackupRun[] = backupRunsRes?.resources ?? []
 
-    // Find the specific backup run by ID or mapped backup job ID
-    const found = backupRuns.find(
-      (run) => getBackupRunId(run) === id || getBackupRunMappedBackupJobId(run) === id || run.metadata?.uid === id
-    )
+      const found = backupRuns.find(
+        (run) => getBackupRunId(run) === id || getBackupRunMappedBackupJobId(run) === id || run.metadata?.uid === id
+      )
 
-    return found || null
+      if (found) {
+        return found
+      }
+
+      if (backupRuns.length < SEARCH_PAGE_SIZE) {
+        break
+      }
+    }
+
+    return null
   } catch (error) {
     console.error('Error searching for backup run:', error)
     return null
@@ -36,24 +54,35 @@ export async function searchBackupRunsByQuery(query: string, limit: number = 50)
   try {
     const api = await getRorApi()
 
-    const params = new URLSearchParams()
-    params.set('limit', String(limit * 2)) // Get more items to search through
-    params.set('offset', '0')
-
-    const backupRunsRes = await api.backupRun.list(params)
-    const backupRuns: BackupRun[] = backupRunsRes?.resources ?? []
-
-    // Filter by query (ID match or source match)
     const queryLower = query.toLowerCase()
-    const filtered = backupRuns.filter((run) => {
-      const id = getBackupRunId(run).toLowerCase()
-      const source = getBackupRunSource(run).toLowerCase()
-      const backupJobId = getBackupRunMappedBackupJobId(run).toLowerCase()
+    const matches: BackupRun[] = []
 
-      return id.includes(queryLower) || source.includes(queryLower) || backupJobId.includes(queryLower)
-    })
+    for (let page = 0; page < MAX_SEARCH_PAGES; page++) {
+      const offset = page * SEARCH_PAGE_SIZE
+      const params = getPageParams(offset, SEARCH_PAGE_SIZE)
 
-    return filtered.slice(0, limit)
+      const backupRunsRes = await api.backupRun.list(params)
+      const backupRuns: BackupRun[] = backupRunsRes?.resources ?? []
+
+      for (const run of backupRuns) {
+        const id = getBackupRunId(run).toLowerCase()
+        const source = getBackupRunSource(run).toLowerCase()
+        const backupJobId = getBackupRunMappedBackupJobId(run).toLowerCase()
+
+        if (id.includes(queryLower) || source.includes(queryLower) || backupJobId.includes(queryLower)) {
+          matches.push(run)
+          if (matches.length >= limit) {
+            return matches
+          }
+        }
+      }
+
+      if (backupRuns.length < SEARCH_PAGE_SIZE) {
+        break
+      }
+    }
+
+    return matches
   } catch (error) {
     console.error('Error searching backup runs:', error)
     return []

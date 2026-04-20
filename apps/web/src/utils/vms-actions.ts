@@ -35,7 +35,7 @@ export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMo
   const [vmRes, backupJobsRes, backupRunsRes] = await Promise.all([
     api.virtualMachine.list(params),
     fetchBackupJobs(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, { page: 1, limit: 10000, order: 'asc' }).catch(() => ({ backupRuns: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms: VirtualMachine[] = vmRes?.resources ?? []
