@@ -3,13 +3,50 @@
 import { useVMContext } from '@/context/vm-context'
 import { BackupOverview } from '@/features/vms/backup/components'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
+import { useEffect, useState } from 'react'
+import type { BackupRun } from '@ror/js-api-client'
 
 export default function VMBackupPage() {
   const { vm } = useVMContext()
+  const [backupRuns, setBackupRuns] = useState<BackupRun[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
   const enhancedVM = vm as VMWithBackupStatus
   const hasBackupDataArrays = 'backupStatus' in enhancedVM && enhancedVM.backupStatus?.relatedBackupJobs !== undefined
   const relatedBackupJobs = enhancedVM.backupStatus?.relatedBackupJobs || []
-  const relatedBackupRuns = enhancedVM.backupStatus?.relatedBackupRuns || []
+  const relatedBackupRuns = backupRuns.length > 0 ? backupRuns : enhancedVM.backupStatus?.relatedBackupRuns || []
+
+  // Fetch backup runs for this VM's backup jobs on mount
+  useEffect(() => {
+    const fetchBackupRunsForVM = async () => {
+      try {
+        setIsLoading(true)
+        if (!relatedBackupJobs.length) {
+          setIsLoading(false)
+          return
+        }
+
+        const response = await fetch('/api/vm-backup-runs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            backupJobs: relatedBackupJobs,
+          }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setBackupRuns(data.backupRuns || [])
+        }
+      } catch (error) {
+        console.error('Error fetching backup runs:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchBackupRunsForVM()
+  }, [relatedBackupJobs])
 
   return (
     <div className='space-y-6'>

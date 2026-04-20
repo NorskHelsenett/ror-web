@@ -12,6 +12,7 @@ import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
+import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
@@ -41,7 +42,21 @@ export default async function VMPage({
 
   const vms = fetchedVms.vms
   const backupJobs = fetchedBackupJobs.backupJobs || []
-  const backupRuns = fetchedBackupRuns.backupRuns || []
+  let backupRuns = [...(fetchedBackupRuns.backupRuns || [])]
+
+  // Supplement with backup runs referenced by the discovered jobs
+  try {
+    const jobSpecificRuns = await fetchBackupRunsForJobs(api, backupJobs).catch(() => [])
+    const runIdSet = new Set(backupRuns.map((r) => r?.backuprun?.id))
+    for (const run of jobSpecificRuns) {
+      const runId = run?.backuprun?.id
+      if (runId && !runIdSet.has(runId)) {
+        backupRuns.push(run)
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching job-specific backup runs:', error)
+  }
 
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
 
