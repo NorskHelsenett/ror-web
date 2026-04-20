@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 /*
  * FILE OVERVIEW:
@@ -6,13 +6,14 @@
  * Layout component that provides shared UI structure and context for all cluster-related pages under the [id] route.
  */
 
-import { Fragment, ReactNode } from 'react'
+import { cache, Fragment, ReactNode } from 'react'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
-import { useClusterLayout } from '@/features/cluster/hooks/use-cluster-layout'
+import { fetchClusterViewItem } from '@/features/cluster/services/fetch-clusters'
+import { ClusterListItemView } from '@ror/js-api-client'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -25,7 +26,7 @@ interface ClusterPageLayoutProps {
 const {
   cluster,
   // clusterIngresses,
-  clusterNodePools,
+  // clusterNodePools,
   // clusterPolicies,
   clusterVulnerabilities,
   // clusterCompliance,
@@ -48,10 +49,10 @@ const createTabNavigationItems = (clusterId: string) => {
     //   label: clusterIngresses.label,
     //   href: clusterIngresses.getHref(clusterId),
     // },
-    {
-      label: clusterNodePools.label,
-      href: clusterNodePools.getHref(clusterId),
-    },
+    // {
+    //   label: clusterNodePools.label,
+    //   href: clusterNodePools.getHref(clusterId),
+    // },
     // {
     //   label: clusterPolicies.label,
     //   href: clusterPolicies.getHref(clusterId),
@@ -75,6 +76,10 @@ const createTabNavigationItems = (clusterId: string) => {
   ]
 }
 
+const fetchCluster = cache(async (id: string) => {
+  return fetchClusterViewItem(id)
+})
+
 /**
  * Layout component for the Cluster page.
  *
@@ -89,23 +94,12 @@ const createTabNavigationItems = (clusterId: string) => {
  * @param children - The child components to be rendered within the layout.
  * @returns The layout for the cluster page, including context and navigation.
  */
-export default function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
-  const { id, cluster, isLoading, error } = useClusterLayout({ params })
+export default async function ClusterPageLayout({ params, children }: ClusterPageLayoutProps) {
+  const { id } = await params
 
   try {
-    if (isLoading) {
-      return <div>Loading Cluster data...</div>
-    }
-
-    if (error || !cluster) {
-      return (
-        <div className='p-6'>
-          <h1 className='text-2xl font-bold text-red-600'>VM Not Found</h1>
-          <p>{error || 'Could not load VM data. Please go back and select a VM.'}</p>
-        </div>
-      )
-    }
-
+    const clusterList = (await fetchCluster(id)) as ClusterListItemView
+    const cluster = clusterList.rows[0]
     const tabs = createTabNavigationItems(id)
     const clusterContextValue = { cluster }
 

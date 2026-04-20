@@ -7,33 +7,33 @@ import { Copy, ExternalLink } from 'lucide-react'
 import { useCallback } from 'react'
 import { standardLayouts } from '../config/cluster-details-layouts'
 import {
-  getArgocdUrlView,
-  getAZView,
-  getClusterIdView,
-  getClusterUidView,
-  getCountryView,
-  getCreatedView,
-  getDatacenterView,
-  getGrafanaUrlView,
-  getKubernetesVersionView,
-  getLastSeenView,
-  getNhnToolVersionView,
-  getNodePoolsView,
-  getNodesView,
-  getPriceMonthView,
-  getPriceYearView,
-  getProviderView,
-  getRegionView,
-  getResourcesCpuUsedMilliView,
-  getResourcesCpuUsedPercentNumberView,
-  getResourcesCpuView,
-  getResourcesMemoryUsedPercentNumberView,
-  getResourcesMemoryUsedView,
-  getResourcesMemoryView,
-  getRorAgentVersionView,
-  getRorLoginView,
-  getServiceIdView,
-  getWorkspaceView,
+  getArgocdUrlViewItem,
+  getAZViewItem,
+  getClusterIdViewItem,
+  getClusterUidViewItem,
+  getCountryViewItem,
+  getCreatedViewItem,
+  getDatacenterViewItem,
+  getGrafanaUrlViewItem,
+  getKubernetesVersionViewItem,
+  getLastSeenViewItem,
+  getNhnToolVersionViewItem,
+  getNodePoolsViewItem,
+  getNodesViewItem,
+  getPriceMonthViewItem,
+  getPriceYearViewItem,
+  getProviderViewItem,
+  getRegionViewItem,
+  getResourcesCpuUsedMilliViewItem,
+  getResourcesCpuUsedPercentNumberViewItem,
+  getResourcesCpuViewItem,
+  getResourcesMemoryUsedPercentNumberViewItem,
+  getResourcesMemoryUsedViewItem,
+  getResourcesMemoryViewItem,
+  getRorAgentVersionViewItem,
+  getRorLoginViewItem,
+  getServiceIdViewItem,
+  getWorkspaceViewItem,
 } from '../utils/cluster'
 import { formatObservationDate } from '../utils/formats'
 import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
@@ -45,33 +45,33 @@ import { copyToClipboard } from '@/utils/copy-to-clipboard'
 export const ClusterDetails = () => {
   const { cluster } = useClusterContext()
 
-  const clusterId = getClusterIdView(cluster) || missingText
-  const clusterUid = getClusterUidView(cluster) || missingText
-  const provider = getProviderView(cluster) || missingText
-  const datacenter = getDatacenterView(cluster) || missingText
-  const az = getAZView(cluster) || missingText
-  const country = getCountryView(cluster) || missingText
-  const region = getRegionView(cluster) || missingText
-  const workspace = getWorkspaceView(cluster) || missingText
-  const cpu = getResourcesCpuView(cluster) || missingText
-  const memory = getResourcesMemoryView(cluster) || missingText
-  const cpuUsedMilli = getResourcesCpuUsedMilliView(cluster) || missingText
-  const memoryUsed = getResourcesMemoryUsedView(cluster) || missingText
-  const cpuUsedPercentNumber = getResourcesCpuUsedPercentNumberView(cluster)
-  const memoryUsedPercentNumber = getResourcesMemoryUsedPercentNumberView(cluster)
-  const nodesAmount = getNodesView(cluster) || 0
-  const nodePools = getNodePoolsView(cluster) || 0
-  const monthlyPrices = getPriceMonthView(cluster)
-  const yearlyPrices = getPriceYearView(cluster)
-  const argocdUrl = getArgocdUrlView(cluster)
-  const grafanaUrl = getGrafanaUrlView(cluster)
-  const rorAgentVersion = getRorAgentVersionView(cluster) || missingText
-  const kubernetesVersion = getKubernetesVersionView(cluster) || missingText
-  const nhnToolingVersion = getNhnToolVersionView(cluster) || missingText
-  const serviceId = getServiceIdView(cluster) || missingText
-  const created = getCreatedView(cluster) || missingText
-  const lastSeen = getLastSeenView(cluster) || missingText
-  const rorLogin = getRorLoginView(cluster) || missingText
+  const clusterId = getClusterIdViewItem(cluster) || missingText
+  const clusterUid = getClusterUidViewItem(cluster) || missingText
+  const provider = getProviderViewItem(cluster) || missingText
+  const datacenter = getDatacenterViewItem(cluster) || missingText
+  const az = getAZViewItem(cluster) || missingText
+  const country = getCountryViewItem(cluster) || missingText
+  const region = getRegionViewItem(cluster) || missingText
+  const workspace = getWorkspaceViewItem(cluster) || missingText
+  const cpu = getResourcesCpuViewItem(cluster) || missingText
+  const memory = getResourcesMemoryViewItem(cluster) || missingText
+  const cpuUsedMilli = getResourcesCpuUsedMilliViewItem(cluster) || missingText
+  const memoryUsed = getResourcesMemoryUsedViewItem(cluster) || missingText
+  const cpuUsedPercentNumber = getResourcesCpuUsedPercentNumberViewItem(cluster)
+  const memoryUsedPercentNumber = getResourcesMemoryUsedPercentNumberViewItem(cluster)
+  const nodesAmount = getNodesViewItem(cluster) || 0
+  const nodePools = getNodePoolsViewItem(cluster) || 0
+  const monthlyPrices = getPriceMonthViewItem(cluster)
+  const yearlyPrices = getPriceYearViewItem(cluster)
+  const argocdUrl = getArgocdUrlViewItem(cluster)
+  const grafanaUrl = getGrafanaUrlViewItem(cluster)
+  const rorAgentVersion = getRorAgentVersionViewItem(cluster) || missingText
+  const kubernetesVersion = getKubernetesVersionViewItem(cluster) || missingText
+  const nhnToolingVersion = getNhnToolVersionViewItem(cluster) || missingText
+  const serviceId = getServiceIdViewItem(cluster) || missingText
+  const created = getCreatedViewItem(cluster)
+  const lastSeen = getLastSeenViewItem(cluster)
+  const rorLogin = getRorLoginViewItem(cluster) || missingText
 
   const cardStyling = 'h-full w-full flex flex-col bg-(--r-layer) p-4 rounded-md'
 

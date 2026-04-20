@@ -19,14 +19,14 @@ export const useClusterLayout = ({ params }: UseClusterLayoutParams): UseCluster
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadVmData = async () => {
+    const loadClusterData = async () => {
       try {
         setIsLoading(true)
         setError(null)
         const { id } = await params
         setId(id)
         const stored = localStorage.getItem('selectedCluster')
-        if (stored) {
+        if (stored && JSON.parse(stored).clusterUid.fieldValue == id) {
           setCluster(JSON.parse(stored))
         } else {
           setError('No Cluster data found in localStorage')
@@ -38,7 +38,7 @@ export const useClusterLayout = ({ params }: UseClusterLayoutParams): UseCluster
       }
     }
 
-    loadVmData()
+    loadClusterData()
   }, [params])
 
   return { id, cluster, isLoading, error }

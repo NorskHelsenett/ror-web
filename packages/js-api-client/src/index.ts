@@ -60,6 +60,8 @@ export type {
   CVEType,
   ClusterListView,
   ClusterListViewRowType,
+  ClusterListItemView,
+  ClusterListViewItemRowType,
 } from './types/entities'
 
 export { CreateApiKeyRequestSchema } from './schemas/api-key'

@@ -1,10 +1,10 @@
 'use client'
 
-import { ClusterListViewRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType } from '@ror/js-api-client'
 import { createContext, useContext } from 'react'
 
 export interface ClusterContextData {
-  cluster: ClusterListViewRowType
+  cluster: ClusterListViewItemRowType
 }
 
 // Create a context
