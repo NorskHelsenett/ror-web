@@ -73,6 +73,13 @@ const VM_BACKUP_INFO_CACHE_TTL_MS = 6 * 60 * 60 * 1000
 const VM_BACKUP_RUN_BATCH_SIZE = 200
 const RUN_IDS_PER_JOB = 3
 
+const isExpiredBackup = (expiryTime?: string | null) => {
+  if (!expiryTime) return false
+  const expiryDate = new Date(expiryTime)
+  if (Number.isNaN(expiryDate.getTime())) return false
+  return expiryDate.getTime() < Date.now()
+}
+
 type BackupInfoCacheEntry = LastBackupInfo & { cachedAt: number }
 type BackupInfoCacheMap = Record<string, BackupInfoCacheEntry>
 
@@ -292,7 +299,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       key: 'Backup',
       extractor: (vm: VirtualMachine | VMWithBackupStatus) => {
         if ('backupStatus' in vm) {
-          const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+          const backupStatus = vm.backupStatus as {
+            hasBackupJob: boolean
+            hasBackupRun: boolean
+            lastBackupInfo?: LastBackupInfo | null
+          }
+          const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+          if (isExpired) return 'expiredBackup'
           if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 'activeBackup'
           if (backupStatus.hasBackupRun) return 'historicalBackup'
           if (backupStatus.hasBackupJob) return 'configuredBackup'
@@ -319,24 +333,38 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       key: 'activeBackup',
       extractor: (vm) => {
         if ('backupStatus' in vm) {
-          const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+          const backupStatus = vm.backupStatus as {
+            hasBackupJob: boolean
+            hasBackupRun: boolean
+            lastBackupInfo?: LastBackupInfo | null
+          }
+          const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+          if (isExpired) return 2 // Expired backup
           if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 1 // Active backup
-          if (backupStatus.hasBackupRun) return 2 // Historical backup
-          if (backupStatus.hasBackupJob) return 3 // Configured backup
-          return 4 // No backup
+          if (backupStatus.hasBackupRun) return 3 // Historical backup
+          if (backupStatus.hasBackupJob) return 4 // Configured backup
+          return 5 // No backup
         }
-        return 4 // No backup data
+        return 5 // No backup data
       },
       compareFn: (a, b) => {
         const getBackupPriority = (vm: VirtualMachine | VMWithBackupStatus) => {
           if ('backupStatus' in vm) {
-            const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+            const backupStatus = vm.backupStatus as {
+              hasBackupJob: boolean
+              hasBackupRun: boolean
+              lastBackupInfo?: LastBackupInfo | null
+            }
+            const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+            if (isExpired) return 2 // Expired backup
             if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 1 // Active backup (highest priority)
-            if (backupStatus.hasBackupRun) return 2 // Historical backup
-            if (backupStatus.hasBackupJob) return 3 // Configured backup
-            return 4 // No backup
+            if (backupStatus.hasBackupRun) return 3 // Historical backup
+            if (backupStatus.hasBackupJob) return 4 // Configured backup
+            return 5 // No backup
           }
-          return 4 // No backup data
+          return 5 // No backup data
         }
 
         return getBackupPriority(a) - getBackupPriority(b)

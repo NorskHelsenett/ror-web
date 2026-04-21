@@ -34,8 +34,11 @@ interface BackupOverviewProps {
   backupRuns: BackupRun[]
 }
 
-const formatDateTime = (dateString: string) => {
-  return format(new Date(dateString), "MMM dd, yyyy 'at' HH:mm")
+const formatDateTime = (dateString: string | null | undefined) => {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return 'N/A'
+  return format(date, "MMM dd, yyyy 'at' HH:mm")
 }
 
 const formatBytes = (bytes: number) => {
@@ -72,9 +75,17 @@ const getStatusColor = (status: string) => {
   }
 }
 
-const getBackupStatusColor = (isActive: boolean, hasRuns: boolean, hasActiveJobs: boolean, latestStatus: string) => {
+const getBackupStatusColor = (
+  isActive: boolean,
+  isExpired: boolean,
+  hasRuns: boolean,
+  hasActiveJobs: boolean,
+  latestStatus: string
+) => {
   if (isActive) {
     return getStatusColor(latestStatus)
+  } else if (isExpired) {
+    return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
   } else if (hasRuns) {
     return 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300'
   } else if (hasActiveJobs) {
@@ -390,18 +401,31 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
     })
   }, [backupRuns])
 
+  const isRunExpired = (run: BackupRun) => {
+    const expiry = getBackupRunExpiryTime(run)
+    if (!expiry || expiry === 'No expiry time') return false
+    const expiryDate = new Date(expiry)
+    if (Number.isNaN(expiryDate.getTime())) return false
+    return expiryDate.getTime() < Date.now()
+  }
+
   const backupSummary = React.useMemo(() => {
     const hasActiveJob = backupJobs.length > 0
     const hasRuns = backupRuns.length > 0
+    const hasNonExpiredRuns = backupRuns.some((run) => !isRunExpired(run))
+    const hasExpiredRuns = backupRuns.some((run) => isRunExpired(run))
     const latestRunInfo = latestRun ? getBackupRunInfo(latestRun) : null
 
     return {
       hasActiveJob,
       hasRuns,
+      hasNonExpiredRuns,
+      hasExpiredRuns,
       totalJobs: backupJobs.length,
       totalRuns: backupRuns.length,
       latestStatus: latestRunInfo?.backupDestinations?.[0]?.status || 'Unknown',
-      isActive: hasActiveJob && hasRuns,
+      isActive: hasActiveJob && hasNonExpiredRuns,
+      isExpired: hasExpiredRuns && !hasNonExpiredRuns,
     }
   }, [backupJobs, backupRuns, latestRun])
 
@@ -419,6 +443,8 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
           <div className='flex items-center space-x-2'>
             {backupSummary.isActive ? (
               getStatusIcon(backupSummary.latestStatus)
+            ) : backupSummary.isExpired ? (
+              <AlertTriangle className='w-4 h-4 text-red-500' />
             ) : backupSummary.hasRuns ? (
               <AlertTriangle className='w-4 h-4 text-amber-500' />
             ) : backupSummary.hasActiveJob ? (
@@ -429,6 +455,7 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
             <Badge
               className={getBackupStatusColor(
                 backupSummary.isActive,
+                backupSummary.isExpired,
                 backupSummary.hasRuns,
                 backupSummary.hasActiveJob,
                 backupSummary.latestStatus
@@ -436,11 +463,13 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
             >
               {backupSummary.isActive
                 ? 'Active'
-                : backupSummary.hasRuns
-                  ? 'Historical'
-                  : backupSummary.hasActiveJob
-                    ? 'Configured backup'
-                    : 'No Backups'}
+                : backupSummary.isExpired
+                  ? 'Expired'
+                  : backupSummary.hasRuns
+                    ? 'Historical'
+                    : backupSummary.hasActiveJob
+                      ? 'Configured backup'
+                      : 'No Backups'}
             </Badge>
           </div>
         </div>

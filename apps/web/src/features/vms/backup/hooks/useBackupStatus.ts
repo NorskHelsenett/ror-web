@@ -10,7 +10,18 @@ interface BackupStatusResult {
   hasBackupJob: boolean
   hasBackupRun: boolean
   hasActiveBackup: boolean
+  hasExpiredBackupRun: boolean
   lastBackupInfo?: LastBackupInfo | null
+}
+
+const isExpiredBackupInfo = (lastBackupInfo?: LastBackupInfo | null) => {
+  const expiryTime = lastBackupInfo?.expiryTime
+  if (!expiryTime) return false
+
+  const expiryDate = new Date(expiryTime)
+  if (Number.isNaN(expiryDate.getTime())) return false
+
+  return expiryDate.getTime() < Date.now()
 }
 
 /**
@@ -32,13 +43,16 @@ export const useBackupStatus = (vm: VMTableRow): BackupStatusResult => {
     const hasBackupJob = backupStatus.hasBackupJob
     const hasBackupRun = backupStatus.hasBackupRun
     const hasBackup = hasBackupJob || hasBackupRun
-    const hasActiveBackup = hasBackupJob // Active backup means VM has a backup job configured
+    const hasExpiredBackupRun = hasBackupRun && isExpiredBackupInfo(backupStatus.lastBackupInfo)
+    const hasNonExpiredBackupRun = hasBackupRun && !hasExpiredBackupRun
+    const hasActiveBackup = hasBackupJob && hasNonExpiredBackupRun
 
     return {
       hasBackup, // Overall backup status (true if job OR run exists)
       isDataLoaded: true, // Indicates data is available
       hasBackupJob,
       hasBackupRun,
+      hasExpiredBackupRun,
       hasActiveBackup, // True only if VM has backup job (actively being backed up)
       lastBackupInfo: backupStatus.lastBackupInfo,
     }
@@ -51,6 +65,7 @@ export const useBackupStatus = (vm: VMTableRow): BackupStatusResult => {
     hasBackupJob: false,
     hasBackupRun: false,
     hasActiveBackup: false,
+    hasExpiredBackupRun: false,
     lastBackupInfo: null,
   }
 }
@@ -74,11 +89,7 @@ export const getVMBackupStatus = (vm: VMTableRow): boolean => {
  * @returns Whether the VM has an active backup job
  */
 export const getVMActiveBackupStatus = (vm: VMTableRow): boolean => {
-  if ('backupStatus' in vm) {
-    const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
-    return backupStatus.hasBackupJob
-  }
-  return false
+  return useBackupStatus(vm).hasActiveBackup
 }
 
 /**
@@ -92,8 +103,9 @@ export const useActiveBackupStatus = (vm: VMTableRow) => {
   return {
     hasActiveBackup: fullStatus.hasActiveBackup,
     isDataLoaded: fullStatus.isDataLoaded,
-    hasHistoricalBackup: fullStatus.hasBackupRun && !fullStatus.hasBackupJob, // Has runs but no job
-    hasConfiguredBackup: fullStatus.hasBackupJob && !fullStatus.hasBackupRun, // Has job but no runs
+    hasExpiredBackup: fullStatus.hasExpiredBackupRun,
+    hasHistoricalBackup: fullStatus.hasBackupRun && !fullStatus.hasBackupJob && !fullStatus.hasExpiredBackupRun,
+    hasConfiguredBackup: fullStatus.hasBackupJob && !fullStatus.hasBackupRun,
   }
 }
 

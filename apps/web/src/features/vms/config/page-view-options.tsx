@@ -46,6 +46,7 @@ export const locationOptions: Option[] = [
 
 export const backupStatusOptions: Option[] = [
   { value: 'activeBackup', label: 'Active Backup' },
+  { value: 'expiredBackup', label: 'Expired Backup' },
   { value: 'historicalBackup', label: 'Historical Backup' },
   { value: 'configuredBackup', label: 'Configured Backup' },
   { value: 'noBackup', label: 'No Backup' },
