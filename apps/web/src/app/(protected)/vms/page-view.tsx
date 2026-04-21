@@ -38,12 +38,11 @@ import {
   getSpecMemory,
   getSpecCpuTotal,
   getLocation,
-  getVmExternalId,
 } from '@/features/vms/utils/vms'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState, useEffect, useRef } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -56,22 +55,14 @@ import { useFilters } from '@/hooks/use-filters'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { DataTable } from '@/components/ui/data-table'
 import { getVMTableColumns } from '@/features/vms/components/vm-columns'
-import {
-  getBackupRunActiveTargets,
-  getBackupRunInfo,
-  type LastBackupInfo,
-} from '@/features/vms/backup/utils/backup-run'
-import type { BackupRun, VirtualMachine } from '@ror/js-api-client'
+import { type LastBackupInfo } from '@/features/vms/backup/utils/backup-run'
+import type { VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
-
-const VM_BACKUP_INFO_CACHE_KEY = 'vm-last-backup-info-v1'
-const VM_BACKUP_INFO_CACHE_TTL_MS = 6 * 60 * 60 * 1000
-const VM_BACKUP_RUN_BATCH_SIZE = 200
-const RUN_IDS_PER_JOB = 3
+import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
   if (!expiryTime) return false
@@ -79,17 +70,9 @@ const isExpiredBackup = (expiryTime?: string | null) => {
   if (Number.isNaN(expiryDate.getTime())) return false
   return expiryDate.getTime() < Date.now()
 }
-
-type BackupInfoCacheEntry = LastBackupInfo & { cachedAt: number }
-type BackupInfoCacheMap = Record<string, BackupInfoCacheEntry>
-
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
-  const [hydratedBackupInfoByVmId, setHydratedBackupInfoByVmId] = useState<BackupInfoCacheMap>({})
-  const requestedRunIdsRef = useRef<Set<string>>(new Set())
-  const hydrateInFlightRef = useRef(false)
-
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
@@ -108,177 +91,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(VM_BACKUP_INFO_CACHE_KEY)
-      if (!raw) return
-
-      const parsed = JSON.parse(raw) as BackupInfoCacheMap
-      const now = Date.now()
-      const next: BackupInfoCacheMap = {}
-
-      for (const [vmExternalId, entry] of Object.entries(parsed)) {
-        if (entry?.cachedAt && now - entry.cachedAt < VM_BACKUP_INFO_CACHE_TTL_MS) {
-          next[vmExternalId] = entry
-        }
-      }
-
-      setHydratedBackupInfoByVmId(next)
-    } catch {
-      // Ignore invalid cache payload.
-    }
-  }, [])
-
-  const hydratedItems = useMemo(() => {
-    return items.map((item) => {
-      if (!('backupStatus' in item)) {
-        return item
-      }
-
-      if (item.backupStatus?.lastBackupInfo) {
-        return item
-      }
-
-      const vmExternalId = getVmExternalId(item)
-      if (!vmExternalId) {
-        return item
-      }
-
-      const cached = hydratedBackupInfoByVmId[vmExternalId]
-      if (!cached) {
-        return item
-      }
-
-      return {
-        ...item,
-        backupStatus: {
-          ...item.backupStatus,
-          lastBackupInfo: {
-            startTime: cached.startTime,
-            endTime: cached.endTime,
-            expiryTime: cached.expiryTime,
-          },
-        },
-      }
-    })
-  }, [items, hydratedBackupInfoByVmId])
-
-  useEffect(() => {
-    if (hydrateInFlightRef.current) return
-
-    const vmCandidateRunIds = new Map<string, Set<string>>()
-    const candidateRunIds: string[] = []
-    const seenCandidateRunIds = new Set<string>()
-
-    for (const item of items) {
-      if (!('backupStatus' in item)) continue
-
-      const backupStatus = item.backupStatus
-      if (!backupStatus?.hasBackupRun || backupStatus.lastBackupInfo) continue
-
-      const vmExternalId = getVmExternalId(item)
-      if (!vmExternalId || hydratedBackupInfoByVmId[vmExternalId]) continue
-
-      const runIdSet = new Set<string>()
-
-      for (const job of backupStatus.relatedBackupJobs ?? []) {
-        const runIds = job?.backupjob?.status?.backupRunIds ?? []
-        for (const runId of runIds.slice(0, RUN_IDS_PER_JOB)) {
-          if (!runId) continue
-          runIdSet.add(runId)
-        }
-      }
-
-      if (!runIdSet.size) continue
-
-      vmCandidateRunIds.set(vmExternalId, runIdSet)
-
-      for (const runId of runIdSet) {
-        if (requestedRunIdsRef.current.has(runId) || seenCandidateRunIds.has(runId)) continue
-        seenCandidateRunIds.add(runId)
-        candidateRunIds.push(runId)
-      }
-    }
-
-    if (!candidateRunIds.length || !vmCandidateRunIds.size) return
-
-    const runIdsBatch = candidateRunIds.slice(0, VM_BACKUP_RUN_BATCH_SIZE)
-    for (const runId of runIdsBatch) {
-      requestedRunIdsRef.current.add(runId)
-    }
-
-    hydrateInFlightRef.current = true
-
-    void (async () => {
-      try {
-        const response = await fetch('/api/vm-backup-runs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ runIds: runIdsBatch }),
-        })
-
-        if (!response.ok) return
-
-        const payload = (await response.json()) as { backupRuns?: BackupRun[] }
-        const fetchedRuns = payload.backupRuns ?? []
-        if (!fetchedRuns.length) return
-
-        const now = Date.now()
-        const updates: BackupInfoCacheMap = {}
-
-        for (const [vmExternalId, runIdSet] of vmCandidateRunIds.entries()) {
-          let latestBackupInfo: LastBackupInfo | null = null
-          let latestTs = 0
-
-          for (const run of fetchedRuns) {
-            const runId = run?.backuprun?.id
-            if (!runId || !runIdSet.has(runId)) continue
-
-            const targets = getBackupRunActiveTargets(run)
-            const targetsVm = targets.some((target) => target.externalId === vmExternalId)
-            if (!targetsVm) continue
-
-            const info = getBackupRunInfo(run)
-            if (!info.startTime) continue
-
-            const ts = Date.parse(info.startTime)
-            if (!Number.isFinite(ts) || ts < latestTs) continue
-
-            latestTs = ts
-            latestBackupInfo = {
-              startTime: info.startTime,
-              endTime: info.endTime,
-              expiryTime: info.expiryTime,
-            }
-          }
-
-          if (latestBackupInfo) {
-            updates[vmExternalId] = {
-              ...latestBackupInfo,
-              cachedAt: now,
-            }
-          }
-        }
-
-        if (!Object.keys(updates).length) return
-
-        setHydratedBackupInfoByVmId((prev) => {
-          const next = { ...prev, ...updates }
-          try {
-            localStorage.setItem(VM_BACKUP_INFO_CACHE_KEY, JSON.stringify(next))
-          } catch {
-            // Ignore storage quota/write errors.
-          }
-          return next
-        })
-      } catch {
-        // Keep page resilient if hydration fetch fails.
-      } finally {
-        hydrateInFlightRef.current = false
-      }
-    })()
-  }, [items, hydratedBackupInfoByVmId])
+  const hydratedItems = useBackupInfoHydration(items)
 
   const safeItems = useMemo(
     () => hydratedItems.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),

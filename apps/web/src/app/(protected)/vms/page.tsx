@@ -44,7 +44,6 @@ export default async function VMPage({
   const backupJobs = fetchedBackupJobs.backupJobs || []
   let backupRuns = [...(fetchedBackupRuns.backupRuns || [])]
 
-  // Supplement with backup runs referenced by the discovered jobs
   try {
     const jobSpecificRuns = await fetchBackupRunsForJobs(api, backupJobs).catch(() => [])
     const runIdSet = new Set(backupRuns.map((r) => r?.backuprun?.id))
