@@ -1,7 +1,9 @@
 import { getRorApi } from '@/services/ror-api'
 import { fetchBackupRunsByIds, fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
+import { authGuard } from '@/features/auth/utils/auth-guard'
 
 export async function POST(request: Request) {
+  await authGuard()
   try {
     const { backupJobs, runIds } = await request.json()
 
