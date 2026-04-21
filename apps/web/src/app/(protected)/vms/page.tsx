@@ -42,22 +42,27 @@ export default async function VMPage({
 
   const vms = fetchedVms.vms
   const backupJobs = fetchedBackupJobs.backupJobs || []
-  let backupRuns = [...(fetchedBackupRuns.backupRuns || [])]
+  const initialBackupRuns = [...(fetchedBackupRuns.backupRuns || [])]
+  let mergedBackupRuns = initialBackupRuns
 
   try {
     const jobSpecificRuns = await fetchBackupRunsForJobs(api, backupJobs).catch(() => [])
-    const runIdSet = new Set(backupRuns.map((r) => r?.backuprun?.id))
+    const runIdSet = new Set(initialBackupRuns.map((r) => r?.backuprun?.id))
+    const extraRuns = []
+
     for (const run of jobSpecificRuns) {
       const runId = run?.backuprun?.id
       if (runId && !runIdSet.has(runId)) {
-        backupRuns.push(run)
+        extraRuns.push(run)
       }
     }
+
+    mergedBackupRuns = [...initialBackupRuns, ...extraRuns]
   } catch (error) {
     console.error('Error fetching job-specific backup runs:', error)
   }
 
-  const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
+  const vmsWithBackup = mapBackupToVM(vms, backupJobs, mergedBackupRuns)
 
   return (
     <div className='w-full flex flex-col'>

@@ -3,7 +3,7 @@
 import { useVMContext } from '@/context/vm-context'
 import { BackupOverview } from '@/features/vms/backup/components'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { BackupRun } from '@ror/js-api-client'
 import { getBackupRunActiveTargets } from '@/features/vms/backup/utils/backup-run'
 import { getVmExternalId } from '@/features/vms/utils/vms'
@@ -11,21 +11,18 @@ import { getVmExternalId } from '@/features/vms/utils/vms'
 export default function VMBackupPage() {
   const { vm } = useVMContext()
   const [backupRuns, setBackupRuns] = useState<BackupRun[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   const enhancedVM = vm as VMWithBackupStatus
   const vmExternalId = getVmExternalId(enhancedVM)
   const hasBackupDataArrays = 'backupStatus' in enhancedVM && enhancedVM.backupStatus?.relatedBackupJobs !== undefined
-  const relatedBackupJobs = enhancedVM.backupStatus?.relatedBackupJobs || []
+  const relatedBackupJobs = useMemo(() => enhancedVM.backupStatus?.relatedBackupJobs || [], [enhancedVM])
   const relatedBackupRuns = backupRuns.length > 0 ? backupRuns : enhancedVM.backupStatus?.relatedBackupRuns || []
 
   // Fetch backup runs for this VM's backup jobs on mount
   useEffect(() => {
     const fetchBackupRunsForVM = async () => {
       try {
-        setIsLoading(true)
         if (!relatedBackupJobs.length) {
-          setIsLoading(false)
           return
         }
 
@@ -52,8 +49,6 @@ export default function VMBackupPage() {
         }
       } catch (error) {
         console.error('Error fetching backup runs:', error)
-      } finally {
-        setIsLoading(false)
       }
     }
 

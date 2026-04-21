@@ -29,9 +29,7 @@ export function useDisplayData<T>(domain: string) {
       if (stored) {
         const parsed = JSON.parse(stored) as T[]
         // Only update if different to avoid unnecessary re-renders
-        if (JSON.stringify(parsed) !== JSON.stringify(selectedDisplayData)) {
-          setSelectedDisplayData(parsed)
-        }
+        setSelectedDisplayData((prev) => (JSON.stringify(parsed) !== JSON.stringify(prev) ? parsed : prev))
       }
     } catch {
       // ignore
