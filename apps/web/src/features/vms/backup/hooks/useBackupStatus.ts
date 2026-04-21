@@ -11,6 +11,7 @@ interface BackupStatusResult {
   hasBackupRun: boolean
   hasActiveBackup: boolean
   hasExpiredBackupRun: boolean
+  isBackupInfoHydrating: boolean
   lastBackupInfo?: LastBackupInfo | null
 }
 
@@ -46,6 +47,12 @@ export const useBackupStatus = (vm: VMTableRow): BackupStatusResult => {
     const hasExpiredBackupRun = hasBackupRun && isExpiredBackupInfo(backupStatus.lastBackupInfo)
     const hasNonExpiredBackupRun = hasBackupRun && !hasExpiredBackupRun
     const hasActiveBackup = hasBackupJob && hasNonExpiredBackupRun
+    const hasHydrationRunIds = (backupStatus.relatedBackupJobs ?? []).some(
+      (job) => (job?.backupjob?.status?.backupRunIds ?? []).length > 0
+    )
+    const hasHydratedRelatedRuns = (backupStatus.relatedBackupRuns ?? []).length > 0
+    const isBackupInfoHydrating =
+      hasBackupJob && hasBackupRun && !backupStatus.lastBackupInfo && hasHydrationRunIds && !hasHydratedRelatedRuns
 
     return {
       hasBackup, // Overall backup status (true if job OR run exists)
@@ -54,6 +61,7 @@ export const useBackupStatus = (vm: VMTableRow): BackupStatusResult => {
       hasBackupRun,
       hasExpiredBackupRun,
       hasActiveBackup, // True only if VM has backup job (actively being backed up)
+      isBackupInfoHydrating,
       lastBackupInfo: backupStatus.lastBackupInfo,
     }
   }
@@ -66,6 +74,7 @@ export const useBackupStatus = (vm: VMTableRow): BackupStatusResult => {
     hasBackupRun: false,
     hasActiveBackup: false,
     hasExpiredBackupRun: false,
+    isBackupInfoHydrating: false,
     lastBackupInfo: null,
   }
 }
@@ -113,6 +122,7 @@ export const useActiveBackupStatus = (vm: VMTableRow) => {
   return {
     hasActiveBackup: fullStatus.hasActiveBackup,
     isDataLoaded: fullStatus.isDataLoaded,
+    isBackupInfoHydrating: fullStatus.isBackupInfoHydrating,
     hasExpiredBackup: fullStatus.hasExpiredBackupRun,
     hasHistoricalBackup: fullStatus.hasBackupRun && !fullStatus.hasBackupJob && !fullStatus.hasExpiredBackupRun,
     hasConfiguredBackup: fullStatus.hasBackupJob && !fullStatus.hasBackupRun,

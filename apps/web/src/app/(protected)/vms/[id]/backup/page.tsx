@@ -11,6 +11,8 @@ import { getVmExternalId } from '@/features/vms/utils/vms'
 export default function VMBackupPage() {
   const { vm } = useVMContext()
   const [backupRuns, setBackupRuns] = useState<BackupRun[]>([])
+  const [isBackupRunsLoading, setIsBackupRunsLoading] = useState(false)
+  const [hasFetchedBackupRuns, setHasFetchedBackupRuns] = useState(false)
 
   const enhancedVM = vm as VMWithBackupStatus
   const vmExternalId = getVmExternalId(enhancedVM)
@@ -21,11 +23,16 @@ export default function VMBackupPage() {
   // Fetch backup runs for this VM's backup jobs on mount
   useEffect(() => {
     const fetchBackupRunsForVM = async () => {
-      try {
-        if (!relatedBackupJobs.length) {
-          return
-        }
+      if (!relatedBackupJobs.length) {
+        setHasFetchedBackupRuns(true)
+        setIsBackupRunsLoading(false)
+        return
+      }
 
+      setIsBackupRunsLoading(true)
+      setHasFetchedBackupRuns(false)
+
+      try {
         const response = await fetch('/api/vm-backup-runs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -49,6 +56,9 @@ export default function VMBackupPage() {
         }
       } catch (error) {
         console.error('Error fetching backup runs:', error)
+      } finally {
+        setIsBackupRunsLoading(false)
+        setHasFetchedBackupRuns(true)
       }
     }
 
@@ -58,7 +68,13 @@ export default function VMBackupPage() {
   return (
     <div className='space-y-6'>
       {hasBackupDataArrays ? (
-        <BackupOverview vm={enhancedVM} backupJobs={relatedBackupJobs} backupRuns={relatedBackupRuns} />
+        <BackupOverview
+          vm={enhancedVM}
+          backupJobs={relatedBackupJobs}
+          backupRuns={relatedBackupRuns}
+          isBackupRunsLoading={isBackupRunsLoading}
+          hasFetchedBackupRuns={hasFetchedBackupRuns}
+        />
       ) : (
         <div className='p-6 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg'>
           <div className='flex items-center space-x-3'>

@@ -85,6 +85,35 @@ const NoBackupTableDisplay = () => (
   </div>
 )
 
+const LoadingBackupTableDisplay = ({ label = 'Loading backup...' }: { label?: string }) => (
+  <div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <Pill className='bg-blue-100 text-blue-800 border-blue-200 cursor-pointer animate-pulse'>{label}</Pill>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <div className='text-xs'>Fetching backup run details</div>
+      </TooltipContent>
+    </Tooltip>
+  </div>
+)
+
+const LoadingBackupDisplay = ({ label = 'Loading backup data...' }: { label?: string }) => (
+  <div className='mt-1 p-4 border border-blue-200 dark:border-blue-800 rounded-lg bg-blue-50 dark:bg-blue-900/20'>
+    <h5 className='font-semibold text-sm text-blue-700 dark:text-blue-300 tracking-wide'>Backup status</h5>
+    <div className='flex items-center justify-center py-2'>
+      <div className='text-center space-y-2'>
+        <div className='w-10 h-10 bg-blue-100 dark:bg-blue-800/40 rounded-full flex items-center justify-center mx-auto'>
+          <span className='w-4 h-4 rounded-full bg-blue-500 animate-pulse' />
+        </div>
+        <p className='text-sm text-blue-700 dark:text-blue-300 font-medium'>{label}</p>
+      </div>
+    </div>
+  </div>
+)
+
 export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
   const backupStatus = useBackupStatus(vm)
   const activeBackupStatus = useActiveBackupStatus(vm)
@@ -92,10 +121,16 @@ export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
   const isExpired = activeBackupStatus.hasExpiredBackup
   const isHistorical = activeBackupStatus.hasHistoricalBackup
   const isConfigured = activeBackupStatus.hasConfiguredBackup
+  const isHydrating = activeBackupStatus.isBackupInfoHydrating
 
-  // If no backup data is loaded, show no backup display
+  // Show loader while the VM backup status itself has not been hydrated.
   if (!backupStatus.isDataLoaded) {
-    return <NoBackupTableDisplay />
+    return <LoadingBackupTableDisplay />
+  }
+
+  // Show loader while active backup exists but latest run info is still hydrating.
+  if (isHydrating) {
+    return <LoadingBackupTableDisplay label='Loading active backup...' />
   }
 
   // If no backup job and no backup runs, show no backup display
@@ -162,9 +197,16 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
   const activeBackupStatus = useActiveBackupStatus(vm)
   const backupStatus = useBackupStatus(vm)
 
-  // If no backup data is loaded, show no backup display
+  const isHydrating = activeBackupStatus.isBackupInfoHydrating
+
+  // Show loader while backup status has not been added to VM data yet.
   if (!backupStatus.isDataLoaded) {
-    return <NoBackupDisplay />
+    return <LoadingBackupDisplay />
+  }
+
+  // Show loader while active backup exists but run details are still loading.
+  if (isHydrating) {
+    return <LoadingBackupDisplay label='Loading active backup...' />
   }
 
   // If no backup job and no backup runs, show no backup display

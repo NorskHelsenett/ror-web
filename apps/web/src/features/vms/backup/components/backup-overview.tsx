@@ -32,6 +32,8 @@ interface BackupOverviewProps {
   vm: VMWithBackupStatus
   backupJobs: BackupJob[]
   backupRuns: BackupRun[]
+  isBackupRunsLoading?: boolean
+  hasFetchedBackupRuns?: boolean
 }
 
 const formatDateTime = (dateString: string | null | undefined) => {
@@ -386,7 +388,12 @@ const BackupRunCard: React.FC<{ run: BackupRun; isLatest: boolean }> = ({ run, i
   )
 }
 
-export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, backupRuns }) => {
+export const BackupOverview: React.FC<BackupOverviewProps> = ({
+  backupJobs,
+  backupRuns,
+  isBackupRunsLoading = false,
+  hasFetchedBackupRuns = false,
+}) => {
   const latestRun = React.useMemo(() => {
     if (backupRuns.length === 0) return null
 
@@ -500,7 +507,7 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
     </Card>
   )
 
-  if (backupJobs.length === 0 && backupRuns.length === 0) {
+  if (backupJobs.length === 0 && backupRuns.length === 0 && !isBackupRunsLoading && hasFetchedBackupRuns) {
     return (
       <div className='flex items-center justify-center p-12 bg-gray-50 dark:bg-gray-900/20 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700'>
         <div className='text-center space-y-3'>
@@ -522,9 +529,7 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
           <TabsTrigger value='jobs' disabled={backupJobs.length === 0}>
             Backup Jobs ({backupJobs.length})
           </TabsTrigger>
-          <TabsTrigger value='runs' disabled={backupRuns.length === 0}>
-            Backup Runs ({backupRuns.length})
-          </TabsTrigger>
+          <TabsTrigger value='runs'>Backup Runs ({isBackupRunsLoading ? 'loading...' : backupRuns.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value='jobs' className='space-y-4'>
@@ -554,6 +559,8 @@ export const BackupOverview: React.FC<BackupOverviewProps> = ({ backupJobs, back
                   <BackupRunCard key={getBackupRunId(run) || index} run={run} isLatest={run === latestRun} />
                 ))}
             </div>
+          ) : isBackupRunsLoading ? (
+            <div className='text-center py-8 text-blue-600 dark:text-blue-300'>Loading backup runs...</div>
           ) : (
             <div className='text-center py-8 text-gray-500'>No backup runs found for this VM.</div>
           )}
