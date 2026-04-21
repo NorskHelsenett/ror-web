@@ -1,17 +1,21 @@
 import { getRorApi } from '@/services/ror-api'
-import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
-import type { BackupJob } from '@ror/js-api-client'
+import { fetchBackupRunsByIds, fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 
 export async function POST(request: Request) {
   try {
-    const { backupJobs } = await request.json()
+    const { backupJobs, runIds } = await request.json()
 
-    if (!backupJobs || !Array.isArray(backupJobs)) {
+    const hasBackupJobs = Array.isArray(backupJobs)
+    const hasRunIds = Array.isArray(runIds)
+
+    if (!hasBackupJobs && !hasRunIds) {
       return Response.json({ backupRuns: [] }, { status: 400 })
     }
 
     const api = await getRorApi()
-    const backupRuns = await fetchBackupRunsForJobs(api, backupJobs)
+    const backupRuns = hasRunIds
+      ? await fetchBackupRunsByIds(api, runIds)
+      : await fetchBackupRunsForJobs(api, backupJobs)
 
     return Response.json({ backupRuns })
   } catch (error) {

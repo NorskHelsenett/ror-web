@@ -5,6 +5,8 @@ import { BackupOverview } from '@/features/vms/backup/components'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { useEffect, useState } from 'react'
 import type { BackupRun } from '@ror/js-api-client'
+import { getBackupRunActiveTargets } from '@/features/vms/backup/utils/backup-run'
+import { getVmExternalId } from '@/features/vms/utils/vms'
 
 export default function VMBackupPage() {
   const { vm } = useVMContext()
@@ -12,6 +14,7 @@ export default function VMBackupPage() {
   const [isLoading, setIsLoading] = useState(true)
 
   const enhancedVM = vm as VMWithBackupStatus
+  const vmExternalId = getVmExternalId(enhancedVM)
   const hasBackupDataArrays = 'backupStatus' in enhancedVM && enhancedVM.backupStatus?.relatedBackupJobs !== undefined
   const relatedBackupJobs = enhancedVM.backupStatus?.relatedBackupJobs || []
   const relatedBackupRuns = backupRuns.length > 0 ? backupRuns : enhancedVM.backupStatus?.relatedBackupRuns || []
@@ -36,7 +39,16 @@ export default function VMBackupPage() {
 
         if (response.ok) {
           const data = await response.json()
-          setBackupRuns(data.backupRuns || [])
+          const fetchedRuns = (data.backupRuns || []) as BackupRun[]
+
+          const vmSpecificRuns = vmExternalId
+            ? fetchedRuns.filter((run) => {
+                const targets = getBackupRunActiveTargets(run)
+                return targets.some((target) => target.externalId === vmExternalId)
+              })
+            : fetchedRuns
+
+          setBackupRuns(vmSpecificRuns)
         }
       } catch (error) {
         console.error('Error fetching backup runs:', error)
@@ -46,7 +58,7 @@ export default function VMBackupPage() {
     }
 
     fetchBackupRunsForVM()
-  }, [relatedBackupJobs])
+  }, [relatedBackupJobs, vmExternalId])
 
   return (
     <div className='space-y-6'>
