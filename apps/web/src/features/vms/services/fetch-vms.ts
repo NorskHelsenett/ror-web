@@ -1,4 +1,4 @@
-import { buildVmSearchFilter } from '../utils/regex-search'
+import { buildVmSearchFilter } from '../utils/vm-regex-search'
 
 export async function fetchVms(
   api: Awaited<ReturnType<typeof import('@/services/ror-api').getRorApi>>,

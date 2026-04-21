@@ -12,6 +12,7 @@ import { mockBackupRuns } from '../data/backup-run'
 type Resource = (typeof clustersVersion2.resources)[number]
 type NotFound = { message: string }
 type ResourceVm = (typeof mockVms.resources)[number]
+type ResourceBackupJob = (typeof mockBackupJobs.resources)[number]
 
 /**
  * Define mock handlers for v2 resource-related endpoints
@@ -86,8 +87,55 @@ export const v2ResourcesHandlers = [
       case 'BackupJob': {
         const limit = Number(url.searchParams.get('limit') || 50)
         const offset = Number(url.searchParams.get('offset') || 0)
-        const allBackupJobs = mockBackupJobs.resources
-        return HttpResponse.json({ resources: allBackupJobs.slice(offset, offset + limit) })
+        const filtersParam = url.searchParams.get('filters')
+        let filteredBackupJobs = mockBackupJobs.resources as ResourceBackupJob[]
+        //const allBackupJobs = mockBackupJobs.resources
+
+        if (filtersParam) {
+          try {
+            const filters = JSON.parse(filtersParam) as {
+              field: string
+              value: string
+              type: string
+              operator: string
+            }[]
+
+            const idFields = new Set(['backupjob.id', 'vm.backupjob.id'])
+            const nameFields = new Set([
+              'backupjob.status.resourceBackupJobSpec.name',
+              'vm.backupjob.status.resourceBackupJobSpec.name',
+              'backupjob.name',
+              'vm.backupjob.name',
+            ])
+
+            const idRegexes: RegExp[] = []
+            const nameRegexes: RegExp[] = []
+
+            for (const filter of filters) {
+              if (filter.operator !== 'regexp') continue
+
+              const regex = new RegExp(filter.value, 'i')
+              if (idFields.has(filter.field)) idRegexes.push(regex)
+              if (nameFields.has(filter.field)) nameRegexes.push(regex)
+            }
+
+            if (idRegexes.length > 0 || nameRegexes.length > 0) {
+              filteredBackupJobs = filteredBackupJobs.filter((backupjob) => {
+                const id = backupjob?.backupjob?.id ?? ''
+                const name = backupjob?.backupjob?.status?.resourceBackupJobSpec?.name ?? ''
+
+                const matchesId = idRegexes.some((regex) => regex.test(id))
+                const matchesName = nameRegexes.some((regex) => regex.test(name))
+
+                return matchesId || matchesName
+              })
+            }
+          } catch {
+            // Ignore malformed filters
+          }
+        }
+
+        return HttpResponse.json({ resources: filteredBackupJobs.slice(offset, offset + limit) })
       }
       case 'BackupRun': {
         const limit = Number(url.searchParams.get('limit') || 50)

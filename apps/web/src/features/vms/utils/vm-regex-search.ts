@@ -1,4 +1,4 @@
-const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+export const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 export function buildVmSearchFilter(searchQuery: string): string | undefined {
   const q = searchQuery.trim()

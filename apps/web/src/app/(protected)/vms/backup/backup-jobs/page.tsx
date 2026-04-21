@@ -6,7 +6,7 @@
  * It handles authentication, data fetching, and rendering of the page layout.
  **/
 
-import { normalizeParams } from '@/features/cluster/utils/normalize-params'
+import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { getRorApi } from '@/services/ror-api'
 import { Metadata } from 'next'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
