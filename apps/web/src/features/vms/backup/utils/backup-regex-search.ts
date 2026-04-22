@@ -34,5 +34,11 @@ export function buildBackupSearchFilter(searchQuery: string): string | undefined
       type: 'string',
       operator: 'regexp',
     },
+    {
+      field: 'backuprun.status.backupRunId',
+      value: `^${safe}`,
+      type: 'string',
+      operator: 'regexp',
+    },
   ])
 }

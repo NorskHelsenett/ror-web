@@ -155,9 +155,11 @@ export const v2ResourcesHandlers = [
 
             const idFields = new Set(['backuprun.id', 'vm.backuprun.id'])
             const sourceFields = new Set(['backuprun.source', 'vm.backuprun.source'])
+            const backupJobIdFields = new Set(['backuprun.status.backupRunId', 'vm.backuprun.status.backupRunId'])
 
             const idRegexes: RegExp[] = []
             const sourceRegexes: RegExp[] = []
+            const backupJobIdRegexes: RegExp[] = []
 
             for (const filter of filters) {
               if (filter.operator !== 'regexp') continue
@@ -165,17 +167,20 @@ export const v2ResourcesHandlers = [
               const regex = new RegExp(filter.value, 'i')
               if (idFields.has(filter.field)) idRegexes.push(regex)
               if (sourceFields.has(filter.field)) sourceRegexes.push(regex)
+              if (backupJobIdFields.has(filter.field)) backupJobIdRegexes.push(regex)
             }
 
-            if (idRegexes.length > 0 || sourceRegexes.length > 0) {
+            if (idRegexes.length > 0 || sourceRegexes.length > 0 || backupJobIdRegexes.length > 0) {
               filteredBackupRuns = filteredBackupRuns.filter((backupRun) => {
                 const id = backupRun?.backuprun?.id ?? ''
                 const source = backupRun?.backuprun?.source ?? ''
+                const backupJobId = backupRun?.backuprun?.status?.backupJobId ?? ''
 
                 const matchesId = idRegexes.some((regex) => regex.test(id))
                 const matchesSource = sourceRegexes.some((regex) => regex.test(source))
+                const matchesBackupJobId = backupJobIdRegexes.some((regex) => regex.test(backupJobId))
 
-                return matchesId || matchesSource
+                return matchesId || matchesSource || matchesBackupJobId
               })
             }
           } catch {
