@@ -17,7 +17,7 @@ export const mockBackupRuns = {
       backuprun: {
         id: '11158793:1762777612377235',
         provider: 'cohesity',
-        source: 'mtr1-bck-ccl01.drift.nhn.no',
+        source: 'mtr2-bck-ccl01.drift.nhn.no',
         status: {
           id: '11158793:1762777612377235',
           backupJobId: '4923908281402464:1614676439887:11158793',

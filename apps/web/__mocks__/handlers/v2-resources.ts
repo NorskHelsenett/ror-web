@@ -13,6 +13,7 @@ type Resource = (typeof clustersVersion2.resources)[number]
 type NotFound = { message: string }
 type ResourceVm = (typeof mockVms.resources)[number]
 type ResourceBackupJob = (typeof mockBackupJobs.resources)[number]
+type ResourceBackupRun = (typeof mockBackupRuns.resources)[number]
 
 /**
  * Define mock handlers for v2 resource-related endpoints
@@ -140,14 +141,56 @@ export const v2ResourcesHandlers = [
       case 'BackupRun': {
         const limit = Number(url.searchParams.get('limit') || 50)
         const offset = Number(url.searchParams.get('offset') || 0)
-        const allBackupRuns = mockBackupRuns.resources
-        return HttpResponse.json({ resources: allBackupRuns.slice(offset, offset + limit) })
+        const filtersParam = url.searchParams.get('filters')
+        let filteredBackupRuns = mockBackupRuns.resources as ResourceBackupRun[]
+
+        if (filtersParam) {
+          try {
+            const filters = JSON.parse(filtersParam) as {
+              field: string
+              value: string
+              type: string
+              operator: string
+            }[]
+
+            const idFields = new Set(['backuprun.id', 'vm.backuprun.id'])
+            const sourceFields = new Set(['backuprun.source', 'vm.backuprun.source'])
+
+            const idRegexes: RegExp[] = []
+            const sourceRegexes: RegExp[] = []
+
+            for (const filter of filters) {
+              if (filter.operator !== 'regexp') continue
+
+              const regex = new RegExp(filter.value, 'i')
+              if (idFields.has(filter.field)) idRegexes.push(regex)
+              if (sourceFields.has(filter.field)) sourceRegexes.push(regex)
+            }
+
+            if (idRegexes.length > 0 || sourceRegexes.length > 0) {
+              filteredBackupRuns = filteredBackupRuns.filter((backupRun) => {
+                const id = backupRun?.backuprun?.id ?? ''
+                const source = backupRun?.backuprun?.source ?? ''
+
+                const matchesId = idRegexes.some((regex) => regex.test(id))
+                const matchesSource = sourceRegexes.some((regex) => regex.test(source))
+
+                return matchesId || matchesSource
+              })
+            }
+          } catch {
+            // Ignore malformed filters
+          }
+        }
+
+        //const allBackupRuns = mockBackupRuns.resources
+        return HttpResponse.json({ resources: filteredBackupRuns.slice(offset, offset + limit) })
       }
+
       default:
-        return HttpResponse.json(null) // If unknown kind, return null
+        return HttpResponse.json({ message: 'Kind not supported in mock' }, { status: 400 })
     }
   }),
-
   // Handle GET requests to /v2/resources/uid/:id to fetch a resource by unique ID
   http.get('http://localhost:10000/v2/resources/uid/:id', ({ params }) => {
     const { id } = params // Extract the resource ID from the URL

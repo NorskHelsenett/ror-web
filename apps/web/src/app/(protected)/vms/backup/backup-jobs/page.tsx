@@ -37,12 +37,11 @@ export default async function BackupJobPage({
 
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const backupRuns = fetchedBackupRuns.backupRuns || []
-  const backupJobId = sp?.backupJobId as string | undefined
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Backup jobs' />
-      <PageView backupJobs={backupJobs} backupRuns={backupRuns} params={params} backupJobId={backupJobId} />
+      <PageView backupJobs={backupJobs} backupRuns={backupRuns} params={params} />
     </div>
   )
 }

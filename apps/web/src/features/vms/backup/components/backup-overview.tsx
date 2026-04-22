@@ -206,7 +206,7 @@ const BackupRunCard: React.FC<{ run: BackupRun; isLatest: boolean }> = ({ run, i
           </div>
           <div className='flex items-center space-x-2 '>
             <Badge variant='outline' className='font-mono text-xs'>
-              <Link href={`/vms/backup/backup-runs?backupRunId=${getBackupRunId(run)}`}>
+              <Link href={`/vms/backup/backup-runs?search=${getBackupRunId(run)}`}>
                 <Badge
                   variant='default'
                   className='text-gray-800 dark:text-gray-200 font-mono text-xs cursor-pointer hover:underline dark:hover:underline transition-colors bg-transparent border-0 p-0'
