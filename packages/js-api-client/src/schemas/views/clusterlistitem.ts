@@ -1,6 +1,7 @@
 import z from 'zod'
 import {
   ViewColumn,
+  ViewElementArray,
   ViewElementNumber,
   ViewElementNumberFieldUnit,
   ViewElementString,
@@ -8,7 +9,7 @@ import {
   ViewElementTagsObject,
 } from './types'
 
-export const ClusterListViewRow = z
+export const ClusterListItemViewRow = z
   .object({
     clusterUid: ViewElementString.nullish(),
     clusterId: ViewElementString.nullish(),
@@ -40,13 +41,15 @@ export const ClusterListViewRow = z
     status: ViewElementString.nullish(),
     created: ViewElementString.nullish(),
     lastSeen: ViewElementString.nullish(),
+    project: ViewElementString.nullish(),
+    slackChannels: ViewElementArray.nullish(),
   })
   .loose()
 
-export const ClusterListViewSchema = z
+export const ClusterListItemViewSchema = z
   .object({
     type: z.string(),
     columns: z.array(ViewColumn),
-    rows: z.array(ClusterListViewRow),
+    rows: z.array(ClusterListItemViewRow),
   })
   .loose()

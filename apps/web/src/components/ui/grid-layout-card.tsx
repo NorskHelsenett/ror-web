@@ -4,6 +4,8 @@
  * A wrapper component for a responsive grid layout using `react-grid-layout`.
  */
 
+import { cn } from '@/utils/clsxm'
+
 /**
  * Renders a card header with a title and a horizontal rule.
  *
@@ -26,9 +28,17 @@ export const CardHeader = ({ title }: { title: string }) => (
  * @example
  * <CardItem label="Username">john_doe</CardItem>
  */
-export const CardItem = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <div className='flex flex-col'>
+export const CardItem = ({
+  label,
+  children,
+  className,
+}: {
+  label: string
+  children: React.ReactNode
+  className?: string
+}) => (
+  <div className={cn('flex flex-col', className)}>
     <p className='font-bold'>{label}</p>
-    <p>{children}</p>
+    <div>{children}</div>
   </div>
 )

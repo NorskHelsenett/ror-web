@@ -4,15 +4,14 @@
  * Layout component that provides shared UI structure and context for all cluster-related pages under the [id] route.
  */
 
-// import { getRorApi } from '@/services/ror-api'
 import { cache, Fragment, ReactNode } from 'react'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
-import { getRorApi } from '@/services/ror-api'
 import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
-// import { RenderApiError } from '@/utils/renderApiError'
+import { fetchClusterViewItem } from '@/features/cluster/services/fetch-clusters'
+import { ClusterListItemView } from '@ror/js-api-client'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -25,7 +24,7 @@ interface ClusterPageLayoutProps {
 const {
   cluster,
   // clusterIngresses,
-  clusterNodePools,
+  // clusterNodePools,
   // clusterPolicies,
   clusterVulnerabilities,
   // clusterCompliance,
@@ -48,10 +47,10 @@ const createTabNavigationItems = (clusterId: string) => {
     //   label: clusterIngresses.label,
     //   href: clusterIngresses.getHref(clusterId),
     // },
-    {
-      label: clusterNodePools.label,
-      href: clusterNodePools.getHref(clusterId),
-    },
+    // {
+    //   label: clusterNodePools.label,
+    //   href: clusterNodePools.getHref(clusterId),
+    // },
     // {
     //   label: clusterPolicies.label,
     //   href: clusterPolicies.getHref(clusterId),
@@ -76,8 +75,7 @@ const createTabNavigationItems = (clusterId: string) => {
 }
 
 const fetchCluster = cache(async (id: string) => {
-  const api = await getRorApi()
-  return api.kubernetesClusters.id(id)
+  return fetchClusterViewItem(id)
 })
 
 /**
@@ -98,13 +96,10 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   const { id } = await params
 
   try {
-    const cluster = await fetchCluster(id)
-
+    const clusterList = (await fetchCluster(id)) as ClusterListItemView
+    const cluster = clusterList.rows[0]
     const tabs = createTabNavigationItems(id)
-
-    const clusterContextValue = {
-      cluster,
-    }
+    const clusterContextValue = { cluster }
 
     return (
       <ClusterProvider value={clusterContextValue}>

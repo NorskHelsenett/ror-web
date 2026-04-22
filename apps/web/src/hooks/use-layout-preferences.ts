@@ -171,7 +171,6 @@ export function useLayoutPreferences(key: LayoutKey, defaultLayoutsInput: Layout
 
   const getCurrentLayouts = useCallback(() => {
     const prefs = getSavedUserPreferenceObject(PREFERENCES_KEY, DEFAULT_USERPREFERENCES)
-    console.log('getCurrentLayouts prefs: ', prefs)
     return prefs
   }, [])
 
