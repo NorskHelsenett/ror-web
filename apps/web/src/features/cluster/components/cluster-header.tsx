@@ -37,7 +37,6 @@ function getEnvironmentForColor(environment: string): Environment {
  */
 export const ClusterHeader = ({ className, tabs }: ClusterHeaderProps) => {
   const { cluster } = useClusterContext()
-  console.log('[CLUSTER-HEADER] cluster:', cluster)
   const environment = getEnvironmentViewItem(cluster)
   const environmentForColor = getEnvironmentForColor(environment)
   const [lightmode, darkmode] = getEnvironmentColors(environmentForColor)

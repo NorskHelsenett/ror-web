@@ -463,7 +463,7 @@ export const getClustersViewKey = (clusters: ClusterListViewRowType[] = []): str
 export const getRorLoginView = (cluster: ClusterListViewRowType): string => `ror login ${getClusterIdView(cluster)}`
 
 export const getClusterUidViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.clusterName?.fieldValue || ''
+  cluster.clusterUid?.fieldValue || ''
 
 export const getClusterIdViewItem = (cluster: ClusterListViewItemRowType): string => cluster.clusterId?.fieldValue || ''
 

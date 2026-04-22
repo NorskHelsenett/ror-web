@@ -3,11 +3,7 @@ import { getRorAPIPath } from '../utils/mock-base-url'
 import { clusterListView, clusterListViewItem } from '../data/clusterlistview'
 
 export const clusterListViewHandler = [
-  http.get(getRorAPIPath('/v2/views/clusterlist'), async ({ request }) => {
-    console.log('[Cluster list handler handler hit]', request.url)
-    const body = await request.json().catch(() => null)
-    console.log('[Cluster list handler handler body]', body)
-
+  http.get(getRorAPIPath('/v2/views/clusterlist'), () => {
     return HttpResponse.json(clusterListView)
   }),
   http.get(getRorAPIPath('/v2/views/clusterlistitem'), async ({ request }) => {
