@@ -1,113 +1,118 @@
+import { ClusterListViewRowType } from '@ror/js-api-client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { getClusterIdView, getClustersViewKey } from '../utils/cluster'
+import { loadMoreClusters } from '@/utils/cluster-actions'
 
-interface UseClusterInfiniteLoaderProps<T> {
-  initial: T[]
-  loadMore: (offset: number, limit: number) => Promise<{ items: T[]; hasMore: boolean }>
+interface UseClusterInfiniteLoaderProps {
+  initial: ClusterListViewRowType[]
   sort?: string
   pageSize?: number
-  getItemId: (item: T) => string
-  getItemsKey?: (items: T[]) => string
 }
 
 /**
- * Hook for implementing infinite scrolling/loading of items.
+ * Custom React hook for infinite loading of Kubernetes clusters with support for sorting, pagination, and deduplication.
  *
- * This hook manages a list of items, loading more as the user scrolls near the end.
- * It uses an IntersectionObserver to trigger loading when a sentinel element becomes visible.
+ * This hook manages a list of clusters, loading more as the user scrolls near the bottom of the list.
+ * It avoids parallel requests, handles stale responses, and prevents unnecessary rerenders by tracking server payloads.
  *
- * @template T The type of items being loaded.
+ * @param {Object} params - Hook parameters.
+ * @param {ClusterListViewRowType[]} params.initial - Initial list of clusters to display.
+ * @param {string} params.sort - Sort order or key for clusters.
+ * @param {number} [params.pageSize=50] - Number of clusters to load per request.
  *
- * @param initial - The initial array of items.
- * @param loadMore - An async function to load more items. Receives the current offset and page size, returns an object with `items` and `hasMore`.
- * @param sort - A value indicating the current sort order; changing this resets the loader.
- * @param pageSize - The number of items to load per request. Defaults to 50.
- * @param getItemId - A function to extract a unique ID from an item. Defaults to extracting `id` property.
- * @param getItemsKey - A function to generate a key for the current items, used to reset loader when data changes.
- *
- * @returns An object containing:
- *   - `items`: The current array of loaded items.
- *   - `sentinelRef`: A ref to attach to the sentinel element for intersection observation.
- *   - `isLoading`: Whether a load operation is in progress.
- *   - `hasMore`: Whether there are more items to load.
- *   - `fetchMore`: A function to manually trigger loading more items.
+ * @returns {{
+ *   items: ClusterListViewRowType[],
+ *   sentinelRef: React.RefObject<HTMLDivElement>,
+ *   isLoading: boolean,
+ *   hasMore: boolean,
+ *   fetchMore: () => Promise<void>,
+ *   reset: (nextInitial?: ClusterListViewRowType[]) => void
+ * }} - Hook state and actions:
+ *   - `items`: Current list of clusters.
+ *   - `sentinelRef`: Ref to the DOM element used for intersection observer.
+ *   - `isLoading`: Whether a fetch is in progress.
+ *   - `hasMore`: Whether more clusters are available to load.
+ *   - `fetchMore`: Function to load more clusters.
+ *   - `reset`: Function to reset the stream and optionally set a new initial list.
  */
-export function useClusterInfiniteLoader<T>({
-  initial,
-  loadMore,
-  sort,
-  pageSize = 50,
-  getItemId,
-  getItemsKey = (items: T[]) => JSON.stringify(items.map(getItemId)),
-}: UseClusterInfiniteLoaderProps<T>) {
-  const [items, setItems] = useState<T[]>(initial)
+export function useClusterInfiniteLoader({ initial, sort, pageSize = 50 }: UseClusterInfiniteLoaderProps) {
+  const [items, setItems] = useState<ClusterListViewRowType[]>(initial)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
-  // DOM sentinel. When this element becomes visible, more items are fetched automatically.
+  // DOM sentinel. When this div becomes visible, more clusters are loaded.
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  // Prevents parallel requests — ensures only one `loadMore` call runs at a time.
+  // Avoid parallel requests, by returning immediately if inFlightRef.current is true
   const inFlightRef = useRef(false)
-  // Tracks active loading session; incremented on resets to ignore stale responses.
-  const runIdRef = useRef(0)
-  // Stores the hash of the last known data to detect changes and reset if needed.
-  const lastKeyRef = useRef(getItemsKey(initial))
+  // Handles stale results, by returning immediately if runId has changed (for example if user changes sort before previous fetch completes)
+  const runIdRef = useRef(0) // increments whenever we "reset" the stream
+  // Remember last server payload to see if the content changed, to avoid unnecessary rerenders
+  const lastKeyRef = useRef(getClustersViewKey(initial))
 
-  // Reset if the initial data changes (for example, new server payload or refreshed state)
+  // Adopt new server payload only if content changed
   useEffect(() => {
-    const nextKey = getItemsKey(initial)
+    const nextKey = getClustersViewKey(initial)
     if (nextKey !== lastKeyRef.current) {
       lastKeyRef.current = nextKey
       setItems(initial)
       setHasMore(true)
-      runIdRef.current++ // invalidate in-flight requests
+      runIdRef.current++ // bump runId so any in-flight responses are ignored
     }
-  }, [initial, getItemsKey])
+  }, [initial])
 
-  // Reset when the sorting order changes
+  // If sort changes, reset the stream (but keep current initial)
   useEffect(() => {
     setHasMore(true)
-    runIdRef.current++ // invalidate previous fetches
+    runIdRef.current++ // bump runId so any in-flight responses are ignored
   }, [sort])
 
-  // Fetch more items (manually or triggered by scroll)
+  // Fetch more clusters
   const fetchMore = useCallback(async () => {
-    // Skip if already fetching or no more items left
+    // If already loading or no more to load, don't do anything
     if (inFlightRef.current || isLoading || !hasMore) return
     inFlightRef.current = true
     setIsLoading(true)
 
+    // Remember the runId for this request
     const runId = runIdRef.current
     try {
-      // Load more data from backend
-      const data = await loadMore(items.length, pageSize)
+      // Fetch more clusters
+      const data = await loadMoreClusters({ offset: items.length, limit: pageSize, sort })
 
-      // Ignore outdated responses (e.g., sort changed mid-fetch)
+      // Ignore stale responses (e.g. sort changed mid-request)
       if (runId !== runIdRef.current) return
 
-      // Merge new items while preventing duplicates
+      // Append new clusters, avoiding duplicates
       setItems((prev) => {
-        const seen = new Set(prev.map(getItemId))
-        const incoming = data.items.filter((item) => !seen.has(getItemId(item)))
+        const seen = new Set(prev.map(getClusterIdView))
+        const incoming = (data.items ?? []).filter((c) => {
+          const id = getClusterIdView(c)
+          return id && !seen.has(id)
+        })
         return incoming.length ? [...prev, ...incoming] : prev
       })
 
-      // Mark as complete if no additional data remains
-      if (!data.hasMore) setHasMore(false)
+      // If we got less than requested, there's no more to load
+      if (!data.hasMore) {
+        setHasMore(false)
+      }
+    } catch (e) {
+      console.error('[useInfiniteClusters] fetchMore failed', e)
+      setHasMore(false)
     } finally {
-      // Only end loading if this request is the latest one
+      // Only turn off loading if this is the latest request
       if (runId === runIdRef.current) {
         setIsLoading(false)
         inFlightRef.current = false
       }
     }
-  }, [items, pageSize, loadMore, hasMore, isLoading, getItemId])
+  }, [items.length, pageSize, sort, hasMore, isLoading])
 
-  // Automatically trigger fetchMore() when sentinel enters the viewport
+  // Observe sentinel to auto-fetch when near bottom
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
-
     const io = new IntersectionObserver(
       (entries) => {
         const entry = entries[0]
@@ -115,16 +120,21 @@ export function useClusterInfiniteLoader<T>({
           fetchMore()
         }
       },
-      {
-        root: null, // uses viewport
-        rootMargin: '600px', // prefetch early while scrolling
-        threshold: 0,
-      }
+      { root: null, rootMargin: '600px', threshold: 0 }
     )
-
     io.observe(el)
     return () => io.disconnect()
   }, [fetchMore, isLoading, hasMore])
 
-  return { items, sentinelRef, isLoading, hasMore, fetchMore }
+  // in case you need to programmatically clear the stream
+  const reset = useCallback((nextInitial?: ClusterListViewRowType[]) => {
+    runIdRef.current++
+    inFlightRef.current = false
+    setIsLoading(false)
+    setHasMore(true)
+    setItems(nextInitial ?? [])
+    if (nextInitial) lastKeyRef.current = getClustersViewKey(nextInitial)
+  }, [])
+
+  return { items, sentinelRef, isLoading, hasMore, fetchMore, reset }
 }

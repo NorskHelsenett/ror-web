@@ -99,16 +99,10 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   // Infinite loading of clusters
 
-  const { items, sentinelRef, isLoading, hasMore } = useClusterInfiniteLoader<ClusterListViewRowType>({
+  const { items, sentinelRef, isLoading, hasMore } = useClusterInfiniteLoader({
     initial: clusters,
     sort: params.sort,
     pageSize: 50,
-    getItemId: getClusterIdView,
-    getItemsKey: getClustersViewKey,
-    loadMore: async (offset, limit) => {
-      const res = await loadMoreClusters({ offset, limit, sort: params.sort })
-      return { items: res.items ?? [], hasMore: res.hasMore }
-    },
   })
 
   // Clusters valid after filtering and searching
