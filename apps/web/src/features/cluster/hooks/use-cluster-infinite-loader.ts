@@ -38,7 +38,7 @@ interface UseClusterInfiniteLoaderProps {
 export function useClusterInfiniteLoader({ initial, sort, pageSize = 50 }: UseClusterInfiniteLoaderProps) {
   const [items, setItems] = useState<ClusterListViewRowType[]>(initial)
   const [isLoading, setIsLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(initial.length >= pageSize)
 
   // DOM sentinel. When this div becomes visible, more clusters are loaded.
   const sentinelRef = useRef<HTMLDivElement>(null)

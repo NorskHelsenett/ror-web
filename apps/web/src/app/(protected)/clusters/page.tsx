@@ -35,10 +35,10 @@ export default async function ClustersPage({
 
   const sp = await searchParams
   const params = normalizeParams(sp)
-  const skip = (params.page - 1) * params.limit
+  // const skip = (params.page - 1) * params.limit
   const listParams = new URLSearchParams()
-  listParams.set('limit', String(params.limit))
-  listParams.set('offset', String(skip))
+  listParams.set('limit', '50')
+  listParams.set('offset', '0')
   if (params.sort) listParams.set('sort', params.sort)
 
   const clusterList = await api.clusterListView.getClusterList(listParams)
