@@ -548,7 +548,7 @@ export const getCreatedViewItem = (cluster: ClusterListViewItemRowType): string 
 export const getLastSeenViewItem = (cluster: ClusterListViewItemRowType): string => cluster.lastSeen?.fieldValue || ''
 
 export const getClustersViewKeyItem = (clusters: ClusterListViewItemRowType[] = []): string =>
-  Array.isArray(clusters) ? clusters.map(getClusterIdView).join('|') : ''
+  Array.isArray(clusters) ? clusters.map(getClusterIdViewItem).join('|') : ''
 
 export const getRorLoginViewItem = (cluster: ClusterListViewItemRowType): string =>
-  `ror login ${getClusterIdView(cluster)}`
+  `ror login ${getClusterIdViewItem(cluster)}`
