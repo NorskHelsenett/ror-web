@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 
-interface UseInfiniteLoaderProps<T> {
+interface UseClusterInfiniteLoaderProps<T> {
   initial: T[]
   loadMore: (offset: number, limit: number) => Promise<{ items: T[]; hasMore: boolean }>
   sort?: string
@@ -31,14 +31,14 @@ interface UseInfiniteLoaderProps<T> {
  *   - `hasMore`: Whether there are more items to load.
  *   - `fetchMore`: A function to manually trigger loading more items.
  */
-export function useInfiniteLoader<T>({
+export function useClusterInfiniteLoader<T>({
   initial,
   loadMore,
   sort,
   pageSize = 50,
   getItemId,
   getItemsKey = (items: T[]) => JSON.stringify(items.map(getItemId)),
-}: UseInfiniteLoaderProps<T>) {
+}: UseClusterInfiniteLoaderProps<T>) {
   const [items, setItems] = useState<T[]>(initial)
   const [isLoading, setIsLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
@@ -57,13 +57,10 @@ export function useInfiniteLoader<T>({
   useEffect(() => {
     const nextKey = getItemsKey(initial)
     if (nextKey !== lastKeyRef.current) {
-      // Always reset — key check was preventing updates when search returned same-sized array
       lastKeyRef.current = nextKey
       setItems(initial)
-      setHasMore(true) // always reset to true — let loadMore determine if there's more
-      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
-      runIdRef.current++
-      inFlightRef.current = false
+      setHasMore(true)
+      runIdRef.current++ // invalidate in-flight requests
     }
   }, [initial, getItemsKey])
 

@@ -46,7 +46,6 @@ import {
   getResourcesMemoryView,
   getWorkspaceView,
 } from '@/features/cluster/utils/cluster'
-import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { cn } from '@/utils/clsxm'
 import { loadMoreClusters } from '@/utils/cluster-actions'
 import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
@@ -59,6 +58,7 @@ import { exportClustersAsCSV, exportClustersAsExcel } from '@/features/cluster/u
 import { Params } from '@/types/resources-page'
 import { useFilters } from '@/hooks/use-filters'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
+import { useClusterInfiniteLoader } from '@/features/cluster/hooks/use-cluster-infinite-loader'
 
 /**
  * Props for the PageView component.
@@ -99,7 +99,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   // Infinite loading of clusters
 
-  const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<ClusterListViewRowType>({
+  const { items, sentinelRef, isLoading, hasMore } = useClusterInfiniteLoader<ClusterListViewRowType>({
     initial: clusters,
     sort: params.sort,
     pageSize: 50,
