@@ -85,16 +85,52 @@ const NoBackupTableDisplay = () => (
   </div>
 )
 
+const LoadingBackupTableDisplay = ({ label = 'Loading backup...' }: { label?: string }) => (
+  <div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <Pill className='bg-blue-100 text-blue-800 border-blue-200 cursor-pointer animate-pulse'>{label}</Pill>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <div className='text-xs'>Fetching backup run details</div>
+      </TooltipContent>
+    </Tooltip>
+  </div>
+)
+
+const LoadingBackupDisplay = ({ label = 'Loading backup data...' }: { label?: string }) => (
+  <div className='mt-1 p-4 border border-blue-200 dark:border-blue-800 rounded-lg bg-blue-50 dark:bg-blue-900/20'>
+    <h5 className='font-semibold text-sm text-blue-700 dark:text-blue-300 tracking-wide'>Backup status</h5>
+    <div className='flex items-center justify-center py-2'>
+      <div className='text-center space-y-2'>
+        <div className='w-10 h-10 bg-blue-100 dark:bg-blue-800/40 rounded-full flex items-center justify-center mx-auto'>
+          <span className='w-4 h-4 rounded-full bg-blue-500 animate-pulse' />
+        </div>
+        <p className='text-sm text-blue-700 dark:text-blue-300 font-medium'>{label}</p>
+      </div>
+    </div>
+  </div>
+)
+
 export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
   const backupStatus = useBackupStatus(vm)
   const activeBackupStatus = useActiveBackupStatus(vm)
   const isActive = activeBackupStatus.hasActiveBackup
+  const isExpired = activeBackupStatus.hasExpiredBackup
   const isHistorical = activeBackupStatus.hasHistoricalBackup
   const isConfigured = activeBackupStatus.hasConfiguredBackup
+  const isHydrating = activeBackupStatus.isBackupInfoHydrating
 
-  // If no backup data is loaded, show no backup display
+  // Show loader while the VM backup status itself has not been hydrated.
   if (!backupStatus.isDataLoaded) {
-    return <NoBackupTableDisplay />
+    return <LoadingBackupTableDisplay />
+  }
+
+  // Show loader while active backup exists but latest run info is still hydrating.
+  if (isHydrating) {
+    return <LoadingBackupTableDisplay label='Loading active backup...' />
   }
 
   // If no backup job and no backup runs, show no backup display
@@ -123,6 +159,8 @@ export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
             {backupStatus.lastBackupInfo.expiryTime ? formatDateTime(backupStatus.lastBackupInfo.expiryTime) : 'N/A'}
           </div>
         </>
+      ) : isExpired ? (
+        <div>Backup run exists but has expired</div>
       ) : isConfigured ? (
         <div>Backup job configured - no runs executed yet</div>
       ) : (
@@ -136,7 +174,9 @@ export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div>
-            {isConfigured ? (
+            {isExpired ? (
+              <Pill className='bg-red-100 text-red-800 border-red-200 cursor-pointer'>Expired</Pill>
+            ) : isConfigured ? (
               <Pill className='bg-blue-100 text-blue-800 border-blue-200 cursor-pointer'>Configured</Pill>
             ) : isActive ? (
               <Pill className='bg-green-100 text-green-800 dark:text-green-500 cursor-pointer'>Active</Pill>
@@ -157,9 +197,16 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
   const activeBackupStatus = useActiveBackupStatus(vm)
   const backupStatus = useBackupStatus(vm)
 
-  // If no backup data is loaded, show no backup display
+  const isHydrating = activeBackupStatus.isBackupInfoHydrating
+
+  // Show loader while backup status has not been added to VM data yet.
   if (!backupStatus.isDataLoaded) {
-    return <NoBackupDisplay />
+    return <LoadingBackupDisplay />
+  }
+
+  // Show loader while active backup exists but run details are still loading.
+  if (isHydrating) {
+    return <LoadingBackupDisplay label='Loading active backup...' />
   }
 
   // If no backup job and no backup runs, show no backup display
@@ -168,30 +215,35 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
   }
 
   const isActive = activeBackupStatus.hasActiveBackup
+  const isExpired = activeBackupStatus.hasExpiredBackup
   const isHistorical = activeBackupStatus.hasHistoricalBackup
   const isConfigured = activeBackupStatus.hasConfiguredBackup
 
   const containerStyles = cn(
     'mt-1 p-3 rounded-md relative overflow-hidden',
-    isConfigured
-      ? 'border-2 border-blue-400 bg-blue-50 dark:bg-blue-900/20'
-      : isActive
-        ? 'border-2 border-green-400 bg-green-50 dark:bg-green-900/20'
-        : isHistorical
-          ? 'border-2 border-orange-400 bg-orange-50 dark:bg-orange-900/20'
-          : 'border border-gray-200 dark:border-gray-700',
+    isExpired
+      ? 'border-2 border-red-400 bg-red-50 dark:bg-red-900/20'
+      : isConfigured
+        ? 'border-2 border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+        : isActive
+          ? 'border-2 border-green-400 bg-green-50 dark:bg-green-900/20'
+          : isHistorical
+            ? 'border-2 border-orange-400 bg-orange-50 dark:bg-orange-900/20'
+            : 'border border-gray-200 dark:border-gray-700',
     className
   )
 
   const titleStyles = cn(
     'font-semibold text-sm mb-2 tracking-wide flex items-center',
-    isConfigured
-      ? 'text-blue-700 dark:text-blue-300'
-      : isActive
-        ? 'text-green-700 dark:text-green-300'
-        : isHistorical
-          ? 'text-orange-700 dark:text-orange-300'
-          : 'text-gray-700 dark:text-gray-300'
+    isExpired
+      ? 'text-red-700 dark:text-red-300'
+      : isConfigured
+        ? 'text-blue-700 dark:text-blue-300'
+        : isActive
+          ? 'text-green-700 dark:text-green-300'
+          : isHistorical
+            ? 'text-orange-700 dark:text-orange-300'
+            : 'text-gray-700 dark:text-gray-300'
   )
 
   const formatDateTime = (dateString: string) => {
@@ -203,6 +255,11 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
       {isActive && (
         <div className='absolute top-0 right-0 bg-green-400 text-white text-xs px-2 py-1 rounded-bl-md font-medium'>
           ACTIVE
+        </div>
+      )}
+      {isExpired && (
+        <div className='absolute top-0 right-0 bg-red-400 text-white text-xs px-2 py-1 rounded-bl-md font-medium'>
+          EXPIRED
         </div>
       )}
       {isHistorical && (
@@ -217,10 +274,15 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
       )}
 
       <h5 className={titleStyles}>
+        {isExpired && <span className='w-2 h-2 bg-red-400 rounded-full mr-2'></span>}
         {isConfigured && <span className='w-2 h-2 bg-blue-400 rounded-full mr-2'></span>}
         {isActive && !isConfigured && <span className='w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse'></span>}
         {isHistorical && <span className='w-2 h-2 bg-orange-400 rounded-full mr-2'></span>}
-        {isConfigured && !backupStatus.hasBackupRun ? 'Backup configured' : 'Last backup'}
+        {isExpired
+          ? 'Backup expired'
+          : isConfigured && !backupStatus.hasBackupRun
+            ? 'Backup configured'
+            : 'Last backup'}
       </h5>
 
       <div className='grid grid-cols-1 gap-2 text-xs'>
@@ -246,6 +308,11 @@ export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps)
               }
             />
           </>
+        ) : isExpired ? (
+          <div className='text-center py-2'>
+            <p className='text-sm text-red-700 dark:text-red-300 font-medium'>Backup run expired</p>
+            <p className='text-xs text-gray-600 dark:text-gray-400 mt-1 mb-1'>A new backup run is required</p>
+          </div>
         ) : isConfigured ? (
           <div className='text-center py-2'>
             <p className='text-sm text-blue-700 dark:text-blue-300 font-medium'>Backup job configured</p>

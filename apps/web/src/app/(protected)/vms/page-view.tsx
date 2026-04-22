@@ -55,17 +55,24 @@ import { useFilters } from '@/hooks/use-filters'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { DataTable } from '@/components/ui/data-table'
 import { getVMTableColumns } from '@/features/vms/components/vm-columns'
+import { type LastBackupInfo } from '@/features/vms/backup/utils/backup-run'
 import type { VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
+import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
 
+const isExpiredBackup = (expiryTime?: string | null) => {
+  if (!expiryTime) return false
+  const expiryDate = new Date(expiryTime)
+  if (Number.isNaN(expiryDate.getTime())) return false
+  return expiryDate.getTime() < Date.now()
+}
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
-
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
@@ -84,10 +91,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
+  const hydratedItems = useBackupInfoHydration(items)
 
   const safeItems = useMemo(
-    () => items.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
-    [items]
+    () => hydratedItems.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
+    [hydratedItems]
   )
 
   const filterDefinitions = [
@@ -104,7 +112,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       key: 'Backup',
       extractor: (vm: VirtualMachine | VMWithBackupStatus) => {
         if ('backupStatus' in vm) {
-          const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+          const backupStatus = vm.backupStatus as {
+            hasBackupJob: boolean
+            hasBackupRun: boolean
+            lastBackupInfo?: LastBackupInfo | null
+          }
+          const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+          if (isExpired) return 'expiredBackup'
           if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 'activeBackup'
           if (backupStatus.hasBackupRun) return 'historicalBackup'
           if (backupStatus.hasBackupJob) return 'configuredBackup'
@@ -131,24 +146,38 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       key: 'activeBackup',
       extractor: (vm) => {
         if ('backupStatus' in vm) {
-          const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+          const backupStatus = vm.backupStatus as {
+            hasBackupJob: boolean
+            hasBackupRun: boolean
+            lastBackupInfo?: LastBackupInfo | null
+          }
+          const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+          if (isExpired) return 2 // Expired backup
           if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 1 // Active backup
-          if (backupStatus.hasBackupRun) return 2 // Historical backup
-          if (backupStatus.hasBackupJob) return 3 // Configured backup
-          return 4 // No backup
+          if (backupStatus.hasBackupRun) return 3 // Historical backup
+          if (backupStatus.hasBackupJob) return 4 // Configured backup
+          return 5 // No backup
         }
-        return 4 // No backup data
+        return 5 // No backup data
       },
       compareFn: (a, b) => {
         const getBackupPriority = (vm: VirtualMachine | VMWithBackupStatus) => {
           if ('backupStatus' in vm) {
-            const backupStatus = vm.backupStatus as { hasBackupJob: boolean; hasBackupRun: boolean }
+            const backupStatus = vm.backupStatus as {
+              hasBackupJob: boolean
+              hasBackupRun: boolean
+              lastBackupInfo?: LastBackupInfo | null
+            }
+            const isExpired = backupStatus.hasBackupRun && isExpiredBackup(backupStatus.lastBackupInfo?.expiryTime)
+
+            if (isExpired) return 2 // Expired backup
             if (backupStatus.hasBackupJob && backupStatus.hasBackupRun) return 1 // Active backup (highest priority)
-            if (backupStatus.hasBackupRun) return 2 // Historical backup
-            if (backupStatus.hasBackupJob) return 3 // Configured backup
-            return 4 // No backup
+            if (backupStatus.hasBackupRun) return 3 // Historical backup
+            if (backupStatus.hasBackupJob) return 4 // Configured backup
+            return 5 // No backup
           }
-          return 4 // No backup data
+          return 5 // No backup data
         }
 
         return getBackupPriority(a) - getBackupPriority(b)
@@ -240,7 +269,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}
         exportAsExcel={exportVmsAsExcel}
-        allItems={items}
+        allItems={hydratedItems}
         filteredItems={filteredItems}
       />
     </div>

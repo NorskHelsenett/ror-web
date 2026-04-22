@@ -3,18 +3,78 @@
 import { useVMContext } from '@/context/vm-context'
 import { BackupOverview } from '@/features/vms/backup/components'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
+import { useEffect, useMemo, useState } from 'react'
+import type { BackupRun } from '@ror/js-api-client'
+import { getBackupRunActiveTargets } from '@/features/vms/backup/utils/backup-run'
+import { getVmExternalId } from '@/features/vms/utils/vms'
 
 export default function VMBackupPage() {
   const { vm } = useVMContext()
+  const [backupRuns, setBackupRuns] = useState<BackupRun[]>([])
+  const [isBackupRunsLoading, setIsBackupRunsLoading] = useState(false)
+  const [hasFetchedBackupRuns, setHasFetchedBackupRuns] = useState(false)
+
   const enhancedVM = vm as VMWithBackupStatus
+  const vmExternalId = getVmExternalId(enhancedVM)
   const hasBackupDataArrays = 'backupStatus' in enhancedVM && enhancedVM.backupStatus?.relatedBackupJobs !== undefined
-  const relatedBackupJobs = enhancedVM.backupStatus?.relatedBackupJobs || []
-  const relatedBackupRuns = enhancedVM.backupStatus?.relatedBackupRuns || []
+  const relatedBackupJobs = useMemo(() => enhancedVM.backupStatus?.relatedBackupJobs || [], [enhancedVM])
+  const relatedBackupRuns = backupRuns.length > 0 ? backupRuns : enhancedVM.backupStatus?.relatedBackupRuns || []
+
+  // Fetch backup runs for this VM's backup jobs on mount
+  useEffect(() => {
+    const fetchBackupRunsForVM = async () => {
+      if (!relatedBackupJobs.length) {
+        setHasFetchedBackupRuns(true)
+        setIsBackupRunsLoading(false)
+        return
+      }
+
+      setIsBackupRunsLoading(true)
+      setHasFetchedBackupRuns(false)
+
+      try {
+        const response = await fetch('/api/vm-backup-runs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            backupJobs: relatedBackupJobs,
+          }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          const fetchedRuns = (data.backupRuns || []) as BackupRun[]
+
+          const vmSpecificRuns = vmExternalId
+            ? fetchedRuns.filter((run) => {
+                const targets = getBackupRunActiveTargets(run)
+                return targets.some((target) => target.externalId === vmExternalId)
+              })
+            : fetchedRuns
+
+          setBackupRuns(vmSpecificRuns)
+        }
+      } catch (error) {
+        console.error('Error fetching backup runs:', error)
+      } finally {
+        setIsBackupRunsLoading(false)
+        setHasFetchedBackupRuns(true)
+      }
+    }
+
+    fetchBackupRunsForVM()
+  }, [relatedBackupJobs, vmExternalId])
 
   return (
     <div className='space-y-6'>
       {hasBackupDataArrays ? (
-        <BackupOverview vm={enhancedVM} backupJobs={relatedBackupJobs} backupRuns={relatedBackupRuns} />
+        <BackupOverview
+          vm={enhancedVM}
+          backupJobs={relatedBackupJobs}
+          backupRuns={relatedBackupRuns}
+          isBackupRunsLoading={isBackupRunsLoading}
+          hasFetchedBackupRuns={hasFetchedBackupRuns}
+        />
       ) : (
         <div className='p-6 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg'>
           <div className='flex items-center space-x-3'>

@@ -12,6 +12,7 @@ import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
+import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
@@ -36,14 +37,32 @@ export default async function VMPage({
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, params),
     fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, params).catch(() => ({ backupRuns: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
   const backupJobs = fetchedBackupJobs.backupJobs || []
-  const backupRuns = fetchedBackupRuns.backupRuns || []
+  const initialBackupRuns = [...(fetchedBackupRuns.backupRuns || [])]
+  let mergedBackupRuns = initialBackupRuns
 
-  const vmsWithBackup = mapBackupToVM(vms, backupJobs, backupRuns)
+  try {
+    const jobSpecificRuns = await fetchBackupRunsForJobs(api, backupJobs).catch(() => [])
+    const runIdSet = new Set(initialBackupRuns.map((r) => r?.backuprun?.id))
+    const extraRuns = []
+
+    for (const run of jobSpecificRuns) {
+      const runId = run?.backuprun?.id
+      if (runId && !runIdSet.has(runId)) {
+        extraRuns.push(run)
+      }
+    }
+
+    mergedBackupRuns = [...initialBackupRuns, ...extraRuns]
+  } catch (error) {
+    console.error('Error fetching job-specific backup runs:', error)
+  }
+
+  const vmsWithBackup = mapBackupToVM(vms, backupJobs, mergedBackupRuns)
 
   return (
     <div className='w-full flex flex-col'>
