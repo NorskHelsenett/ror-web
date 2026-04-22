@@ -78,6 +78,12 @@ export function useClusterInfiniteLoader({ initial, sort, pageSize = 50 }: UseCl
     const runId = runIdRef.current
     try {
       // Fetch more clusters
+      console.log('[useClusterInfiniteLoader] fetchMore', {
+        offset: items.length,
+        limit: pageSize,
+        sort,
+        runId: runIdRef.current,
+      })
       const data = await loadMoreClusters({ offset: items.length, limit: pageSize, sort })
 
       // Ignore stale responses (e.g. sort changed mid-request)
