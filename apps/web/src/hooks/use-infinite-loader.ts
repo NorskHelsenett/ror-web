@@ -53,37 +53,58 @@ export function useInfiniteLoader<T>({
   // Stores the hash of the last known data to detect changes and reset if needed.
   const lastKeyRef = useRef(getItemsKey(initial))
 
+  const hasMoreRef = useRef(true)
+  const isLoadingRef = useRef(false)
+  const itemsRef = useRef<T[]>(initial)
+
+  useEffect(() => {
+    hasMoreRef.current = hasMore
+  }, [hasMore])
+  useEffect(() => {
+    isLoadingRef.current = isLoading
+  }, [isLoading])
+  useEffect(() => {
+    itemsRef.current = items
+  }, [items])
+
   // Reset if the initial data changes (for example, new server payload or refreshed state)
   useEffect(() => {
     const nextKey = getItemsKey(initial)
     if (nextKey !== lastKeyRef.current) {
-      // Always reset — key check was preventing updates when search returned same-sized array
       lastKeyRef.current = nextKey
       setItems(initial)
-      setHasMore(true) // always reset to true — let loadMore determine if there's more
-      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
+      itemsRef.current = initial // <- sync ref immediately too
+      setHasMore(true)
+      hasMoreRef.current = true // <- add here
+      setIsLoading(false)
+      isLoadingRef.current = false // <- and this for consistency
       runIdRef.current++
       inFlightRef.current = false
     }
   }, [initial, getItemsKey])
 
   // Reset when the sorting order changes
+  const previousSortRef = useRef(sort)
   useEffect(() => {
+    if (sort === previousSortRef.current) return
+    previousSortRef.current = sort
     setHasMore(true)
-    runIdRef.current++ // invalidate previous fetches
+    hasMoreRef.current = true
+    runIdRef.current++
   }, [sort])
 
   // Fetch more items (manually or triggered by scroll)
   const fetchMore = useCallback(async () => {
     // Skip if already fetching or no more items left
-    if (inFlightRef.current || isLoading || !hasMore) return
+    if (inFlightRef.current || !hasMoreRef.current) return
     inFlightRef.current = true
     setIsLoading(true)
+    isLoadingRef.current = true
 
     const runId = runIdRef.current
     try {
       // Load more data from backend
-      const data = await loadMore(items.length, pageSize)
+      const data = await loadMore(itemsRef.current.length, pageSize)
 
       // Ignore outdated responses (e.g., sort changed mid-fetch)
       if (runId !== runIdRef.current) return
@@ -96,15 +117,19 @@ export function useInfiniteLoader<T>({
       })
 
       // Mark as complete if no additional data remains
-      if (!data.hasMore) setHasMore(false)
+      if (!data.hasMore) {
+        setHasMore(false)
+        hasMoreRef.current = false
+      }
     } finally {
       // Only end loading if this request is the latest one
       if (runId === runIdRef.current) {
         setIsLoading(false)
+        isLoadingRef.current = false
         inFlightRef.current = false
       }
     }
-  }, [items, pageSize, loadMore, hasMore, isLoading, getItemId])
+  }, [pageSize, loadMore, getItemId])
 
   // Automatically trigger fetchMore() when sentinel enters the viewport
   useEffect(() => {
@@ -113,8 +138,7 @@ export function useInfiniteLoader<T>({
 
     const io = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0]
-        if (entry.isIntersecting && !isLoading && hasMore) {
+        if (entries[0].isIntersecting && !inFlightRef.current && hasMoreRef.current) {
           fetchMore()
         }
       },
@@ -127,7 +151,7 @@ export function useInfiniteLoader<T>({
 
     io.observe(el)
     return () => io.disconnect()
-  }, [fetchMore, isLoading, hasMore])
+  }, [fetchMore])
 
   return { items, sentinelRef, isLoading, hasMore, fetchMore }
 }
