@@ -13,12 +13,12 @@ export function buildVmSearchFilter(searchQuery: string): string | undefined {
       type: 'string',
       operator: 'regexp',
     },
-    {
-      field: 'virtualmachine.provider',
-      value: `${safe}$`,
-      type: 'string',
-      operator: 'regexp',
-    },
+    // {
+    //   field: 'virtualmachine.provider',
+    //   value: `${safe}$`,
+    //   type: 'string',
+    //   operator: 'regexp',
+    // },
     // Regex for name
     // {
     //   field: 'virtualmachine.spec.name',
