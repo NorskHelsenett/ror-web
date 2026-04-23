@@ -19,6 +19,7 @@ export interface NormalizeParamsResult {
   filters?: string
   filterPanel?: string
   search?: string
+  searchField?: string
 }
 
 /**
@@ -51,6 +52,7 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
 
   const filters = rawFiltersPanel && rawFiltersPanel !== 'open' ? rawFiltersPanel : undefined
   const search = get('search')?.trim() || undefined
+  const searchField = get('searchField') || undefined
 
-  return { view, page, limit, sort, order, filters, filterPanel, search }
+  return { view, page, limit, sort, order, filters, filterPanel, search, searchField }
 }

@@ -13,9 +13,10 @@ type LoadMoreOpts = {
   sort?: string
   order?: 'asc' | 'desc'
   search?: string
+  searchField?: string
 }
 
-export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMoreOpts) {
+export async function loadMoreVMs({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -26,7 +27,7 @@ export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMo
 
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
-    const filters = buildVmSearchFilter(searchQuery)
+    const filters = buildVmSearchFilter(searchQuery, searchField)
     //console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
     if (filters) params.set('filters', filters)
   }

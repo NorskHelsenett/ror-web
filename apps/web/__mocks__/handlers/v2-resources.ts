@@ -51,6 +51,27 @@ export const v2ResourcesHandlers = [
         const filtersParam = url.searchParams.get('filters')
         let filteredVMs = mockVms.resources as ResourceVm[]
 
+        const getVmFieldValue = (vm: ResourceVm, field: string): string | undefined => {
+          switch (field) {
+            case 'virtualmachine.spec.name':
+              return vm.virtualmachine?.spec?.name ?? ''
+            case 'virtualmachine.provider':
+              return vm.virtualmachine?.provider ?? ''
+            case 'virtualmachine.status.tags.team.value':
+              return vm.virtualmachine?.status?.tags?.team?.value ?? ''
+            case 'virtualmachine.status.tags.team.description':
+              return vm.virtualmachine?.status?.tags?.team?.description ?? ''
+            case 'virtualmachine.status.tags.serviceId.value':
+            case 'virtualmachine.status.tags.service-id.value':
+              return vm.virtualmachine?.status?.tags?.serviceId?.value ?? ''
+            case 'virtualmachine.status.tags.serviceId.description':
+            case 'virtualmachine.status.tags.service-id.description':
+              return vm.virtualmachine?.status?.tags?.serviceId?.description ?? ''
+            default:
+              return undefined
+          }
+        }
+
         if (filtersParam) {
           try {
             const filters = JSON.parse(filtersParam) as {
@@ -61,82 +82,19 @@ export const v2ResourcesHandlers = [
             }[]
 
             for (const filter of filters) {
-              if (filter.operator === 'regexp' && filter.field === 'virtualmachine.spec.name') {
-                const regex = new RegExp(filter.value, 'i')
-                filteredVMs = filteredVMs.filter((vm) => {
-                  const name = vm.virtualmachine?.spec?.name ?? ''
-                  return regex.test(name)
-                })
-              }
+              if (filter.operator !== 'regexp') continue
+
+              const regex = new RegExp(filter.value, 'i')
+              filteredVMs = filteredVMs.filter((vm) => {
+                const fieldValue = getVmFieldValue(vm, filter.field)
+                if (fieldValue === undefined) return true
+                return regex.test(fieldValue)
+              })
             }
           } catch {
             // Ignore malformed filters
           }
         }
-
-        // if (filtersParam) {
-        //   try {
-        //     const filters = JSON.parse(filtersParam) as {
-        //       field: string
-        //       value: string
-        //       type: string
-        //       operator: string
-        //     }[]
-
-        //     const nameRegexes: RegExp[] = []
-        //     const teamTagRegexes: RegExp[] = []
-        //     const teamDescriptionRegexes: RegExp[] = []
-
-        //     for (const filter of filters) {
-        //       if (filter.operator !== 'regexp') continue
-
-        //       const regex = new RegExp(filter.value, 'i')
-        //       if (filter.field === 'virtualmachine.spec.name') {
-        //         nameRegexes.push(regex)
-        //       }
-        //       if (filter.field === 'virtualmachine.status.tags.team.value') {
-        //         teamTagRegexes.push(regex)
-        //       }
-        //       if (filter.field === 'virtualmachine.status.tags.team.description') {
-        //         teamDescriptionRegexes.push(regex)
-        //       }
-        //       if (filter.field === 'virtualmachine.status.tags.service-id.value') {
-        //         teamTagRegexes.push(regex)
-        //       }
-        //       if (filter.field === 'virtualmachine.status.tags.service-id.description') {
-        //         teamDescriptionRegexes.push(regex)
-        //       }
-        //     }
-
-        //     if (nameRegexes.length > 0 || teamTagRegexes.length > 0) {
-        //       filteredVMs = filteredVMs.filter((vm) => {
-        //         const name = vm.virtualmachine?.spec?.name ?? ''
-        //         const matchesName = nameRegexes.some((regex) => regex.test(name))
-
-        //         const teamTags = vm.virtualmachine?.status?.tags.team?.value ?? ''
-        //         const matchesTags = teamTagRegexes.some((regex) => regex.test(teamTags))
-        //         const teamDescription = vm.virtualmachine?.status?.tags.team?.description ?? ''
-        //         const matchesTeamDescription = teamDescriptionRegexes.some((regex) => regex.test(teamDescription))
-        //         const serviceIdTags = vm.virtualmachine?.status?.tags.serviceId?.value ?? ''
-        //         const matchesServiceIdTags = teamTagRegexes.some((regex) => regex.test(serviceIdTags))
-        //         const serviceIdDescription = vm.virtualmachine?.status?.tags.serviceId?.description ?? ''
-        //         const matchesServiceIdDescription = teamDescriptionRegexes.some((regex) =>
-        //           regex.test(serviceIdDescription)
-        //         )
-
-        //         return (
-        //           matchesName ||
-        //           matchesTags ||
-        //           matchesTeamDescription ||
-        //           matchesServiceIdTags ||
-        //           matchesServiceIdDescription
-        //         )
-        //       })
-        //     }
-        //   } catch {
-        //     // Ignore malformed filters
-        //   }
-        // }
 
         return HttpResponse.json({ resources: filteredVMs.slice(offset, offset + limit) })
       }

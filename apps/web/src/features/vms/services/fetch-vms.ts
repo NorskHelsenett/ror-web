@@ -9,6 +9,7 @@ export async function fetchVms(
     order: 'asc' | 'desc'
     filters?: string
     search?: string
+    searchField?: string
   }
 ) {
   const skip = (params.page - 1) * params.limit
@@ -20,7 +21,7 @@ export async function fetchVms(
   const search = params.search?.trim() || undefined
 
   if (search) {
-    const filters = buildVmSearchFilter(search)
+    const filters = buildVmSearchFilter(search, params.searchField)
     if (filters) listParams.set('filters', filters)
   } else if (params.filters) {
     listParams.set('filters', params.filters)

@@ -49,6 +49,7 @@ interface ResourceControlsProps<T> {
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
   onSearchResultsChange?: (results: T[], searchQuery?: string) => void
+  onFieldChange?: (field: string) => void
   displayDataOptions: Option[]
   handleRefreshFilters: () => void
   toggleParams: string
@@ -99,6 +100,7 @@ export function ResourceControls<T>({
   selectedDisplayData,
   onDisplayChange,
   onSearchResultsChange,
+  onFieldChange,
   displayDataOptions,
   handleRefreshFilters,
   toggleParams,
@@ -123,10 +125,12 @@ export function ResourceControls<T>({
           key={searchResetKey}
           items={safeItems}
           onResultsChange={onSearchResultsChange}
+          onFieldChange={onFieldChange}
           searchText={searchText}
           keys={searchKeys}
           mapItem={mapItem}
           getItemsKey={getItemsKey}
+          resourceType={domain}
         />
 
         <MultipleSelector
