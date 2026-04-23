@@ -24,11 +24,8 @@ export function VmSearchWithOptions({
 
   const vmFieldLabels: Record<string, string> = {
     'virtualmachine.spec.name': 'name',
-    'virtualmachine.provider': 'provider',
-    // 'virtualmachine.status.tags.team.value': 'team',
     'virtualmachine.status.tags.team.description': 'team',
     'virtualmachine.status.tags.service-id.value': 'service ID',
-    // 'virtualmachine.status.tags.serviceId.description': 'service-id',
   }
 
   const vmPlaceholder = `Find VM by ${vmFieldLabels[vmSearchField] ?? 'name'}...`
@@ -78,11 +75,8 @@ export function VmSearchWithOptions({
         </SelectTrigger>
         <SelectContent align='end'>
           <SelectItem value='virtualmachine.spec.name'>Name</SelectItem>
-          <SelectItem value='virtualmachine.provider'>Provider</SelectItem>
-          {/* <SelectItem value='virtualmachine.status.tags.team.value'>Team</SelectItem> */}
           <SelectItem value='virtualmachine.status.tags.team.description'>Team</SelectItem>
           <SelectItem value='virtualmachine.status.tags.service-id.value'>Service-id</SelectItem>
-          {/* <SelectItem value='virtualmachine.status.tags.serviceId.description'>Service name</SelectItem> */}
         </SelectContent>
       </Select>
     </div>

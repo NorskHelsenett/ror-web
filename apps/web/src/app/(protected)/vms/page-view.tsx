@@ -38,6 +38,7 @@ import {
   getSpecMemory,
   getSpecCpuTotal,
   getLocation,
+  getProvider,
 } from '@/features/vms/utils/vms'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
@@ -110,6 +111,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       },
     },
     { key: 'Teams', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getTeamIdentifier(vm) },
+    { key: 'Provider', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getProvider(vm) },
     {
       key: 'Backup',
       extractor: (vm: VirtualMachine | VMWithBackupStatus) => {
@@ -287,16 +289,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostName', 'powerState', 'family', 'location']}
-        mapItem={(vm) => ({
-          ...vm,
-          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-          hostName: getVmHostName(vm),
-          powerState: getVmPowerState(vm),
-          family: getVmFamily(vm),
-          location: getLocation(vm),
-          // fullLocation: getSpecificLocation(getLocation(vm) || ''),
-        })}
+        searchKeys={[]}
+        mapItem={(vm) => ({})}
+        // ...vm,
+        // label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
+        // hostName: getVmHostName(vm),
+        // powerState: getVmPowerState(vm),
+        // family: getVmFamily(vm),
+        // location: getLocation(vm),
+        // fullLocation: getSpecificLocation(getLocation(vm) || ''),
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}
         exportAsExcel={exportVmsAsExcel}

@@ -7,8 +7,6 @@ export function buildVmSearchFilter(searchQuery: string, field?: string): string
   const safe = escapeRegExp(q)
   const searchField = field || 'virtualmachine.spec.name'
 
-  console.log('[buildVmSearchFilter] searchQuery:', searchQuery, 'searchField:', searchField, 'safe:', safe)
-
   return JSON.stringify([
     {
       field: searchField,
@@ -16,43 +14,5 @@ export function buildVmSearchFilter(searchQuery: string, field?: string): string
       type: 'string',
       operator: 'regexp',
     },
-    // {
-    //   field: 'virtualmachine.provider',
-    //   value: `${safe}$`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
-    // Regex for name
-    // {
-    //   field: 'virtualmachine.spec.name',
-    //   value: `(^${safe}|${safe}$|${safe})`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
-    // // Regex for tags (searches across both tag keys and values)
-    // {
-    //   field: 'virtualmachine.status.tags.team.value',
-    //   value: `(^${safe}|${safe}$|${safe})`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
-    // {
-    //   field: 'virtualmachine.status.tags.team.description',
-    //   value: `(^${safe}|${safe}$|${safe})`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
-    // {
-    //   field: 'virtualmachine.status.tags.service-id.value',
-    //   value: `(^${safe}|${safe}$|${safe})`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
-    // {
-    //   field: 'virtualmachine.status.tags.service-id.description',
-    //   value: `(^${safe}|${safe}$|${safe})`,
-    //   type: 'string',
-    //   operator: 'regexp',
-    // },
   ])
 }
