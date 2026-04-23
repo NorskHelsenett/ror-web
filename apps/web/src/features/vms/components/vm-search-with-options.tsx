@@ -5,6 +5,7 @@ import { Search } from 'lucide-react'
 import { Input } from '@/components/shadcn/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
 import { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export function VmSearchWithOptions({
   onFieldChange,
@@ -13,8 +14,11 @@ export function VmSearchWithOptions({
   onFieldChange?: (field: string) => void
   onQueryChange?: (query: string) => void
 }) {
-  const [query, setQuery] = useState('')
-  const [vmSearchField, setVmSearchField] = useState('virtualmachine.spec.name')
+  const urlSearchParams = useSearchParams()
+  const [query, setQuery] = useState(() => urlSearchParams.get('search') ?? '')
+  const [vmSearchField, setVmSearchField] = useState(
+    () => urlSearchParams.get('searchField') ?? 'virtualmachine.spec.name'
+  )
   const debouncedQuery = useDebouncedValue(query, 120)
   const lastEmittedQueryRef = useRef<string | null>(null)
 
