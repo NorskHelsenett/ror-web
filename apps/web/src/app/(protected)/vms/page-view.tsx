@@ -42,7 +42,7 @@ import {
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -201,6 +201,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const searchParams = useSearchParams()
   const isSearching = searchParams.get('search')?.trim() || undefined
   const currentSearchField = searchParams.get('searchField') || undefined
+  const [selectedSearchField, setSelectedSearchField] = useState(currentSearchField || 'virtualmachine.spec.name')
+
+  // Keep local selection aligned when URL has an explicit field (e.g. deep links/back-forward).
+  useEffect(() => {
+    if (currentSearchField) {
+      setSelectedSearchField(currentSearchField)
+    }
+  }, [currentSearchField])
 
   const updateFiltersInUrl = useCallback(
     (searchQuery: string, searchField?: string) => {
@@ -210,7 +218,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       if (q) next.set('search', q)
       else next.delete('search')
 
-      if (searchField) next.set('searchField', searchField)
+      // Keep searchField only while a query exists, so refresh/clear doesn't preserve stale field state.
+      if (q && searchField) next.set('searchField', searchField)
       else next.delete('searchField')
 
       next.delete('page')
@@ -228,14 +237,15 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const handleSearchResultsChange = useCallback(
     (_results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
       if (typeof searchQuery === 'string') {
-        updateFiltersInUrl(searchQuery, currentSearchField)
+        updateFiltersInUrl(searchQuery, selectedSearchField)
       }
     },
-    [updateFiltersInUrl, currentSearchField]
+    [updateFiltersInUrl, selectedSearchField]
   )
 
   const handleFieldChange = useCallback(
     (field: string) => {
+      setSelectedSearchField(field)
       updateFiltersInUrl(isSearching || '', field)
     },
     [updateFiltersInUrl, isSearching]

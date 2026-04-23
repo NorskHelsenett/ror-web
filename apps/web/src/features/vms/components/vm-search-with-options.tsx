@@ -23,7 +23,7 @@ export function VmSearchWithOptions({
     'virtualmachine.provider': 'provider',
     // 'virtualmachine.status.tags.team.value': 'team',
     'virtualmachine.status.tags.team.description': 'team',
-    'virtualmachine.status.tags.serviceId.value': 'service ID',
+    'virtualmachine.status.tags.service-id.value': 'service ID',
     // 'virtualmachine.status.tags.serviceId.description': 'service-id',
   }
 
