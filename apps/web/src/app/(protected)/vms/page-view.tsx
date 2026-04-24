@@ -62,7 +62,6 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
-// import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
@@ -330,7 +329,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
             <div className='mt-2 flex flex-col items-center gap-3'>
               {isSearching && (
                 <p className='text-xs'>
-                  Searching for: <span className='font-medium text-foreground'>&quot;{isSearching}&quot;</span>
+                  {/* Searching for {currentSearchField}: <span className='font-medium text-foreground'>&quot;{isSearching}&quot;</span> */}
+                  Searching for {currentSearchField?.split('.').slice(-2).join('.')}: &quot;{isSearching}&quot;
                 </p>
               )}
               {Object.values(selectedFilters).some((v) => v.length > 0) && (
