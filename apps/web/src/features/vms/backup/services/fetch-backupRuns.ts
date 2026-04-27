@@ -8,6 +8,7 @@ export async function fetchBackupRuns(
     sort?: string
     order: 'asc' | 'desc'
     search?: string
+    searchField?: string
   }
 ) {
   const skip = (params.page - 1) * params.limit
@@ -20,7 +21,7 @@ export async function fetchBackupRuns(
 
   const search = params.search?.trim() || undefined
   if (search) {
-    const filters = buildBackupSearchFilter(search)
+    const filters = buildBackupSearchFilter(search, 'backup-runs', params.searchField)
     if (filters) listParams.set('filters', filters)
   }
 

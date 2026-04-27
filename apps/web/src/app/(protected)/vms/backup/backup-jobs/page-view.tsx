@@ -26,6 +26,7 @@ import { sortingOptionsBackupJob } from '@/features/backup/config/page-view-opti
 import { Input } from '@/components/shadcn/input'
 import { RotateCw, Search } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
+import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 
 export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -43,13 +44,16 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     getItemId: getBackupJobId,
     getItemsKey: getBackupJobKey,
     loadMore: async (offset, limit) => {
-      const currentSearch = new URLSearchParams(window.location.search).get('search')?.trim() || undefined
+      const urlParams = new URLSearchParams(window.location.search)
+      const currentSearch = urlParams.get('search')?.trim() || undefined
+      const currentSearchField = urlParams.get('searchField') || 'backupjob.id'
       const res = await loadMoreBackupJobs({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
         search: currentSearch,
+        searchField: currentSearchField,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -87,6 +91,15 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     [pathname, router, searchParams]
   )
 
+  const updateFieldInUrl = useCallback(
+    (field: string) => {
+      const next = new URLSearchParams(searchParams.toString())
+      next.set('searchField', field)
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+    },
+    [pathname, router, searchParams]
+  )
+
   const handleSearchResultsChange = useCallback(
     (_results: BackupJob[], searchQuery?: string) => {
       if (typeof searchQuery === 'string') {
@@ -113,13 +126,17 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
         <div className='relative'>
-          <Input
+          {/* <Input
             value={isSearching ?? ''}
             onChange={(e) => handleSearchResultsChange([], e.target.value)}
             aria-label='Search backup jobs...'
             placeholder={isPending ? 'Searching...' : 'Search backup jobs...'}
             icon={<Search className='w-4 h-4' />}
             iconPosition='left'
+          /> */}
+          <BackupSearchWithOptions
+            onQueryChange={(query) => handleSearchResultsChange([], query)}
+            onFieldChange={(field) => updateFieldInUrl(field)}
           />
         </div>
         <SortSelect options={sortingOptionsBackupJob} currentSort={params.sort} />

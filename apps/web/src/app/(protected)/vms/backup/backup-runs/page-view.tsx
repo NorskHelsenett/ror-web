@@ -28,6 +28,7 @@ import { getBackupRunTableColumns } from '@/features/backup/backup-run/component
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
+import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -45,12 +46,14 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     getItemsKey: getBackupRunKey,
     loadMore: async (offset, limit) => {
       const currentSearch = new URLSearchParams(window.location.search).get('search')?.trim() || undefined
+      const currentSearchField = new URLSearchParams(window.location.search).get('searchField') || 'backuprun.id'
       const res = await loadMoreBackupRuns({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
         search: currentSearch,
+        searchField: currentSearchField,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -87,6 +90,15 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     [pathname, router, searchParams]
   )
 
+  const updateFieldInUrl = useCallback(
+    (field: string) => {
+      const next = new URLSearchParams(searchParams.toString())
+      next.set('searchField', field)
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+    },
+    [pathname, router, searchParams]
+  )
+
   const handleSearchResultsChange = useCallback(
     (_results: BackupRun[], searchQuery?: string) => {
       if (typeof searchQuery === 'string') {
@@ -113,14 +125,18 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
         <div className='relative'>
-          <Input
+          <BackupSearchWithOptions
+            onQueryChange={(query) => handleSearchResultsChange([], query)}
+            onFieldChange={(field) => updateFieldInUrl(field)}
+          />
+          {/* <Input
             value={isSearching ?? ''}
             onChange={(e) => handleSearchResultsChange([], e.target.value)}
             aria-label='Search backup runs...'
             placeholder={isSearching ? 'Searching...' : 'Search backup runs...'}
             icon={<Search className='w-4 h-4' />}
             iconPosition='left'
-          />
+          /> */}
         </div>
         <SortSelect options={sortingOptionsBackupRun} currentSort={params.sort} />
         <Button

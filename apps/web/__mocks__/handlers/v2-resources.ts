@@ -177,7 +177,7 @@ export const v2ResourcesHandlers = [
 
             const idFields = new Set(['backuprun.id', 'vm.backuprun.id'])
             const sourceFields = new Set(['backuprun.source', 'vm.backuprun.source'])
-            const backupJobIdFields = new Set(['backuprun.status.backupRunId', 'vm.backuprun.status.backupRunId'])
+            const backupJobIdFields = new Set(['backuprun.status.backupJobId', 'vm.backuprun.status.backupJobId'])
 
             const idRegexes: RegExp[] = []
             const sourceRegexes: RegExp[] = []

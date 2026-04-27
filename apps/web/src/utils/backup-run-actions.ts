@@ -4,9 +4,16 @@ import { getRorApi } from '@/services/ror-api'
 import { BackupRun } from '@ror/js-api-client'
 import { buildBackupSearchFilter } from '@/features/vms/backup/utils/backup-regex-search'
 
-type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc'; search?: string }
+type LoadMoreOpts = {
+  offset: number
+  limit: number
+  sort?: string
+  order?: 'asc' | 'desc'
+  search?: string
+  searchField?: string
+}
 
-export async function loadMoreBackupRuns({ offset, limit, sort, order, search }: LoadMoreOpts) {
+export async function loadMoreBackupRuns({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -17,7 +24,7 @@ export async function loadMoreBackupRuns({ offset, limit, sort, order, search }:
 
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
-    const filters = buildBackupSearchFilter(searchQuery)
+    const filters = buildBackupSearchFilter(searchQuery, 'backup-runs', searchField)
     if (filters) params.set('filters', filters)
   }
 
