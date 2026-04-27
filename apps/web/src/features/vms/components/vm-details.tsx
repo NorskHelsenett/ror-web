@@ -139,7 +139,7 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
   )
 
   const TeamCard = () => {
-    if (!teamName) {
+    if (!teamName && !teamValue) {
       return (
         <Card className='bg-slate-50 dark:bg-slate-900/50'>
           <ShadcnCardHeader>
