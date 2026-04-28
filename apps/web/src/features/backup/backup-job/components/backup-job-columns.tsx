@@ -199,7 +199,7 @@ export const getBackupJobTableColumns = (): DataTableColumnDef<BackupJob>[] => {
             triggerElement: React.createElement(
               Link,
               {
-                href: `/vms/backup/backup-runs?search=${backupJobId}&searchField=backuprun.status.backupJobId`,
+                href: `/vms/backup/backup-runs?search=${backupJobId}&searchField=backuprun.status.backupjobid`,
                 className: 'text-blue-600 hover:underline',
               },
               `View Backup Runs`
