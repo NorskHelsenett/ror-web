@@ -3,9 +3,8 @@
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { Input } from '@/components/shadcn/input'
 import { Search } from 'lucide-react'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearch } from '@/hooks/use-search'
-import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-options'
 
 /**
  * Props for the `ResourceSearch` component.
@@ -22,7 +21,6 @@ import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-op
 export interface ResourceSearchProps<T> {
   items: T[]
   onResultsChange?: (results: T[], searchQuery?: string) => void
-  onFieldChange?: (field: string) => void
   searchText?: string
   keys: string[]
   mapItem?: (item: T) => Record<string, unknown>
@@ -49,7 +47,6 @@ export interface ResourceSearchProps<T> {
 export function ResourceSearch<T>({
   items,
   onResultsChange,
-  onFieldChange,
   searchText,
   keys,
   mapItem,
@@ -64,8 +61,6 @@ export function ResourceSearch<T>({
   const lastSentKeyRef = useRef('')
 
   useEffect(() => {
-    if (resourceType === 'vms') return
-
     const resultsKey = getItemsKey ? getItemsKey(results) : JSON.stringify(results)
     const nextKey = `${debouncedQuery}::${resultsKey}`
 
@@ -74,18 +69,6 @@ export function ResourceSearch<T>({
       lastSentKeyRef.current = nextKey
     }
   }, [results, debouncedQuery, onResultsChange, getItemsKey, resourceType])
-
-  const handleVmQueryChange = useCallback(
-    (query: string) => {
-      onResultsChange?.(items, query)
-    },
-    [onResultsChange, items]
-  )
-
-  if (resourceType === 'vms') {
-    return <VmSearchWithOptions onFieldChange={onFieldChange} onQueryChange={handleVmQueryChange} />
-  }
-
   return (
     <Input
       value={query}

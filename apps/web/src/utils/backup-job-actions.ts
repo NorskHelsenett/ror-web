@@ -2,7 +2,7 @@
 
 import { getRorApi } from '@/services/ror-api'
 import type { BackupJob } from '@ror/js-api-client'
-import { buildBackupSearchFilter } from '@/features/vms/backup/utils/backup-regex-search'
+import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
 
 type LoadMoreOpts = {
   offset: number
@@ -24,7 +24,7 @@ export async function loadMoreBackupJobs({ offset, limit, sort, order, search, s
 
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
-    const filters = buildBackupSearchFilter(searchQuery, 'backup-jobs', searchField)
+    const filters = buildRegexSearchFilter(searchQuery, 'backupjob.id', searchField)
     if (filters) params.set('filters', filters)
   }
 

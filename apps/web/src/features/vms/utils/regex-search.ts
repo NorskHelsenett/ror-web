@@ -1,11 +1,11 @@
 export const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-export function buildVmSearchFilter(searchQuery: string, field?: string): string | undefined {
+export function buildRegexSearchFilter(searchQuery: string, defaultField: string, field?: string): string | undefined {
   const q = searchQuery.trim()
   if (!q) return undefined
 
   const safe = escapeRegExp(q)
-  const searchField = field || 'virtualmachine.spec.name'
+  const searchField = field || defaultField
 
   return JSON.stringify([
     {

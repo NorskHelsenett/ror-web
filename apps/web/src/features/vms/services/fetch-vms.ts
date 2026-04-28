@@ -1,4 +1,4 @@
-import { buildVmSearchFilter } from '../utils/vm-regex-search'
+import { buildRegexSearchFilter } from '../utils/regex-search'
 
 export async function fetchVms(
   api: Awaited<ReturnType<typeof import('@/services/ror-api').getRorApi>>,
@@ -21,7 +21,7 @@ export async function fetchVms(
   const search = params.search?.trim() || undefined
 
   if (search) {
-    const filters = buildVmSearchFilter(search, params.searchField)
+    const filters = buildRegexSearchFilter(search, 'virtualmachine.spec.name', params.searchField)
     if (filters) listParams.set('filters', filters)
   } else if (params.filters) {
     listParams.set('filters', params.filters)

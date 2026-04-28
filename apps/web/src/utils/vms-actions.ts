@@ -5,7 +5,7 @@ import type { VirtualMachine } from '@ror/js-api-client'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
-import { buildVmSearchFilter } from '@/features/vms/utils/vm-regex-search'
+import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
 
 type LoadMoreOpts = {
   offset: number
@@ -27,7 +27,7 @@ export async function loadMoreVMs({ offset, limit, sort, order, search, searchFi
 
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
-    const filters = buildVmSearchFilter(searchQuery, searchField)
+    const filters = buildRegexSearchFilter(searchQuery, 'virtualmachine.spec.name', searchField)
     //console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
     if (filters) params.set('filters', filters)
   }

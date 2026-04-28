@@ -43,7 +43,7 @@ import {
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState, useEffect } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -63,6 +63,7 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
 import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
+import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-options'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
   if (!expiryTime) return false
@@ -202,59 +203,33 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const searchParams = useSearchParams()
   const isSearching = searchParams.get('search')?.trim() || undefined
   const currentSearchField = searchParams.get('searchField') || undefined
-  const [selectedSearchField, setSelectedSearchField] = useState(currentSearchField || 'virtualmachine.spec.name')
 
-  // Keep local selection aligned when URL has an explicit field (e.g. deep links/back-forward).
-  useEffect(() => {
-    if (currentSearchField) {
-      setSelectedSearchField(currentSearchField)
-    }
-  }, [currentSearchField])
+  const clearUrl = useCallback(() => {
+    router.replace(pathname, { scroll: false })
+  }, [pathname, router])
 
   const updateFiltersInUrl = useCallback(
-    (searchQuery: string, searchField?: string) => {
+    (searchQuery: string) => {
       const next = new URLSearchParams(searchParams.toString())
       const q = (searchQuery ?? '').trim()
 
       if (q) next.set('search', q)
       else next.delete('search')
 
-      // Keep searchField only while a query exists, so refresh/clear doesn't preserve stale field state.
-      if (q && searchField) next.set('searchField', searchField)
-      else next.delete('searchField')
-
       next.delete('page')
-
-      const nextQuery = next.toString()
-      const currentQuery = searchParams.toString()
-      if (nextQuery === currentQuery) return
-
-      const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname
-      router.replace(nextUrl, { scroll: false })
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
     [pathname, router, searchParams]
   )
 
-  const handleSearchResultsChange = useCallback(
-    (_results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
-      if (typeof searchQuery === 'string') {
-        updateFiltersInUrl(searchQuery, selectedSearchField)
-      }
-    },
-    [updateFiltersInUrl, selectedSearchField]
-  )
-
-  const handleFieldChange = useCallback(
+  const updateFieldInUrl = useCallback(
     (field: string) => {
-      setSelectedSearchField(field)
-      updateFiltersInUrl(isSearching || '', field)
+      const next = new URLSearchParams(searchParams.toString())
+      next.set('searchField', field)
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
-    [updateFiltersInUrl, isSearching]
+    [pathname, router, searchParams]
   )
-
-  const clearUrl = useCallback(() => {
-    router.replace(pathname, { scroll: false })
-  }, [pathname, router])
 
   const handleRefreshFilters = useCallback(() => {
     resetFilters()
@@ -276,8 +251,17 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         safeItems={safeItems}
         selectedDisplayData={selectedDisplayData}
         onDisplayChange={onDisplayChange}
-        onSearchResultsChange={handleSearchResultsChange}
-        onFieldChange={handleFieldChange}
+        onSearchResultsChange={(_results, query) => {
+          if (typeof query === 'string') {
+            updateFiltersInUrl(query)
+          }
+        }}
+        renderRegexSearch={({ onQueryChange }) => (
+          <VmSearchWithOptions onQueryChange={onQueryChange} onFieldChange={updateFieldInUrl} />
+        )}
+        searchType='regex'
+        searchKeys={['name', 'team', 'service-id']}
+        mapItem={() => ({})}
         searchResetKey={searchResetKey}
         displayDataOptions={displayDataOptions}
         params={params}
@@ -287,8 +271,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={[]}
-        mapItem={() => ({})}
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}
         exportAsExcel={exportVmsAsExcel}

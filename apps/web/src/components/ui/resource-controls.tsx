@@ -19,6 +19,7 @@ import MultipleSelector, { Option } from '@/components/shadcn/multiselect'
 import { ResourceSearch } from './resource-search'
 import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
+import { ResourceRegexSearch } from './resource-regex-search'
 
 /**
  * Props for the ResourceControls component.
@@ -45,11 +46,15 @@ import { Toggle } from '../shadcn/toggle'
  */
 interface ResourceControlsProps<T> {
   safeItems: T[]
+  searchType: string
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
   onSearchResultsChange?: (results: T[], searchQuery?: string) => void
-  onFieldChange?: (field: string) => void
+  renderRegexSearch?: (props: {
+    onQueryChange: (query: string) => void
+    onFieldChange: (field: string) => void
+  }) => React.ReactNode
   displayDataOptions: Option[]
   handleRefreshFilters: () => void
   toggleParams: string
@@ -96,11 +101,12 @@ interface ResourceControlsProps<T> {
  */
 export function ResourceControls<T>({
   safeItems,
+  searchType,
   searchText,
   selectedDisplayData,
   onDisplayChange,
   onSearchResultsChange,
-  onFieldChange,
+  renderRegexSearch,
   displayDataOptions,
   handleRefreshFilters,
   toggleParams,
@@ -121,17 +127,33 @@ export function ResourceControls<T>({
   return (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
-        <ResourceSearch<T>
-          key={searchResetKey}
-          items={safeItems}
-          onResultsChange={onSearchResultsChange}
-          onFieldChange={onFieldChange}
-          searchText={searchText}
-          keys={searchKeys}
-          mapItem={mapItem}
-          getItemsKey={getItemsKey}
-          resourceType={domain}
-        />
+        {searchType === 'regex' ? (
+          renderRegexSearch ? (
+            renderRegexSearch({
+              onQueryChange: (query) => onSearchResultsChange?.([], query),
+              onFieldChange: () => {},
+            })
+          ) : (
+            <ResourceRegexSearch
+              onQueryChange={(query) => onSearchResultsChange?.([], query)}
+              onFieldChange={() => {}}
+              fields={searchKeys?.map((key) => ({ value: key, label: key })) || []}
+              searchEntityLabel={domain.slice(0, -1)}
+              defaultField='name'
+            />
+          )
+        ) : (
+          <ResourceSearch<T>
+            key={searchResetKey}
+            items={safeItems}
+            onResultsChange={onSearchResultsChange}
+            searchText={searchText}
+            keys={searchKeys}
+            mapItem={mapItem}
+            getItemsKey={getItemsKey}
+            resourceType={domain}
+          />
+        )}
 
         <MultipleSelector
           className='w-52'

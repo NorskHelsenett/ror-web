@@ -1,4 +1,4 @@
-import { buildBackupSearchFilter } from '../utils/backup-regex-search'
+import { buildRegexSearchFilter } from '../../utils/regex-search'
 
 export async function fetchBackupJobs(
   api: Awaited<ReturnType<typeof import('@/services/ror-api').getRorApi>>,
@@ -21,7 +21,7 @@ export async function fetchBackupJobs(
 
   const search = params.search?.trim() || undefined
   if (search) {
-    const filters = buildBackupSearchFilter(search, 'backup-jobs', params.searchField)
+    const filters = buildRegexSearchFilter(search, 'backupjob.id', params.searchField)
     if (filters) listParams.set('filters', filters)
   }
 
