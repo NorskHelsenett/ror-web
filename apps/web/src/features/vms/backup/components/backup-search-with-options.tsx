@@ -85,12 +85,16 @@ export function BackupSearchWithOptions({
           {page === 'backupjob' ? (
             <>
               <SelectItem value='backupjob.id'>ID</SelectItem>
-              <SelectItem value='backupjob.status.resourceBackupJobSpec.name'>Name</SelectItem>
+              <SelectItem value='backupjob.status.resourceBackupJobSpec.name' disabled>
+                Name
+              </SelectItem>
             </>
           ) : (
             <>
               <SelectItem value='backuprun.id'>ID</SelectItem>
-              <SelectItem value='backuprun.status.backupJobId'>Backup Job ID</SelectItem>
+              <SelectItem value='backuprun.status.backupJobId' disabled>
+                Backup Job ID
+              </SelectItem>
             </>
           )}
         </SelectContent>
