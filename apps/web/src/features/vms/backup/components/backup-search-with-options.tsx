@@ -75,21 +75,6 @@ export function BackupSearchWithOptions({
           iconPosition='left'
         />
       </div>
-      {/* <SortSelect
-                options={
-                    page === 'backupjob' 
-                    ? [
-                        { label: 'ID', value: 'backupjob.id' },
-                        { label: 'Name', value: 'backupjob.status.resourceBackupJobSpec.name' },
-                      ]
-                    : [
-                        { label: 'ID', value: 'backuprun.id' },
-                        { label: 'Backup Run ID', value: 'backuprun.status.backupRunId' },
-                      ]
-                }
-                currentSort={backupSearchField}
-                onValueChange={handleFieldChange}
-            /> */}
       <Select value={backupSearchField} onValueChange={handleFieldChange}>
         <SelectTrigger className='h-9 w-10 rounded-l-none border-l-0 px-0 justify-center'>
           <SelectValue>

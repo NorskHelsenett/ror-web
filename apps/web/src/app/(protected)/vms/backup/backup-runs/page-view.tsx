@@ -16,10 +16,9 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { loadMoreBackupRuns } from '@/utils/backup-run-actions'
 import { BackupRun } from '@ror/js-api-client'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { useCallback, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { RotateCw, Search } from 'lucide-react'
-import { Input } from '@/components/shadcn/input'
+import { RotateCw } from 'lucide-react'
 import { SortSelect } from '@/components/ui/sort-select'
 import { sortingOptionsBackupRun } from '@/features/backup/config/page-view-options'
 import { Button } from '@/components/shadcn/button'
@@ -32,8 +31,6 @@ import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
-  const [searchResetKey, setSearchResetKey] = useState(0)
-  const [isPending, startTransition] = useTransition()
 
   const router = useRouter()
   const pathname = usePathname()
@@ -74,7 +71,6 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const { setSelectedDisplayData } = useDisplayData<BackupRunColumnsData>('backup-runs')
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
   const searchParams = useSearchParams()
-  const isSearching = searchParams.get('search')?.trim() || undefined
 
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
@@ -116,7 +112,6 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     resetFilters()
     setSelectedDisplayData([])
     clearUrl()
-    setSearchResetKey((k) => k + 1)
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
@@ -129,14 +124,6 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
             onQueryChange={(query) => handleSearchResultsChange([], query)}
             onFieldChange={(field) => updateFieldInUrl(field)}
           />
-          {/* <Input
-            value={isSearching ?? ''}
-            onChange={(e) => handleSearchResultsChange([], e.target.value)}
-            aria-label='Search backup runs...'
-            placeholder={isSearching ? 'Searching...' : 'Search backup runs...'}
-            icon={<Search className='w-4 h-4' />}
-            iconPosition='left'
-          /> */}
         </div>
         <SortSelect options={sortingOptionsBackupRun} currentSort={params.sort} />
         <Button

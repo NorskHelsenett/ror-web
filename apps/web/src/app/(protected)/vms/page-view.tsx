@@ -274,7 +274,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <ResourceControls
         safeItems={safeItems}
-        //searchText='Find VMs...'
         selectedDisplayData={selectedDisplayData}
         onDisplayChange={onDisplayChange}
         onSearchResultsChange={handleSearchResultsChange}
@@ -289,14 +288,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         domain='vms'
         sortingOptions={sortingOptions}
         searchKeys={[]}
-        mapItem={(vm) => ({})}
-        // ...vm,
-        // label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-        // hostName: getVmHostName(vm),
-        // powerState: getVmPowerState(vm),
-        // family: getVmFamily(vm),
-        // location: getLocation(vm),
-        // fullLocation: getSpecificLocation(getLocation(vm) || ''),
+        mapItem={() => ({})}
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}
         exportAsExcel={exportVmsAsExcel}

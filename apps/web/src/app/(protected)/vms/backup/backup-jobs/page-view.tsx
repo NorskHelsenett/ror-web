@@ -12,7 +12,7 @@ import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreBackupJobs } from '@/utils/backup-job-actions'
 import { BackupJob } from '@ror/js-api-client'
-import { useCallback, useMemo, useState, useTransition } from 'react'
+import { useCallback, useMemo } from 'react'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
@@ -23,16 +23,12 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { SortSelect } from '@/components/ui/sort-select'
 import { sortingOptionsBackupJob } from '@/features/backup/config/page-view-options'
-import { Input } from '@/components/shadcn/input'
-import { RotateCw, Search } from 'lucide-react'
+import { RotateCw } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 
 export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
-  const [searchResetKey, setSearchResetKey] = useState(0)
-
-  const [isPending, startTransition] = useTransition()
 
   const pathname = usePathname()
   const router = useRouter()
@@ -75,7 +71,6 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
   const { setSelectedDisplayData } = useDisplayData<BackupJobColumnsData>('backup-jobs')
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
   const searchParams = useSearchParams()
-  const isSearching = searchParams.get('search')?.trim() || undefined
 
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
@@ -117,7 +112,6 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     resetFilters()
     setSelectedDisplayData([])
     clearUrl()
-    setSearchResetKey((k) => k + 1)
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
@@ -126,14 +120,6 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
         <div className='relative'>
-          {/* <Input
-            value={isSearching ?? ''}
-            onChange={(e) => handleSearchResultsChange([], e.target.value)}
-            aria-label='Search backup jobs...'
-            placeholder={isPending ? 'Searching...' : 'Search backup jobs...'}
-            icon={<Search className='w-4 h-4' />}
-            iconPosition='left'
-          /> */}
           <BackupSearchWithOptions
             onQueryChange={(query) => handleSearchResultsChange([], query)}
             onFieldChange={(field) => updateFieldInUrl(field)}
