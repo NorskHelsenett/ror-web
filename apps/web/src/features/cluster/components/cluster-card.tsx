@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { Copy, Dot, ExternalLink } from 'lucide-react'
+import { Copy, Dot } from 'lucide-react'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
@@ -44,6 +44,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/shadcn/button'
 import { copyToClipboard } from '@/utils/copy-to-clipboard'
 import { ResourceBar } from './resource-bar'
+import { ExternalToolButton } from './external-tool-button'
+import { RorCliButton } from './ror-cli-button'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -109,30 +111,6 @@ const colsMap: Record<number, string> = {
 function externalLinkNum(shows: (...keys: ClusterCardDisplayData[]) => boolean): string {
   const count = (['argocd', 'grafana', 'rorcli'] as ClusterCardDisplayData[]).filter((k) => shows(k)).length
   return colsMap[count] ?? 'grid-cols-3'
-}
-
-function ExternalTool({
-  name,
-  type,
-  url,
-}: {
-  name: string
-  type: 'argocd' | 'grafana'
-  url: string | null | undefined
-}) {
-  if (!url)
-    return (
-      <Button variant={type} disabled className='font-bold'>
-        <ExternalLink className='w-5 h-5' /> {name}
-      </Button>
-    )
-  return (
-    <Button variant={type} className='font-bold' asChild>
-      <a href={url} target='_blank' rel='noopener noreferrer' onClick={(e) => e.stopPropagation()}>
-        <ExternalLink className='w-5 h-5' /> {name}
-      </a>
-    </Button>
-  )
 }
 
 const infoSectionCls =
@@ -270,20 +248,9 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
         {shows('argocd', 'grafana', 'rorcli') && (
           <>
             <section className={cn('grid gap-2', externalLinkNum(shows))}>
-              {shows('argocd') && <ExternalTool name='ArgoCD' type='argocd' url={argocdUrl} />}
-              {shows('grafana') && <ExternalTool name='Grafana' type='grafana' url={grafanaUrl} />}
-              {shows('rorcli') && (
-                <Button
-                  variant='rorcli'
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    void copyToClipboard(rorLogin).catch(() => {})
-                  }}
-                  className='font-bold'
-                >
-                  <Copy /> ROR CLI
-                </Button>
-              )}
+              {shows('argocd') && <ExternalToolButton name='ArgoCD' type='argocd' url={argocdUrl} />}
+              {shows('grafana') && <ExternalToolButton name='Grafana' type='grafana' url={grafanaUrl} />}
+              {shows('rorcli') && <RorCliButton cluster={cluster} />}
             </section>
             <hr />
           </>
