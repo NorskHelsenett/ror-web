@@ -1,3 +1,5 @@
+import { buildRegexSearchFilter } from '../../utils/regex-search'
+
 export async function fetchBackupJobs(
   api: Awaited<ReturnType<typeof import('@/services/ror-api').getRorApi>>,
   params: {
@@ -5,6 +7,8 @@ export async function fetchBackupJobs(
     limit: number
     sort?: string
     order: 'asc' | 'desc'
+    search?: string
+    searchField?: string
   }
 ) {
   const skip = (params.page - 1) * params.limit
@@ -14,6 +18,12 @@ export async function fetchBackupJobs(
   listParams.set('offset', String(skip))
   if (params.sort) listParams.set('sort', params.sort)
   if (params.order) listParams.set('order', params.order)
+
+  const search = params.search?.trim() || undefined
+  if (search) {
+    const filters = buildRegexSearchFilter(search, 'backupjob.id', params.searchField)
+    if (filters) listParams.set('filters', filters)
+  }
 
   const backupJobs = await api.backupJob.list(listParams)
 

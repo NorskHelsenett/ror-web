@@ -20,7 +20,6 @@ export interface PageViewProps {
   backupJobs: BackupJob[]
   backupRuns?: BackupRun[]
   params: Params
-  backupJobId?: string | null
 }
 
 export const getBackupJobActiveTargets = (backupJob: BackupJob): BackupActiveTarget[] => {

@@ -6,7 +6,7 @@
  * It handles authentication, data fetching, and rendering of the page layout.
  **/
 
-import { normalizeParams } from '@/features/cluster/utils/normalize-params'
+import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { getRorApi } from '@/services/ror-api'
 import { Metadata } from 'next'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
@@ -29,18 +29,14 @@ export default async function BackupRunPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  // Extract backupJobId from search parameters
-  const backupJobId = typeof sp.backupJobId === 'string' ? sp.backupJobId : undefined
-
   const [fetchedBackupRuns] = await Promise.all([fetchBackupRuns(api, params)])
 
   const backupRuns = fetchedBackupRuns.backupRuns || []
-  const backupRunId = sp?.backupRunId as string | undefined
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Backup runs' />
-      <PageView backupRuns={backupRuns} params={params} backupJobId={backupJobId} backupRunId={backupRunId} />
+      <PageView backupRuns={backupRuns} params={params} />
     </div>
   )
 }

@@ -2,10 +2,18 @@
 
 import { getRorApi } from '@/services/ror-api'
 import type { BackupJob } from '@ror/js-api-client'
+import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
 
-type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
+type LoadMoreOpts = {
+  offset: number
+  limit: number
+  sort?: string
+  order?: 'asc' | 'desc'
+  search?: string
+  searchField?: string
+}
 
-export async function loadMoreBackupJobs({ offset, limit, sort, order }: LoadMoreOpts) {
+export async function loadMoreBackupJobs({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -13,6 +21,12 @@ export async function loadMoreBackupJobs({ offset, limit, sort, order }: LoadMor
   params.set('offset', String(offset))
   if (sort) params.set('sort', sort)
   if (order) params.set('order', order)
+
+  const searchQuery = search?.trim() || undefined
+  if (searchQuery) {
+    const filters = buildRegexSearchFilter(searchQuery, 'backupjob.id', searchField)
+    if (filters) params.set('filters', filters)
+  }
 
   const backupJobsRes = await api.backupJob.list(params)
   const backupJobs: BackupJob[] = backupJobsRes?.resources ?? []

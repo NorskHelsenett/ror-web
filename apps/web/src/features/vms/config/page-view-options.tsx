@@ -52,6 +52,11 @@ export const backupStatusOptions: Option[] = [
   { value: 'noBackup', label: 'No Backup' },
 ]
 
+export const providerOptions: Option[] = [
+  { value: 'Vsphere', label: 'VMware' },
+  { value: 'kubevirt', label: 'Kubevirt' },
+]
+
 export const generateServerTeamOptions = async (): Promise<Option[]> => {
   return await fetchAllTeamOptions()
 }
@@ -69,6 +74,7 @@ export const generateServerFilterOptions = async (): Promise<
     { label: 'Power States', placeholder: 'Choose Power State', data: powerStateOptions },
     { label: 'Location', placeholder: 'Choose Location', data: locationOptions },
     { label: 'Teams', placeholder: 'Choose Team', data: teamOptions },
+    { label: 'Provider', placeholder: 'Choose Provider', data: providerOptions },
     { label: 'Backup', placeholder: 'Choose Backup Status', data: backupStatusOptions },
   ]
 }

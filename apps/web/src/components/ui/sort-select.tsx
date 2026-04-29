@@ -98,36 +98,36 @@ export function SortSelect({ options, currentSort }: SortSelectProps) {
     <div className='flex flex-col -mt-4'>
       <span className='text-xs'>Sorting</span>
 
-      {/* Optional tiny skeleton while hydrating (no early return) */}
-      {!mounted && <div className='h-9 w-52 rounded-md border mb-1' aria-hidden='true' />}
-
-      <Select
-        key={selectKey}
-        open={open}
-        onOpenChange={onOpenChange}
-        defaultValue={mounted ? selected : undefined}
-        onValueChange={onValueChange}
-      >
-        <SelectTrigger
-          className='w-52'
-          onPointerDown={() => {
-            userInteracted.current = true
-          }}
-          aria-busy={!mounted}
+      {!mounted ? (
+        <div className='h-9 w-52 rounded-md border mb-1' aria-hidden='true' />
+      ) : (
+        <Select
+          key={selectKey}
+          open={open}
+          onOpenChange={onOpenChange}
+          defaultValue={selected}
+          onValueChange={onValueChange}
         >
-          <SelectValue placeholder='Select sorting' />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Sort by</SelectLabel>
-            {options.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>
-                {opt.label}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+          <SelectTrigger
+            className='w-52'
+            onPointerDown={() => {
+              userInteracted.current = true
+            }}
+          >
+            <SelectValue placeholder='Select sorting' />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Sort by</SelectLabel>
+              {options.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      )}
     </div>
   )
 }

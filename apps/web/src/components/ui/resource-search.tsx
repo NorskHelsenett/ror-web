@@ -26,6 +26,7 @@ export interface ResourceSearchProps<T> {
   mapItem?: (item: T) => Record<string, unknown>
   threshold?: number
   getItemsKey?: (items: T[]) => string
+  resourceType?: string
 }
 
 /**
@@ -40,6 +41,7 @@ export interface ResourceSearchProps<T> {
  * @param props.mapItem - Function to map an item for searching.
  * @param props.threshold - Optional threshold for search matching (default: 0.3).
  * @param props.getItemsKey - Optional function to generate a unique key for the results.
+ * @param props.resourceType - Resource type to return different search options
  * @returns A search input field that filters items and notifies on result changes.
  */
 export function ResourceSearch<T>({
@@ -50,6 +52,7 @@ export function ResourceSearch<T>({
   mapItem,
   threshold = 0.3,
   getItemsKey,
+  resourceType,
 }: ResourceSearchProps<T>) {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query, 120)
@@ -65,8 +68,7 @@ export function ResourceSearch<T>({
       onResultsChange?.(results, debouncedQuery)
       lastSentKeyRef.current = nextKey
     }
-  }, [results, debouncedQuery, onResultsChange, getItemsKey])
-
+  }, [results, debouncedQuery, onResultsChange, getItemsKey, resourceType])
   return (
     <Input
       value={query}

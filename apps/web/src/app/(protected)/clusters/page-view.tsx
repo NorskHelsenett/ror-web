@@ -219,6 +219,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
         <div className={cn('mx-12 flex items-center min-h-28 py-6 ', filtersOpen && 'w-[calc(100%-6rem)] border-b')}>
           <ResourceControls
             safeItems={safeItems}
+            searchType='fuzzy'
             searchText='Find clusters...'
             selectedDisplayData={selectedDisplayData}
             onDisplayChange={onDisplayChange}

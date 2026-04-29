@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import MultipleSelector from '@/components/shadcn/multiselect'
-import { powerStateOptions, backupStatusOptions, locationOptions } from '@/features/vms/config/page-view-options'
+import {
+  powerStateOptions,
+  backupStatusOptions,
+  locationOptions,
+  providerOptions,
+} from '@/features/vms/config/page-view-options'
 import { generateServerTeamOptions } from '@/features/vms/config/page-view-options'
 import { Option } from '@/components/shadcn/multiselect'
 
@@ -42,6 +47,11 @@ export const VmFilterSection = ({ filtersOpen, selectedFilters, setSelectedFilte
       label: 'Teams',
       placeholder: isLoadingTeams ? 'Loading teams...' : 'Choose Team',
       data: teamOptions,
+    },
+    {
+      label: 'Provider',
+      placeholder: 'Choose Provider',
+      data: providerOptions,
     },
     { label: 'Backup', placeholder: 'Choose Backup Status', data: backupStatusOptions },
   ]

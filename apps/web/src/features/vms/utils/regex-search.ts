@@ -1,15 +1,16 @@
-const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+export const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-export function buildVmSearchFilter(searchQuery: string): string | undefined {
+export function buildRegexSearchFilter(searchQuery: string, defaultField: string, field?: string): string | undefined {
   const q = searchQuery.trim()
   if (!q) return undefined
 
   const safe = escapeRegExp(q)
+  const searchField = field || defaultField
 
   return JSON.stringify([
     {
-      field: 'virtualmachine.spec.name',
-      value: `^${safe}`,
+      field: searchField,
+      value: `${safe}`,
       type: 'string',
       operator: 'regexp',
     },

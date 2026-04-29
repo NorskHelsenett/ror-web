@@ -15,6 +15,14 @@ export function onUnhandledRequest(request: Request, print: { warning: () => voi
   const url = new URL(request.url)
   const path = url.pathname
 
+  // Ignore Next.js RSC requests (e.g. /vms?_rsc=...).
+  // These are framework internals and should not be mocked as API endpoints.
+  const accept = request.headers.get('accept') || ''
+  const isRscRequest = url.searchParams.has('_rsc') || accept.includes('text/x-component')
+  if (isRscRequest) {
+    return
+  }
+
   // Check if the request should be ignored based on the ignore list
   const onIgnoreList = ignoreList.some(
     (ignore) =>

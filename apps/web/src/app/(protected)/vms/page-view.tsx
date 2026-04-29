@@ -38,6 +38,7 @@ import {
   getSpecMemory,
   getSpecCpuTotal,
   getLocation,
+  getProvider,
 } from '@/features/vms/utils/vms'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
@@ -61,8 +62,8 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
-import { getSpecificLocation } from '@/features/vms/hooks/use-vm-search'
 import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
+import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-options'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
   if (!expiryTime) return false
@@ -81,12 +82,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     getItemsKey: getVmsKey,
     loadMore: async (offset, limit) => {
       const currentSearch = new URLSearchParams(window.location.search).get('search')?.trim() || undefined
+      const currentSearchField = new URLSearchParams(window.location.search).get('searchField') || undefined
       const res = await loadMoreVMs({
         offset,
         limit,
         sort: params.sort,
         order: params.order,
         search: currentSearch,
+        searchField: currentSearchField,
       })
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
@@ -108,6 +111,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       },
     },
     { key: 'Teams', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getTeamIdentifier(vm) },
+    { key: 'Provider', extractor: (vm: VirtualMachine | VMWithBackupStatus) => getProvider(vm) },
     {
       key: 'Backup',
       extractor: (vm: VirtualMachine | VMWithBackupStatus) => {
@@ -198,6 +202,11 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isSearching = searchParams.get('search')?.trim() || undefined
+  const currentSearchField = searchParams.get('searchField') || undefined
+
+  const clearUrl = useCallback(() => {
+    router.replace(pathname, { scroll: false })
+  }, [pathname, router])
 
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
@@ -213,23 +222,20 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     [pathname, router, searchParams]
   )
 
-  const handleSearchResultsChange = useCallback(
-    (_results: (VirtualMachine | VMWithBackupStatus)[], searchQuery?: string) => {
-      if (typeof searchQuery === 'string') {
-        updateFiltersInUrl(searchQuery)
-      }
+  const updateFieldInUrl = useCallback(
+    (field: string) => {
+      const next = new URLSearchParams(searchParams.toString())
+      next.set('searchField', field)
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
     },
-    [updateFiltersInUrl]
+    [pathname, router, searchParams]
   )
-
-  const clearUrl = useCallback(() => {
-    router.replace(pathname, { scroll: false })
-  }, [pathname, router])
 
   const handleRefreshFilters = useCallback(() => {
     resetFilters()
     setSelectedDisplayData([])
     clearUrl()
+    setSelectedFilters({})
     setSearchResetKey((k) => k + 1)
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
@@ -243,10 +249,19 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <ResourceControls
         safeItems={safeItems}
-        searchText='Find VMs...'
         selectedDisplayData={selectedDisplayData}
         onDisplayChange={onDisplayChange}
-        onSearchResultsChange={handleSearchResultsChange}
+        onSearchResultsChange={(_results, query) => {
+          if (typeof query === 'string') {
+            updateFiltersInUrl(query)
+          }
+        }}
+        renderRegexSearch={({ onQueryChange }) => (
+          <VmSearchWithOptions onQueryChange={onQueryChange} onFieldChange={updateFieldInUrl} />
+        )}
+        searchType='regex'
+        searchKeys={['name', 'team', 'service-id']}
+        mapItem={() => ({})}
         searchResetKey={searchResetKey}
         displayDataOptions={displayDataOptions}
         params={params}
@@ -256,16 +271,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         handleRefreshFilters={handleRefreshFilters}
         domain='vms'
         sortingOptions={sortingOptions}
-        searchKeys={['label', 'hostName', 'powerState', 'family', 'location']}
-        mapItem={(vm) => ({
-          ...vm,
-          label: vm.metadata?.name ?? vm.virtualmachine?.spec?.name,
-          hostName: getVmHostName(vm),
-          powerState: getVmPowerState(vm),
-          family: getVmFamily(vm),
-          location: getLocation(vm),
-          fullLocation: getSpecificLocation(getLocation(vm) || ''),
-        })}
         getItemsKey={getVmsKey}
         exportAsCSV={exportVmsAsCSV}
         exportAsExcel={exportVmsAsExcel}
@@ -298,7 +303,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
             <div className='mt-2 flex flex-col items-center gap-3'>
               {isSearching && (
                 <p className='text-xs'>
-                  Searching for: <span className='font-medium text-foreground'>&quot;{isSearching}&quot;</span>
+                  {/* Searching for {currentSearchField}: <span className='font-medium text-foreground'>&quot;{isSearching}&quot;</span> */}
+                  Searching for {currentSearchField?.split('.').slice(-2).join('.')}: &quot;{isSearching}&quot;
                 </p>
               )}
               {Object.values(selectedFilters).some((v) => v.length > 0) && (

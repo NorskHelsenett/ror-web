@@ -7,8 +7,6 @@ export interface PageViewProps {
   className?: string
   backupRuns: BackupRun[]
   params: Params
-  backupJobId?: string
-  backupRunId?: string | null
 }
 
 export interface LastBackupInfo {

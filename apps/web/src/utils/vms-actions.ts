@@ -5,7 +5,7 @@ import type { VirtualMachine } from '@ror/js-api-client'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
-import { buildVmSearchFilter } from '@/features/vms/utils/regex-search'
+import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
 
 type LoadMoreOpts = {
   offset: number
@@ -13,9 +13,10 @@ type LoadMoreOpts = {
   sort?: string
   order?: 'asc' | 'desc'
   search?: string
+  searchField?: string
 }
 
-export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMoreOpts) {
+export async function loadMoreVMs({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()
@@ -26,8 +27,8 @@ export async function loadMoreVMs({ offset, limit, sort, order, search }: LoadMo
 
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
-    const filters = buildVmSearchFilter(searchQuery)
-    console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
+    const filters = buildRegexSearchFilter(searchQuery, 'virtualmachine.spec.name', searchField)
+    //console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
     if (filters) params.set('filters', filters)
   }
 

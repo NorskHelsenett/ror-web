@@ -6,6 +6,7 @@ export const mockVms = {
     const osFamily = ['Windows', 'Linux']
     const osName = ['Windows', 'Red Hat Enterprise Linux']
     const diskCount = (idx % 3) + 1
+    const services = ['Egg- og Sæddonorregisteret', 'Ansible']
     const allDisks = [
       {
         id: `disk-${idx}`,
@@ -141,7 +142,7 @@ export const mockVms = {
               value: idx % 2 === 0 ? 'prod' : 'test',
             },
             serviceId: {
-              description: 'Egg- og Sæddonorregisteret',
+              description: services[idx % services.length],
               key: 'service-id',
               value: `100${idx}`,
             },
