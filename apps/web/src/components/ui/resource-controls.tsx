@@ -46,7 +46,7 @@ import { ResourceRegexSearch } from './resource-regex-search'
  */
 interface ResourceControlsProps<T> {
   safeItems: T[]
-  searchType: string
+  searchType: "fuzzy" | "regex"
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
