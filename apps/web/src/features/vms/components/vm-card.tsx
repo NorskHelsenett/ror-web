@@ -36,7 +36,7 @@ import {
   getLocation,
 } from '@/features/vms/utils/vms'
 import { changePowerStateValues } from '../types/powerState'
-import { BackupStatusDisplay } from '@/features/vms/backup/components'
+import { BackupStatusDisplay } from '../backup/components/backup-status-display'
 import { Badge } from '@/components/shadcn/badge'
 import { PowerStatusIcon } from './power-status-icon'
 import { routes } from '@/config/routes'
@@ -71,7 +71,6 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
   const name = getVmName(vm)
   const id = getVmOperatingSystemId(vm)
   const family = getVmFamily(vm)
-  const hostName = getVmHostName(vm)
   const version = getVmVersion(vm)
   const architecture = getVmArchitecture(vm)
   const toolVersion = getVmToolVersion(vm)
@@ -211,7 +210,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
 
   return (
     <Link
-      href={routes.app.vm.getHref(hostName?.toLowerCase())}
+      href={routes.app.vm.getHref(name?.toLowerCase())}
       onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}
     >
       <Card
