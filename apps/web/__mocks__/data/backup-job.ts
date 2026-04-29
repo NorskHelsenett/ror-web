@@ -59,7 +59,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-1',
+                name: 'mtrd3-posl-1',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
                 source: {
@@ -70,7 +70,7 @@ export const mockBackupJobs = {
                 },
               },
               {
-                name: 'Mock-Virtual-machine-5',
+                name: 'trd1-dc-nam-01-intern-5',
                 id: '2606',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a35',
                 source: {
@@ -83,7 +83,7 @@ export const mockBackupJobs = {
             ],
             indirectBackupTargets: null,
           },
-          location: 'TRD1',
+          location: '',
           policyName: 'Optimal-1M',
           backupRunIds: [
             '11158793:1762777612377235',
@@ -147,7 +147,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-20',
+                name: 'trd1-dc-nam-01-intern-5',
                 id: '2718',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a320',
                 source: {
@@ -217,7 +217,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-1',
+                name: 'mtrd3-posl-1',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
                 source: {
@@ -287,7 +287,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-8',
+                name: 'trd1-dc-nam-01-intern-8',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a38',
                 source: {

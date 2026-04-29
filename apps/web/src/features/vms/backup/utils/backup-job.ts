@@ -13,6 +13,7 @@ export interface BackupActiveTarget {
   id?: string
   externalId?: string
   source: ActiveTargetSource | null
+  lastBackupRunId?: string | null
 }
 
 export interface PageViewProps {

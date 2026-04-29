@@ -26,8 +26,9 @@ import { sortingOptionsBackupJob } from '@/features/backup/config/page-view-opti
 import { RotateCw } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
+import { HealthCard, HealthCardContent, HealthCardHeader, HealthCardTitle } from '@/components/ui/health-card'
 
-export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
+export const PageView = ({ className, backupJobs, backupRuns = [], params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
 
   const pathname = usePathname()
@@ -140,12 +141,54 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
     </div>
   )
 
+  const HealthCards = () => {
+    return (
+      <div className='px-12 mt-8 flex flex-grid gap-6 @container'>
+        <HealthCard className='w-full' size='md' type='summary'>
+          <HealthCardHeader>
+            <HealthCardTitle>Summary</HealthCardTitle>
+          </HealthCardHeader>
+          <HealthCardContent>
+            <div className='flex flex-col gap-4'>
+              <div className='flex items-center justify-between'>
+                <span className='font-bold'>Total backup jobs</span>
+                <span>{backupJobs.length}</span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='font-bold'>Total backup runs</span>
+                <span>{backupRuns.length}</span>
+              </div>
+            </div>
+          </HealthCardContent>
+        </HealthCard>
+        <HealthCard className='w-full' size='md' type='status'>
+          <HealthCardHeader>
+            <HealthCardTitle>Status overview</HealthCardTitle>
+          </HealthCardHeader>
+          <HealthCardContent>
+            <div className='flex flex-col gap-4'>
+              {/* Here you can add more detailed status information, e.g. counts of backup jobs by status */}
+              <div className='flex items-center justify-between'>
+                <span className='font-bold'>Successful backup runs</span>
+                <span>{backupRuns.filter((run) => run.backuprun?.status?.id === 'successful').length}</span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='font-bold'>Failed backup runs</span>
+                <span>{backupRuns.filter((run) => run.backuprun?.status?.id === 'failed').length}</span>
+              </div>
+            </div>
+          </HealthCardContent>
+        </HealthCard>
+      </div>
+    )
+  }
+
   const TableView = () => {
     return (
       <div>
         <DataTable
           data={displayedItems}
-          columns={getBackupJobTableColumns()}
+          columns={getBackupJobTableColumns(backupRuns)}
           hasMore={hasMore}
           isLoading={isLoading}
           sentinelRef={sentinelRef}
@@ -167,6 +210,7 @@ export const PageView = ({ className, backupJobs, params }: PageViewProps) => {
         complete product as quick as possible :)
       </NotReadyMessage>
 
+      <HealthCards />
       <section className='px-12 my-8'>
         <TableView />
       </section>

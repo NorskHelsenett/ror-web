@@ -204,7 +204,7 @@ export const mockBackupRuns = {
             },
           ],
           startTime: '2025-08-30T02:00:00Z',
-          endTime: null,
+          endTime: '2025-08-30T02:04:00Z',
           expiryTime: null,
           backupStorage: {
             unit: 'bytes',

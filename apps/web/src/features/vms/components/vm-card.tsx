@@ -18,7 +18,6 @@ import { vmCardPowerStatus } from '@/features/vms/utils/env-colors'
 import {
   getVmArchitecture,
   getVmFamily,
-  getVmHostName,
   getVmOperatingSystemId,
   getVmName,
   getVmPowerState,
