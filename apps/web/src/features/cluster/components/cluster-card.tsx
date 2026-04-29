@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { Copy, Dot } from 'lucide-react'
+import { Dot } from 'lucide-react'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
@@ -31,7 +31,6 @@ import {
   getResourcesMemoryUsedView,
   getResourcesMemoryView,
   getRorAgentVersionView,
-  getRorLoginView,
   getServiceIdView,
   getStatusView,
   getWorkspaceView,
@@ -41,8 +40,6 @@ import { HealthCircle } from './health-circle'
 import { Environment } from '../types/environment'
 import { routes } from '@/config/routes'
 import { useRouter } from 'next/navigation'
-import { Button } from '@/components/shadcn/button'
-import { copyToClipboard } from '@/utils/copy-to-clipboard'
 import { ResourceBar } from './resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
@@ -154,8 +151,6 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const healthCondition = getStatusView(cluster)
   // TODO: implement tags when view has tags
   // const serviceTags = getTagsView(cluster) || []
-
-  const rorLogin = getRorLoginView(cluster)
   const envColor = getHighDifferenceEnvironmentColors(env as Environment)
 
   const shows = (...keys: ClusterCardDisplayData[]) => displayDataContains(displayData, ...keys)
