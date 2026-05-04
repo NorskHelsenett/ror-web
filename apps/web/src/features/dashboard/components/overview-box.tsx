@@ -1,4 +1,4 @@
-import { DashboardBox } from './DashboardBox'
+import { DashboardBox } from './dashboard-box'
 import { cn } from '@/utils/clsxm'
 
 export interface OverviewItem {
