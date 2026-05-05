@@ -13,7 +13,7 @@ import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreBackupJobs } from '@/utils/backup-job-actions'
 import { BackupJob } from '@ror/js-api-client'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
@@ -125,6 +125,8 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const pausedJobRatio = totalJobs > 0 ? Math.round((pausedJobs / totalJobs) * 100) : 0
   const inactiveJobRatio = totalJobs > 0 ? Math.round((inactiveJobs / totalJobs) * 100) : 0
 
+  const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
+
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
@@ -136,11 +138,20 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
         </div>
         <SortSelect options={sortingOptionsBackupJob} currentSort={params.sort} />
         <Button
+          variant='outline'
+          aria-label={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          title={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          className='gap-2'
+          onClick={() => setSummaryCardsVisible(!summaryCardsVisible)}
+        >
+          {summaryCardsVisible ? 'Hide' : 'Show'} summary cards
+        </Button>
+        <Button
           type='button'
           onClick={handleRefreshFilters}
           aria-label='Reset filters'
           title='Reset filters'
-          className='gap-2'
+          className='gap-4 flex flex-row '
         >
           <RotateCw className='h-4 w-4' />
           Refresh
@@ -176,15 +187,18 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
         complete product as quick as possible :)
       </NotReadyMessage>
 
-      <SummaryCards
-        totalJobs={totalJobs}
-        activeJobs={activeJobs}
-        pausedJobs={pausedJobs}
-        inactiveJobs={inactiveJobs}
-        activeJobRatio={activeJobRatio}
-        pausedJobRatio={pausedJobRatio}
-        inactiveJobRatio={inactiveJobRatio}
-      />
+      {summaryCardsVisible && (
+        <SummaryCards
+          totalJobs={totalJobs}
+          activeJobs={activeJobs}
+          pausedJobs={pausedJobs}
+          inactiveJobs={inactiveJobs}
+          activeJobRatio={activeJobRatio}
+          pausedJobRatio={pausedJobRatio}
+          inactiveJobRatio={inactiveJobRatio}
+        />
+      )}
+
       <section className='px-12 my-8'>
         <TableView />
       </section>

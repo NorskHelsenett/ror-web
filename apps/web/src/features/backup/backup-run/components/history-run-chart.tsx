@@ -61,13 +61,13 @@ export const HistoryRunChart = ({ backupRuns }: HistoryRunChartProps) => {
   const data = getChartData()
 
   return (
-    <Card className='m-10 max-w-4xl'>
-      <CardHeader>
-        <CardTitle>Runs Over Time (Last 30 Days)</CardTitle>
+    <Card className='mx-10 mt-6 max-w-2xl'>
+      <CardHeader className='pb-2'>
+        <CardTitle className='text-sm font-medium text-muted-foreground'>Runs Over Time (Last 30 Days)</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width='100%' height={300}>
-          <AreaChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+      <CardContent className='pt-0'>
+        <ResponsiveContainer width='100%' height={200}>
+          <AreaChart data={data} margin={{ top: 5, right: 16, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray='3 3' stroke='var(--color-border)' />
             <XAxis dataKey='date' stroke='var(--color-muted-foreground)' style={{ fontSize: '12px' }} />
             <YAxis stroke='var(--color-muted-foreground)' style={{ fontSize: '12px' }} />

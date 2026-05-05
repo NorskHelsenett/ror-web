@@ -13,7 +13,6 @@ import {
 import { BackupRun } from '@ror/js-api-client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { CopyButton } from '@/components/ui/copy-button'
-import copy from 'clipboard-copy'
 import React from 'react'
 import { formatDistance } from 'date-fns'
 import {

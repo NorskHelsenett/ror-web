@@ -16,7 +16,7 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { loadMoreBackupRuns } from '@/utils/backup-run-actions'
 import { BackupRun } from '@ror/js-api-client'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { RotateCw } from 'lucide-react'
 import { SortSelect } from '@/components/ui/sort-select'
@@ -117,6 +117,8 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
 
   const displayedItems = sortedItems
 
+  const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
+
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
       <div className='flex flex-wrap items-center gap-x-4 gap-y-6'>
@@ -127,6 +129,15 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
           />
         </div>
         <SortSelect options={sortingOptionsBackupRun} currentSort={params.sort} />
+        <Button
+          variant='outline'
+          aria-label={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          title={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          className='gap-2'
+          onClick={() => setSummaryCardsVisible(!summaryCardsVisible)}
+        >
+          {summaryCardsVisible ? 'Hide' : 'Show'} summary cards
+        </Button>
         <Button
           type='button'
           onClick={handleRefreshFilters}
@@ -168,7 +179,8 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
         complete product as quick as possible :)
       </NotReadyMessage>
 
-      <HistoryRunChart backupRuns={backupRuns} />
+      {summaryCardsVisible && <HistoryRunChart backupRuns={backupRuns} />}
+
       <section className='px-12 my-8'>
         <TableView />
       </section>
