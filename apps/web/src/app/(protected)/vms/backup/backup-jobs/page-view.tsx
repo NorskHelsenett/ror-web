@@ -7,6 +7,7 @@ import {
   getBackupJobKey,
   getBackupJobLocation,
   getBackupJobSource,
+  getBackupStatus,
 } from '@/features/vms/backup/utils/backup-job'
 import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
@@ -26,7 +27,7 @@ import { sortingOptionsBackupJob } from '@/features/backup/config/page-view-opti
 import { RotateCw } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
-import { HealthCard, HealthCardContent, HealthCardHeader, HealthCardTitle } from '@/components/ui/health-card'
+import { SummaryCards } from '@/features/backup/backup-job/components/summary-cards'
 
 export const PageView = ({ className, backupJobs, backupRuns = [], params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -116,6 +117,13 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
+  const totalJobs = backupJobs.length
+  const activeJobs = backupJobs.filter((job) => getBackupStatus(job) === 'active').length
+  const pausedJobs = backupJobs.filter((job) => getBackupStatus(job) === 'paused').length
+  const inactiveJobs = backupJobs.filter((job) => getBackupStatus(job) === 'inactive').length
+  const activeJobRatio = totalJobs > 0 ? Math.round((activeJobs / totalJobs) * 100) : 0
+  const pausedJobRatio = totalJobs > 0 ? Math.round((pausedJobs / totalJobs) * 100) : 0
+  const inactiveJobRatio = totalJobs > 0 ? Math.round((inactiveJobs / totalJobs) * 100) : 0
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -140,48 +148,6 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
       </div>
     </div>
   )
-
-  const HealthCards = () => {
-    return (
-      <div className='px-12 mt-8 flex flex-grid gap-6 @container'>
-        <HealthCard className='w-full' size='md' type='summary'>
-          <HealthCardHeader>
-            <HealthCardTitle>Summary</HealthCardTitle>
-          </HealthCardHeader>
-          <HealthCardContent>
-            <div className='flex flex-col gap-4'>
-              <div className='flex items-center justify-between'>
-                <span className='font-bold'>Total backup jobs</span>
-                <span>{backupJobs.length}</span>
-              </div>
-              <div className='flex items-center justify-between'>
-                <span className='font-bold'>Total backup runs</span>
-                <span>{backupRuns.length}</span>
-              </div>
-            </div>
-          </HealthCardContent>
-        </HealthCard>
-        <HealthCard className='w-full' size='md' type='status'>
-          <HealthCardHeader>
-            <HealthCardTitle>Status overview</HealthCardTitle>
-          </HealthCardHeader>
-          <HealthCardContent>
-            <div className='flex flex-col gap-4'>
-              {/* Here you can add more detailed status information, e.g. counts of backup jobs by status */}
-              <div className='flex items-center justify-between'>
-                <span className='font-bold'>Successful backup runs</span>
-                <span>{backupRuns.filter((run) => run.backuprun?.status?.id === 'successful').length}</span>
-              </div>
-              <div className='flex items-center justify-between'>
-                <span className='font-bold'>Failed backup runs</span>
-                <span>{backupRuns.filter((run) => run.backuprun?.status?.id === 'failed').length}</span>
-              </div>
-            </div>
-          </HealthCardContent>
-        </HealthCard>
-      </div>
-    )
-  }
 
   const TableView = () => {
     return (
@@ -210,7 +176,15 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
         complete product as quick as possible :)
       </NotReadyMessage>
 
-      <HealthCards />
+      <SummaryCards
+        totalJobs={totalJobs}
+        activeJobs={activeJobs}
+        pausedJobs={pausedJobs}
+        inactiveJobs={inactiveJobs}
+        activeJobRatio={activeJobRatio}
+        pausedJobRatio={pausedJobRatio}
+        inactiveJobRatio={inactiveJobRatio}
+      />
       <section className='px-12 my-8'>
         <TableView />
       </section>
