@@ -8,7 +8,6 @@ import { ExternalToolButton } from '@/features/cluster/components/external-tool-
 import { ResourceBar } from '@/features/cluster/components/resource-bar'
 import { RorCliButton } from '@/features/cluster/components/ror-cli-button'
 import {
-  getStatusView,
   getLastSeenViewItem,
   getResourcesCpuViewItem,
   getResourcesCpuUsedMilliViewItem,
@@ -20,7 +19,6 @@ import {
   getGrafanaUrlViewItem,
   getStatusViewItem,
 } from '@/features/cluster/utils/cluster'
-import { CodeSnippet } from '@/components/ui/code-snippet'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
   <span className={'flex items-center justify-around size-7'}>

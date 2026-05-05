@@ -3,7 +3,7 @@ import { DashboardSection } from '@/features/dashboard/components/dashboard-sect
 import { Notification, NotificationBox } from '@/features/dashboard/components/notification-box'
 import { OverviewItem, OverviewBox } from '@/features/dashboard/components/overview-box'
 import { FavoritedBox } from '@/features/dashboard/components/favorited-box'
-import { ClusterListViewRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType } from '@ror/js-api-client'
 import { ReactNode } from 'react'
 import { FavoritedCluster } from '@/features/dashboard/components/favorited-cluster'
 
@@ -116,7 +116,7 @@ const DashboardPage = async () => {
     },
   }
 
-  const favorited1: ClusterListViewRowType = {
+  const favorited1: ClusterListViewItemRowType = {
     argocdURL: {
       fieldValue: 'https://argo.bgo-mgmt-001.talos-bgo.sky.nhn.no',
     },
@@ -208,7 +208,7 @@ const DashboardPage = async () => {
     },
   }
 
-  const favorited2: ClusterListViewRowType = {
+  const favorited2: ClusterListViewItemRowType = {
     argocdURL: {
       fieldValue: 'https://argo.t-per-et-401.t-per.sky.nhn.no',
     },
@@ -300,7 +300,7 @@ const DashboardPage = async () => {
     },
   }
 
-  const favorited3: ClusterListViewRowType = {
+  const favorited3: ClusterListViewItemRowType = {
     argocdURL: {
       fieldValue: 'https://argo.d-amk-003.vitistack-amk-3sad.sky.nhn.no',
     },

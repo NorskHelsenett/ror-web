@@ -12,9 +12,8 @@ export const DashboardSection = ({ title, items, className }: DashboardSectionPr
     <div className={cn('mx-7', className)}>
       <h2>{title}</h2>
       <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
-        {' '}
         {/* Margin padding solution is to avoid clipping of pinging dot due to overflow-x-auto */}
-        {items?.length !== 0 && items !== undefined ? items.map((item) => item) : 'No items presents'}
+        {items?.length ? items.map((item) => item) : 'No items present'}
       </div>
     </div>
   )
