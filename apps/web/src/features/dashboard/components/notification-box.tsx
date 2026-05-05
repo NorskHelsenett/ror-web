@@ -1,7 +1,7 @@
 'use client'
 
 import { Checkbox } from '@/components/shadcn/checkbox'
-import { DashboardBox } from './DashboardBox'
+import { DashboardBox } from './dashboard-box'
 import { useState } from 'react'
 import { cn } from '@/utils/clsxm'
 

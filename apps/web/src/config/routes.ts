@@ -10,6 +10,10 @@ export const routes = {
     },
   },
   app: {
+    dashboard: {
+      label: 'My Dashboard',
+      getHref: () => '/my-dashboard',
+    },
     overview: {
       label: 'Overview',
       getHref: () => '/clusters',

@@ -1,7 +1,7 @@
 'use client'
 
 import { Star } from 'lucide-react'
-import { DashboardBox } from './DashboardBox'
+import { DashboardBox } from './dashboard-box'
 import { ReactNode } from 'react'
 import { cn } from '@/utils/clsxm'
 
