@@ -125,7 +125,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-1m-test-backup',
-            status: 'paused',
+            status: 'active',
             policyId: '4923908281402464:1614676439887:3154',
             schedules: [
               {
@@ -195,7 +195,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-12h-single-vm',
-            status: 'deleted',
+            status: 'active',
             policyId: '4923908281402464:1614676439887:3155',
             schedules: [
               {

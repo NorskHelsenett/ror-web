@@ -28,6 +28,7 @@ import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
+import { HistoryRunChart } from '@/features/backup/backup-run/components/history-run-chart'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -167,6 +168,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
         complete product as quick as possible :)
       </NotReadyMessage>
 
+      <HistoryRunChart backupRuns={backupRuns} />
       <section className='px-12 my-8'>
         <TableView />
       </section>

@@ -13,6 +13,12 @@ export interface BackupActiveTarget {
   id?: string
   externalId?: string
   source: ActiveTargetSource | null
+  size?: {
+    unit?: string
+    sourceSize?: number
+    logicalSize?: number
+    physicalSize?: number
+  } | null
   lastBackupRunId?: string | null
 }
 

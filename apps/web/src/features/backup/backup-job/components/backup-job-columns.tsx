@@ -28,7 +28,7 @@ import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
 
 const columnHelper = createColumnHelper<BackupJob>()
 
-const getCompactIdLabel = (id: string) => {
+export const getCompactIdLabel = (id: string) => {
   if (id.length <= 20) return id
   return `${id.slice(0, 8)}...${id.slice(-6)}`
 }
@@ -60,7 +60,7 @@ const formatScheduleFrequency = (schedule: { frequency?: number | null; unit?: s
   return `Every ${frequency} ${singularUnit}s`
 }
 
-const getBackupRunStatusIcon = (status: string | null | undefined) => {
+export const getBackupRunStatusIcon = (status: string | null | undefined) => {
   const normalizedStatus = (status || '').toLowerCase()
   if (normalizedStatus === 'failed') {
     return <XCircle className='w-4 h-4 text-red-500' />
@@ -72,22 +72,35 @@ const getBackupRunStatusIcon = (status: string | null | undefined) => {
   return <QuestionMarkCircledIcon className='w-4 h-4 text-gray-500' />
 }
 
-const getBackupRunStatusLabel = (status: string | null | undefined) => {
+export const getBackupRunStatusLabel = (status: string | null | undefined) => {
   const normalizedStatus = (status || '').toLowerCase()
   if (normalizedStatus === 'failed') return 'Failed'
-  if (normalizedStatus === 'succeeded' || normalizedStatus === 'completed') return 'Completed'
+  if (normalizedStatus === 'succeeded' || normalizedStatus === 'completed') return 'Succeeded'
   return 'Unknown'
 }
 
-const getBackupRunStatusLabelClass = (status: string | null | undefined) => {
+export const getBackupRunStatusLabelClass = (status: string | null | undefined) => {
   const normalizedStatus = (status || '').toLowerCase()
   if (normalizedStatus === 'failed') return 'text-red-600'
   if (normalizedStatus === 'succeeded' || normalizedStatus === 'completed') return 'text-green-600'
   return 'text-gray-500'
 }
 
-const showTargets = (targets: BackupActiveTarget[], backupJob: string) => {
+const formatBytes = (bytes: number | null | undefined) => {
+  if (bytes == null || Number.isNaN(bytes) || bytes <= 0) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+  const exponent = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1)
+  const value = bytes / 1024 ** exponent
+  const precision = value >= 100 ? 0 : value >= 10 ? 1 : 2
+  return `${value.toFixed(precision)} ${units[exponent]}`
+}
+
+export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
   const [open, setIsOpen] = useState(false)
+  const hasSizeData = targets.some(
+    (target) =>
+      target?.size?.sourceSize != null || target?.size?.logicalSize != null || target?.size?.physicalSize != null
+  )
 
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
@@ -103,19 +116,41 @@ const showTargets = (targets: BackupActiveTarget[], backupJob: string) => {
           <DialogTitle className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
             VMs included in backup
           </DialogTitle>
-          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>{backupJob}</p>
+          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>{backup}</p>
+          {hasSizeData && (
+            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+              Size shown per VM: Source, Logical, and Physical.
+            </p>
+          )}
         </DialogHeader>
         <div className='space-y-2'>
           {targets.map((target, index) => (
             <div
               key={index}
-              className='flex items-center justify-between gap-3 rounded-lg border border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-950/20 px-4 py-3 transition-colors hover:bg-blue-100 dark:hover:bg-blue-950/40 h-10'
+              className='flex items-center justify-between gap-3 rounded-lg border border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-950/20 px-4 py-3 transition-colors hover:bg-blue-100 dark:hover:bg-blue-950/40'
             >
-              <div className='flex items-center gap-3 min-w-0'>
+              <div className='flex items-center gap-3 min-w-0 flex-1'>
                 <div className='flex-shrink-0 w-2 h-2 rounded-full bg-blue-500'></div>
-                <span className='font-mono text-sm text-gray-800 dark:text-gray-200 truncate'>
-                  {target.name || 'Unnamed target'}
-                </span>
+                <div className='min-w-0 flex-1'>
+                  <span className='font-mono text-sm text-gray-800 dark:text-gray-200 truncate block'>
+                    {target.name || 'Unnamed target'}
+                  </span>
+                  {(target?.size?.sourceSize != null ||
+                    target?.size?.logicalSize != null ||
+                    target?.size?.physicalSize != null) && (
+                    <div className='mt-1 flex flex-wrap gap-1.5'>
+                      <span className='inline-flex items-center rounded-md bg-white/80 dark:bg-gray-800 px-1.5 py-0.5 text-[11px] text-gray-700 dark:text-gray-200'>
+                        Src {formatBytes(target?.size?.sourceSize)}
+                      </span>
+                      <span className='inline-flex items-center rounded-md bg-white/80 dark:bg-gray-800 px-1.5 py-0.5 text-[11px] text-gray-700 dark:text-gray-200'>
+                        Log {formatBytes(target?.size?.logicalSize)}
+                      </span>
+                      <span className='inline-flex items-center rounded-md bg-white/80 dark:bg-gray-800 px-1.5 py-0.5 text-[11px] text-gray-700 dark:text-gray-200'>
+                        Phys {formatBytes(target?.size?.physicalSize)}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
               <CopyButton
                 value={target.name || ''}
@@ -168,6 +203,7 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         header: 'Status',
         enableSorting: true,
         sortingFn: 'text',
+        size: 120,
         cell: (info) => {
           const jobStatus = info.getValue() as BackupJobStatusType
           return <BackupJobStatus status={jobStatus} />
@@ -184,7 +220,7 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         header: 'Backup job ID',
         enableSorting: true,
         sortingFn: 'text',
-        size: 250,
+        size: 225,
         cell: (info) => {
           const id = info.getValue() as string
           const compactId = getCompactIdLabel(id)
@@ -235,13 +271,12 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         return activeTargets
       },
       {
-        id: 'activeTargets',
+        id: 'targets',
         header: 'Targets',
         enableSorting: false,
-        size: 150,
+        size: 105,
         cell: (info) => {
           const activeTargets = info.getValue()
-          const targetCount = activeTargets.length
           return showTargets(activeTargets, getBackupJobName(info.row.original))
         },
       }
@@ -263,10 +298,10 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         cell: (info) => {
           const endTime = info.getValue() as string | null
           if (!endTime || endTime === 'No end time') {
-            return <span className='text-gray-400 '>No backup runs</span>
+            return <span className='text-gray-400 text-sm '>No backup runs</span>
           }
           const date = new Date(endTime)
-          if (isNaN(date.getTime())) return <span className='text-gray-400'>No backup runs</span>
+          if (isNaN(date.getTime())) return <span className='text-gray-400 text-sm'>No backup runs</span>
           const relative = formatDistance(date, new Date(), { addSuffix: true })
           const lastRunId = getLastBackupRun(info.row.original)
 
@@ -280,7 +315,7 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
               className='inline-flex flex-col w-40 rounded items-start gap-0.5 px-2 py-1 hover:text-blue-700 hover:bg-blue-50 transition-colors'
               title={date.toLocaleString()}
             >
-              <span className='inline-flex items-center gap-1.5 '>
+              <span className='inline-flex items-center gap-1.5 text-sm'>
                 {getBackupRunStatusIcon(status)}
                 {relative}
               </span>
@@ -300,12 +335,13 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         header: 'Location',
         enableSorting: true,
         sortingFn: 'text',
+        size: 100,
         cell: (info) => {
           const location = info.getValue()
           if (location == null || location === '') {
-            return <span className='text-gray-400'>N/A</span>
+            return <span className='text-gray-400 text-sm'>N/A</span>
           }
-          return location
+          return <span className='text-sm'>{location}</span>
         },
       }
     ),
@@ -318,15 +354,15 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         id: 'schedules',
         header: 'Schedule',
         enableSorting: false,
-        size: 250,
+        size: 200,
         cell: (info) => {
           const schedules = info.getValue()
           if (!schedules || schedules.length === 0) {
-            return 'No schedules'
+            return <span className='text-sm text-gray-400'>No schedules</span>
           }
 
           const scheduleLabels = [...new Set(schedules.map(formatScheduleFrequency))]
-          return scheduleLabels.join(', ')
+          return <span className='text-sm'>{scheduleLabels.join(', ')}</span>
         },
       }
     ),
@@ -343,7 +379,7 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         cell: (info) => {
           const backupRunIds = info.getValue()
           if (!backupRunIds || backupRunIds.length === 0) {
-            return <span className='text-gray-400'>No backup runs</span>
+            return <span className='text-gray-400 text-sm'>No backup runs</span>
           }
           const backupJobId = getBackupJobId(info.row.original)
           return React.createElement(IdListTooltip, {
