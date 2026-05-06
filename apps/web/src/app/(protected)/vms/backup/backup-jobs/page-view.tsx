@@ -11,8 +11,8 @@ import {
 } from '@/features/vms/backup/utils/backup-job'
 import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
-import { loadMoreBackupJobs } from '@/utils/backup-job-actions'
-import { BackupJob } from '@ror/js-api-client'
+import { loadMoreBackupJobs, loadBackupRunsForJobs } from '@/utils/backup-job-actions'
+import { BackupJob, BackupRun } from '@ror/js-api-client'
 import { useCallback, useMemo, useState } from 'react'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { useDisplayData } from '@/hooks/use-display-data'
@@ -35,6 +35,8 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const pathname = usePathname()
   const router = useRouter()
 
+  const [allBackupRuns, setAllBackupRuns] = useState<BackupRun[]>(backupRuns)
+
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,
     sort: params.sort,
@@ -53,6 +55,16 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
         search: currentSearch,
         searchField: currentSearchField,
       })
+
+      if (res.items && res.items.length > 0) {
+        const newRuns = await loadBackupRunsForJobs(res.items)
+        setAllBackupRuns((prev) => {
+          const existingIds = new Set(prev.map((r) => r?.backuprun?.id))
+          const uniqueNewRuns = newRuns.filter((r) => !existingIds.has(r?.backuprun?.id))
+          return [...prev, ...uniqueNewRuns]
+        })
+      }
+
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
@@ -165,7 +177,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
       <div>
         <DataTable
           data={displayedItems}
-          columns={getBackupJobTableColumns(backupRuns)}
+          columns={getBackupJobTableColumns(allBackupRuns)}
           hasMore={hasMore}
           isLoading={isLoading}
           sentinelRef={sentinelRef}
