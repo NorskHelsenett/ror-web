@@ -10,7 +10,7 @@ import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { getRorApi } from '@/services/ror-api'
 import { Metadata } from 'next'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
-import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
+import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 import { Header } from '@/components/layout/app-shell/header'
 import { PageView } from './page-view'
 
@@ -30,13 +30,10 @@ export default async function BackupJobPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  const [fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchBackupJobs(api, params),
-    fetchBackupRuns(api, params),
-  ])
+  const fetchedBackupJobs = await fetchBackupJobs(api, params)
 
   const backupJobs = fetchedBackupJobs.backupJobs || []
-  const backupRuns = fetchedBackupRuns.backupRuns || []
+  const backupRuns = await fetchBackupRunsForJobs(api, backupJobs)
 
   return (
     <div className='w-full flex flex-col'>
