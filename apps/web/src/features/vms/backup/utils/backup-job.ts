@@ -93,6 +93,12 @@ export const getBackupJobAllRunIds = (backupJob: BackupJob): string[] => {
   return backupJob?.backupjob?.status?.backupRunIds ?? []
 }
 
+export const getActiveBackupRunIds = (backupJob: BackupJob, backupRuns: BackupRun[]): string[] => {
+  const backupRunIds = getBackupJobAllRunIds(backupJob)
+  const existingRunIds = new Set(backupRuns?.map((run) => run?.backuprun?.id).filter(Boolean) ?? [])
+  return backupRunIds.filter((id) => existingRunIds.has(id))
+}
+
 export const getBackupJobId = (backupJob: BackupJob) => {
   return backupJob?.backupjob?.id ?? 'No backupJob ID'
 }

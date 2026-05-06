@@ -7,12 +7,12 @@ import {
   getBackupJobId,
   getBackupJobLocation,
   getBackupJobSchedules,
-  getBackupJobAllRunIds,
   getBackupJobActiveTargets,
   BackupActiveTarget,
   getBackupJobName,
   getBackupStatus,
   getLastBackupRun,
+  getActiveBackupRunIds,
 } from '@/features/vms/backup/utils/backup-job'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -123,7 +123,7 @@ export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
             </p>
           )}
         </DialogHeader>
-        <div className='space-y-2'>
+        <div className={targets.length > 10 ? 'space-y-2 max-h-[28rem] overflow-y-auto pr-1' : 'space-y-2'}>
           {targets.map((target, index) => (
             <div
               key={index}
@@ -368,7 +368,7 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
     ),
     columnHelper.accessor(
       (row) => {
-        const backupRunIds = getBackupJobAllRunIds(row)
+        const backupRunIds = getActiveBackupRunIds(row, backupRuns)
         return backupRunIds
       },
       {
