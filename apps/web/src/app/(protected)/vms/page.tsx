@@ -34,13 +34,38 @@ export default async function VMPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
-  const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
-    fetchVms(api, params),
+  // Fetch VMs first for immediate page render
+  const fetchedVms = await fetchVms(api, params)
+  const vms = fetchedVms.vms
+
+  // Fetch backup data in parallel without blocking initial page render
+  const backupDataPromise = Promise.all([
     fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
     fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
-  const vms = fetchedVms.vms
+  return (
+    <div className='w-full flex flex-col'>
+      <Header title='Virtual machines' />
+      <VMsContent vms={vms} backupDataPromise={backupDataPromise} api={api} params={params} />
+    </div>
+  )
+}
+
+async function VMsContent({
+  vms,
+  backupDataPromise,
+  api,
+  params,
+}: {
+  vms: any[]
+  backupDataPromise: Promise<any[]>
+  api: any
+  params: any
+}) {
+  // Resolve backup data while page is already rendering
+  const [fetchedBackupJobs, fetchedBackupRuns] = await backupDataPromise
+
   const backupJobs = fetchedBackupJobs.backupJobs || []
   const initialBackupRuns = [...(fetchedBackupRuns.backupRuns || [])]
   let mergedBackupRuns = initialBackupRuns
@@ -64,10 +89,5 @@ export default async function VMPage({
 
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, mergedBackupRuns)
 
-  return (
-    <div className='w-full flex flex-col'>
-      <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} />
-    </div>
-  )
+  return <PageView vms={vmsWithBackup} params={params} />
 }

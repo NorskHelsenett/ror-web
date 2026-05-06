@@ -30,15 +30,32 @@ export default async function BackupJobPage({
   const sp = await searchParams
   const params = normalizeParams(sp)
 
+  // Fetch jobs first for immediate page render
   const fetchedBackupJobs = await fetchBackupJobs(api, params)
-
   const backupJobs = fetchedBackupJobs.backupJobs || []
-  const backupRuns = await fetchBackupRunsForJobs(api, backupJobs)
+
+  // Fetch runs in parallel, don't block initial page render
+  const runsPromise = fetchBackupRunsForJobs(api, backupJobs)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Backup jobs' />
-      <PageView backupJobs={backupJobs} backupRuns={backupRuns} params={params} />
+      <BackupJobsContent backupJobs={backupJobs} runsPromise={runsPromise} params={params} />
     </div>
   )
+}
+
+async function BackupJobsContent({
+  backupJobs,
+  runsPromise,
+  params,
+}: {
+  backupJobs: any[]
+  runsPromise: Promise<any[]>
+  params: any
+}) {
+  // Resolve runs while page is already rendering
+  const backupRuns = await runsPromise
+
+  return <PageView backupJobs={backupJobs} backupRuns={backupRuns} params={params} />
 }
