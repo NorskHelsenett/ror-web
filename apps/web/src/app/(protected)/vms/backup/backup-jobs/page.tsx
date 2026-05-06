@@ -14,6 +14,7 @@ import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs
 import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 import { Header } from '@/components/layout/app-shell/header'
 import { PageView } from './page-view'
+import { Loader } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'ROR - Backup Jobs',
@@ -52,11 +53,9 @@ async function BackupJobsContent({ params }: { params: any }) {
 
 function BackupJobsPageSkeleton() {
   return (
-    <div className='px-12 mt-8 space-y-3 animate-pulse'>
-      <div className='h-10 w-full rounded-md bg-muted' />
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className='h-12 w-full rounded-md bg-muted/60' />
-      ))}
+    <div className='flex flex-col items-center justify-center flex-1 min-h-[60vh] gap-3'>
+      <Loader className='h-6 w-6 animate-spin text-muted-foreground' />
+      <span className='text-sm text-muted-foreground'>Loading backup jobs...</span>
     </div>
   )
 }

@@ -17,6 +17,7 @@ import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-bac
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
+import { Loader } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'ROR - VM',
@@ -81,11 +82,9 @@ async function VMsContent({ params }: { params: any }) {
 
 function VMsPageSkeleton() {
   return (
-    <div className='px-12 mt-8 space-y-3 animate-pulse'>
-      <div className='h-10 w-full rounded-md bg-muted' />
-      {Array.from({ length: 10 }).map((_, i) => (
-        <div key={i} className='h-12 w-full rounded-md bg-muted/60' />
-      ))}
+    <div className='flex flex-col items-center justify-center flex-1 min-h-[60vh] gap-3'>
+      <Loader className='h-6 w-6 animate-spin text-muted-foreground' />
+      <span className='text-sm text-muted-foreground'>Loading virtual machines...</span>
     </div>
   )
 }
