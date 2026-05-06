@@ -1,16 +1,18 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shadcn/card'
-import { AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { BackupRun } from '@ror/js-api-client'
 import { getBackupRunStartTime, getBackupRunStatusLocal } from '@/features/vms/backup/utils/backup-run'
 import { subDays, startOfDay, format } from 'date-fns'
+import type { BackupRunsHistoryPoint } from '@/features/vms/backup/services/backup-runs-history-cache'
 
 interface HistoryRunChartProps {
   backupRuns: BackupRun[]
+  historySummary?: BackupRunsHistoryPoint[]
 }
 
-export const HistoryRunChart = ({ backupRuns }: HistoryRunChartProps) => {
+export const HistoryRunChart = ({ backupRuns, historySummary }: HistoryRunChartProps) => {
   const generateDateRange = () => {
     const today = startOfDay(new Date())
     const dates: Date[] = []
@@ -58,7 +60,7 @@ export const HistoryRunChart = ({ backupRuns }: HistoryRunChartProps) => {
     }))
   }
 
-  const data = getChartData()
+  const data = historySummary && historySummary.length > 0 ? historySummary : getChartData()
 
   return (
     <Card className='mx-10 mt-6 max-w-2xl'>

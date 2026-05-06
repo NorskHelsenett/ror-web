@@ -29,6 +29,7 @@ import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 import { HistoryRunChart } from '@/features/backup/backup-run/components/history-run-chart'
+import { useBackupRunsHistoryHydration } from '@/features/vms/backup/services/backup-runs-history-cache'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -116,6 +117,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
+  const historySummary = useBackupRunsHistoryHydration(backupRuns)
 
   const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
 
@@ -179,7 +181,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
         complete product as quick as possible :)
       </NotReadyMessage>
 
-      {summaryCardsVisible && <HistoryRunChart backupRuns={backupRuns} />}
+      {summaryCardsVisible && <HistoryRunChart backupRuns={backupRuns} historySummary={historySummary} />}
 
       <section className='px-12 my-8'>
         <TableView />
