@@ -13,7 +13,7 @@ import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreBackupJobs, loadBackupRunsForJobs } from '@/utils/backup-job-actions'
 import { BackupJob, BackupRun } from '@ror/js-api-client'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState, useEffect } from 'react'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
@@ -138,6 +138,29 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const inactiveJobRatio = totalJobs > 0 ? Math.round((inactiveJobs / totalJobs) * 100) : 0
 
   const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
+
+  useEffect(() => {
+    const currentSearch = searchParams.get('search')?.trim()
+
+    if (currentSearch && displayedItems && displayedItems.length > 0) {
+      const jobsNeedingRuns = displayedItems.filter((job) => {
+        const jobRunIds = job?.backupjob?.status?.backupRunIds ?? []
+        return jobRunIds.length > 0 && jobRunIds.some((id) => !allBackupRuns.some((r) => r?.backuprun?.id === id))
+      })
+
+      if (jobsNeedingRuns.length > 0) {
+        loadBackupRunsForJobs(jobsNeedingRuns)
+          .then((newRuns) => {
+            setAllBackupRuns((prev) => {
+              const existingIds = new Set(prev.map((r) => r?.backuprun?.id))
+              const uniqueNewRuns = newRuns.filter((r) => !existingIds.has(r?.backuprun?.id))
+              return [...prev, ...uniqueNewRuns]
+            })
+          })
+          .catch((err) => console.error('Failed to load backup runs for searched jobs:', err))
+      }
+    }
+  }, [searchParams, displayedItems, allBackupRuns])
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
