@@ -95,9 +95,9 @@ const formatBytes = (bytes: number | null | undefined) => {
   return `${value.toFixed(precision)} ${units[exponent]}`
 }
 
-export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
+export const ShowTargets = (props: { targets: BackupActiveTarget[]; backup: string }) => {
   const [open, setIsOpen] = useState(false)
-  const hasSizeData = targets.some(
+  const hasSizeData = props.targets.some(
     (target) =>
       target?.size?.sourceSize != null || target?.size?.logicalSize != null || target?.size?.physicalSize != null
   )
@@ -109,22 +109,22 @@ export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
         className='inline-flex items-center gap-1 px-2 py-1 text-md justify-center hover:font-medium hover:text-blue-600'
       >
         <Monitor size={14} className='mr-2' />
-        {targets.length}
+        {props.targets.length}
       </button>
       <DialogContent className='bg-white dark:bg-gray-900 rounded-lg p-6'>
         <DialogHeader className='mb-4'>
           <DialogTitle className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
             VMs included in backup
           </DialogTitle>
-          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>{backup}</p>
+          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>{props.backup}</p>
           {hasSizeData && (
             <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
               Size shown per VM: Source, Logical, and Physical.
             </p>
           )}
         </DialogHeader>
-        <div className={targets.length > 10 ? 'space-y-2 max-h-[28rem] overflow-y-auto pr-1' : 'space-y-2'}>
-          {targets.map((target, index) => (
+        <div className={props.targets.length > 10 ? 'space-y-2 max-h-[28rem] overflow-y-auto pr-1' : 'space-y-2'}>
+          {props.targets.map((target, index) => (
             <div
               key={index}
               className='flex items-center justify-between gap-3 rounded-lg border border-blue-200 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-950/20 px-4 py-3 transition-colors hover:bg-blue-100 dark:hover:bg-blue-950/40'
@@ -160,7 +160,7 @@ export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
             </div>
           ))}
         </div>
-        {targets.length === 0 && (
+        {props.targets.length === 0 && (
           <p className='text-sm text-gray-500 dark:text-gray-400 text-center py-4'>No active targets</p>
         )}
       </DialogContent>
@@ -280,7 +280,7 @@ export const getBackupJobTableColumns = (
         size: 105,
         cell: (info) => {
           const activeTargets = info.getValue()
-          return showTargets(activeTargets, getBackupJobName(info.row.original))
+          return <ShowTargets targets={activeTargets} backup={getBackupJobName(info.row.original)} />
         },
       }
     ),

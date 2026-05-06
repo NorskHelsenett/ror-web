@@ -19,7 +19,7 @@ import {
   getBackupRunStatusIcon,
   getBackupRunStatusLabel,
   getBackupRunStatusLabelClass,
-  showTargets,
+  ShowTargets,
   getCompactIdLabel,
 } from '../../backup-job/components/backup-job-columns'
 import { Tooltip, TooltipProvider, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
@@ -196,7 +196,7 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
         size: 105,
         cell: (info) => {
           const activeTargets = info.getValue()
-          return showTargets(activeTargets, getBackupRunId(info.row.original))
+          return <ShowTargets targets={activeTargets} backup={getBackupRunId(info.row.original)} />
         },
       }
     ),

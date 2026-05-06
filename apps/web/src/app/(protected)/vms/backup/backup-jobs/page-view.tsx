@@ -7,7 +7,6 @@ import {
   getBackupJobKey,
   getBackupJobLocation,
   getBackupJobSource,
-  getBackupStatus,
 } from '@/features/vms/backup/utils/backup-job'
 import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'

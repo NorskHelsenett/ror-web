@@ -9,7 +9,7 @@
 import { Suspense } from 'react'
 import PageView from './page-view'
 import { Header } from '@/components/layout/app-shell/header'
-import { normalizeParams } from '@/features/vms/utils/normalize-params'
+import { normalizeParams, type NormalizeParamsResult } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
@@ -44,7 +44,7 @@ export default async function VMPage({
   )
 }
 
-async function VMsContent({ params }: { params: any }) {
+async function VMsContent({ params }: { params: NormalizeParamsResult }) {
   const api = await getRorApi()
 
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([

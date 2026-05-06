@@ -7,7 +7,7 @@
  **/
 
 import { Suspense } from 'react'
-import { normalizeParams } from '@/features/vms/utils/normalize-params'
+import { normalizeParams, type NormalizeParamsResult } from '@/features/vms/utils/normalize-params'
 import { getRorApi } from '@/services/ror-api'
 import { Metadata } from 'next'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
@@ -41,7 +41,7 @@ export default async function BackupJobPage({
   )
 }
 
-async function BackupJobsContent({ params }: { params: any }) {
+async function BackupJobsContent({ params }: { params: NormalizeParamsResult }) {
   const api = await getRorApi()
 
   const fetchedBackupJobs = await fetchBackupJobs(api, params)
