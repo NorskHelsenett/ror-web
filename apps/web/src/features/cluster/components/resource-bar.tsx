@@ -6,19 +6,22 @@ interface ResourceCardProps {
   capacity?: string
   used?: string
   percentage?: number | null
+  showPercentage?: boolean
 }
 
-export function ResourceBar({ capacity, used, percentage }: ResourceCardProps) {
+export function ResourceBar({ capacity, used, percentage, showPercentage = true }: ResourceCardProps) {
   const barColor = negativeColors(percentage ?? 0).join(' ')
   return (
-    <div>
+    <div className='flex-1 min-w-0'>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className='flex items-center'>
             <Progress value={percentage ?? 0} indicatorColor={barColor} className='flex-1 mr-1' />
-            <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
-              {percentage == null ? '—' : `${percentage.toFixed(0)}%`}
-            </span>
+            {showPercentage && (
+              <span className='w-10 text-right text-sm text-muted-foreground tabular-nums'>
+                {percentage == null ? '—' : `${percentage.toFixed(0)}%`}
+              </span>
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent>
