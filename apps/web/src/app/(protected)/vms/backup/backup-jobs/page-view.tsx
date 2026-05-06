@@ -13,7 +13,7 @@ import { useFilters } from '@/hooks/use-filters'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreBackupJobs, loadBackupRunsForJobs } from '@/utils/backup-job-actions'
 import { BackupJob, BackupRun } from '@ror/js-api-client'
-import { useCallback, useMemo, useState, useEffect } from 'react'
+import { useCallback, useMemo, useState, useEffect, useRef, useTransition } from 'react'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
@@ -24,7 +24,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { SortSelect } from '@/components/ui/sort-select'
 import { sortingOptionsBackupJob } from '@/features/backup/config/page-view-options'
-import { RotateCw } from 'lucide-react'
+import { Loader2, RotateCw } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 import { SummaryCards } from '@/features/backup/backup-job/components/summary-cards'
@@ -34,9 +34,11 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
 
   const pathname = usePathname()
   const router = useRouter()
+  const [isSearchNavigationPending, startSearchTransition] = useTransition()
 
   const [allBackupRuns, setAllBackupRuns] = useState<BackupRun[]>(backupRuns)
   const [isLoadingRunsForSearch, setIsLoadingRunsForSearch] = useState(false)
+  const attemptedMissingRunIdsRef = useRef<Set<string>>(new Set())
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,
@@ -86,6 +88,11 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const { setSelectedDisplayData } = useDisplayData<BackupJobColumnsData>('backup-jobs')
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
   const searchParams = useSearchParams()
+  const currentSearchQuery = searchParams.get('search')?.trim() ?? ''
+  const existingRunIds = useMemo(
+    () => new Set(allBackupRuns.map((run) => run?.backuprun?.id).filter(Boolean)),
+    [allBackupRuns]
+  )
 
   const updateFiltersInUrl = useCallback(
     (searchQuery: string) => {
@@ -96,18 +103,22 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
       else next.delete('search')
 
       next.delete('page')
-      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+      startSearchTransition(() => {
+        router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+      })
     },
-    [pathname, router, searchParams]
+    [pathname, router, searchParams, startSearchTransition]
   )
 
   const updateFieldInUrl = useCallback(
     (field: string) => {
       const next = new URLSearchParams(searchParams.toString())
       next.set('searchField', field)
-      router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+      startSearchTransition(() => {
+        router.replace(`${pathname}?${next.toString()}`, { scroll: false })
+      })
     },
-    [pathname, router, searchParams]
+    [pathname, router, searchParams, startSearchTransition]
   )
 
   const handleSearchResultsChange = useCallback(
@@ -141,29 +152,51 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
 
   useEffect(() => {
-    const currentSearch = searchParams.get('search')?.trim()
+    attemptedMissingRunIdsRef.current.clear()
+    setIsLoadingRunsForSearch(false)
+  }, [currentSearchQuery])
 
-    if (currentSearch && displayedItems && displayedItems.length > 0) {
-      const jobsNeedingRuns = displayedItems.filter((job) => {
-        const jobRunIds = job?.backupjob?.status?.backupRunIds ?? []
-        return jobRunIds.length > 0 && jobRunIds.some((id) => !allBackupRuns.some((r) => r?.backuprun?.id === id))
-      })
+  useEffect(() => {
+    if (!currentSearchQuery || !displayedItems || displayedItems.length === 0) {
+      setIsLoadingRunsForSearch(false)
+      return
+    }
 
-      if (jobsNeedingRuns.length > 0) {
-        setIsLoadingRunsForSearch(true)
-        loadBackupRunsForJobs(jobsNeedingRuns)
-          .then((newRuns) => {
-            setAllBackupRuns((prev) => {
-              const existingIds = new Set(prev.map((r) => r?.backuprun?.id))
-              const uniqueNewRuns = newRuns.filter((r) => !existingIds.has(r?.backuprun?.id))
-              return [...prev, ...uniqueNewRuns]
-            })
-          })
-          .catch((err) => console.error('Failed to load backup runs for searched jobs:', err))
-          .finally(() => setIsLoadingRunsForSearch(false))
+    const missingRunIds = new Set<string>()
+    for (const job of displayedItems) {
+      const jobRunIds = job?.backupjob?.status?.backupRunIds ?? []
+      for (const runId of jobRunIds) {
+        if (!runId || existingRunIds.has(runId) || attemptedMissingRunIdsRef.current.has(runId)) continue
+        missingRunIds.add(runId)
       }
     }
-  }, [searchParams, displayedItems, allBackupRuns])
+
+    if (!missingRunIds.size) {
+      setIsLoadingRunsForSearch(false)
+      return
+    }
+
+    const jobsNeedingRuns = displayedItems.filter((job) => {
+      const jobRunIds = job?.backupjob?.status?.backupRunIds ?? []
+      return jobRunIds.some((runId) => missingRunIds.has(runId))
+    })
+
+    for (const runId of missingRunIds) {
+      attemptedMissingRunIdsRef.current.add(runId)
+    }
+
+    setIsLoadingRunsForSearch(true)
+    loadBackupRunsForJobs(jobsNeedingRuns)
+      .then((newRuns) => {
+        setAllBackupRuns((prev) => {
+          const existingIds = new Set(prev.map((run) => run?.backuprun?.id))
+          const uniqueNewRuns = newRuns.filter((run) => !existingIds.has(run?.backuprun?.id))
+          return [...prev, ...uniqueNewRuns]
+        })
+      })
+      .catch((err) => console.error('Failed to load backup runs for searched jobs:', err))
+      .finally(() => setIsLoadingRunsForSearch(false))
+  }, [currentSearchQuery, displayedItems, existingRunIds])
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -174,6 +207,12 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
             onFieldChange={(field) => updateFieldInUrl(field)}
           />
         </div>
+        {(isSearchNavigationPending || isLoadingRunsForSearch) && (
+          <div className='inline-flex items-center gap-2 text-sm text-muted-foreground'>
+            <Loader2 className='h-4 w-4 animate-spin' />
+            <span>Loading search...</span>
+          </div>
+        )}
         <SortSelect options={sortingOptionsBackupJob} currentSort={params.sort} />
         <Button
           variant='outline'
