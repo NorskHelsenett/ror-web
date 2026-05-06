@@ -6,6 +6,7 @@
  * It handles authentication, data fetching, and rendering of the page layout.
  **/
 
+import { Suspense } from 'react'
 import { normalizeParams } from '@/features/vms/utils/normalize-params'
 import { getRorApi } from '@/services/ror-api'
 import { Metadata } from 'next'
@@ -26,36 +27,36 @@ export default async function BackupJobPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const api = await getRorApi()
   const sp = await searchParams
   const params = normalizeParams(sp)
-
-  // Fetch jobs first for immediate page render
-  const fetchedBackupJobs = await fetchBackupJobs(api, params)
-  const backupJobs = fetchedBackupJobs.backupJobs || []
-
-  // Fetch runs in parallel, don't block initial page render
-  const runsPromise = fetchBackupRunsForJobs(api, backupJobs)
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Backup jobs' />
-      <BackupJobsContent backupJobs={backupJobs} runsPromise={runsPromise} params={params} />
+      <Suspense fallback={<BackupJobsPageSkeleton />}>
+        <BackupJobsContent params={params} />
+      </Suspense>
     </div>
   )
 }
 
-async function BackupJobsContent({
-  backupJobs,
-  runsPromise,
-  params,
-}: {
-  backupJobs: any[]
-  runsPromise: Promise<any[]>
-  params: any
-}) {
-  // Resolve runs while page is already rendering
-  const backupRuns = await runsPromise
+async function BackupJobsContent({ params }: { params: any }) {
+  const api = await getRorApi()
+
+  const fetchedBackupJobs = await fetchBackupJobs(api, params)
+  const backupJobs = fetchedBackupJobs.backupJobs || []
+  const backupRuns = await fetchBackupRunsForJobs(api, backupJobs)
 
   return <PageView backupJobs={backupJobs} backupRuns={backupRuns} params={params} />
+}
+
+function BackupJobsPageSkeleton() {
+  return (
+    <div className='px-12 mt-8 space-y-3 animate-pulse'>
+      <div className='h-10 w-full rounded-md bg-muted' />
+      {Array.from({ length: 10 }).map((_, i) => (
+        <div key={i} className='h-12 w-full rounded-md bg-muted/60' />
+      ))}
+    </div>
+  )
 }
