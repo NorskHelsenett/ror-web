@@ -28,6 +28,7 @@ import { Loader2, RotateCw } from 'lucide-react'
 import { Button } from '@/components/shadcn/button'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 import { SummaryCards } from '@/features/backup/backup-job/components/summary-cards'
+import { useBackupJobsSummaryHydration } from '@/features/vms/backup/services/backup-jobs-summary-cache'
 
 export const PageView = ({ className, backupJobs, backupRuns = [], params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -39,6 +40,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const [allBackupRuns, setAllBackupRuns] = useState<BackupRun[]>(backupRuns)
   const [isLoadingRunsForSearch, setIsLoadingRunsForSearch] = useState(false)
   const attemptedMissingRunIdsRef = useRef<Set<string>>(new Set())
+  const summary = useBackupJobsSummaryHydration(backupJobs)
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,
@@ -141,13 +143,6 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
-  const totalJobs = backupJobs.length
-  const activeJobs = backupJobs.filter((job) => getBackupStatus(job) === 'active').length
-  const pausedJobs = backupJobs.filter((job) => getBackupStatus(job) === 'paused').length
-  const inactiveJobs = backupJobs.filter((job) => getBackupStatus(job) === 'inactive').length
-  const activeJobRatio = totalJobs > 0 ? Math.round((activeJobs / totalJobs) * 100) : 0
-  const pausedJobRatio = totalJobs > 0 ? Math.round((pausedJobs / totalJobs) * 100) : 0
-  const inactiveJobRatio = totalJobs > 0 ? Math.round((inactiveJobs / totalJobs) * 100) : 0
 
   const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
 
@@ -266,13 +261,13 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
 
       {summaryCardsVisible && (
         <SummaryCards
-          totalJobs={totalJobs}
-          activeJobs={activeJobs}
-          pausedJobs={pausedJobs}
-          inactiveJobs={inactiveJobs}
-          activeJobRatio={activeJobRatio}
-          pausedJobRatio={pausedJobRatio}
-          inactiveJobRatio={inactiveJobRatio}
+          totalJobs={summary.totalJobs}
+          activeJobs={summary.activeJobs}
+          pausedJobs={summary.pausedJobs}
+          inactiveJobs={summary.inactiveJobs}
+          activeJobRatio={summary.activeJobRatio}
+          pausedJobRatio={summary.pausedJobRatio}
+          inactiveJobRatio={summary.inactiveJobRatio}
         />
       )}
 
