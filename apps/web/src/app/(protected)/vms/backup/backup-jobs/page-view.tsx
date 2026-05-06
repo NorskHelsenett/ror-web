@@ -36,6 +36,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const router = useRouter()
 
   const [allBackupRuns, setAllBackupRuns] = useState<BackupRun[]>(backupRuns)
+  const [isLoadingRunsForSearch, setIsLoadingRunsForSearch] = useState(false)
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,
@@ -149,6 +150,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
       })
 
       if (jobsNeedingRuns.length > 0) {
+        setIsLoadingRunsForSearch(true)
         loadBackupRunsForJobs(jobsNeedingRuns)
           .then((newRuns) => {
             setAllBackupRuns((prev) => {
@@ -158,6 +160,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
             })
           })
           .catch((err) => console.error('Failed to load backup runs for searched jobs:', err))
+          .finally(() => setIsLoadingRunsForSearch(false))
       }
     }
   }, [searchParams, displayedItems, allBackupRuns])
@@ -200,7 +203,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
       <div>
         <DataTable
           data={displayedItems}
-          columns={getBackupJobTableColumns(allBackupRuns)}
+          columns={getBackupJobTableColumns(allBackupRuns, isLoadingRunsForSearch)}
           hasMore={hasMore}
           isLoading={isLoading}
           sentinelRef={sentinelRef}

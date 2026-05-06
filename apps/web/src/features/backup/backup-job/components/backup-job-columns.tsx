@@ -21,7 +21,7 @@ import { BackupJobStatus, BackupJobStatusType } from './backup-job-status'
 import { CopyButton } from '@/components/ui/copy-button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/shadcn/tooltip'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Monitor, CheckCircle, XCircle, List } from 'lucide-react'
+import { Monitor, CheckCircle, XCircle, List, Loader } from 'lucide-react'
 import { BackupRun } from '@ror/js-api-client'
 import { formatDistance } from 'date-fns'
 import { QuestionMarkCircledIcon } from '@radix-ui/react-icons'
@@ -168,7 +168,10 @@ export const showTargets = (targets: BackupActiveTarget[], backup: string) => {
   )
 }
 
-export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTableColumnDef<BackupJob>[] => {
+export const getBackupJobTableColumns = (
+  backupRuns: BackupRun[] = [],
+  isLoadingRuns: boolean = false
+): DataTableColumnDef<BackupJob>[] => {
   return [
     columnHelper.accessor(
       (row) => {
@@ -297,6 +300,9 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         size: 200,
         cell: (info) => {
           const endTime = info.getValue() as string | null
+          if (isLoadingRuns) {
+            return <Loader className='h-4 w-4 animate-spin text-muted-foreground' />
+          }
           if (!endTime || endTime === 'No end time') {
             return <span className='text-gray-400 text-sm '>No backup runs</span>
           }
@@ -378,6 +384,9 @@ export const getBackupJobTableColumns = (backupRuns: BackupRun[] = []): DataTabl
         size: 200,
         cell: (info) => {
           const backupRunIds = info.getValue()
+          if (isLoadingRuns) {
+            return <Loader className='h-4 w-4 animate-spin text-muted-foreground' />
+          }
           if (!backupRunIds || backupRunIds.length === 0) {
             return <span className='text-gray-400 text-sm'>No backup runs</span>
           }
