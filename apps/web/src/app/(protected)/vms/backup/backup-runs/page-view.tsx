@@ -30,7 +30,6 @@ import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 import { HistoryRunChart } from '@/features/backup/backup-run/components/history-run-chart'
 import { useBackupRunsHistoryHydration } from '@/features/vms/backup/services/backup-runs-history-cache'
-import { get } from 'http'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
