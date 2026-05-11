@@ -12,7 +12,7 @@ import {
   getBackupJobName,
   getBackupStatus,
   getLastBackupRun,
-  getActiveBackupRunIds,
+  getBackupJobAllRunIds,
 } from '@/features/vms/backup/utils/backup-job'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -374,7 +374,8 @@ export const getBackupJobTableColumns = (
     ),
     columnHelper.accessor(
       (row) => {
-        const backupRunIds = getActiveBackupRunIds(row, backupRuns)
+        // const backupRunIds = getActiveBackupRunIds(row, backupRuns)
+        const backupRunIds = getBackupJobAllRunIds(row)
         return backupRunIds
       },
       {
