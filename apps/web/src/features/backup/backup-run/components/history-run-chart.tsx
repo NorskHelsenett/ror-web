@@ -38,13 +38,13 @@ export const HistoryRunChart = ({ backupRuns, historySummary }: HistoryRunChartP
         try {
           const runDate = startOfDay(new Date(startTime))
           const dateKey = format(runDate, 'MMM dd')
-          const status = getBackupRunStatusLocal(run)
+          const status = getBackupRunStatusLocal(run).toLowerCase()
           const counts = dateMap.get(dateKey)
 
           if (counts) {
-            if (status === 'Succeeded' || status === 'succeeded') {
+            if (status === 'succeeded' || status === 'completed') {
               counts.successful += 1
-            } else if (status === 'Failed' || status === 'failed') {
+            } else if (status === 'failed') {
               counts.failed += 1
             }
           }
