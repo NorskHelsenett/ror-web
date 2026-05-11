@@ -67,8 +67,11 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     {
       key: 'duration',
       extractor: (item) => {
-        getBackupRunStartTime(item)
-        getBackupRunEndTime(item)
+        const start = getBackupRunStartTime(item)
+        const end = getBackupRunEndTime(item)
+        if (!start || start === 'No start time' || !end || end === 'No end time') return null
+        const ms = new Date(end).getTime() - new Date(start).getTime()
+        return isNaN(ms) ? null : ms
       },
       compareFn: (a, b) => {
         const aStart = getBackupRunStartTime(a)
@@ -87,16 +90,6 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
     },
     { key: 'expiryTime', extractor: (item) => getBackupRunExpiryTime(item) },
     { key: 'backupJobId', extractor: (item) => getBackupRunMappedBackupJobId(item) },
-    // {
-    //   key: 'duration',
-    //   extractor: (item) => {
-    //     const start = getBackupRunStartTime(item)
-    //     const end = getBackupRunEndTime(item)
-    //     if (!start || start === 'No start time' || !end || end === 'No end time') return null
-    //     const ms = new Date(end).getTime() - new Date(start).getTime()
-    //     return isNaN(ms) ? null : ms
-    //   },
-    // },
   ]
 
   const { filteredItems, resetFilters } = useFilters<BackupRun>(safeItems, filterDefinitions)
