@@ -30,6 +30,7 @@ import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
 import { HistoryRunChart } from '@/features/backup/backup-run/components/history-run-chart'
 import { useBackupRunsHistoryHydration } from '@/features/vms/backup/services/backup-runs-history-cache'
+import { get } from 'http'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -64,9 +65,39 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const definitions: SortDefinition<BackupRun>[] = [
     { key: 'source', extractor: (item) => getBackupRunSource(item) },
     { key: 'startTime', extractor: (item) => getBackupRunStartTime(item) },
-    { key: 'endTime', extractor: (item) => getBackupRunEndTime(item) },
+    {
+      key: 'duration',
+      extractor: (item) => {
+        getBackupRunStartTime(item)
+        getBackupRunEndTime(item)
+      },
+      compareFn: (a, b) => {
+        const aStart = getBackupRunStartTime(a)
+        const aEnd = getBackupRunEndTime(a)
+        const bStart = getBackupRunStartTime(b)
+        const bEnd = getBackupRunEndTime(b)
+
+        if (!aStart || !aEnd) return 1
+        if (!bStart || !bEnd) return -1
+
+        const aDuration = new Date(aEnd).getTime() - new Date(aStart).getTime()
+        const bDuration = new Date(bEnd).getTime() - new Date(bStart).getTime()
+
+        return aDuration - bDuration
+      },
+    },
     { key: 'expiryTime', extractor: (item) => getBackupRunExpiryTime(item) },
     { key: 'backupJobId', extractor: (item) => getBackupRunMappedBackupJobId(item) },
+    // {
+    //   key: 'duration',
+    //   extractor: (item) => {
+    //     const start = getBackupRunStartTime(item)
+    //     const end = getBackupRunEndTime(item)
+    //     if (!start || start === 'No start time' || !end || end === 'No end time') return null
+    //     const ms = new Date(end).getTime() - new Date(start).getTime()
+    //     return isNaN(ms) ? null : ms
+    //   },
+    // },
   ]
 
   const { filteredItems, resetFilters } = useFilters<BackupRun>(safeItems, filterDefinitions)

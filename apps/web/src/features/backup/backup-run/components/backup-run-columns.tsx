@@ -162,23 +162,32 @@ export const getBackupRunTableColumns = (): DataTableColumnDef<BackupRun>[] => {
     ),
     columnHelper.accessor(
       (row) => {
-        const backupRunStartTime = getBackupRunStartTime(row)
-        return backupRunStartTime
+        const startTime = getBackupRunStartTime(row)
+        const endTime = getBackupRunEndTime(row)
+        if (!startTime || !endTime) return null
+        const startMs = new Date(startTime).getTime()
+        const endMs = new Date(endTime).getTime()
+        if (isNaN(startMs) || isNaN(endMs)) return null
+        return endMs - startMs
       },
       {
         id: 'duration',
         header: 'Duration',
         enableSorting: true,
-        sortingFn: 'text',
+        sortingFn: (rowA, rowB, columnId) => {
+          const a = rowA.getValue<number | null>(columnId)
+          const b = rowB.getValue<number | null>(columnId)
+          if (a === null && b === null) return 0
+          if (a === null) return 1
+          if (b === null) return -1
+          return a - b
+        },
         size: 130,
         cell: (info) => {
-          const startTime = info.getValue()
-          const endTime = getBackupRunEndTime(info.row.original)
-          if (!startTime || !endTime) return React.createElement('span', { className: 'text-gray-400' }, 'N/A')
-          const startDate = new Date(startTime)
-          const endDate = new Date(endTime)
-          if (isNaN(startDate.getTime()) || isNaN(endDate.getTime()))
-            return React.createElement('span', { className: 'text-gray-400' }, 'Invalid date')
+          const durationMs = info.getValue()
+          if (durationMs === null) return React.createElement('span', { className: 'text-gray-400' }, 'N/A')
+          const startDate = new Date(getBackupRunStartTime(info.row.original)!)
+          const endDate = new Date(getBackupRunEndTime(info.row.original)!)
           const duration = formatDuration(startDate, endDate)
           return React.createElement('span', { className: 'text-md' }, duration)
         },
