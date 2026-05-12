@@ -1,13 +1,20 @@
 import { Header } from '@/components/layout/app-shell/header'
 import { DashboardSection } from '@/features/dashboard/components/dashboard-section'
 import { Notification, NotificationBox } from '@/features/dashboard/components/notification-box'
-import { OverviewItem, OverviewBox } from '@/features/dashboard/components/overview-box'
+import { OverviewBox } from '@/features/dashboard/components/overview-box'
 import { FavoritedBox } from '@/features/dashboard/components/favorited-box'
-import { ClusterListViewItemRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType, OverviewItemsViewRowType } from '@ror/js-api-client'
 import { ReactNode } from 'react'
 import { FavoritedCluster } from '@/features/dashboard/components/favorited-cluster'
+import { NotReadyMessage } from '@/components/ui/not-ready-message'
+import { getRorApi } from '@/services/ror-api'
+import { OverviewSection } from '@/features/dashboard/components/overview-section'
 
 const DashboardPage = async () => {
+  const api = await getRorApi()
+  const overviewItemsList = await api.overviewItemsView.getOverviewItems()
+  const overviewItems: OverviewItemsViewRowType[] = overviewItemsList.rows
+
   const notificationTest1: Notification = {
     title: {
       fieldValue: 'Test notification 1',
@@ -41,78 +48,6 @@ const DashboardPage = async () => {
     },
     criticality: {
       fieldValue: 'positive',
-    },
-  }
-
-  const overviewTest1: OverviewItem = {
-    title: {
-      fieldValue: 'Clusters',
-    },
-    greenItemTitle: {
-      fieldValue: 'Green item title 1',
-    },
-    greenItemNumber: {
-      fieldValue: 1,
-    },
-    yellowItemTitle: {
-      fieldValue: 'Yellow item title 1',
-    },
-    yellowItemNumber: {
-      fieldValue: 11,
-    },
-    redItemTitle: {
-      fieldValue: 'Red item title 1',
-    },
-    redItemNumber: {
-      fieldValue: 111,
-    },
-  }
-
-  const overviewTest2: OverviewItem = {
-    title: {
-      fieldValue: 'VMs',
-    },
-    greenItemTitle: {
-      fieldValue: 'Green item title 2',
-    },
-    greenItemNumber: {
-      fieldValue: 2,
-    },
-    yellowItemTitle: {
-      fieldValue: 'Yellow item title 2',
-    },
-    yellowItemNumber: {
-      fieldValue: 22,
-    },
-    redItemTitle: {
-      fieldValue: 'Red item title 2',
-    },
-    redItemNumber: {
-      fieldValue: 222,
-    },
-  }
-
-  const overviewTest3: OverviewItem = {
-    title: {
-      fieldValue: 'Vulnerabilities',
-    },
-    greenItemTitle: {
-      fieldValue: 'Green item title 3',
-    },
-    greenItemNumber: {
-      fieldValue: 3,
-    },
-    yellowItemTitle: {
-      fieldValue: 'Yellow item title 3',
-    },
-    yellowItemNumber: {
-      fieldValue: 33,
-    },
-    redItemTitle: {
-      fieldValue: 'Red item title 3',
-    },
-    redItemNumber: {
-      fieldValue: 333,
     },
   }
 
@@ -392,67 +327,104 @@ const DashboardPage = async () => {
     },
   }
 
-  const notifications: ReactNode[] = [
-    <NotificationBox key={1} notification={notificationTest1} />,
-    <NotificationBox key={2} notification={notificationTest2} />,
-    <NotificationBox key={3} notification={notificationTest3} />,
+  const notifications: { nodeId: string; node: ReactNode }[] = [
+    { nodeId: '1', node: <NotificationBox key={1} notification={notificationTest1} /> },
+    { nodeId: '2', node: <NotificationBox key={2} notification={notificationTest2} /> },
+    { nodeId: '3', node: <NotificationBox key={3} notification={notificationTest3} /> },
   ]
-  const overviewItems: ReactNode[] = [
-    <OverviewBox key={1} item={overviewTest1} />,
-    <OverviewBox key={2} item={overviewTest2} />,
-    <OverviewBox key={3} item={overviewTest3} />,
-  ]
-  const favoritedItems: ReactNode[] = [
-    <FavoritedBox
-      key={1}
-      title={favorited1.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited1.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited1} />
-    </FavoritedBox>,
-    <FavoritedBox
-      key={2}
-      title={favorited2.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited2.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited2} />
-    </FavoritedBox>,
-    <FavoritedBox
-      key={3}
-      title={favorited3.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited3.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited3} />
-    </FavoritedBox>,
-    <FavoritedBox
-      key={4}
-      title={favorited1.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited1.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited1} />
-    </FavoritedBox>,
-    <FavoritedBox
-      key={5}
-      title={favorited2.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited2.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited2} />
-    </FavoritedBox>,
-    <FavoritedBox
-      key={6}
-      title={favorited3.clusterName?.fieldValue || 'Unknown cluster'}
-      isError={favorited3.status?.fieldValue === 'error'}
-    >
-      <FavoritedCluster cluster={favorited3} />
-    </FavoritedBox>,
+
+  const mappedOverviewItems: { nodeId: string; node: ReactNode }[] = overviewItems.map((item) => ({
+    nodeId: item.itemUid.fieldValue,
+    nodeTitle: item.itemName.fieldValue ?? undefined,
+    node: <OverviewBox key={item.itemUid.fieldValue} item={item} />,
+  }))
+
+  const favoritedItems: { nodeId: string; node: ReactNode }[] = [
+    {
+      nodeId: '7',
+      node: (
+        <FavoritedBox
+          key={1}
+          title={favorited1.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited1.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited1} />
+        </FavoritedBox>
+      ),
+    },
+    {
+      nodeId: '8',
+      node: (
+        <FavoritedBox
+          key={2}
+          title={favorited2.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited2.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited2} />
+        </FavoritedBox>
+      ),
+    },
+    {
+      nodeId: '9',
+      node: (
+        <FavoritedBox
+          key={3}
+          title={favorited3.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited3.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited3} />
+        </FavoritedBox>
+      ),
+    },
+    {
+      nodeId: '10',
+      node: (
+        <FavoritedBox
+          key={4}
+          title={favorited1.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited1.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited1} />
+        </FavoritedBox>
+      ),
+    },
+    {
+      nodeId: '11',
+      node: (
+        <FavoritedBox
+          key={5}
+          title={favorited2.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited2.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited2} />
+        </FavoritedBox>
+      ),
+    },
+    {
+      nodeId: '12',
+      node: (
+        <FavoritedBox
+          key={6}
+          title={favorited3.clusterName?.fieldValue || 'Unknown cluster'}
+          isError={favorited3.status?.fieldValue === 'error'}
+        >
+          <FavoritedCluster cluster={favorited3} />
+        </FavoritedBox>
+      ),
+    },
   ]
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='My Dashboard' />
       <div className='mx-6 my-8'>
+        <NotReadyMessage removable={false}>
+          This page is still under construction. Currently the data is saved locally in the browser. This means that if
+          you clear the cache of the site, your overview items will be set back to standard and favorited items will be
+          erased.
+        </NotReadyMessage>
         <DashboardSection title='Notifications' items={notifications} />
-        <DashboardSection title='Overview' items={overviewItems} />
+        <OverviewSection allItems={overviewItems} />
         <DashboardSection title='Clusters' items={favoritedItems} />
         <DashboardSection title='VMs' />
       </div>
