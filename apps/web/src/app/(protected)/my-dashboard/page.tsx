@@ -1,7 +1,6 @@
 import { Header } from '@/components/layout/app-shell/header'
 import { DashboardSection } from '@/features/dashboard/components/dashboard-section'
 import { Notification, NotificationBox } from '@/features/dashboard/components/notification-box'
-import { OverviewBox } from '@/features/dashboard/components/overview-box'
 import { FavoritedBox } from '@/features/dashboard/components/favorited-box'
 import { ClusterListViewItemRowType, OverviewItemsViewRowType } from '@ror/js-api-client'
 import { ReactNode } from 'react'
@@ -332,12 +331,6 @@ const DashboardPage = async () => {
     { nodeId: '2', node: <NotificationBox key={2} notification={notificationTest2} /> },
     { nodeId: '3', node: <NotificationBox key={3} notification={notificationTest3} /> },
   ]
-
-  const mappedOverviewItems: { nodeId: string; node: ReactNode }[] = overviewItems.map((item) => ({
-    nodeId: item.itemUid.fieldValue,
-    nodeTitle: item.itemName.fieldValue ?? undefined,
-    node: <OverviewBox key={item.itemUid.fieldValue} item={item} />,
-  }))
 
   const favoritedItems: { nodeId: string; node: ReactNode }[] = [
     {
