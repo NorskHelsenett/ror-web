@@ -49,8 +49,8 @@ async function VMsContent({ params }: { params: NormalizeParamsResult }) {
 
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, params),
-    fetchBackupJobs(api, { page: 1, limit: 400, order: 'asc' }).catch(() => ({ backupJobs: [] })),
-    fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
+    fetchBackupJobs(api, { page: 1, limit: 1, order: 'asc' }).catch(() => ({ backupJobs: [] })),
+    fetchBackupRuns(api, { page: 1, limit: 1, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
   const vms = fetchedVms.vms
