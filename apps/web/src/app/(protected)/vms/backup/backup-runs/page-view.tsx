@@ -140,7 +140,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
-  const historySummary = useBackupRunsHistoryHydration(backupRuns)
+  const historySummary = useBackupRunsHistoryHydration()
 
   const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
 

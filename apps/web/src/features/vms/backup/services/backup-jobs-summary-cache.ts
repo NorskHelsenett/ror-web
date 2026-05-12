@@ -40,7 +40,7 @@ const summarizeBackupJobs = (jobs: BackupJob[]): BackupJobsSummary => {
   return toSummaryWithRatios({ totalJobs, activeJobs, pausedJobs, inactiveJobs })
 }
 
-export const useBackupJobsSummaryHydration = (_initialJobs: BackupJob[]) => {
+export const useBackupJobsSummaryHydration = () => {
   const { jobs } = useGlobalBackupJobs()
 
   return useMemo(() => summarizeBackupJobs(jobs), [jobs])

@@ -75,7 +75,7 @@ const readHistoryFromStorage = (): BackupRunsHistoryPoint[] | null => {
   }
 }
 
-export const useBackupRunsHistoryHydration = (_initialRuns: BackupRun[]) => {
+export const useBackupRunsHistoryHydration = () => {
   const { runs, isLoading } = useGlobalBackupRuns()
   const persistedRef = useRef(false)
 
