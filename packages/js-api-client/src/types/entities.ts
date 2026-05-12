@@ -35,6 +35,7 @@ import { VirtualMachineVulnerabilityInfo, CVE } from '../schemas/vm-vulnerabilit
 // import type { ClusterListViewSchema } from '../schemas/views/clusterlist'
 import { ClusterListViewRow, ClusterListViewSchema } from '../schemas/views/clusterlist'
 import type { ClusterListItemViewRow, ClusterListItemViewSchema } from '../schemas/views/clusterlistitem'
+import type { OverviewItemsViewRow, OverviewItemsViewSchema } from '../schemas/views/overviewitems'
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
@@ -96,3 +97,6 @@ export type ClusterListView = z.infer<typeof ClusterListViewSchema>
 export type ClusterListViewRowType = z.infer<typeof ClusterListViewRow>
 export type ClusterListItemView = z.infer<typeof ClusterListItemViewSchema>
 export type ClusterListViewItemRowType = z.infer<typeof ClusterListItemViewRow>
+
+export type OverviewItemsView = z.infer<typeof OverviewItemsViewSchema>
+export type OverviewItemsViewRowType = z.infer<typeof OverviewItemsViewRow>
