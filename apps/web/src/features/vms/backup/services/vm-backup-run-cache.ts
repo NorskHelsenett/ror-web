@@ -1,7 +1,9 @@
-// FILE OVERVIEW:
+//FILE OVERVIEW:
 // ------------------------
-// This file defines a custom React hook `useBackupInfoHydration` that manages the hydration of backup information for virtual machines (VMs) in a web application.
-// The hook retrieves cached backup information from local storage, identifies VMs that require backup information hydration, and fetches the necessary backup run data to update the cache and provide a more complete backup status for each VM.
+// Find the last backupRun for each VM to display on the backupCard status
+// Looks at the realted jobs in the backupJobs backupRunIds, resolves those again the global backupRun cache. Stores this in a compact cache as a compact per-VM results
+// If the global backupRun cache doesn't have the runId, then it will fetch those specific runs from the API (POST /api/vm-backup-runs) and update the cache with the results.
+// This avoids fetching all backupRuns when we just need a few specific ones.
 
 import {
   type LastBackupInfo,
@@ -12,9 +14,10 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { getVmExternalId } from '@/features/vms/utils/vms'
 import type { BackupRun, VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '../utils/map-backup-to-vm'
+import { findGlobalBackupRunById } from '@/features/backup/cache/global-backup-runs-cache'
 
-export const vmBackupUpCacheKey = 'vm-last-backup-info'
-export const vmBackupUpCacheTTL = 6 * 60 * 60 * 1000
+export const vmBackupRunCacheKey = 'vm-backup-run-info'
+export const vmBackupRunCacheTTL = 6 * 60 * 60 * 1000
 export const vmBackupRunBatchSize = 200
 export const runIdsPerJob = 3
 
@@ -25,14 +28,14 @@ type HydratableVm = VirtualMachine | VMWithBackupStatus
 
 const hasBackupStatus = (item: HydratableVm): item is VMWithBackupStatus => 'backupStatus' in item
 
-export const useBackupInfoHydration = (items: HydratableVm[]) => {
+export const useBackupRunInfoHydration = (items: HydratableVm[]) => {
   const [hydratedBackupInfoByVmId, setHydratedBackupInfoByVmId] = useState<BackupInfoCacheMap>({})
   const requestedRunIdsRef = useRef<Set<string>>(new Set())
   const hydrateInFlightRef = useRef(false)
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(vmBackupUpCacheKey)
+      const raw = localStorage.getItem(vmBackupRunCacheKey)
       if (!raw) return
 
       const parsed = JSON.parse(raw) as BackupInfoCacheMap
@@ -40,7 +43,7 @@ export const useBackupInfoHydration = (items: HydratableVm[]) => {
       const next: BackupInfoCacheMap = {}
 
       for (const [vmExternalId, entry] of Object.entries(parsed)) {
-        if (entry?.cachedAt && now - entry.cachedAt < vmBackupUpCacheTTL) {
+        if (entry?.cachedAt && now - entry.cachedAt < vmBackupRunCacheTTL) {
           next[vmExternalId] = entry
         }
       }
@@ -124,7 +127,58 @@ export const useBackupInfoHydration = (items: HydratableVm[]) => {
 
     if (!candidateRunIds.length || !vmCandidateRunIds.size) return
 
-    const runIdsBatch = candidateRunIds.slice(0, vmBackupRunBatchSize)
+    const globalUpdates: BackupInfoCacheMap = {}
+    const now = Date.now()
+    const runIdsNeedingApiFetch: string[] = []
+
+    for (const runId of candidateRunIds) {
+      const globalRun = findGlobalBackupRunById(runId)
+      if (!globalRun) {
+        runIdsNeedingApiFetch.push(runId)
+      }
+    }
+
+    for (const [vmExternalId, runIdSet] of vmCandidateRunIds.entries()) {
+      let latestBackupInfo: LastBackupInfo | null = null
+      let latestTs = 0
+
+      for (const runId of runIdSet) {
+        const run = findGlobalBackupRunById(runId)
+        if (!run) continue
+
+        const targets = getBackupRunActiveTargets(run)
+        if (!targets.some((t) => t.externalId === vmExternalId)) continue
+
+        const info = getBackupRunInfo(run)
+        if (!info.startTime) continue
+
+        const ts = Date.parse(info.startTime)
+        if (!Number.isFinite(ts) || ts < latestTs) continue
+
+        latestTs = ts
+        latestBackupInfo = { startTime: info.startTime, endTime: info.endTime, expiryTime: info.expiryTime }
+      }
+
+      if (latestBackupInfo) {
+        globalUpdates[vmExternalId] = { ...latestBackupInfo, cachedAt: now }
+      }
+    }
+
+    if (Object.keys(globalUpdates).length > 0) {
+      setHydratedBackupInfoByVmId((prev) => {
+        const next = { ...prev, ...globalUpdates }
+        try {
+          localStorage.setItem(vmBackupRunCacheKey, JSON.stringify(next))
+        } catch {
+          // Ignore storage quota/write errors.
+        }
+        return next
+      })
+    }
+
+    const runIdsBatch = runIdsNeedingApiFetch.slice(0, vmBackupRunBatchSize)
+    if (!runIdsBatch.length) return
+
     for (const runId of runIdsBatch) {
       requestedRunIdsRef.current.add(runId)
     }
@@ -145,10 +199,12 @@ export const useBackupInfoHydration = (items: HydratableVm[]) => {
         const fetchedRuns = payload.backupRuns ?? []
         if (!fetchedRuns.length) return
 
-        const now = Date.now()
+        const fetchNow = Date.now()
         const updates: BackupInfoCacheMap = {}
 
         for (const [vmExternalId, runIdSet] of vmCandidateRunIds.entries()) {
+          if (globalUpdates[vmExternalId]) continue // already resolved from global cache
+
           let latestBackupInfo: LastBackupInfo | null = null
           let latestTs = 0
 
@@ -177,7 +233,7 @@ export const useBackupInfoHydration = (items: HydratableVm[]) => {
           if (latestBackupInfo) {
             updates[vmExternalId] = {
               ...latestBackupInfo,
-              cachedAt: now,
+              cachedAt: fetchNow,
             }
           }
         }
@@ -187,7 +243,7 @@ export const useBackupInfoHydration = (items: HydratableVm[]) => {
         setHydratedBackupInfoByVmId((prev) => {
           const next = { ...prev, ...updates }
           try {
-            localStorage.setItem(vmBackupUpCacheKey, JSON.stringify(next))
+            localStorage.setItem(vmBackupRunCacheKey, JSON.stringify(next))
           } catch {
             // Ignore storage quota/write errors.
           }

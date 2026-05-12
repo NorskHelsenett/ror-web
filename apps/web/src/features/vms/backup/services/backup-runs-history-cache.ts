@@ -1,12 +1,20 @@
-import { loadMoreBackupRuns } from '@/utils/backup-run-actions'
+// FILE OVERVIEW:
+// ------------------------
+// Thin wrapper around the global BackupRuns cache.
+// Derives a 30-day run history (BackupRunsHistoryPoint[]) from the shared run list —
+// no independent fetch is started. All fetching lives in global-backup-runs-cache.ts.
+//
+// A localStorage warm-start entry is still written so the chart renders immediately
+// on the next hard refresh, before the global cache re-populates.
+
 import type { BackupRun } from '@ror/js-api-client'
 import { format, startOfDay, subDays } from 'date-fns'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
+import { useGlobalBackupRuns } from '@/features/backup/cache/global-backup-runs-cache'
+import { useState } from 'react'
 
 export const backupRunsHistoryCacheKey = 'backup-runs-history-summary'
 export const backupRunsHistoryCacheTTL = 30 * 60 * 1000
-export const backupRunsHistoryBatchSize = 200
-export const backupRunsHistoryMaxPages = 100
 
 export type BackupRunsHistoryPoint = {
   date: string
@@ -50,82 +58,46 @@ const summarizeRunsToHistory = (runs: BackupRun[]): BackupRunsHistoryPoint[] => 
 
   return getDefaultHistory().map((point) => {
     const entry = map.get(point.date) ?? { successful: 0, failed: 0 }
-    return {
-      date: point.date,
-      successful: entry.successful,
-      failed: entry.failed,
-    }
+    return { date: point.date, successful: entry.successful, failed: entry.failed }
   })
 }
 
-export const useBackupRunsHistoryHydration = (initialRuns: BackupRun[]) => {
-  const [historySummary, setHistorySummary] = useState<BackupRunsHistoryPoint[]>(() =>
-    summarizeRunsToHistory(initialRuns)
-  )
-  const hydrationStartedRef = useRef(false)
+const readHistoryFromStorage = (): BackupRunsHistoryPoint[] | null => {
+  try {
+    const raw = localStorage.getItem(backupRunsHistoryCacheKey)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as { points?: BackupRunsHistoryPoint[]; cachedAt?: number }
+    if (!parsed?.cachedAt || Date.now() - parsed.cachedAt > backupRunsHistoryCacheTTL) return null
+    if (!parsed.points || !Array.isArray(parsed.points)) return null
+    return parsed.points
+  } catch {
+    return null
+  }
+}
 
+export const useBackupRunsHistoryHydration = (_initialRuns: BackupRun[]) => {
+  const { runs, isLoading } = useGlobalBackupRuns()
+  const persistedRef = useRef(false)
+
+  // Warm start: read localStorage cache synchronously on first render
+  const [storedHistory] = useState<BackupRunsHistoryPoint[] | null>(() => readHistoryFromStorage())
+
+  // Derive history from global runs whenever they update
+  const derivedHistory = useMemo(() => summarizeRunsToHistory(runs), [runs])
+
+  // Use derived history once we have real data; fall back to stored history
+  const historySummary = runs.length > 0 ? derivedHistory : (storedHistory ?? getDefaultHistory())
+
+  // Persist the derived history to localStorage once the global fetch completes
   useEffect(() => {
+    if (isLoading || persistedRef.current || runs.length === 0) return
+    persistedRef.current = true
     try {
-      const raw = localStorage.getItem(backupRunsHistoryCacheKey)
-      if (!raw) return
-
-      const parsed = JSON.parse(raw) as { points?: BackupRunsHistoryPoint[]; cachedAt?: number }
-      if (!parsed?.cachedAt || Date.now() - parsed.cachedAt > backupRunsHistoryCacheTTL) return
-      if (!parsed.points || !Array.isArray(parsed.points)) return
-
-      setHistorySummary(parsed.points)
+      localStorage.setItem(backupRunsHistoryCacheKey, JSON.stringify({ points: derivedHistory, cachedAt: Date.now() }))
     } catch {
-      // Ignore invalid cache payload.
+      // Ignore storage quota/write errors.
     }
-  }, [])
-
-  useEffect(() => {
-    if (hydrationStartedRef.current) return
-    hydrationStartedRef.current = true
-
-    let cancelled = false
-
-    const hydrateHistory = async () => {
-      const allRuns: BackupRun[] = []
-
-      for (let page = 0; page < backupRunsHistoryMaxPages && !cancelled; page++) {
-        const offset = page * backupRunsHistoryBatchSize
-        const res = await loadMoreBackupRuns({
-          offset,
-          limit: backupRunsHistoryBatchSize,
-          order: 'desc',
-        })
-
-        const pageItems = res.items ?? []
-        if (!pageItems.length) break
-
-        allRuns.push(...pageItems)
-        setHistorySummary(summarizeRunsToHistory(allRuns))
-
-        if (!res.hasMore || pageItems.length < backupRunsHistoryBatchSize) break
-      }
-
-      if (!cancelled) {
-        try {
-          localStorage.setItem(
-            backupRunsHistoryCacheKey,
-            JSON.stringify({
-              points: summarizeRunsToHistory(allRuns),
-              cachedAt: Date.now(),
-            })
-          )
-        } catch {
-          // Ignore storage quota/write errors.
-        }
-      }
-    }
-
-    void hydrateHistory()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  }, [isLoading, runs.length, derivedHistory])
 
   return historySummary
 }
