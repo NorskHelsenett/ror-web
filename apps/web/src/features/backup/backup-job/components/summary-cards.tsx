@@ -5,7 +5,7 @@ import {
   HealthCardHeader,
   HealthCardIcon,
   HealthCardTitle,
-} from '@/components/ui/health-card'
+} from '@/features/backup/backup-job/components/health-card'
 
 export interface SummaryCardsProps {
   totalJobs: number
