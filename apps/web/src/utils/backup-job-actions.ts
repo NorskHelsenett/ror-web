@@ -1,8 +1,9 @@
 'use server'
 
 import { getRorApi } from '@/services/ror-api'
-import type { BackupJob } from '@ror/js-api-client'
+import type { BackupJob, BackupRun } from '@ror/js-api-client'
 import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
+import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-backupRuns-for-jobs'
 
 type LoadMoreOpts = {
   offset: number
@@ -36,4 +37,9 @@ export async function loadMoreBackupJobs({ offset, limit, sort, order, search, s
     hasMore: backupJobs.length === limit,
     nextOffset: backupJobs.length === limit ? offset + limit : null,
   }
+}
+
+export async function loadBackupRunsForJobs(jobs: BackupJob[]): Promise<BackupRun[]> {
+  const api = await getRorApi()
+  return fetchBackupRunsForJobs(api, jobs)
 }

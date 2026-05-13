@@ -62,6 +62,10 @@ export const getBackupRunExpiryTime = (backupRun: BackupRun) => {
   return backupRun?.backuprun?.status?.expiryTime ?? 'No expiry time'
 }
 
+export const getBackupRunStatusLocal = (backupRun: BackupRun) => {
+  return backupRun?.backuprun?.status?.backupDestinations?.[0]?.status ?? 'Unknown'
+}
+
 export const getBackupRunMappedBackupJobId = (backupRun: BackupRun) => {
   return backupRun?.backuprun?.status?.backupJobId ?? 'No mapped BackupJob ID'
 }
@@ -94,12 +98,14 @@ export const getBackupRunActiveTargets = (backupRun: BackupRun): BackupActiveTar
       uuid: target?.source?.uuid ?? '',
       type: target?.source?.type ?? '',
     },
+    size: {
+      unit: target?.size?.unit ?? 'bytes',
+      sourceSize: target?.size?.sourceSize ?? 0,
+      logicalSize: target?.size?.logicalSize ?? 0,
+      physicalSize: target?.size?.physicalSize ?? 0,
+    },
   }))
 }
-
-// export const getBackupRunExternalId = (backupActiveTarget: BackupActiveTarget) => {
-//   return backupActiveTarget?.externalId ?? 'No backupRun External ID'
-// }
 
 export const getBackupRunInfo = (backupRun: BackupRun) => {
   const storage = backupRun?.backuprun?.status?.backupStorage

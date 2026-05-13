@@ -6,9 +6,10 @@
  * It handles authentication, data fetching, and rendering of the page layout.
  */
 
+import { Suspense } from 'react'
 import PageView from './page-view'
 import { Header } from '@/components/layout/app-shell/header'
-import { normalizeParams } from '@/features/vms/utils/normalize-params'
+import { normalizeParams, type NormalizeParamsResult } from '@/features/vms/utils/normalize-params'
 import { fetchVms } from '@/features/vms/services/fetch-vms'
 import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs'
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
@@ -16,6 +17,7 @@ import { fetchBackupRunsForJobs } from '@/features/vms/backup/services/fetch-bac
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
+import { Loader } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'ROR - VM',
@@ -29,14 +31,25 @@ export default async function VMPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }) {
-  const api = await getRorApi()
-
   const sp = await searchParams
   const params = normalizeParams(sp)
 
+  return (
+    <div className='w-full flex flex-col'>
+      <Header title='Virtual machines' />
+      <Suspense fallback={<VMsPageSkeleton />}>
+        <VMsContent params={params} />
+      </Suspense>
+    </div>
+  )
+}
+
+async function VMsContent({ params }: { params: NormalizeParamsResult }) {
+  const api = await getRorApi()
+
   const [fetchedVms, fetchedBackupJobs, fetchedBackupRuns] = await Promise.all([
     fetchVms(api, params),
-    fetchBackupJobs(api, params).catch(() => ({ backupJobs: [] })),
+    fetchBackupJobs(api, { page: 1, limit: 400, order: 'asc' }).catch(() => ({ backupJobs: [] })),
     fetchBackupRuns(api, { page: 1, limit: 500, order: 'desc' }).catch(() => ({ backupRuns: [] })),
   ])
 
@@ -64,10 +77,14 @@ export default async function VMPage({
 
   const vmsWithBackup = mapBackupToVM(vms, backupJobs, mergedBackupRuns)
 
+  return <PageView vms={vmsWithBackup} params={params} />
+}
+
+function VMsPageSkeleton() {
   return (
-    <div className='w-full flex flex-col'>
-      <Header title='Virtual machines' />
-      <PageView vms={vmsWithBackup} params={params} />
+    <div className='flex flex-col items-center justify-center flex-1 min-h-[60vh] gap-3'>
+      <Loader className='h-6 w-6 animate-spin text-muted-foreground' />
+      <span className='text-sm text-muted-foreground'>Loading virtual machines...</span>
     </div>
   )
 }

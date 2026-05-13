@@ -59,7 +59,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-1',
+                name: 'mtrd3-posl-1',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
                 source: {
@@ -70,7 +70,106 @@ export const mockBackupJobs = {
                 },
               },
               {
-                name: 'Mock-Virtual-machine-5',
+                name: 'mtrd3-posl-2',
+                id: '2535',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-3',
+                id: '2555',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-4',
+                id: '2575',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-5',
+                id: '2595',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-6',
+                id: '2615',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-7',
+                id: '2635',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-8',
+                id: '2655',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-9',
+                id: '2675',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'mtrd3-posl-10',
+                id: '2695',
+                externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
+                source: {
+                  name: 'm-trd-vcenter-02.drift.nhn.no',
+                  id: '193',
+                  uuid: '3acf4419-4708-4869-b7a5-28edc591fe2a',
+                  type: 'kVCenter',
+                },
+              },
+              {
+                name: 'trd1-dc-nam-01-intern-5',
                 id: '2606',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a35',
                 source: {
@@ -83,7 +182,7 @@ export const mockBackupJobs = {
             ],
             indirectBackupTargets: null,
           },
-          location: 'TRD1',
+          location: '',
           policyName: 'Optimal-1M',
           backupRunIds: [
             '11158793:1762777612377235',
@@ -92,6 +191,7 @@ export const mockBackupJobs = {
             '11158793:1762734406722623',
             '11158793:1762720011313147',
             '11158793:1762763214507512',
+            '11158793:1762763214507999',
           ],
         },
         spec: {
@@ -125,7 +225,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-1m-test-backup',
-            status: 'paused',
+            status: 'active',
             policyId: '4923908281402464:1614676439887:3154',
             schedules: [
               {
@@ -147,7 +247,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-20',
+                name: 'trd1-dc-nam-01-intern-5',
                 id: '2718',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a320',
                 source: {
@@ -195,7 +295,7 @@ export const mockBackupJobs = {
         status: {
           resourceBackupJobSpec: {
             name: 'tr1-vs-nhn-12h-single-vm',
-            status: 'deleted',
+            status: 'active',
             policyId: '4923908281402464:1614676439887:3155',
             schedules: [
               {
@@ -217,7 +317,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-1',
+                name: 'mtrd3-posl-1',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a31',
                 source: {
@@ -287,7 +387,7 @@ export const mockBackupJobs = {
             ],
             activeTargets: [
               {
-                name: 'Mock-Virtual-machine-8',
+                name: 'trd1-dc-nam-01-intern-8',
                 id: '2515',
                 externalId: '501425ca-4dd7-1950-f259-3e53d087a38',
                 source: {
