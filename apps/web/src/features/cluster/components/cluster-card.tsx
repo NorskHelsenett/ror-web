@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { Dot } from 'lucide-react'
+import { Dot, Star } from 'lucide-react'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
@@ -43,6 +43,7 @@ import { useRouter } from 'next/navigation'
 import { ResourceBar } from './resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
+import { FavoriteStar, StarCircle } from '@/components/ui/favorite-star'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -191,17 +192,24 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
         }
       }}
     >
-      <CardHeader className='m-0 mb-7 p-0 w-full'>
-        <CardTitle className={cn('text-2xl rounded-t-xl px-6 py-2 flex', envColor[0], envColor[1])}>
-          {(clusterName || 'Unnamed Cluster') as string}
-        </CardTitle>
-        <HealthCircle className='ml-auto mr-4 -mt-6 w-13 h-13 ' healthCondition={healthCondition} />
+      <CardHeader
+        className={cn(
+          'h-15 pl-6 pr-2 py-2 m-0 mb-7 w-full flex justify-between items-center rounded-t-xl',
+          envColor[0],
+          envColor[1]
+        )}
+      >
+        <CardTitle className='text-xl'>{(clusterName || 'Unnamed Cluster') as string}</CardTitle>
+        <div className='flex justify-end gap-2'>
+          <HealthCircle className='w-11 h-11' healthCondition={healthCondition} />
+          <FavoriteStar className='w-11 h-11' favorited />
+        </div>
       </CardHeader>
 
       <CardContent className='text-sm flex flex-col gap-3'>
         {basicItems.length > 0 && (
           <>
-            <section className='flex items-center gap-2'>
+            <section className='flex items-center gap-1'>
               {basicItems.map((item, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && <Dot />}
