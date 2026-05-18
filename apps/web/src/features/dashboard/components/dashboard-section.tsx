@@ -43,8 +43,8 @@ export const DashboardSection = ({
       </div>
       <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
         {items?.length
-          ? items.map((item, i) => (
-              <div key={i} className='relative'>
+          ? items.map((item) => (
+              <div key={item.nodeId} className='relative'>
                 {item.node}
                 {isEditing && item.nodeTitle && onRemove && (
                   <button

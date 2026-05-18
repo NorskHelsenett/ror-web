@@ -3,14 +3,14 @@ import { ViewElementString, ViewElementNumber, ViewColumn } from './types'
 
 export const OverviewItemsViewRow = z
   .object({
-    itemUid: ViewElementString,
-    itemName: ViewElementString,
-    greenTitle: ViewElementString,
-    greenNumber: ViewElementNumber,
-    yellowTitle: ViewElementString,
-    yellowNumber: ViewElementNumber,
-    redTitle: ViewElementString,
-    redNumber: ViewElementNumber,
+    itemUid: ViewElementString.nullish(),
+    itemName: ViewElementString.nullish(),
+    greenTitle: ViewElementString.nullish(),
+    greenNumber: ViewElementNumber.nullish(),
+    yellowTitle: ViewElementString.nullish(),
+    yellowNumber: ViewElementNumber.nullish(),
+    redTitle: ViewElementString.nullish(),
+    redNumber: ViewElementNumber.nullish(),
   })
   .loose()
 
