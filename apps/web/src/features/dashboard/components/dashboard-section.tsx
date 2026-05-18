@@ -48,10 +48,12 @@ export const DashboardSection = ({
                 {item.node}
                 {isEditing && item.nodeTitle && onRemove && (
                   <button
+                    type='button'
+                    aria-label='Remove'
                     className='absolute top-2 right-2 z-10 flex items-center justify-center'
                     onClick={() => onRemove(item.nodeTitle as OverviewItem)}
                   >
-                    <X className='size-5 text-white' aria-label="Remove" type="button" />
+                    <X className='size-5 text-white' />
                   </button>
                 )}
               </div>
