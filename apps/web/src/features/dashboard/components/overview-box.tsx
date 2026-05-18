@@ -19,17 +19,21 @@ const BoxRow = ({ color, title, value }: { color: keyof typeof colorMap; title: 
 }
 
 export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => (
-  <DashboardBox title={item.itemName.fieldValue || 'Name missing'} className='flex flex-col gap-1' half>
+  <DashboardBox title={item.itemName?.fieldValue ?? 'Name missing'} className='flex flex-col gap-1' half>
     <BoxRow
       color={'green'}
-      title={item.greenTitle.fieldValue || 'Title missing'}
-      value={item.greenNumber.fieldValue || 0}
+      title={item.greenTitle?.fieldValue ?? 'Title missing'}
+      value={item.greenNumber?.fieldValue ?? 0}
     />
     <BoxRow
       color={'yellow'}
-      title={item.yellowTitle.fieldValue || 'Title missing'}
-      value={item.yellowNumber.fieldValue || 0}
+      title={item.yellowTitle?.fieldValue ?? 'Title missing'}
+      value={item.yellowNumber?.fieldValue ?? 0}
     />
-    <BoxRow color={'red'} title={item.redTitle.fieldValue || 'Title missing'} value={item.redNumber.fieldValue || 0} />
+    <BoxRow
+      color={'red'}
+      title={item.redTitle?.fieldValue ?? 'Title missing'}
+      value={item.redNumber?.fieldValue ?? 0}
+    />
   </DashboardBox>
 )

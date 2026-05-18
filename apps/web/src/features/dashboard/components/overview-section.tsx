@@ -34,12 +34,12 @@ export const OverviewSection = ({ allItems }: OverviewSectionProps) => {
 
   const items = allItems
     .filter(
-      (item) => item.itemUid.fieldValue != null && visibleItems.includes(item.itemName.fieldValue as OverviewItem)
+      (item) => item.itemUid?.fieldValue != null && visibleItems.includes(item.itemName.fieldValue as OverviewItem)
     )
     .map((item) => ({
-      nodeId: item.itemUid.fieldValue as string,
+      nodeId: item.itemUid?.fieldValue as string,
       nodeTitle: item.itemName.fieldValue ?? undefined,
-      node: <OverviewBox key={item.itemUid.fieldValue} item={item} />,
+      node: <OverviewBox key={item.itemUid?.fieldValue} item={item} />,
     }))
 
   const addSlot =
