@@ -51,7 +51,7 @@ export const DashboardSection = ({
                     className='absolute top-2 right-2 z-10 flex items-center justify-center'
                     onClick={() => onRemove(item.nodeTitle as OverviewItem)}
                   >
-                    <X className='size-5 text-white' />
+                    <X className='size-5 text-white' aria-label="Remove" type="button" />
                   </button>
                 )}
               </div>
