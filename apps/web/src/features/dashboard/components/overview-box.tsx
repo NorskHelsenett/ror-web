@@ -1,15 +1,6 @@
+import { OverviewItemsViewRowType } from '@ror/js-api-client'
 import { DashboardBox } from './dashboard-box'
 import { cn } from '@/utils/clsxm'
-
-export interface OverviewItem {
-  title: { fieldValue: string }
-  greenItemTitle: { fieldValue: string }
-  greenItemNumber: { fieldValue: number }
-  yellowItemTitle: { fieldValue: string }
-  yellowItemNumber: { fieldValue: number }
-  redItemTitle: { fieldValue: string }
-  redItemNumber: { fieldValue: number }
-}
 
 const colorMap = {
   green: { bg: 'bg-green-600', text: 'text-green-900', border: 'border-green-900' },
@@ -22,15 +13,27 @@ const BoxRow = ({ color, title, value }: { color: keyof typeof colorMap; title: 
   return (
     <div className='flex justify-between'>
       <span>{title}</span>
-      <span className={cn(cm.bg, cm.text, cm.border, 'border w-10 text-center rounded-md')}>{value}</span>
+      <span className={cn(cm.bg, cm.text, cm.border, 'border px-1 min-w-10 text-center rounded-md')}>{value}</span>
     </div>
   )
 }
 
-export const OverviewBox = ({ item }: { item: OverviewItem }) => (
-  <DashboardBox title={item.title.fieldValue} className='flex flex-col gap-1' half>
-    <BoxRow color={'green'} title={item.greenItemTitle.fieldValue} value={item.greenItemNumber.fieldValue} />
-    <BoxRow color={'yellow'} title={item.yellowItemTitle.fieldValue} value={item.yellowItemNumber.fieldValue} />
-    <BoxRow color={'red'} title={item.redItemTitle.fieldValue} value={item.redItemNumber.fieldValue} />
+export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => (
+  <DashboardBox title={item.itemName?.fieldValue ?? 'Name missing'} className='flex flex-col gap-1' half>
+    <BoxRow
+      color={'green'}
+      title={item.greenTitle?.fieldValue ?? 'Title missing'}
+      value={item.greenNumber?.fieldValue ?? 0}
+    />
+    <BoxRow
+      color={'yellow'}
+      title={item.yellowTitle?.fieldValue ?? 'Title missing'}
+      value={item.yellowNumber?.fieldValue ?? 0}
+    />
+    <BoxRow
+      color={'red'}
+      title={item.redTitle?.fieldValue ?? 'Title missing'}
+      value={item.redNumber?.fieldValue ?? 0}
+    />
   </DashboardBox>
 )

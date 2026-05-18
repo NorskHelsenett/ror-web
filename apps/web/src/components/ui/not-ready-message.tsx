@@ -6,10 +6,11 @@ import { useState } from 'react'
 
 interface NotReadyMessageProps {
   className?: string
+  removable?: boolean
   children?: React.ReactNode
 }
 
-export const NotReadyMessage = ({ className, children }: NotReadyMessageProps) => {
+export const NotReadyMessage = ({ className, removable = true, children }: NotReadyMessageProps) => {
   const [isVisible, setIsVisible] = useState(true)
 
   if (!isVisible) return null
@@ -24,9 +25,11 @@ export const NotReadyMessage = ({ className, children }: NotReadyMessageProps) =
       role='alert'
     >
       <div>{children}</div>
-      <button onClick={() => setIsVisible(false)} aria-label='Close notification' type='button' className='pr-2'>
-        <X />
-      </button>
+      {removable && (
+        <button onClick={() => setIsVisible(false)} aria-label='Close notification' type='button' className='pr-2'>
+          <X />
+        </button>
+      )}
     </div>
   )
 }
