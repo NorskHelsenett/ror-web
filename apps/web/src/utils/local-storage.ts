@@ -9,21 +9,17 @@
  * @typeParam T - The expected type of the stored value
  */
 export function getSavedPreference<T>(key: string, fallback: T): T {
-  if (window.localStorage.getItem(key)) {
-    const value = window.localStorage.getItem(key) as T
-    // Booleans are saved as strings, therefore we need to parse them
-    if (value === 'true') {
-      return true as T
-    } else if (value === 'false') {
-      return false as T
-    } else {
-      return value
-    }
+  if (typeof window === 'undefined') return fallback
+  const raw = window.localStorage.getItem(key)
+  if (!raw) return fallback
+  if (raw === 'true') return true as T
+  if (raw === 'false') return false as T
+  try {
+    return JSON.parse(raw) as T
+  } catch {
+    return raw as T
   }
-
-  return fallback
 }
-
 /**
  * Save a preference value to local storage
  * @param key - The key to store the value under in localStorage
@@ -31,6 +27,7 @@ export function getSavedPreference<T>(key: string, fallback: T): T {
  * @typeParam T - The type of value being stored (must extend string)
  */
 export function savePreference<T extends string>(key: string, value: T): void {
+  if (typeof window === 'undefined') return
   window.localStorage.setItem(key, value)
 }
 
@@ -42,5 +39,6 @@ export function savePreference<T extends string>(key: string, value: T): void {
  * @returns void
  */
 export function removePreference(key: string): void {
+  if (typeof window === 'undefined') return
   window.localStorage.removeItem(key)
 }
