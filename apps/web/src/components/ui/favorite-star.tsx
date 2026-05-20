@@ -42,10 +42,10 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100' }:
     e.preventDefault()
 
     if (favorited) {
-      addFavoriteItem(itemId, domain)
+      removeFavoriteItem(itemId, domain)
       setFavorited(false)
     } else {
-      removeFavoriteItem(itemId, domain)
+      addFavoriteItem(itemId, domain)
       setFavorited(true)
     }
   }
