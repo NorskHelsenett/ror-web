@@ -44,6 +44,7 @@ import { ResourceBar } from './resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
 import { FavoriteStar, StarCircle } from '@/components/ui/favorite-star'
+import { randomUUID } from 'crypto'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -125,6 +126,7 @@ const infoSectionCls =
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
+  const clusterUid = getClusterUidView(cluster) || randomUUID()
   const clusterName = getClusterNameView(cluster) || missingText
   const provider = getProviderView(cluster) || missingText
   const datacenter = getDatacenterView(cluster) || missingText
@@ -192,18 +194,18 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
         }
       }}
     >
-      <CardHeader
-        className={cn(
-          'h-15 pl-6 pr-2 py-2 m-0 mb-7 w-full flex justify-between items-center rounded-t-xl',
-          envColor[0],
-          envColor[1]
-        )}
-      >
-        <CardTitle className='text-xl'>{(clusterName || 'Unnamed Cluster') as string}</CardTitle>
-        <div className='flex justify-end gap-2'>
-          <HealthCircle className='w-11 h-11' healthCondition={healthCondition} />
-          <FavoriteStar className='w-11 h-11' favorited />
-        </div>
+      <CardHeader className='m-0 mb-7 p-0 w-full'>
+        <CardTitle
+          className={cn(
+            'text-2xl rounded-t-xl pl-2 pr-6 py-2 flex items-center gap-1.5 h-14',
+            envColor[0],
+            envColor[1]
+          )}
+        >
+          <FavoriteStar domain='cluster' itemId={clusterUid} className='w-11 h-11' scale='scale-75' />
+          {(clusterName || 'Unnamed Cluster') as string}
+        </CardTitle>
+        <HealthCircle className='ml-auto mr-4 -mt-7 w-13 h-13' healthCondition={healthCondition} />
       </CardHeader>
 
       <CardContent className='text-sm flex flex-col gap-3'>
