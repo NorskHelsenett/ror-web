@@ -10,7 +10,6 @@ interface FavoriteStarProps {
   domain: string
   itemId: string
   className?: string
-  favorited?: boolean
   scale?:
     | 'scale-0'
     | 'scale-50'
