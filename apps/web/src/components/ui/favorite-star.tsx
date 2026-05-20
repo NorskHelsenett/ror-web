@@ -1,3 +1,5 @@
+'use client'
+
 import { addFavoriteItem, removeFavoriteItem } from '@/features/dashboard/utils/dashboard-localstorage'
 import { cn } from '@/utils/clsxm'
 import { getSavedPreference } from '@/utils/local-storage'
@@ -21,11 +23,6 @@ interface FavoriteStarProps {
     | 'scale-125'
     | 'scale-150'
     | 'scale-200'
-}
-
-function checkIfFavorited(domain: string, itemId: string) {
-  const items = getSavedPreference(`${domain}:favorite`, [] as string[])
-  return items.includes(itemId)
 }
 
 export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100' }: FavoriteStarProps) => {
@@ -55,6 +52,8 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100' }:
       type='button'
       className={cn('h-13 w-13 flex items-center justify-center', className)}
       onClick={toggleFavoriteLocalstorage}
+      aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+      aria-pressed={favorited}
     >
       <Star className={cn(favorited && 'fill-yellow-500', 'w-full h-full hover:fill-yellow-500', scale)} />
     </button>

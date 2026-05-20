@@ -44,7 +44,6 @@ import { ResourceBar } from './resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
 import { FavoriteStar } from '@/components/ui/favorite-star'
-import { randomUUID } from 'crypto'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -126,7 +125,7 @@ const infoSectionCls =
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
-  const clusterUid = getClusterUidView(cluster) || randomUUID()
+  const clusterUid = getClusterUidView(cluster) || globalThis.crypto.randomUUID()
   const clusterName = getClusterNameView(cluster) || missingText
   const provider = getProviderView(cluster) || missingText
   const datacenter = getDatacenterView(cluster) || missingText
