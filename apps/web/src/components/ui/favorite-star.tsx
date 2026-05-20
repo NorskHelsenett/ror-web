@@ -55,6 +55,8 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100' }:
       type='button'
       className={cn('h-13 w-13 flex items-center justify-center', className)}
       onClick={toggleFavoriteLocalstorage}
+      aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+      aria-pressed={favorited}
     >
       <Star className={cn(favorited && 'fill-yellow-500', 'w-full h-full hover:fill-yellow-500', scale)} />
     </button>
