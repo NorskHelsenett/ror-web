@@ -176,8 +176,28 @@ export const useBackupRunInfoHydration = (items: HydratableVm[]) => {
       })
     }
 
+    // Helper: after a hydration attempt (full or partial), mark any candidate VMs not resolved
+    // from the global cache as a "checked" sentinel so the loading spinner stops.
+    // Sentinels are intentionally NOT persisted to localStorage — in-memory only for this session.
+    const markUnresolvedAsSentinels = (excludeResolved: Set<string>, nowTs: number) => {
+      const sentinels: BackupInfoCacheMap = {}
+      for (const vmExternalId of vmCandidateRunIds.keys()) {
+        if (!globalUpdates[vmExternalId] && !excludeResolved.has(vmExternalId)) {
+          sentinels[vmExternalId] = { startTime: null, endTime: null, expiryTime: null, cachedAt: nowTs }
+        }
+      }
+      if (Object.keys(sentinels).length > 0) {
+        setHydratedBackupInfoByVmId((prev) => ({ ...prev, ...sentinels }))
+      }
+    }
+
     const runIdsBatch = runIdsNeedingApiFetch.slice(0, vmBackupRunBatchSize)
-    if (!runIdsBatch.length) return
+    if (!runIdsBatch.length) {
+      // All runIds were found in the global cache (or none existed).
+      // Mark any candidate VMs not resolved from global cache as checked.
+      markUnresolvedAsSentinels(new Set(), Date.now())
+      return
+    }
 
     for (const runId of runIdsBatch) {
       requestedRunIdsRef.current.add(runId)
@@ -193,12 +213,13 @@ export const useBackupRunInfoHydration = (items: HydratableVm[]) => {
           body: JSON.stringify({ runIds: runIdsBatch }),
         })
 
-        if (!response.ok) return
+        if (!response.ok) {
+          markUnresolvedAsSentinels(new Set(), Date.now())
+          return
+        }
 
         const payload = (await response.json()) as { backupRuns?: BackupRun[] }
         const fetchedRuns = payload.backupRuns ?? []
-        if (!fetchedRuns.length) return
-
         const fetchNow = Date.now()
         const updates: BackupInfoCacheMap = {}
 
@@ -238,12 +259,21 @@ export const useBackupRunInfoHydration = (items: HydratableVm[]) => {
           }
         }
 
+        const resolvedByApi = new Set(Object.keys(updates))
+        // Mark any VMs we still couldn't resolve as sentinels so the spinner stops.
+        markUnresolvedAsSentinels(resolvedByApi, fetchNow)
+
         if (!Object.keys(updates).length) return
 
         setHydratedBackupInfoByVmId((prev) => {
           const next = { ...prev, ...updates }
           try {
-            localStorage.setItem(vmBackupRunCacheKey, JSON.stringify(next))
+            // Only persist entries with real backup info to localStorage; sentinels stay in-memory.
+            const persistable: BackupInfoCacheMap = {}
+            for (const [key, entry] of Object.entries(next)) {
+              if (entry.startTime !== null) persistable[key] = entry
+            }
+            localStorage.setItem(vmBackupRunCacheKey, JSON.stringify(persistable))
           } catch {
             // Ignore storage quota/write errors.
           }
@@ -251,6 +281,7 @@ export const useBackupRunInfoHydration = (items: HydratableVm[]) => {
         })
       } catch {
         // Keep page resilient if hydration fetch fails.
+        markUnresolvedAsSentinels(new Set(), Date.now())
       } finally {
         hydrateInFlightRef.current = false
       }
