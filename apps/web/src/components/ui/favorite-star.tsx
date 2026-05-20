@@ -52,6 +52,7 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100' }:
 
   return (
     <button
+      type='button'
       className={cn('h-13 w-13 flex items-center justify-center', className)}
       onClick={toggleFavoriteLocalstorage}
     >

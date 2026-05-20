@@ -32,16 +32,16 @@ export function addOverviewItem(item: OverviewItem): OverviewItem[] {
 
 export function addFavoriteItem(itemId: string, domain: string) {
   const items = getSavedPreference(`${domain}:favorite`, [] as string[])
-  if (!items.includes(itemId)) return items
-  const updated = items.filter((i) => i !== itemId)
+  if (items.includes(itemId)) return items
+  const updated = [...items, itemId]
   savePreference(`${domain}:favorite`, JSON.stringify(updated))
   return updated
 }
 
 export function removeFavoriteItem(itemId: string, domain: string) {
   const items = getSavedPreference(`${domain}:favorite`, [] as string[])
-  if (items.includes(itemId)) return items
-  const updated = [...items, itemId]
+  if (!items.includes(itemId)) return items
+  const updated = items.filter((i) => i !== itemId)
   savePreference(`${domain}:favorite`, JSON.stringify(updated))
   return updated
 }
