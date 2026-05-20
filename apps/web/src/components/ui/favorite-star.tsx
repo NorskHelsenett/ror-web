@@ -1,6 +1,6 @@
 import { addFavoriteItem, removeFavoriteItem } from '@/features/dashboard/utils/dashboard-localstorage'
 import { cn } from '@/utils/clsxm'
-import { getSavedPreference, removePreference, savePreference } from '@/utils/local-storage'
+import { getSavedPreference } from '@/utils/local-storage'
 import { Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Pill } from '@/components/shadcn/pill'
 import { cn } from '@/utils/clsxm'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
-import { Dot, Star } from 'lucide-react'
+import { Dot } from 'lucide-react'
 import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getArgocdUrlView,
@@ -43,7 +43,7 @@ import { useRouter } from 'next/navigation'
 import { ResourceBar } from './resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
-import { FavoriteStar, StarCircle } from '@/components/ui/favorite-star'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 import { randomUUID } from 'crypto'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
