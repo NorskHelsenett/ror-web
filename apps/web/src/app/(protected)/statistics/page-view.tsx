@@ -7,6 +7,7 @@
 
 'use client'
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/shadcn/chart'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from 'recharts'
@@ -81,7 +82,10 @@ const SmallerChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title || globalThis.crypto.randomUUID()} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      </span>
       <div className={cn('bg-gray-100 rounded-lg w-full min-w-0')}>
         <ChartContainer config={chartConfig} className='w-full' style={{ height: chartH }}>
           <BarChart accessibilityLayer data={chartData} layout='vertical' margin={{ left: -54 }}>
@@ -112,7 +116,10 @@ const SmChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title || globalThis.crypto.randomUUID()} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      </span>
       <div className={cn('bg-gray-100 rounded-lg w-full min-w-0')}>
         <ChartContainer config={chartConfig} className='w-full min-w-0' style={{ height: chartH }}>
           <BarChart accessibilityLayer data={chartData} layout='vertical' margin={{ left: -54 }}>
@@ -141,8 +148,10 @@ const MdChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('min-w-0 w-full', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
-
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title || globalThis.crypto.randomUUID()} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      </span>
       <div className='min-w-0 w-full max-w-full overflow-hidden'>
         <ChartContainer config={chartConfig} className={cn('h-128 w-full max-w-full overflow-hidden min-w-0')}>
           <BarChart accessibilityLayer layout='horizontal' data={chartData} margin={{ left: -33 }}>
@@ -175,7 +184,10 @@ const LgChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('min-w-0 w-full', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title || globalThis.crypto.randomUUID()} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      </span>
       <ChartContainer config={chartConfig} className={cn('h-128 w-full max-w-full overflow-hidden min-w-0')}>
         <BarChart accessibilityLayer layout='horizontal' data={chartData} margin={{ left: -33 }}>
           <CartesianGrid vertical={true} />
