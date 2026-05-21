@@ -23,16 +23,20 @@ import { PricesTable } from '@/features/economy/components/prices-table'
  * @returns {Promise<JSX.Element>} The rendered Price List page component.
  */
 const PriceListPage = async () => {
-  const api = await getRorApi()
-  const res = await api.prices.list()
+  // const api = await getRorApi()
+  // const res = await api.prices.list()
 
-  const items: Price[] = Array.isArray(res) ? res : []
+  // const items: Price[] = Array.isArray(res) ? res : []
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Price list' />
       <div className='mx-13 my-8'>
-        <PricesTable data={items} />
+        <p>
+          The cost model is still under development and this will be updated with correct information when the
+          information is available.
+        </p>
+        {/* <PricesTable data={items} /> */}
       </div>
     </div>
   )
