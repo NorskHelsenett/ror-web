@@ -239,7 +239,6 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
-  --radius: var(--radius);
   --color-sidebar: var(--background);
   --color-sidebar-foreground: var(--background-inverse);
   --color-sidebar-primary: var(--background-inverse-hover);
@@ -248,6 +247,20 @@
   --color-sidebar-accent-foreground: var(--background-inverse-hover);
   --color-sidebar-border: var(--background-active);
   --color-sidebar-ring: 0 0% 98%;
+
+  --radius: var(--radius);
+
+  --animate-wiggle: wiggle 1000ms ease-in-out infinite;
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-0.5deg);
+    }
+    50% {
+      transform: rotate(0.5deg);
+    }
+  }
 }
 
 @layer base {
