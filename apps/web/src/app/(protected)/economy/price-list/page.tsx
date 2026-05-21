@@ -9,9 +9,9 @@
 import React from 'react'
 
 import { Header } from '@/components/layout/app-shell/header'
-import { getRorApi } from '@/services/ror-api'
-import { Price } from '@/types/prices'
-import { PricesTable } from '@/features/economy/components/prices-table'
+// import { getRorApi } from '@/services/ror-api'
+// import { Price } from '@/types/prices'
+// import { PricesTable } from '@/features/economy/components/prices-table'
 
 /**
  * Renders the Price List page, fetching price data from the API and displaying it in a data table.
