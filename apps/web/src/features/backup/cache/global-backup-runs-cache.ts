@@ -53,8 +53,8 @@ function ensureFetching() {
         const pageItems = result.items ?? []
         if (!pageItems.length) break
 
-        _partialRuns = [..._partialRuns, ...pageItems]
-        notify(_partialRuns) // progressive update per page
+        _partialRuns.push(...pageItems)
+        notify([..._partialRuns]) // progressive update per page
 
         if (!result.hasMore || pageItems.length < BATCH_SIZE) break
       }
