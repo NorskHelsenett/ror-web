@@ -219,7 +219,7 @@ export function ResourceControls<T>({
           // <Link href={`/clusters/new-cluster`}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className='inline-block w-fit'>
+              <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
                 <Button disabled>
                   <Plus />
                   Create Cluster
