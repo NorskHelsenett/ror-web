@@ -20,6 +20,7 @@ import { ResourceSearch } from './resource-search'
 import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
 import { ResourceRegexSearch } from './resource-regex-search'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
 
 /**
  * Props for the ResourceControls component.
@@ -46,7 +47,7 @@ import { ResourceRegexSearch } from './resource-regex-search'
  */
 interface ResourceControlsProps<T> {
   safeItems: T[]
-  searchType: "fuzzy" | "regex"
+  searchType: 'fuzzy' | 'regex'
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
@@ -214,12 +215,23 @@ export function ResourceControls<T>({
         </Toggle>
 
         {domain === 'clusters' && (
-          <Link href={`/clusters/new-cluster`}>
-            <Button>
-              <Plus />
-              Create Cluster
-            </Button>
-          </Link>
+          // TODO: enable when cluster creation is available in ROR
+          // <Link href={`/clusters/new-cluster`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
+                <Button disabled>
+                  <Plus />
+                  Create Cluster
+                </Button>
+              </span>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <p>Coming to ROR real soon</p>
+            </TooltipContent>
+          </Tooltip>
+          // </Link>
         )}
 
         <Button
