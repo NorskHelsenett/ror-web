@@ -351,7 +351,7 @@ export const getVmUniqueKey = (vm: VirtualMachine) => {
 export const getVmsKey = (vms: VirtualMachine[] = []) => (Array.isArray(vms) ? vms.map(getVmUniqueKey).join('|') : '')
 
 export const getVmExternalId = (vm: VirtualMachine) => {
-  return vm?.virtualmachine?.externalId
+  return vm?.virtualmachine?.externalId || ''
 }
 
 /**

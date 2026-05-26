@@ -97,7 +97,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Statistics',
-        url: routes.app.statistics.getHref(),
+        url: 'https://ror.nhn.no/metrics', // TODO: revert to routes.app.statistics.getHref() when backend is available
       },
     ],
   },
@@ -118,29 +118,29 @@ const sections: Section[] = [
     isActive: true,
     items: [
       {
-        title: 'Data centers',
-        url: routes.app.dataCenters.getHref(),
+        title: 'Datacenters',
+        url: 'https://ror.nhn.no/admin/datacenter', // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
       },
-      //         {
-      //             title: 'Policy reports',
-      //             url: '#',
-      //         },
+      {
+        title: 'Policy reports',
+        url: 'https://ror.nhn.no/admin/policyreports',
+      },
       //         {
       //             title: 'Admin price list',
       //             url: '#',
       //         },
-      //         {
-      //             title: 'Projects',
-      //             url: '#',
-      //         },
-      //         {
-      //             title: 'Vulnerability reports',
-      //             url: '#',
-      //         },
-      //         {
-      //             title: 'Workspaces',
-      //             url: '#',
-      //         },
+      {
+        title: 'Projects',
+        url: 'https://ror.nhn.no/admin/projects',
+      },
+      {
+        title: 'Vulnerability reports',
+        url: 'https://ror.nhn.no/admin/vulnerabilityreports',
+      },
+      {
+        title: 'Workspaces',
+        url: 'https://ror.nhn.no/workspaces',
+      },
     ],
   },
   {

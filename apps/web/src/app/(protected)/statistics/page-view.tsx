@@ -7,6 +7,7 @@
 
 'use client'
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/shadcn/chart'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from 'recharts'
@@ -49,7 +50,7 @@ interface PageViewProps {
  * @property data - An object mapping string labels to numeric values to be displayed in the chart.
  */
 interface ChartProps {
-  title?: string
+  title: string
   data: Record<string, number>
   className?: string
   metricLabel: string
@@ -81,7 +82,10 @@ const SmallerChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      </span>
       <div className={cn('bg-gray-100 rounded-lg w-full min-w-0')}>
         <ChartContainer config={chartConfig} className='w-full' style={{ height: chartH }}>
           <BarChart accessibilityLayer data={chartData} layout='vertical' margin={{ left: -54 }}>
@@ -112,7 +116,10 @@ const SmChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2')}>{title}</h2>
+      </span>
       <div className={cn('bg-gray-100 rounded-lg w-full min-w-0')}>
         <ChartContainer config={chartConfig} className='w-full min-w-0' style={{ height: chartH }}>
           <BarChart accessibilityLayer data={chartData} layout='vertical' margin={{ left: -54 }}>
@@ -141,8 +148,10 @@ const MdChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('min-w-0 w-full', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
-
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      </span>
       <div className='min-w-0 w-full max-w-full overflow-hidden'>
         <ChartContainer config={chartConfig} className={cn('h-128 w-full max-w-full overflow-hidden min-w-0')}>
           <BarChart accessibilityLayer layout='horizontal' data={chartData} margin={{ left: -33 }}>
@@ -175,7 +184,10 @@ const LgChart = ({ title, data, className, metricLabel }: ChartProps) => {
 
   return (
     <div className={cn('min-w-0 w-full', className)}>
-      <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      <span className='flex items-center'>
+        <FavoriteStar domain={'statistics'} itemId={title} scale='scale-50' />
+        <h2 className={cn('text-lg font-medium', 'mt-4 mb-2', 'sm:mt-4 sm:mb-4')}>{title}</h2>
+      </span>
       <ChartContainer config={chartConfig} className={cn('h-128 w-full max-w-full overflow-hidden min-w-0')}>
         <BarChart accessibilityLayer layout='horizontal' data={chartData} margin={{ left: -33 }}>
           <CartesianGrid vertical={true} />
@@ -635,10 +647,6 @@ export const PageView = ({
           )}
         </div>
       </div>
-
-      {/* {kubernetesVersions && Object.keys(kubernetesVersions).length > 0 && <Chart title='Kubernetes Versions' data={kubernetesVersions} />}
-          {agentVersions && Object.keys(agentVersions).length > 0 && <Chart title='Agent Versions' data={agentVersions} />}
-          {nhnToolingVersion && Object.keys(nhnToolingVersion).length > 0 && <Chart title='NHN Tooling Version' data={nhnToolingVersion} />} */}
     </div>
   )
 }
