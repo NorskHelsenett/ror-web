@@ -22,6 +22,10 @@
 
 - [How to - clone and run ror-web](clone-run.md)
 
+## How to - authentication
+
+- [How to - understand the Dex authentication flow](authentication.md)
+
 ## General how tos
 
 - [How to - get the user object](get-user-object.md)

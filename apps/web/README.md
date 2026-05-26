@@ -72,6 +72,12 @@ apps/web/
 - `src/services/`: External service integrations
 - `src/utils/`: Utility functions for common operations across the app
 
+## Authentication
+
+Authentication uses [NextAuth v4](https://next-auth.js.org/) with [Dex](https://dexidp.io/) as the OIDC identity provider.  
+For a full explanation of the login redirect, token verification, session management, and token refresh flow see
+[docs/how-tos/authentication.md](../../docs/how-tos/authentication.md).
+
 ## Health Checks
 
 The application provides health check endpoints for Kubernetes and other monitoring systems:

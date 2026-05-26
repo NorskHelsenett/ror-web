@@ -1,3 +1,22 @@
+/**
+ * @file middleware.ts
+ * @description Next.js edge middleware that enforces authentication on every protected route.
+ *
+ * Responsibilities:
+ *  1. **Skip** static assets and explicitly bypass-listed paths (sign-in, /api/auth/*, health checks).
+ *  2. **Read** the NextAuth session JWT from the request cookie using `getToken()`.
+ *  3. **Redirect** unauthenticated or token-expired requests to `/sign-in?callbackUrl=<current-path>`.
+ *  4. **Allow** valid, unexpired requests to proceed.
+ *
+ * Token expiry is checked against `accessTokenExpires` (set in the jwt callback) or the JWT's
+ * own `exp` claim, whichever is available. This mirrors the check performed server-side in the
+ * NextAuth jwt callback in `src/config/auth.config.ts`.
+ *
+ * @see docs/how-tos/authentication.md for a complete end-to-end explanation of the auth flow.
+ * @see src/config/auth.config.ts for token storage, refresh, and session shaping.
+ * @see src/app/(public)/sign-in/route.ts for the sign-in redirect target.
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import type { JWT as NextAuthJWT } from 'next-auth/jwt'

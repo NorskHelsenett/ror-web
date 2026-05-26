@@ -1,3 +1,25 @@
+/**
+ * @file auth.config.ts
+ * @description Core NextAuth configuration for Dex-based authentication.
+ *
+ * This file is the heart of the authentication system. It contains:
+ *  - **DexProvider** – an OAuth 2.0 / OIDC provider pointed at the Dex identity server.
+ *    Dex performs the actual user login (LDAP, GitHub, etc.) and issues JWTs.
+ *  - **jwt callback** – runs on every sign-in and session access. Stores the Dex access
+ *    token and refresh token in the NextAuth session cookie, and rotates the access token
+ *    when it expires.
+ *  - **session callback** – shapes the client-visible session object returned by
+ *    `useSession()` and `getServerSession()`.
+ *  - **refreshAccessToken** – exchanges the OAuth refresh token for a new access token at
+ *    `${AUTH_ISSUER}/token` when the current one has expired.
+ *
+ * @see docs/how-tos/authentication.md for a complete end-to-end explanation of the auth flow.
+ * @see src/middleware.ts for route-level token validation and redirect-to-sign-in logic.
+ * @see src/app/(public)/sign-in/route.ts for the custom sign-in entry point.
+ * @see src/app/api/auth/[...nextauth]/route.ts for the NextAuth catch-all API route.
+ * @see src/features/auth/utils/auth-guard.ts for server-side session helpers (authGuard, getSession).
+ */
+
 import type { NextAuthOptions, Session } from 'next-auth'
 import type { JWT } from 'next-auth/jwt'
 import type { OAuthConfig } from 'next-auth/providers/oauth'

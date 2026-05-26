@@ -1,3 +1,22 @@
+/**
+ * @file sign-in/route.ts
+ * @description Custom sign-in entry point (`GET /sign-in`).
+ *
+ * This route is the first stop after the middleware decides a user needs to authenticate.
+ * It is NOT the OAuth callback – it is a lightweight redirect handler that:
+ *  1. Sanitises and validates the `callbackUrl` query parameter (same-origin, loop-safe).
+ *  2. Forwards known NextAuth error codes to `/auth-debug` for user-friendly error display.
+ *  3. Verifies the `dex` provider is registered; redirects to `/auth-debug` if missing.
+ *  4. Redirects to `/api/auth/signin/dex?callbackUrl=<safe-callback>` to start the OAuth flow.
+ *
+ * The actual OAuth 2.0 / OIDC exchange (authorization code, token request, PKCE) is handled
+ * entirely by NextAuth at `/api/auth/[...nextauth]`.
+ *
+ * @see docs/how-tos/authentication.md for a complete end-to-end explanation of the auth flow.
+ * @see src/config/auth.config.ts for the DexProvider definition and token callbacks.
+ * @see src/middleware.ts for the middleware that redirects here.
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
 import { routes } from '@/config/routes'
 import { getPublicOrigin } from '@/lib/public-origin'
