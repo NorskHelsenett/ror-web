@@ -62,7 +62,8 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
-import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
+import { useBackupRunInfoHydration } from '@/features/vms/backup/services/vm-backup-run-cache'
+import { useVmBackupJobsHydration } from '@/features/vms/backup/services/vm-backup-jobs-cache'
 import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-options'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
@@ -94,7 +95,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
-  const hydratedItems = useBackupInfoHydration(items)
+  const itemsWithBackupStatus = useVmBackupJobsHydration(items)
+  const hydratedItems = useBackupRunInfoHydration(itemsWithBackupStatus)
 
   const safeItems = useMemo(
     () => hydratedItems.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),

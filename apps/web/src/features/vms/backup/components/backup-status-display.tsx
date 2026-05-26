@@ -10,14 +10,40 @@ import { cn } from '@/utils/clsxm'
 import { useActiveBackupStatus, useBackupStatus } from '@/features/vms/backup/hooks/useBackupStatus'
 import type { VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
+import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { Pill } from '@/components/shadcn/pill'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
+import { readCachedJobs } from '@/features/vms/backup/services/vm-backup-jobs-cache'
+import { useMemo, useState, useEffect } from 'react'
 
 type VMTableRow = VirtualMachine | VMWithBackupStatus
 
 interface BackupStatusDisplayProps {
   vm: VMTableRow
   className?: string
+}
+
+/**
+ * Self-hydrates a VM with backup status from the jobs localStorage cache.
+ * If the VM is already enriched (has backupStatus), it is returned as-is.
+ * If not, the cached BackupJobs are loaded in useEffect (client-only, avoids
+ * hydration mismatch) and used to derive backupStatus.
+ */
+const useVmWithCachedBackupStatus = (vm: VMTableRow): VMTableRow => {
+  // Start with [] so server and client initial render are identical.
+  // readCachedJobs() touches localStorage, so it must run in useEffect only.
+  const [cachedJobs, setCachedJobs] = useState<ReturnType<typeof readCachedJobs>>([])
+
+  useEffect(() => {
+    const jobs = readCachedJobs()
+    if (jobs.length > 0) setCachedJobs(jobs)
+  }, [])
+
+  return useMemo(() => {
+    if ('backupStatus' in vm) return vm
+    if (cachedJobs.length === 0) return vm
+    return mapBackupToVM([vm as VirtualMachine], cachedJobs, [])[0]
+  }, [vm, cachedJobs])
 }
 
 interface BackupInfoItemProps {
@@ -115,8 +141,9 @@ const LoadingBackupDisplay = ({ label = 'Loading backup data...' }: { label?: st
 )
 
 export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
-  const backupStatus = useBackupStatus(vm)
-  const activeBackupStatus = useActiveBackupStatus(vm)
+  const effectiveVm = useVmWithCachedBackupStatus(vm)
+  const backupStatus = useBackupStatus(effectiveVm)
+  const activeBackupStatus = useActiveBackupStatus(effectiveVm)
   const isActive = activeBackupStatus.hasActiveBackup
   const isExpired = activeBackupStatus.hasExpiredBackup
   const isHistorical = activeBackupStatus.hasHistoricalBackup
@@ -194,8 +221,9 @@ export const BackupStatusTableDisplay = ({ vm }: BackupStatusDisplayProps) => {
 }
 
 export const BackupStatusDisplay = ({ vm, className }: BackupStatusDisplayProps) => {
-  const activeBackupStatus = useActiveBackupStatus(vm)
-  const backupStatus = useBackupStatus(vm)
+  const effectiveVm = useVmWithCachedBackupStatus(vm)
+  const activeBackupStatus = useActiveBackupStatus(effectiveVm)
+  const backupStatus = useBackupStatus(effectiveVm)
 
   const isHydrating = activeBackupStatus.isBackupInfoHydrating
 

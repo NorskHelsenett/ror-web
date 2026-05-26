@@ -39,7 +39,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
   const [allBackupRuns, setAllBackupRuns] = useState<BackupRun[]>(backupRuns)
   const [isLoadingRunsForSearch, setIsLoadingRunsForSearch] = useState(false)
   const attemptedMissingRunIdsRef = useRef<Set<string>>(new Set())
-  const summary = useBackupJobsSummaryHydration(backupJobs)
+  const summary = useBackupJobsSummaryHydration()
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<BackupJob>({
     initial: backupJobs,

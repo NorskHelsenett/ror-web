@@ -1,11 +1,13 @@
-import { getBackupStatus } from '@/features/vms/backup/utils/backup-job'
-import { loadMoreBackupJobs } from '@/utils/backup-job-actions'
-import type { BackupJob } from '@ror/js-api-client'
-import { useEffect, useRef, useState } from 'react'
+// FILE OVERVIEW:
+// ------------------------
+// Thin wrapper around the global BackupJobs cache.
+// Derives a summary (counts + ratios) from the shared job list —
+// no independent fetch is started. All fetching lives in global-backup-jobs-cache.ts.
 
-export const backupJobsSummaryCacheKey = 'backup-jobs-summary'
-export const backupJobsSummaryCacheTTL = 30 * 60 * 1000
-export const backupJobsSummaryBatchSize = 200
+import { getBackupStatus } from '@/features/vms/backup/utils/backup-job'
+import type { BackupJob } from '@ror/js-api-client'
+import { useMemo } from 'react'
+import { useGlobalBackupJobs } from '@/features/backup/cache/backup-jobs-cache'
 
 export type BackupJobsSummary = {
   totalJobs: number
@@ -35,97 +37,11 @@ const summarizeBackupJobs = (jobs: BackupJob[]): BackupJobsSummary => {
   const pausedJobs = jobs.filter((job) => getBackupStatus(job) === 'paused').length
   const inactiveJobs = jobs.filter((job) => getBackupStatus(job) === 'inactive').length
 
-  return toSummaryWithRatios({
-    totalJobs,
-    activeJobs,
-    pausedJobs,
-    inactiveJobs,
-  })
+  return toSummaryWithRatios({ totalJobs, activeJobs, pausedJobs, inactiveJobs })
 }
 
-export const useBackupJobsSummaryHydration = (initialJobs: BackupJob[]) => {
-  const [summary, setSummary] = useState<BackupJobsSummary>(() => summarizeBackupJobs(initialJobs))
-  const hydrationStartedRef = useRef(false)
+export const useBackupJobsSummaryHydration = () => {
+  const { jobs } = useGlobalBackupJobs()
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(backupJobsSummaryCacheKey)
-      if (!raw) return
-
-      const parsed = JSON.parse(raw) as BackupJobsSummary & { cachedAt?: number }
-      if (!parsed?.cachedAt || Date.now() - parsed.cachedAt > backupJobsSummaryCacheTTL) return
-
-      setSummary({
-        totalJobs: parsed.totalJobs,
-        activeJobs: parsed.activeJobs,
-        pausedJobs: parsed.pausedJobs,
-        inactiveJobs: parsed.inactiveJobs,
-        activeJobRatio: parsed.activeJobRatio,
-        pausedJobRatio: parsed.pausedJobRatio,
-        inactiveJobRatio: parsed.inactiveJobRatio,
-      })
-    } catch {
-      // Ignore invalid cache payload.
-    }
-  }, [])
-
-  useEffect(() => {
-    if (hydrationStartedRef.current) return
-    hydrationStartedRef.current = true
-
-    let cancelled = false
-
-    const hydrateSummary = async () => {
-      let offset = 0
-      const totals = {
-        totalJobs: 0,
-        activeJobs: 0,
-        pausedJobs: 0,
-        inactiveJobs: 0,
-      }
-
-      while (!cancelled) {
-        const res = await loadMoreBackupJobs({
-          offset,
-          limit: backupJobsSummaryBatchSize,
-          order: 'desc',
-        })
-
-        const pageItems = res.items ?? []
-        if (!pageItems.length) break
-
-        totals.totalJobs += pageItems.length
-        totals.activeJobs += pageItems.filter((job) => getBackupStatus(job) === 'active').length
-        totals.pausedJobs += pageItems.filter((job) => getBackupStatus(job) === 'paused').length
-        totals.inactiveJobs += pageItems.filter((job) => getBackupStatus(job) === 'inactive').length
-
-        setSummary(toSummaryWithRatios(totals))
-
-        if (!res.hasMore || pageItems.length < backupJobsSummaryBatchSize) break
-        offset += backupJobsSummaryBatchSize
-      }
-
-      if (!cancelled) {
-        try {
-          localStorage.setItem(
-            backupJobsSummaryCacheKey,
-            JSON.stringify({
-              ...toSummaryWithRatios(totals),
-              cachedAt: Date.now(),
-            })
-          )
-        } catch {
-          // Ignore storage quota/write errors.
-        }
-      }
-    }
-
-    void hydrateSummary()
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  return summary
+  return useMemo(() => summarizeBackupJobs(jobs), [jobs])
 }
