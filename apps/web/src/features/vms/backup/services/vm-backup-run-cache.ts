@@ -14,7 +14,7 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import { getVmExternalId } from '@/features/vms/utils/vms'
 import type { BackupRun, VirtualMachine } from '@ror/js-api-client'
 import type { VMWithBackupStatus } from '../utils/map-backup-to-vm'
-import { findGlobalBackupRunById } from '@/features/backup/cache/global-backup-runs-cache'
+import { findGlobalBackupRunById } from '@/features/backup/cache/backup-runs-cache'
 
 export const vmBackupRunCacheKey = 'vm-backup-run-info'
 export const vmBackupRunCacheTTL = 6 * 60 * 60 * 1000

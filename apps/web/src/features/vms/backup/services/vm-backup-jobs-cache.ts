@@ -8,7 +8,7 @@
 import { useMemo } from 'react'
 import type { VirtualMachine } from '@ror/js-api-client'
 import { mapBackupToVM, type VMWithBackupStatus } from '../utils/map-backup-to-vm'
-import { useGlobalBackupJobs, readGlobalBackupJobs } from '@/features/backup/cache/global-backup-jobs-cache'
+import { useGlobalBackupJobs, readGlobalBackupJobs } from '@/features/backup/cache/backup-jobs-cache'
 
 /** Synchronous read of cached jobs — delegates to the global cache. */
 export const readCachedJobs = readGlobalBackupJobs

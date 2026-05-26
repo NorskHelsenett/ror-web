@@ -7,7 +7,7 @@
 import { getBackupStatus } from '@/features/vms/backup/utils/backup-job'
 import type { BackupJob } from '@ror/js-api-client'
 import { useMemo } from 'react'
-import { useGlobalBackupJobs } from '@/features/backup/cache/global-backup-jobs-cache'
+import { useGlobalBackupJobs } from '@/features/backup/cache/backup-jobs-cache'
 
 export type BackupJobsSummary = {
   totalJobs: number

@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
 import type { BackupRun } from '@ror/js-api-client'
 import { loadMoreBackupRuns } from '@/utils/backup-run-actions'
 
-export const GLOBAL_BACKUP_RUNS_TTL = 30 * 60 * 1000 // 30 minutes
+export const BACKUP_RUNS_TTL = 30 * 60 * 1000 // 30 minutes
 const BATCH_SIZE = 200
 const MAX_PAGES = 100
 
@@ -33,7 +33,7 @@ let _fetchPromise: Promise<void> | null = null
 const _subscribers = new Set<(runs: BackupRun[]) => void>()
 
 function isFresh(): boolean {
-  return _runs !== null && Date.now() - _loadedAt < GLOBAL_BACKUP_RUNS_TTL
+  return _runs !== null && Date.now() - _loadedAt < BACKUP_RUNS_TTL
 }
 
 function notify(runs: BackupRun[]) {

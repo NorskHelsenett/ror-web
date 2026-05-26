@@ -17,8 +17,8 @@ import { useEffect, useState } from 'react'
 import type { BackupJob } from '@ror/js-api-client'
 import { loadMoreBackupJobs } from '@/utils/backup-job-actions'
 
-export const GLOBAL_BACKUP_JOBS_STORAGE_KEY = 'global-backup-jobs'
-export const GLOBAL_BACKUP_JOBS_TTL = 30 * 60 * 1000 // 30 minutes
+export const BACKUP_JOBS_STORAGE_KEY = 'backup-jobs'
+export const BACKUP_JOBS_TTL = 30 * 60 * 1000 // 30 minutes
 const BATCH_SIZE = 200
 
 // --- Module-level singleton (persists across React navigation) ---
@@ -29,10 +29,10 @@ const _subscribers = new Set<(jobs: BackupJob[]) => void>()
 
 function readFromStorage(): BackupJob[] | null {
   try {
-    const raw = localStorage.getItem(GLOBAL_BACKUP_JOBS_STORAGE_KEY)
+    const raw = localStorage.getItem(BACKUP_JOBS_STORAGE_KEY)
     if (!raw) return null
     const parsed = JSON.parse(raw) as { jobs: BackupJob[]; cachedAt: number }
-    if (!parsed?.cachedAt || Date.now() - parsed.cachedAt > GLOBAL_BACKUP_JOBS_TTL) return null
+    if (!parsed?.cachedAt || Date.now() - parsed.cachedAt > BACKUP_JOBS_TTL) return null
     return parsed.jobs ?? null
   } catch {
     return null
@@ -41,14 +41,14 @@ function readFromStorage(): BackupJob[] | null {
 
 function writeToStorage(jobs: BackupJob[]) {
   try {
-    localStorage.setItem(GLOBAL_BACKUP_JOBS_STORAGE_KEY, JSON.stringify({ jobs, cachedAt: Date.now() }))
+    localStorage.setItem(BACKUP_JOBS_STORAGE_KEY, JSON.stringify({ jobs, cachedAt: Date.now() }))
   } catch {
     // Ignore storage quota / write errors
   }
 }
 
 function isFresh(): boolean {
-  return _jobs !== null && Date.now() - _loadedAt < GLOBAL_BACKUP_JOBS_TTL
+  return _jobs !== null && Date.now() - _loadedAt < BACKUP_JOBS_TTL
 }
 
 function notify(jobs: BackupJob[]) {

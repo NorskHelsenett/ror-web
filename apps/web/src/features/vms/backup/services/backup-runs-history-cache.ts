@@ -10,7 +10,7 @@
 import type { BackupRun } from '@ror/js-api-client'
 import { format, startOfDay, subDays } from 'date-fns'
 import { useEffect, useMemo, useRef } from 'react'
-import { useGlobalBackupRuns } from '@/features/backup/cache/global-backup-runs-cache'
+import { useGlobalBackupRuns } from '@/features/backup/cache/backup-runs-cache'
 import { useState } from 'react'
 
 export const backupRunsHistoryCacheKey = 'backup-runs-history-summary'
