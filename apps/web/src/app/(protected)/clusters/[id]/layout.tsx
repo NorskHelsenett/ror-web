@@ -23,12 +23,12 @@ interface ClusterPageLayoutProps {
 // TODO: Uncomment the following lines when the respective components are available
 const {
   cluster,
-  // clusterIngresses,
-  // clusterNodePools,
-  // clusterPolicies,
+  clusterIngresses,
+  clusterNodePools,
+  clusterPolicies,
   clusterVulnerabilities,
-  // clusterCompliance,
-  // clusterAbout,
+  clusterCompliance,
+  clusterAbout,
   clusterRawData,
 } = routes.app
 
@@ -43,30 +43,30 @@ const createTabNavigationItems = (clusterId: string) => {
       label: 'Details',
       href: cluster.getHref(clusterId),
     },
-    // {
-    //   label: clusterIngresses.label,
-    //   href: clusterIngresses.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterNodePools.label,
-    //   href: clusterNodePools.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterPolicies.label,
-    //   href: clusterPolicies.getHref(clusterId),
-    // },
+    {
+      label: clusterIngresses.label,
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=ingresses`,
+    },
+    {
+      label: clusterNodePools.label,
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=nodepools`,
+    },
+    {
+      label: clusterPolicies.label,
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=policyReports`,
+    },
     {
       label: clusterVulnerabilities.label,
-      href: clusterVulnerabilities.getHref(clusterId),
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=vulnerabilityReports`,
     },
-    // {
-    //   label: clusterCompliance.label,
-    //   href: clusterCompliance.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterAbout.label,
-    //   href: clusterAbout.getHref(clusterId),
-    // },
+    {
+      label: clusterCompliance.label,
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=complianceReports`,
+    },
+    {
+      label: clusterAbout.label,
+      href: `https://ror.nhn.no/cluster/${clusterId}?tab=metadata`,
+    },
     {
       label: clusterRawData.label,
       href: clusterRawData.getHref(clusterId),
@@ -98,7 +98,9 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   try {
     const clusterList = (await fetchCluster(id)) as ClusterListItemView
     const cluster = clusterList.rows[0]
-    const tabs = createTabNavigationItems(id)
+    const clusterId = cluster.clusterId?.fieldValue || 'missing'
+    console.log('cluster:', cluster)
+    const tabs = createTabNavigationItems(clusterId)
     const clusterContextValue = { cluster }
 
     return (
