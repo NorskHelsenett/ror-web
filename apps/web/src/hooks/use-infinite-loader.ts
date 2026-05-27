@@ -53,6 +53,20 @@ export function useInfiniteLoader<T>({
   // Stores the hash of the last known data to detect changes and reset if needed.
   const lastKeyRef = useRef(getItemsKey(initial))
 
+  // Ref-based mirror of `hasMore` state — allows fetchMore to read current value
+  // without being listed as a dependency (avoids stale closure issues)
+  const hasMoreRef = useRef(true)
+  // Ref-based mirror of `isLoading` state — same reason as hasMoreRef
+  const isLoadingRef = useRef(false)
+  // Keep hasMoreRef in sync whenever the hasMore state value changes
+  useEffect(() => {
+    hasMoreRef.current = hasMore
+  }, [hasMore])
+  // Keep isLoadingRef in sync whenever the isLoading state value changes
+  useEffect(() => {
+    isLoadingRef.current = isLoading
+  }, [isLoading])
+
   // Reset if the initial data changes (for example, new server payload or refreshed state)
   useEffect(() => {
     const nextKey = getItemsKey(initial)
@@ -75,8 +89,9 @@ export function useInfiniteLoader<T>({
 
   // Fetch more items (manually or triggered by scroll)
   const fetchMore = useCallback(async () => {
-    // Skip if already fetching or no more items left
-    if (inFlightRef.current || isLoading || !hasMore) return
+    // Read from refs instead of state — avoids stale closure where
+    // isLoading/hasMore were captured at callback creation time, not call time
+    if (inFlightRef.current || isLoadingRef.current || !hasMoreRef.current) return
     inFlightRef.current = true
     setIsLoading(true)
 
@@ -104,7 +119,7 @@ export function useInfiniteLoader<T>({
         inFlightRef.current = false
       }
     }
-  }, [items, pageSize, loadMore, hasMore, isLoading, getItemId])
+  }, [items, pageSize, loadMore, getItemId])
 
   // Automatically trigger fetchMore() when sentinel enters the viewport
   useEffect(() => {
@@ -113,16 +128,12 @@ export function useInfiniteLoader<T>({
 
     const io = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0]
-        if (entry.isIntersecting && !isLoading && hasMore) {
-          fetchMore()
-        }
+        // Guard removed here — fetchMore handles it internally via refs now.
+        // Previously, isLoading/hasMore here caused the observer to re-register
+        // on every state change, which could trigger duplicate fetches
+        if (entries[0].isIntersecting) fetchMore()
       },
-      {
-        root: null, // uses viewport
-        rootMargin: '600px', // prefetch early while scrolling
-        threshold: 0,
-      }
+      { root: null, rootMargin: '600px', threshold: 0 }
     )
 
     io.observe(el)
