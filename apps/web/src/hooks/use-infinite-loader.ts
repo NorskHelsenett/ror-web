@@ -53,30 +53,19 @@ export function useInfiniteLoader<T>({
   // Stores the hash of the last known data to detect changes and reset if needed.
   const lastKeyRef = useRef(getItemsKey(initial))
 
-  // Ref-based mirror of `hasMore` state — allows fetchMore to read current value
-  // without being listed as a dependency (avoids stale closure issues)
-  const hasMoreRef = useRef(true)
-  // Ref-based mirror of `isLoading` state
-  const isLoadingRef = useRef(false)
-  // Ref-based mirror of `initial.length` state
-  const itemsLengthRef = useRef(initial.length)
-  // Keep hasMoreRef in sync whenever the hasMore state value changes
-  useEffect(() => {
-    hasMoreRef.current = hasMore
-  }, [hasMore])
-  // Keep isLoadingRef in sync whenever the isLoading state value changes
-  useEffect(() => {
-    isLoadingRef.current = isLoading
-  }, [isLoading])
-
   // Reset if the initial data changes (for example, new server payload or refreshed state)
   useEffect(() => {
-    setItems(initial)
-    itemsLengthRef.current = initial.length // ← reset offset to match fresh data
-    setHasMore(true)
-    runIdRef.current++
-    inFlightRef.current = false
-  }, [initial, sort])
+    const nextKey = getItemsKey(initial)
+    if (nextKey !== lastKeyRef.current) {
+      // Always reset — key check was preventing updates when search returned same-sized array
+      lastKeyRef.current = nextKey
+      setItems(initial)
+      setHasMore(true) // always reset to true — let loadMore determine if there's more
+      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
+      runIdRef.current++
+      inFlightRef.current = false
+    }
+  }, [initial, getItemsKey])
 
   // Reset when the sorting order changes
   useEffect(() => {
@@ -86,45 +75,59 @@ export function useInfiniteLoader<T>({
 
   // Fetch more items (manually or triggered by scroll)
   const fetchMore = useCallback(async () => {
-    if (inFlightRef.current || isLoadingRef.current || !hasMoreRef.current) return
+    // Skip if already fetching or no more items left
+    if (inFlightRef.current || isLoading || !hasMore) return
     inFlightRef.current = true
     setIsLoading(true)
 
     const runId = runIdRef.current
     try {
-      const data = await loadMore(itemsLengthRef.current, pageSize) // ← ref, not items.length
+      // Load more data from backend
+      const data = await loadMore(items.length, pageSize)
+
+      // Ignore outdated responses (e.g., sort changed mid-fetch)
       if (runId !== runIdRef.current) return
 
+      // Merge new items while preventing duplicates
       setItems((prev) => {
         const seen = new Set(prev.map(getItemId))
         const incoming = data.items.filter((item) => !seen.has(getItemId(item)))
-        const next = incoming.length ? [...prev, ...incoming] : prev
-        itemsLengthRef.current = next.length
-        return next
+        return incoming.length ? [...prev, ...incoming] : prev
       })
 
+      // Mark as complete if no additional data remains
       if (!data.hasMore) setHasMore(false)
     } finally {
+      // Only end loading if this request is the latest one
       if (runId === runIdRef.current) {
         setIsLoading(false)
         inFlightRef.current = false
       }
     }
-  }, [pageSize, loadMore, getItemId])
+  }, [items, pageSize, loadMore, hasMore, isLoading, getItemId])
 
   // Automatically trigger fetchMore() when sentinel enters the viewport
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
+
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) fetchMore()
+        const entry = entries[0]
+        if (entry.isIntersecting && !isLoading && hasMore) {
+          fetchMore()
+        }
       },
-      { root: null, rootMargin: '600px', threshold: 0 }
+      {
+        root: null, // uses viewport
+        rootMargin: '600px', // prefetch early while scrolling
+        threshold: 0,
+      }
     )
+
     io.observe(el)
     return () => io.disconnect()
-  }, [fetchMore])
+  }, [fetchMore, isLoading, hasMore])
 
   return { items, sentinelRef, isLoading, hasMore, fetchMore }
 }
