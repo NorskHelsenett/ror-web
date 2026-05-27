@@ -19,8 +19,6 @@ interface ClusterPageLayoutProps {
   }>
   children: ReactNode
 }
-
-// TODO: Uncomment the following lines when the respective components are available
 const {
   cluster,
   clusterIngresses,

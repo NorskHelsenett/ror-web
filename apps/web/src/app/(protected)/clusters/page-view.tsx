@@ -198,7 +198,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
         ))}
         <div ref={sentinelRef} className='h-px' />
       </div>
-      {isLoading && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
+      {isLoading && hasMore && <div style={{ textAlign: 'center', padding: 16 }}>Loading...</div>}
       {!hasMore && <div style={{ textAlign: 'center', padding: 16, color: '#888' }}>All clusters are loaded.</div>}
     </div>
   )
