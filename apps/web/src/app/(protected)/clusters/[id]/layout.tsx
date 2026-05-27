@@ -99,7 +99,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
     const clusterList = (await fetchCluster(id)) as ClusterListItemView
     const cluster = clusterList.rows[0]
     const clusterId = cluster.clusterId?.fieldValue || 'missing'
-    console.log('cluster:', cluster)
     const tabs = createTabNavigationItems(clusterId)
     const clusterContextValue = { cluster }
 
