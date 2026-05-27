@@ -56,8 +56,10 @@ export function useInfiniteLoader<T>({
   // Ref-based mirror of `hasMore` state — allows fetchMore to read current value
   // without being listed as a dependency (avoids stale closure issues)
   const hasMoreRef = useRef(true)
-  // Ref-based mirror of `isLoading` state — same reason as hasMoreRef
+  // Ref-based mirror of `isLoading` state
   const isLoadingRef = useRef(false)
+  // Ref-based mirror of `initial.length` state
+  const itemsLengthRef = useRef(initial.length)
   // Keep hasMoreRef in sync whenever the hasMore state value changes
   useEffect(() => {
     hasMoreRef.current = hasMore
@@ -89,56 +91,45 @@ export function useInfiniteLoader<T>({
 
   // Fetch more items (manually or triggered by scroll)
   const fetchMore = useCallback(async () => {
-    // Read from refs instead of state — avoids stale closure where
-    // isLoading/hasMore were captured at callback creation time, not call time
     if (inFlightRef.current || isLoadingRef.current || !hasMoreRef.current) return
     inFlightRef.current = true
     setIsLoading(true)
 
     const runId = runIdRef.current
     try {
-      // Load more data from backend
-      const data = await loadMore(items.length, pageSize)
-
-      // Ignore outdated responses (e.g., sort changed mid-fetch)
+      const data = await loadMore(itemsLengthRef.current, pageSize) // ← ref, not items.length
       if (runId !== runIdRef.current) return
 
-      // Merge new items while preventing duplicates
       setItems((prev) => {
         const seen = new Set(prev.map(getItemId))
         const incoming = data.items.filter((item) => !seen.has(getItemId(item)))
-        return incoming.length ? [...prev, ...incoming] : prev
+        const next = incoming.length ? [...prev, ...incoming] : prev
+        itemsLengthRef.current = next.length
+        return next
       })
 
-      // Mark as complete if no additional data remains
       if (!data.hasMore) setHasMore(false)
     } finally {
-      // Only end loading if this request is the latest one
       if (runId === runIdRef.current) {
         setIsLoading(false)
         inFlightRef.current = false
       }
     }
-  }, [items, pageSize, loadMore, getItemId])
+  }, [pageSize, loadMore, getItemId])
 
   // Automatically trigger fetchMore() when sentinel enters the viewport
   useEffect(() => {
     const el = sentinelRef.current
     if (!el) return
-
     const io = new IntersectionObserver(
       (entries) => {
-        // Guard removed here — fetchMore handles it internally via refs now.
-        // Previously, isLoading/hasMore here caused the observer to re-register
-        // on every state change, which could trigger duplicate fetches
         if (entries[0].isIntersecting) fetchMore()
       },
       { root: null, rootMargin: '600px', threshold: 0 }
     )
-
     io.observe(el)
     return () => io.disconnect()
-  }, [fetchMore, isLoading, hasMore])
+  }, [fetchMore])
 
   return { items, sentinelRef, isLoading, hasMore, fetchMore }
 }
