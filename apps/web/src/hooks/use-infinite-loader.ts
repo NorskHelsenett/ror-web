@@ -71,17 +71,12 @@ export function useInfiniteLoader<T>({
 
   // Reset if the initial data changes (for example, new server payload or refreshed state)
   useEffect(() => {
-    const nextKey = getItemsKey(initial)
-    if (nextKey !== lastKeyRef.current) {
-      // Always reset — key check was preventing updates when search returned same-sized array
-      lastKeyRef.current = nextKey
-      setItems(initial)
-      setHasMore(true) // always reset to true — let loadMore determine if there's more
-      setIsLoading(false) // clear loading flag so fetchMore isn't permanently blocked
-      runIdRef.current++
-      inFlightRef.current = false
-    }
-  }, [initial, getItemsKey])
+    setItems(initial)
+    itemsLengthRef.current = initial.length // ← reset offset to match fresh data
+    setHasMore(true)
+    runIdRef.current++
+    inFlightRef.current = false
+  }, [initial, sort])
 
   // Reset when the sorting order changes
   useEffect(() => {
