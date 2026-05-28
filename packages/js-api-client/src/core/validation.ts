@@ -27,13 +27,16 @@ export function validateResponse<T>(data: unknown, schema: z.ZodType<T>): T {
     // like when the user does not have access to any clusters.
     // This could benefit from being fixed in the API, but for now we handle it here.
     // TODO: Ask Håvard or Roger if this should be fixed in the API when they are back from holidays.
-    if (
-      typeof data === 'object' &&
-      data !== null &&
-      Object.keys(data).length === 0 &&
-      schema.safeParse({ resources: [] }).success
-    ) {
-      return schema.parse({ resources: [] })
+    if (typeof data === 'object' && data !== null && Object.keys(data).length === 0) {
+      // Handle resource-based schemas (e.g. kubernetesClusters)
+      if (schema.safeParse({ resources: [] }).success) {
+        return schema.parse({ resources: [] })
+      }
+      // Handle view-based schemas (e.g. clusterListView, clusterListItemView)
+      const emptyView = { type: '', columns: [], rows: [] }
+      if (schema.safeParse(emptyView).success) {
+        return schema.parse(emptyView)
+      }
     }
 
     return schema.parse(data)
