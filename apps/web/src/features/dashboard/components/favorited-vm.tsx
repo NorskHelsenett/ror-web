@@ -1,14 +1,11 @@
 'use client'
 
-import { VirtualMachine } from '@ror/js-api-client'
 import { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { DotIcon } from 'lucide-react'
 import { cn } from '@/utils/clsxm'
 import {
   getVmPowerState,
   getTeamIdentifier,
-  getLocation,
-  getVmFamily,
   getStatusCpuUsage,
   getSpecCpuTotal,
   getSpecMemory,
