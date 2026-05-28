@@ -5,7 +5,7 @@ import { AuthenticationError, AuthorizationError, isApiError, NotFoundError, Val
 export function RenderApiError(error: unknown) {
   let errorButtonLink: string
   let errorText: string
-  const clustersPage = routes.app.clusters.getHref()
+  const dashboardPage = routes.app.dashboard.getHref()
   const buttonTextHomepage = 'return to homepage'
 
   if (error instanceof AuthenticationError) {
@@ -23,7 +23,7 @@ export function RenderApiError(error: unknown) {
     // Handle 403 - show permission denied message
     errorText = 'You do not have permission to access this resource.'
     console.error(errorText)
-    errorButtonLink = clustersPage
+    errorButtonLink = dashboardPage
     return Error({
       errorCode: '403',
       errorText: errorText,
@@ -34,7 +34,7 @@ export function RenderApiError(error: unknown) {
     // Handle 404 - show not found message
     errorText = 'The requested resource was not found.'
     console.error(errorText)
-    errorButtonLink = clustersPage
+    errorButtonLink = dashboardPage
     return Error({
       errorCode: '403',
       errorText: errorText,
@@ -55,7 +55,7 @@ export function RenderApiError(error: unknown) {
       errorCode: '400',
       errorText: 'Validation error occurred.',
       errorButtonText: buttonTextHomepage,
-      errorButtonLink: clustersPage,
+      errorButtonLink: dashboardPage,
     })
   } else if (isApiError(error)) {
     // Handle other API errors
@@ -68,7 +68,7 @@ export function RenderApiError(error: unknown) {
       errorCode: String(error.status),
       errorText: error.message,
       errorButtonText: 'Go Back',
-      errorButtonLink: clustersPage,
+      errorButtonLink: dashboardPage,
     })
   } else {
     // Handle unexpected errors
@@ -77,7 +77,7 @@ export function RenderApiError(error: unknown) {
       errorCode: '500',
       errorText: 'An unexpected error occurred.',
       errorButtonText: buttonTextHomepage,
-      errorButtonLink: clustersPage,
+      errorButtonLink: dashboardPage,
     })
   }
 }
