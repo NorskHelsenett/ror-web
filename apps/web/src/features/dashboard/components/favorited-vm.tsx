@@ -43,6 +43,7 @@ export const FavoritedVm = ({ vm }: { vm: VMWithBackupStatus }) => {
 
   const cpuUsage = getStatusCpuUsage(vm) ?? 0
   const cpuTotal = getSpecCpuTotal(vm)
+  const cpuPct = cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0
 
   const memorySizeBytes = getSpecMemory(vm)
   const memoryUsageBytes = getStatusMemoryUsage(vm) ?? 0
@@ -65,8 +66,8 @@ export const FavoritedVm = ({ vm }: { vm: VMWithBackupStatus }) => {
         <span className='text-xs'>CPU</span>
         <ResourceBar
           capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
-          used={`${cpuUsage}%`}
-          percentage={cpuUsage}
+          used={`${cpuUsage} cores`}
+          percentage={cpuPct}
           showPercentage={false}
         />
         <span className='text-xs shrink-0 text-muted-foreground'>Mem</span>
