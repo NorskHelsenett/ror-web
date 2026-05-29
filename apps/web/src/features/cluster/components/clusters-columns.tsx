@@ -267,7 +267,7 @@ export function getClustersTableColumns(
           const argo = getArgocdUrlView(info.row.original)
           return argo ? (
             <a
-              href={`https://${argo}`}
+              href={`${argo}`}
               target='_blank'
               rel='noreferrer'
               className='flex items-center gap-2 text-blue-600 dark:text-blue-500'
@@ -287,7 +287,7 @@ export function getClustersTableColumns(
           const grafana = getGrafanaUrlView(info.row.original)
           return grafana ? (
             <a
-              href={`https://${grafana}`}
+              href={`${grafana}`}
               target='_blank'
               rel='noreferrer'
               className='flex items-center gap-2 text-blue-600 dark:text-blue-500'

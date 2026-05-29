@@ -38,11 +38,11 @@ export interface navigationItemObject {
 
 const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
 
-const createTabNavigationItems = (clusterId: string) => {
+const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
   return [
     {
       label: 'Details',
-      href: cluster.getHref(clusterId),
+      href: cluster.getHref(clusterUid),
     },
     {
       label: clusterIngresses.label,
@@ -70,7 +70,7 @@ const createTabNavigationItems = (clusterId: string) => {
     },
     {
       label: clusterRawData.label,
-      href: clusterRawData.getHref(clusterId),
+      href: clusterRawData.getHref(clusterUid),
     },
   ]
 }
@@ -102,8 +102,9 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
     if (!cluster) {
       redirect('/clusters')
     }
-    const clusterId = cluster.clusterUid?.fieldValue || 'missing'
-    const tabs = createTabNavigationItems(clusterId)
+    const clusterId = cluster.clusterId?.fieldValue || 'missing'
+    const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
+    const tabs = createTabNavigationItems(clusterId, clusterUid)
     const clusterContextValue = { cluster }
 
     return (

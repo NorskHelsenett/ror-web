@@ -56,7 +56,13 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100', o
       aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
       aria-pressed={favorited}
     >
-      <Star className={cn(favorited && 'fill-yellow-500', 'w-full h-full hover:fill-yellow-500', scale)} />
+      <Star
+        className={cn(
+          favorited && 'fill-yellow-300 dark:fill-yellow-500',
+          'w-full h-full hover:fill-yellow-300 dark:hover:fill-yellow-500',
+          scale
+        )}
+      />
     </button>
   )
 }
