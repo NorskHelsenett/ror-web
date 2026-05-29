@@ -75,9 +75,11 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
       <Header title='My Dashboard' />
       <div className='mx-6 my-8'>
         <NotReadyMessage removable={false}>
-          This page is still under construction. Currently the data is saved locally in the browser. This means that if
-          you clear the cache of the site, your overview items will be set back to standard and favorited items will be
-          erased.
+          Welcome to the new ROR website! We are excited to launch this, and aware that some parts of the page is still
+          not operational. In these places we have aimed at rerouting you to the old ROR website. If you prefer the old
+          ROR website, you can find this in the sidebar to your left. Currently the data on this dashboard site is saved
+          locally in the browser. This means that if you clear the cache of the site, your overview items will be set
+          back to standard and favorited items will be erased.
         </NotReadyMessage>
         <OverviewSection allItems={overviewItems} />
         <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
