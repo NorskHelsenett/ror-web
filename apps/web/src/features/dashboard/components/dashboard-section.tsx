@@ -27,7 +27,7 @@ export const DashboardSection = ({
   return (
     <div className={cn('mx-7', className)}>
       <div className='flex justify-between items-center'>
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         {editable &&
           (isEditing ? (
             <Button onClick={() => setIsEditing(false)} variant='green'>

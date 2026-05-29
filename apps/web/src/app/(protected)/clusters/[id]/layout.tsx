@@ -5,6 +5,7 @@
  */
 
 import { cache, Fragment, ReactNode } from 'react'
+import { redirect } from 'next/navigation'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
@@ -19,8 +20,6 @@ interface ClusterPageLayoutProps {
   }>
   children: ReactNode
 }
-
-// TODO: Uncomment the following lines when the respective components are available
 const {
   cluster,
   clusterIngresses,
@@ -98,6 +97,9 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   try {
     const clusterList = (await fetchCluster(id)) as ClusterListItemView
     const cluster = clusterList.rows[0]
+    if (!cluster) {
+      redirect('/clusters')
+    }
     const clusterId = cluster.clusterId?.fieldValue || 'missing'
     const tabs = createTabNavigationItems(clusterId)
     const clusterContextValue = { cluster }
