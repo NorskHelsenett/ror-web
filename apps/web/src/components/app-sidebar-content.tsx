@@ -100,7 +100,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Statistics',
-        url: `${oldRorBaseUrl}https://ror.nhn.no/metrics`, // TODO: revert to routes.app.statistics.getHref() when backend is available
+        url: `${oldRorBaseUrl}metrics`, // TODO: revert to routes.app.statistics.getHref() when backend is available
       },
     ],
   },
