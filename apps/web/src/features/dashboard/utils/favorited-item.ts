@@ -16,15 +16,16 @@ export async function loadFavoritedClusters(uids: string[]): Promise<ClusterList
 
 export async function loadFavoritedVms(uids: string[]): Promise<VirtualMachine[]> {
   const api = await getRorApi()
-  const results: VirtualMachine[] = []
-  for (const uid of uids) {
-    try {
-      const res = await api.virtualMachine.list(new URLSearchParams({ uid }))
-      const vm = res?.resources?.[0]
-      if (vm) results.push(vm)
-    } catch (error) {
-      console.error('Failed to fetch VM:', uid, error)
-    }
-  }
-  return results
+  const vms = await Promise.all(
+    uids.map(async (uid) => {
+      try {
+        const res = await api.virtualMachine.list(new URLSearchParams({ uid }))
+        return res?.resources?.[0] ?? null
+      } catch (error) {
+        console.error('Failed to fetch VM:', uid, error)
+        return null
+      }
+    })
+  )
+  return vms.filter((vm): vm is VirtualMachine => Boolean(vm))
 }
