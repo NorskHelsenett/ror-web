@@ -1,6 +1,5 @@
 'use client'
 
-import { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { DotIcon } from 'lucide-react'
 import { cn } from '@/utils/clsxm'
 import {
@@ -14,7 +13,7 @@ import {
 } from '@/features/vms/utils/vms'
 import { ResourceBar } from '@/features/cluster/components/resource-bar'
 import { formatBytes } from '@/features/vms/components/metrics-cell'
-import { BackupStatusTableDisplay } from '@/features/vms/backup/components/backup-status-display'
+import { VirtualMachine } from '@ror/js-api-client'
 
 const Dot = ({ status }: { status: string }) => (
   <span className='flex items-center justify-around size-5'>
@@ -38,7 +37,7 @@ const DisplayedPowerState = ({ status, className }: { status: string; className?
   return <span className={className}>{label}</span>
 }
 
-export const FavoritedVm = ({ vm }: { vm: VMWithBackupStatus }) => {
+export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
   const powerState = getVmPowerState(vm)
 
   const cpuUsage = getStatusCpuUsage(vm) ?? 0
@@ -84,10 +83,6 @@ export const FavoritedVm = ({ vm }: { vm: VMWithBackupStatus }) => {
           percentage={diskPct}
           showPercentage={false}
         />
-      </div>
-      <div className='flex items-center gap-2 pl-1 pt-1 border-t border-gray-700'>
-        <span className='text-xs text-muted-foreground shrink-0'>Backup</span>
-        <BackupStatusTableDisplay vm={vm} />
       </div>
     </div>
   )

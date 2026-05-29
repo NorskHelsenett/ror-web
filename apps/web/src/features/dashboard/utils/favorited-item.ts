@@ -18,9 +18,13 @@ export async function loadFavoritedVms(uids: string[]): Promise<VirtualMachine[]
   const api = await getRorApi()
   const results: VirtualMachine[] = []
   for (const uid of uids) {
-    const res = await api.virtualMachine.id(uid)
-    const vm = res?.resources?.[0]
-    if (vm) results.push(vm)
+    try {
+      const res = await api.virtualMachine.list(new URLSearchParams({ uid }))
+      const vm = res?.resources?.[0]
+      if (vm) results.push(vm)
+    } catch (error) {
+      console.error('Failed to fetch VM:', uid, error)
+    }
   }
   return results
 }
