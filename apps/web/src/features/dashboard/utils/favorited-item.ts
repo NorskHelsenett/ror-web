@@ -19,7 +19,7 @@ export async function loadFavoritedVms(uids: string[]): Promise<VirtualMachine[]
   const results: VirtualMachine[] = []
   for (const uid of uids) {
     try {
-      const res = await api.virtualMachine.list(new URLSearchParams({ uid }))
+      const res = await api.virtualMachine.id(uid)
       const vm = res?.resources?.[0]
       if (vm) results.push(vm)
     } catch (error) {
