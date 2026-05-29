@@ -33,7 +33,7 @@ import {
   getVmDisks,
   getTeamIdentifier,
   getLocation,
-  getVmExternalId,
+  getVmUid,
 } from '@/features/vms/utils/vms'
 import { changePowerStateValues } from '../types/powerState'
 import { BackupStatusDisplay } from '../backup/components/backup-status-display'
@@ -77,7 +77,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
   const toolVersion = getVmToolVersion(vm)
   const powerState = getVmPowerState(vm)
   const location = getLocation(vm)
-  const externalId = getVmExternalId(vm)
+  const vmUid = getVmUid(vm)
 
   const envColor = vmCardPowerStatus[powerState ?? 'undefined'] ?? vmCardPowerStatus['undefined']
 
@@ -226,7 +226,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
       >
         <CardHeader className='m-0 mb-4 p-0 w-full relative'>
           <CardTitle className={cn('text-sm rounded-t-xl px-6 py-2 flex items-center gap-3', envColor[0], envColor[1])}>
-            <FavoriteStar domain='vms' itemId={externalId} className='w-8 h-8' scale='scale-75' />
+            <FavoriteStar domain='vms' itemId={vmUid} className='w-8 h-8' scale='scale-75' />
             {name.toLowerCase()}
           </CardTitle>
         </CardHeader>
