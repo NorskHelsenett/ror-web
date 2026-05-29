@@ -32,7 +32,6 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
     if (!vmUids.length) {
       setFavoritedVms([])
     } else {
-      console.log('!!!')
       loadFavoritedVms(vmUids).then(setFavoritedVms)
     }
   }, [])
