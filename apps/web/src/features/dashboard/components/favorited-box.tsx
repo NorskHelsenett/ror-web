@@ -24,7 +24,7 @@ export const FavoritedBox = ({
   className,
   onUnfavorite,
 }: FavoritedBoxProps) => (
-  <DashboardBox className={cn(className, isError && 'bg-red-900')} title={title}>
+  <DashboardBox className={cn(className, isError && 'bg-red-300 dark:bg-red-900')} title={title}>
     <FavoriteStar
       domain={domain}
       itemId={itemId}
