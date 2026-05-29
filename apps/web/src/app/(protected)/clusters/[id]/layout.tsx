@@ -102,7 +102,7 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
     if (!cluster) {
       redirect('/clusters')
     }
-    const clusterId = cluster.clusterId?.fieldValue || 'missing'
+    const clusterId = cluster.clusterUid?.fieldValue || 'missing'
     const tabs = createTabNavigationItems(clusterId)
     const clusterContextValue = { cluster }
 
