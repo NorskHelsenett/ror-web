@@ -112,9 +112,58 @@ export async function GET(req: NextRequest) {
     if (debug) console.log('[AUTH][SIGNIN] providers check failed', String(e))
   }
 
-  // Normal case: go straight to Dex provider with sanitized callback
+  // Normal case: initiate OAuth flow directly (skip the NextAuth button page)
+  // 1. Fetch CSRF token from NextAuth
+  try {
+    const csrfUrl = new URL('/api/auth/csrf', publicOrigin)
+    const csrfRes = await fetch(csrfUrl, {
+      cache: 'no-store',
+      headers: { cookie: req.headers.get('cookie') || '' },
+    })
+    if (csrfRes.ok) {
+      const { csrfToken } = (await csrfRes.json()) as { csrfToken: string }
+      // Forward the set-cookie from the CSRF response (contains the next-auth csrf cookie)
+      const csrfCookies = csrfRes.headers.get('set-cookie')
+
+      // 2. POST to NextAuth's signin endpoint to get the OAuth redirect URL
+      const signinUrl = new URL('/api/auth/signin/dex', publicOrigin)
+      const body = new URLSearchParams({
+        csrfToken,
+        callbackUrl: safeCallback,
+      })
+      const signinRes = await fetch(signinUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          cookie: [req.headers.get('cookie') || '', csrfCookies || ''].filter(Boolean).join('; '),
+        },
+        body: body.toString(),
+        redirect: 'manual', // Don't follow the redirect, capture it
+      })
+
+      const location = signinRes.headers.get('location')
+      if (location) {
+        if (debug) console.log('[AUTH][SIGNIN] direct OAuth redirect', { to: location })
+        const response = NextResponse.redirect(location, { status: 302 })
+        // Forward any cookies set by NextAuth (PKCE state, etc.)
+        const setCookies = signinRes.headers.getSetCookie?.() ?? []
+        for (const cookie of setCookies) {
+          response.headers.append('set-cookie', cookie)
+        }
+        if (csrfCookies) {
+          response.headers.append('set-cookie', csrfCookies)
+        }
+        return response
+      }
+      if (debug) console.log('[AUTH][SIGNIN] no location in signin response, falling back')
+    }
+  } catch (e) {
+    if (debug) console.log('[AUTH][SIGNIN] direct OAuth flow failed, falling back', String(e))
+  }
+
+  // Fallback: redirect to NextAuth's sign-in page (shows button)
   const to = new URL('/api/auth/signin/dex', publicOrigin)
   to.searchParams.set('callbackUrl', safeCallback)
-  if (debug) console.log('[AUTH][SIGNIN] redirect', { to: to.toString(), publicOrigin })
+  if (debug) console.log('[AUTH][SIGNIN] redirect(fallback)', { to: to.toString(), publicOrigin })
   return NextResponse.redirect(to, { status: 302 })
 }
