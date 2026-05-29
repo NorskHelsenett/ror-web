@@ -9,6 +9,7 @@ import {
   Settings2,
   Monitor,
   Boxes,
+  House,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -35,6 +36,8 @@ interface Section {
 //const vmsEnabled = process.env.NEXT_PUBLIC_VMS_ENABLED === 'true'
 const vmsEnabled = true
 
+const oldRorBaseUrl = 'https://ror.nhn.no/'
+
 /*
  * TODO: Add sections as they are created
  */
@@ -49,24 +52,24 @@ const sections: Section[] = [
   //       }
   //     ]
   //   },
-  //   {
-  //     title: "Overview",
-  //     icon: House,
-  //     isActive: true,
-  //     items: [
-  //       {
-  //         title: "Overview",
-  //         url: "#",
-  //       }
-  //     ]
-  //   },
+  {
+    title: 'Overview',
+    icon: House,
+    isActive: true,
+    items: [
+      {
+        title: routes.app.dashboard.label,
+        url: routes.app.dashboard.getHref(),
+      },
+    ],
+  },
   {
     title: 'Clusters',
     icon: Boxes,
     isActive: true,
     items: [
       {
-        title: 'Clusters',
+        title: routes.app.clusters.label,
         url: routes.app.clusters.getHref(),
       },
     ],
@@ -77,15 +80,15 @@ const sections: Section[] = [
     isActive: true,
     items: [
       {
-        title: 'Virtual machines',
+        title: routes.app.vms.label,
         url: routes.app.vms.getHref(),
       },
       {
-        title: 'Backup jobs',
+        title: routes.app.backupJobs.label,
         url: routes.app.backupJobs.getHref(),
       },
       {
-        title: 'Backup runs',
+        title: routes.app.backupRuns.label,
         url: routes.app.backupRuns.getHref(),
       },
     ],
@@ -97,7 +100,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Statistics',
-        url: 'https://ror.nhn.no/metrics', // TODO: revert to routes.app.statistics.getHref() when backend is available
+        url: `${oldRorBaseUrl}https://ror.nhn.no/metrics`, // TODO: revert to routes.app.statistics.getHref() when backend is available
       },
     ],
   },
@@ -107,7 +110,7 @@ const sections: Section[] = [
     isActive: true,
     items: [
       {
-        title: 'Price list',
+        title: routes.app.priceList.label,
         url: routes.app.priceList.getHref(),
       },
     ],
@@ -119,11 +122,11 @@ const sections: Section[] = [
     items: [
       {
         title: 'Datacenters',
-        url: 'https://ror.nhn.no/admin/datacenter', // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
+        url: `${oldRorBaseUrl}admin/datacenter`, // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
       },
       {
         title: 'Policy reports',
-        url: 'https://ror.nhn.no/admin/policyreports',
+        url: `${oldRorBaseUrl}admin/policyreports`,
       },
       //         {
       //             title: 'Admin price list',
@@ -131,15 +134,15 @@ const sections: Section[] = [
       //         },
       {
         title: 'Projects',
-        url: 'https://ror.nhn.no/admin/projects',
+        url: `${oldRorBaseUrl}admin/projects`,
       },
       {
         title: 'Vulnerability reports',
-        url: 'https://ror.nhn.no/admin/vulnerabilityreports',
+        url: `${oldRorBaseUrl}admin/vulnerabilityreports`,
       },
       {
         title: 'Workspaces',
-        url: 'https://ror.nhn.no/workspaces',
+        url: `${oldRorBaseUrl}workspaces`,
       },
     ],
   },
@@ -173,7 +176,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Old ROR',
-        url: 'https://ror.nhn.no/',
+        url: oldRorBaseUrl,
       },
     ],
   },
