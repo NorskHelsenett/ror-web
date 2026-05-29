@@ -22,7 +22,7 @@ interface FavoriteStarProps {
     | 'scale-125'
     | 'scale-150'
     | 'scale-200'
-  onUnfavorite: () => void
+  onUnfavorite?: () => void
 }
 
 export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100', onUnfavorite }: FavoriteStarProps) => {
