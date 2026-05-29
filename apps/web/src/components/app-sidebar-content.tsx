@@ -36,7 +36,7 @@ interface Section {
 //const vmsEnabled = process.env.NEXT_PUBLIC_VMS_ENABLED === 'true'
 const vmsEnabled = true
 
-const oldRorBaseUrl = 'https://ror.nhn.no/'
+const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
 
 /*
  * TODO: Add sections as they are created

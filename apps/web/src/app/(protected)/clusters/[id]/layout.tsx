@@ -13,7 +13,6 @@ import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { fetchClusterViewItem } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView } from '@ror/js-api-client'
-import { oldRorBaseUrl } from '@/components/app-sidebar-content'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -36,6 +35,8 @@ export interface navigationItemObject {
   label: string
   href: string
 }
+
+const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
 
 const createTabNavigationItems = (clusterId: string) => {
   return [
