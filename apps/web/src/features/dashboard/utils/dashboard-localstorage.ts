@@ -30,6 +30,15 @@ export function addOverviewItem(item: OverviewItem): OverviewItem[] {
   return updated
 }
 
+export function getFavoritedItems(domain: string): string[] {
+  if (typeof window === 'undefined') return []
+  const stored = window.localStorage.getItem(`${domain}:favorite`)
+  if (stored) {
+    return JSON.parse(stored)
+  }
+  return []
+}
+
 export function addFavoriteItem(itemId: string, domain: string) {
   const items = getSavedPreference(`${domain}:favorite`, [] as string[])
   if (items.includes(itemId)) return items

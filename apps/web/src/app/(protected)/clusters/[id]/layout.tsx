@@ -36,6 +36,8 @@ export interface navigationItemObject {
   href: string
 }
 
+const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
+
 const createTabNavigationItems = (clusterId: string) => {
   return [
     {
@@ -44,27 +46,27 @@ const createTabNavigationItems = (clusterId: string) => {
     },
     {
       label: clusterIngresses.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=ingresses`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=ingresses`,
     },
     {
       label: clusterNodePools.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=nodepools`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=nodepools`,
     },
     {
       label: clusterPolicies.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=policyReports`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=policyReports`,
     },
     {
       label: clusterVulnerabilities.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=vulnerabilityReports`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=vulnerabilityReports`,
     },
     {
       label: clusterCompliance.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=complianceReports`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=complianceReports`,
     },
     {
       label: clusterAbout.label,
-      href: `https://ror.nhn.no/cluster/${clusterId}?tab=metadata`,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=metadata`,
     },
     {
       label: clusterRawData.label,
