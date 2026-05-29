@@ -52,7 +52,7 @@ export const mockVms = {
       apiVersion: 'general.ror.internal/v1alpha1',
       metadata: {
         name: names[idx % names.length],
-        uid: `mock-uid-${idx}`,
+        uid: `501425ca-4dd7-1950-f259-3e53d083b2${idx}`,
       },
       rormeta: {
         ownerref: {
