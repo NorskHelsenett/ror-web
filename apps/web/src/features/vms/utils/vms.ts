@@ -92,6 +92,10 @@ export interface MetricsData {
   }>
 }
 
+export const getVmUid = (vm: VirtualMachine): string => {
+  return vm?.metadata?.uid || ''
+}
+
 export const getVmOperatingSystemId = (vm: VirtualMachine): string => {
   return vm.virtualmachine?.status?.operatingSystem?.id || 'unknown-id'
 }
