@@ -10,7 +10,10 @@ import {
   getSpecMemory,
   getStatusMemoryUsage,
   getVmDisks,
+  getVmUid,
+  getVmName,
 } from '@/features/vms/utils/vms'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 import { ResourceBar } from '@/features/cluster/components/resource-bar'
 import { formatBytes } from '@/features/vms/components/metrics-cell'
 import { VirtualMachine } from '@ror/js-api-client'
@@ -37,6 +40,74 @@ const DisplayedPowerState = ({ status, className }: { status: string; className?
   return <span className={className}>{label}</span>
 }
 
+export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnfavorite?: () => void }) => {
+  const powerState = getVmPowerState(vm)
+
+  const cpuUsage = getStatusCpuUsage(vm) ?? 0
+  const cpuTotal = getSpecCpuTotal(vm)
+  const cpuPct = cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0
+
+  const memorySizeBytes = getSpecMemory(vm)
+  const memoryUsageBytes = getStatusMemoryUsage(vm) ?? 0
+  const memoryPct = memorySizeBytes ? (memoryUsageBytes / memorySizeBytes) * 100 : 0
+
+  const disks = getVmDisks(vm)
+  const diskTotalBytes = disks.reduce((sum, d) => sum + (d.sizeBytes ?? 0), 0)
+  const diskUsedBytes = disks.reduce((sum, d) => sum + (d.usageBytes ?? 0), 0)
+  const diskPct = diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0
+
+  const isPoweredOff = powerState === 'poweredOff'
+
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity',
+        isPoweredOff && 'opacity-50'
+      )}
+    >
+      <Dot status={powerState} />
+      <div className={cn('flex flex-1 items-center gap-3 min-w-0', isPoweredOff && 'grayscale')}>
+        <span className='text-sm truncate min-w-0 shrink'>{getVmName(vm)}</span>
+        <DotIcon />
+        <span className='flex-1 text-sm truncate min-w-0'>{getTeamIdentifier(vm)}</span>
+        <div className='flex items-center gap-1.5'>
+          <span className='text-xs text-muted-foreground w-6'>CPU</span>
+          <div className='w-30'>
+            <ResourceBar
+              capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
+              used={`${cpuUsage} cores`}
+              percentage={cpuPct}
+            />
+          </div>
+        </div>
+        <DotIcon />
+        <div className='flex items-center gap-1.5'>
+          <span className='text-xs text-muted-foreground w-12 '>Memory</span>
+          <div className='w-30'>
+            <ResourceBar
+              capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
+              used={formatBytes(memoryUsageBytes)}
+              percentage={memoryPct}
+            />
+          </div>
+        </div>
+        <DotIcon />
+        <div className='flex items-center gap-1.5'>
+          <span className='text-xs text-muted-foreground w-7 '>Disk</span>
+          <div className='w-30'>
+            <ResourceBar
+              capacity={formatBytes(diskTotalBytes)}
+              used={formatBytes(diskUsedBytes)}
+              percentage={diskPct}
+            />
+          </div>
+        </div>
+        <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
+      </div>
+    </div>
+  )
+}
+
 export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
   const powerState = getVmPowerState(vm)
 
@@ -53,36 +124,39 @@ export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
   const diskUsedBytes = disks.reduce((sum, d) => sum + (d.usageBytes ?? 0), 0)
   const diskPct = diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0
 
+  const isPoweredOff = powerState === 'poweredOff'
+
   return (
-    <div className='flex flex-col gap-2 min-w-86'>
+    <div className={cn('flex flex-col gap-2 min-w-86 transition-opacity', isPoweredOff && 'opacity-75')}>
       <div className='flex items-center'>
         <Dot status={powerState} />
-        <DisplayedPowerState status={powerState} className='text-sm' />
-        <DotIcon />
-        <span className='text-sm truncate max-w-48'>{getTeamIdentifier(vm)}</span>
+        <div className={cn('flex items-center min-w-0', isPoweredOff && 'grayscale')}>
+          <DisplayedPowerState status={powerState} className='text-sm' />
+          <DotIcon />
+          <span className='text-sm truncate max-w-48'>{getTeamIdentifier(vm)}</span>
+        </div>
       </div>
-      <div className='flex items-center gap-2 pl-1'>
-        <span className='text-xs'>CPU</span>
-        <ResourceBar
-          capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
-          used={`${cpuUsage} cores`}
-          percentage={cpuPct}
-          showPercentage={false}
-        />
-        <span className='text-xs shrink-0 text-muted-foreground'>Mem</span>
-        <ResourceBar
-          capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
-          used={formatBytes(memoryUsageBytes)}
-          percentage={memoryPct}
-          showPercentage={false}
-        />
-        <span className='text-xs shrink-0 text-muted-foreground'>Disk</span>
-        <ResourceBar
-          capacity={formatBytes(diskTotalBytes)}
-          used={formatBytes(diskUsedBytes)}
-          percentage={diskPct}
-          showPercentage={false}
-        />
+      <div className={cn('flex flex-col gap-1 pl-1', isPoweredOff && 'grayscale')}>
+        <div className='flex items-center gap-2'>
+          <span className='text-xs text-muted-foreground w-7'>CPU</span>
+          <ResourceBar
+            capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
+            used={`${cpuUsage} cores`}
+            percentage={cpuPct}
+          />
+        </div>
+        <div className='flex items-center gap-2'>
+          <span className='text-xs text-muted-foreground w-7'>Mem</span>
+          <ResourceBar
+            capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
+            used={formatBytes(memoryUsageBytes)}
+            percentage={memoryPct}
+          />
+        </div>
+        <div className='flex items-center gap-2'>
+          <span className='text-xs text-muted-foreground w-7 '>Disk</span>
+          <ResourceBar capacity={formatBytes(diskTotalBytes)} used={formatBytes(diskUsedBytes)} percentage={diskPct} />
+        </div>
       </div>
     </div>
   )

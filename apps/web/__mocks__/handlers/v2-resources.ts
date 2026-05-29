@@ -222,21 +222,24 @@ export const v2ResourcesHandlers = [
   http.get('http://localhost:10000/v2/resources/uid/:id', ({ params }) => {
     const { id } = params // Extract the resource ID from the URL
 
-    // Find a cluster resource with the matching clusterId
+    // Look up VM by uid first
+    const vm = (mockVms.resources as ResourceVm[]).find((res) => res.metadata.uid === id)
+    if (vm) {
+      return HttpResponse.json({ resources: [vm] })
+    }
+
+    // Find a cluster resource with the matching uid
     const cluster = clustersVersion2.resources.find(
       (res) => res.kind === 'KubernetesCluster' && res.metadata.uid === id
     )
 
-    const clusterInArray = []
-    clusterInArray.push(cluster)
-
     // Return 404 if not found
-    if (!clusterInArray) {
+    if (!cluster) {
       return HttpResponse.json({ message: 'Not found' }, { status: 404 })
     }
 
     // Return the found cluster resource
-    return HttpResponse.json(clusterInArray)
+    return HttpResponse.json([cluster])
   }),
 
   http.put<{ id: string }, Resource | NotFound, Resource | NotFound>(

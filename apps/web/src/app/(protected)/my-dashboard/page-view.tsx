@@ -9,8 +9,10 @@ import { getFavoritedItems } from '@/features/dashboard/utils/dashboard-localsto
 import { ClusterListViewItemRowType, OverviewItemsViewRowType, VirtualMachine } from '@ror/js-api-client'
 import { useCallback, useEffect, useState } from 'react'
 import { loadFavoritedClusters, loadFavoritedVms } from '@/features/dashboard/utils/favorited-item'
-import { FavoritedVm } from '@/features/dashboard/components/favorited-vm'
+import { FavoritedVm, FavoritedVmRow } from '@/features/dashboard/components/favorited-vm'
 import { getVmUid } from '@/features/vms/utils/vms'
+import { LayoutGrid, LayoutList } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 interface PageViewProps {
   overviewItems: OverviewItemsViewRowType[]
@@ -19,6 +21,7 @@ interface PageViewProps {
 export const PageView = ({ overviewItems }: PageViewProps) => {
   const [favoritedClusters, setFavoritedClusters] = useState<ClusterListViewItemRowType[]>([])
   const [favoritedVms, setFavoritedVms] = useState<VirtualMachine[]>([])
+  const [vmView, setVmView] = useState<'card' | 'list'>('card')
 
   const fetchFavorites = useCallback(() => {
     const clusterUids = getFavoritedItems('cluster')
@@ -82,7 +85,40 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         </NotReadyMessage>
         <OverviewSection allItems={overviewItems} />
         <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
-        <DashboardSection title='VMs' items={favoritedVmBoxes} />
+        <div className='mx-7'>
+          <div className='flex justify-between items-center'>
+            <h3>VMs</h3>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setVmView((v) => (v === 'card' ? 'list' : 'card'))}
+                  className='text-muted-foreground hover:text-foreground transition-colors p-1'
+                  aria-label='Toggle VM view'
+                >
+                  {vmView === 'card' ? <LayoutList className='size-6' /> : <LayoutGrid className='size-6' />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{vmView === 'card' ? 'List-view' : 'Card-view'}</TooltipContent>
+            </Tooltip>
+          </div>
+          {vmView === 'card' ? (
+            <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
+              {favoritedVmBoxes.length
+                ? favoritedVmBoxes.map((item) => (
+                    <div key={item.nodeId} className='relative'>
+                      {item.node}
+                    </div>
+                  ))
+                : 'No items present'}
+            </div>
+          ) : (
+            <div className='flex flex-col gap-1 pt-2.5'>
+              {favoritedVms.length
+                ? favoritedVms.map((vm) => <FavoritedVmRow key={getVmUid(vm)} vm={vm} onUnfavorite={fetchFavorites} />)
+                : 'No items present'}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
