@@ -5,13 +5,18 @@ import { ClusterListViewItemRowType, VirtualMachine } from '@ror/js-api-client'
 
 export async function loadFavoritedClusters(uids: string[]): Promise<ClusterListViewItemRowType[]> {
   const api = await getRorApi()
-  const results: ClusterListViewItemRowType[] = []
-  for (const uid of uids) {
-    const res = await api.clusterListItemView.getClusterListItem(uid)
-    const cluster = res.rows?.[0]
-    if (cluster) results.push(cluster)
-  }
-  return results
+  const clusters = await Promise.all(
+    uids.map(async (uid) => {
+      try {
+        const res = await api.clusterListItemView.getClusterListItem(uid)
+        return res.rows?.[0] ?? null
+      } catch (error) {
+        console.error('Failed to fetch cluster:', uid, error)
+        return null
+      }
+    })
+  )
+  return clusters.filter((c): c is ClusterListViewItemRowType => Boolean(c))
 }
 
 export async function loadFavoritedVms(uids: string[]): Promise<VirtualMachine[]> {
