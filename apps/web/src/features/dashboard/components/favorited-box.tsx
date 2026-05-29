@@ -28,7 +28,7 @@ export const FavoritedBox = ({
     <FavoriteStar
       domain={domain}
       itemId={itemId}
-      scale='scale-75'
+      scale='scale-50'
       className='absolute right-1.5 top-1.5'
       onUnfavorite={onUnfavorite}
     />
