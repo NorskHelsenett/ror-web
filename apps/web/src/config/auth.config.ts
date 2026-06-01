@@ -157,7 +157,7 @@ const DexProvider: OAuthConfig<DexProfile> = {
   checks: ['pkce', 'state'], // standard OIDC/NextAuth security checks
   // Map the OIDC profile to NextAuth's internal user shape
   profile(profile) {
-    console.log('[AUTH] Profile from Dex:', profile)
+    console.log('[AUTH] User from Dex:', profile.name || profile.preferred_username || profile.sub)
     return {
       id: profile.sub,
       name: profile.name || profile.preferred_username || profile.sub,
