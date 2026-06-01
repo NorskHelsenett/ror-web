@@ -257,7 +257,11 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
       <NotReadyMessage className='mx-12 my-6'>
         Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
         expect finished functionality or that all data is present. The development team is working hard on delivering a
-        complete product as quick as possible :)
+        complete product as quick as possible :) If you are missing anything in the new web, you can still use{' '}
+        <a className='underline text-blue-700 inline!' href='https://legacy.ror.nhn.no/'>
+          the old ROR
+        </a>
+        . This link can also be found in the sidebar to the left.
       </NotReadyMessage>
 
       <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>

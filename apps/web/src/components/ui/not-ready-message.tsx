@@ -24,7 +24,7 @@ export const NotReadyMessage = ({ className, removable = true, children }: NotRe
       )}
       role='alert'
     >
-      <div>{children}</div>
+      <span>{children}</span>
       {removable && (
         <button onClick={() => setIsVisible(false)} aria-label='Close notification' type='button' className='pr-2'>
           <X />
