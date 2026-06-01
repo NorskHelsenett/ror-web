@@ -1,7 +1,7 @@
 'use server'
 
 import { getRorApi } from '@/services/ror-api'
-import type { KubernetesCluster } from '@ror/js-api-client'
+import type { ClusterListViewRowType } from '@ror/js-api-client'
 
 type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
 
@@ -14,8 +14,8 @@ export async function loadMoreClusters({ offset, limit, sort, order }: LoadMoreO
   if (order) params.set('order', order)
 
   try {
-    const res = await api.kubernetesClusters.list(params)
-    const items: KubernetesCluster[] = res?.resources ?? []
+    const res = await api.clusterListView.getClusterList(params)
+    const items: ClusterListViewRowType[] = res?.rows ?? []
     return {
       items,
       hasMore: items.length === limit,
