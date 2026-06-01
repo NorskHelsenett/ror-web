@@ -52,7 +52,7 @@ import { loadMoreClusters } from '@/utils/cluster-actions'
 import { buildSortParams, buildToggledParams } from '@/utils/url-helpers'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { usePathname, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { getClustersTableColumns } from '@/features/cluster/components/clusters-columns'
 import { ResourceControls } from '@/components/ui/resource-controls'
 import { exportClustersAsCSV, exportClustersAsExcel } from '@/features/cluster/utils/export-helpers'
@@ -99,16 +99,21 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   // Infinite loading of clusters
 
+  const loadMore = useCallback(
+    async (offset: number, limit: number) => {
+      const res = await loadMoreClusters({ offset, limit, sort: params.sort })
+      return { items: res.items ?? [], hasMore: res.hasMore }
+    },
+    [params.sort]
+  )
+
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<ClusterListViewRowType>({
     initial: clusters,
     sort: params.sort,
     pageSize: 50,
     getItemId: getClusterIdView,
     getItemsKey: getClustersViewKey,
-    loadMore: async (offset, limit) => {
-      const res = await loadMoreClusters({ offset, limit, sort: params.sort })
-      return { items: res.items ?? [], hasMore: res.hasMore }
-    },
+    loadMore,
   })
 
   // Clusters valid after filtering and searching
@@ -142,25 +147,17 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
   )
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<ClusterCardDisplayData>('clusters')
   const [searchResults, setSearchResults] = useState<ClusterListViewRowType[]>(safeItems)
+  const [searchQuery, setSearchQuery] = useState('')
   const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
+
+  const handleSearchResultsChange = useCallback((results: ClusterListViewRowType[], query?: string) => {
+    setSearchResults(results)
+    setSearchQuery(query ?? '')
+  }, [])
 
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) =>
     setSelectedDisplayData(selected.map((i) => i.value as ClusterCardDisplayData))
-
-  // Sync safeItems -> searchResults only if content differs
-  const lastSafeKeyRef = useRef('')
-  useEffect(() => {
-    const nextKey = getClustersViewKey(safeItems)
-    if (nextKey !== lastSafeKeyRef.current) {
-      lastSafeKeyRef.current = nextKey
-      setSearchResults((prev) => {
-        const prevKey = getClustersViewKey(prev)
-        const isSearching = prev.length !== safeItems.length
-        return isSearching || prevKey === nextKey ? prev : safeItems
-      })
-    }
-  }, [safeItems])
 
   const pathname = usePathname()
   const router = useRouter()
@@ -179,10 +176,11 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
   const toggleSortParams = useMemo(() => buildSortParams(params, 'clusters'), [params])
 
   const displayedItems = useMemo(() => {
+    if (!searchQuery) return sortedItems
     if (!searchResults?.length) return sortedItems
     const ids = new Set(searchResults.map(getClusterIdView))
     return sortedItems.filter((c) => ids.has(getClusterIdView(c)))
-  }, [sortedItems, searchResults])
+  }, [sortedItems, searchResults, searchQuery])
 
   const effectiveDisplayData = (
     selectedDisplayData?.length > 0 ? selectedDisplayData : defaultDisplayData
@@ -223,7 +221,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
             searchText='Find clusters...'
             selectedDisplayData={selectedDisplayData}
             onDisplayChange={onDisplayChange}
-            onSearchResultsChange={setSearchResults}
+            onSearchResultsChange={handleSearchResultsChange}
             displayDataOptions={displayDataOptions}
             params={params}
             toggleSortParams={toggleSortParams}

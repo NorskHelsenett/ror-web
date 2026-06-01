@@ -6,7 +6,6 @@
 
 import { cache, Fragment, ReactNode } from 'react'
 import { redirect } from 'next/navigation'
-import { isRedirectError } from 'next/dist/client/components/redirect'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
@@ -122,7 +121,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
       </ClusterProvider>
     )
   } catch (error) {
-    if (isRedirectError(error)) throw error
     return RenderApiError(error)
   }
 }
