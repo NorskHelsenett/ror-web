@@ -19,7 +19,7 @@ import { formatBytes } from '@/features/vms/components/metrics-cell'
 import { VirtualMachine } from '@ror/js-api-client'
 
 const Dot = ({ status }: { status: string }) => (
-  <span className='flex items-center justify-around size-5'>
+  <span className='relative flex items-center justify-center size-5'>
     <span
       className={cn(
         'size-4 rounded-full opacity-75',
@@ -102,8 +102,8 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
             />
           </div>
         </div>
-        <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
       </div>
+      <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
     </div>
   )
 }
