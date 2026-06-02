@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Search, Loader2, Boxes, Monitor } from 'lucide-react'
 import { Input } from '@/components/shadcn/input'
 import { FavoriteStar } from '@/components/ui/favorite-star'
@@ -28,6 +28,19 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
   const [allClusters, setAllClusters] = useState<ClusterListViewRowType[]>([])
   const [clustersFetched, setClustersFetched] = useState(false)
   const [loadingClusters, setLoadingClusters] = useState(false)
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [resultsOpen, setResultsOpen] = useState(true)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setResultsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const [vmResults, setVmResults] = useState<VirtualMachine[]>([])
   const [loadingVms, setLoadingVms] = useState(false)
@@ -73,10 +86,11 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
     setVmQuery('')
     setVmResults([])
     setVmResetKey((k) => k + 1)
+    setResultsOpen(true)
   }
 
   return (
-    <div className='flex items-center gap-3'>
+    <div ref={containerRef} className='flex items-center gap-3'>
       {/* Domain toggle tabs */}
       <div className='flex items-center rounded-lg border p-1 gap-0.5 shrink-0'>
         <button
@@ -109,7 +123,11 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
           <Input
             className='w-full'
             value={clusterQuery}
-            onChange={(e) => setClusterQuery(e.target.value)}
+            onChange={(e) => {
+              setClusterQuery(e.target.value)
+              setResultsOpen(true)
+            }}
+            onFocus={() => setResultsOpen(true)}
             placeholder='Find clusters...'
             aria-label='Search clusters'
             icon={loadingClusters ? <Loader2 className='w-4 h-4 animate-spin' /> : <Search className='w-4 h-4' />}
@@ -131,12 +149,15 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
             defaultField='virtualmachine.spec.name'
             searchEntityLabel='VM'
             onFieldChange={setVmField}
-            onQueryChange={setVmQuery}
+            onQueryChange={(q) => {
+              setVmQuery(q)
+              setResultsOpen(true)
+            }}
           />
         )}
 
         {/* Results list */}
-        {(showClusterResults || showVmResults) && (
+        {resultsOpen && (showClusterResults || showVmResults) && (
           <div className='absolute z-50 top-full left-0 right-0 mt-1 bg-popover border rounded-md shadow-lg max-h-80 overflow-y-auto'>
             {showClusterResults &&
               (clusterResults.length === 0 ? (
