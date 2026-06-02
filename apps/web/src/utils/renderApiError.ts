@@ -36,7 +36,7 @@ export function RenderApiError(error: unknown) {
     console.error(errorText)
     errorButtonLink = dashboardPage
     return Error({
-      errorCode: '403',
+      errorCode: '404',
       errorText: errorText,
       errorButtonText: buttonTextHomepage,
       errorButtonLink: errorButtonLink,

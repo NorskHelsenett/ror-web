@@ -114,6 +114,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
     getItemId: getClusterIdView,
     getItemsKey: getClustersViewKey,
     loadMore,
+    initialHasMore: clusters.length >= (params.limit ?? 10),
   })
 
   // Clusters valid after filtering and searching

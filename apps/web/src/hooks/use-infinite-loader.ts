@@ -7,6 +7,7 @@ interface UseInfiniteLoaderProps<T> {
   pageSize?: number
   getItemId: (item: T) => string
   getItemsKey?: (items: T[]) => string
+  initialHasMore?: boolean
 }
 
 /**
@@ -38,10 +39,11 @@ export function useInfiniteLoader<T>({
   pageSize = 50,
   getItemId,
   getItemsKey = (items: T[]) => JSON.stringify(items.map(getItemId)),
+  initialHasMore = true,
 }: UseInfiniteLoaderProps<T>) {
   const [items, setItems] = useState<T[]>(initial)
   const [isLoading, setIsLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(initialHasMore)
 
   // DOM sentinel. When this element becomes visible, more items are fetched automatically.
   const sentinelRef = useRef<HTMLDivElement>(null)
