@@ -20,6 +20,7 @@ export interface ResourceRegexSearchProps {
   searchEntityLabel?: string
   onFieldChange?: (field: string) => void
   onQueryChange?: (query: string) => void
+  className?: string
 }
 
 export function ResourceRegexSearch({
@@ -28,6 +29,7 @@ export function ResourceRegexSearch({
   searchEntityLabel,
   onFieldChange,
   onQueryChange,
+  className,
 }: ResourceRegexSearchProps) {
   const urlSearchParams = useSearchParams()
   const [query, setQuery] = useState(() => urlSearchParams.get('search') ?? '')
@@ -64,7 +66,7 @@ export function ResourceRegexSearch({
   }, [debouncedQuery, onQueryChange])
 
   return (
-    <div className='flex max-w-xs'>
+    <div className={className ?? 'flex max-w-xs'}>
       <div className='flex-1 min-w-0'>
         <Input
           className='w-full rounded-r-none border-r-0'

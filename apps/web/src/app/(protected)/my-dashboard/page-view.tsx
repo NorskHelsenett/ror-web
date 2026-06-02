@@ -13,6 +13,7 @@ import { FavoritedVm, FavoritedVmRow } from '@/features/dashboard/components/fav
 import { getVmUid } from '@/features/vms/utils/vms'
 import { LayoutGrid, LayoutList } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
+import { DashboardSearch } from '@/features/dashboard/components/dashboard-search'
 
 interface PageViewProps {
   overviewItems: OverviewItemsViewRowType[]
@@ -76,13 +77,18 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
     <div className='w-full flex flex-col'>
       <Header title='My Dashboard' />
       <div className='mx-6 my-8'>
-        <NotReadyMessage removable={false}>
-          Welcome to the new ROR website! We are excited to launch this, and aware that some parts of the page is still
-          not operational. In these places we have aimed at rerouting you to the old ROR website. If you prefer the old
-          ROR website, you can find this in the sidebar to your left. Currently the data on this dashboard site is saved
-          locally in the browser. This means that if you clear the cache of the site, your overview items will be set
-          back to standard and favorited items will be erased.
-        </NotReadyMessage>
+        <div className='mx-7'>
+          <NotReadyMessage removable={false}>
+            Welcome to the new ROR website! We are excited to launch this, and aware that some parts of the page is
+            still not operational. In these places we have aimed at rerouting you to the old ROR website. If you prefer
+            the old ROR website, you can find this in the sidebar to your left. Currently the data on this dashboard
+            site is saved locally in the browser. This means that if you clear the cache of the site, your overview
+            items will be set back to standard and favorited items will be erased.
+          </NotReadyMessage>
+        </div>
+        <div className='mb-6 pt-5 max-w-2xl mx-7'>
+          <DashboardSearch onFavorite={fetchFavorites} />
+        </div>
         <OverviewSection allItems={overviewItems} />
         <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
         <div className='mx-7'>
