@@ -27,7 +27,7 @@ export function ResourceBar({ capacity, used, percentage, showPercentage = true 
         <TooltipContent>
           <p>Used: {used ?? 'data missing'}</p>
           <p>Capacity: {capacity ?? 'data missing'}</p>
-          <p>Percentage: {percentage != null ? `${percentage.toFixed(2)}%` : 'data missing'}</p>
+          <p>Percentage: {percentage != null ? `${percentage}%` : 'data missing'}</p>
         </TooltipContent>
       </Tooltip>
     </div>

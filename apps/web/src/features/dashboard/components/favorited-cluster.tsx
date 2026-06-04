@@ -5,7 +5,7 @@ import { DotIcon } from 'lucide-react'
 import { cn } from '@/utils/clsxm'
 import { HealthStatus } from '@/features/cluster/types/health-status'
 import { ExternalToolButton } from '@/features/cluster/components/external-tool-button'
-import { ResourceBar } from '@/features/cluster/components/resource-bar'
+import { ResourceBar } from '@/components/ui/resource-bar'
 import { RorCliButton } from '@/features/cluster/components/ror-cli-button'
 import {
   getLastSeenViewItem,
