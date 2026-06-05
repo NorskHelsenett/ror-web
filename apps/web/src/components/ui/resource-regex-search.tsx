@@ -6,6 +6,7 @@ import { Search } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
+import { cn } from '@/utils/clsxm'
 
 export interface RegexSearchFieldOption {
   value: string
@@ -20,6 +21,7 @@ export interface ResourceRegexSearchProps {
   searchEntityLabel?: string
   onFieldChange?: (field: string) => void
   onQueryChange?: (query: string) => void
+  className?: string
 }
 
 export function ResourceRegexSearch({
@@ -28,6 +30,7 @@ export function ResourceRegexSearch({
   searchEntityLabel,
   onFieldChange,
   onQueryChange,
+  className,
 }: ResourceRegexSearchProps) {
   const urlSearchParams = useSearchParams()
   const [query, setQuery] = useState(() => urlSearchParams.get('search') ?? '')
@@ -64,7 +67,7 @@ export function ResourceRegexSearch({
   }, [debouncedQuery, onQueryChange])
 
   return (
-    <div className='flex max-w-xs'>
+    <div className={cn('flex max-w-xs', className)}>
       <div className='flex-1 min-w-0'>
         <Input
           className='w-full rounded-r-none border-r-0'

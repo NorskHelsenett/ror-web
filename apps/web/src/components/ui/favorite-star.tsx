@@ -23,9 +23,17 @@ interface FavoriteStarProps {
     | 'scale-150'
     | 'scale-200'
   onUnfavorite?: () => void
+  onFavorite?: () => void
 }
 
-export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100', onUnfavorite }: FavoriteStarProps) => {
+export const FavoriteStar = ({
+  domain,
+  itemId,
+  className,
+  scale = 'scale-100',
+  onUnfavorite,
+  onFavorite,
+}: FavoriteStarProps) => {
   const [favorited, setFavorited] = useState(false)
 
   useEffect(() => {
@@ -45,6 +53,7 @@ export const FavoriteStar = ({ domain, itemId, className, scale = 'scale-100', o
     } else {
       addFavoriteItem(itemId, domain)
       setFavorited(true)
+      onFavorite?.()
     }
   }
 

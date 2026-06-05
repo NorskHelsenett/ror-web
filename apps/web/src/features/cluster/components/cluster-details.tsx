@@ -38,7 +38,7 @@ import {
 import { formatObservationDate } from '../utils/formats'
 import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
 import { missingText } from './cluster-card'
-import { ResourceBar } from './resource-bar'
+import { ResourceBar } from '../../../components/ui/resource-bar'
 import { Button } from '@/components/shadcn/button'
 import { copyToClipboard } from '@/utils/copy-to-clipboard'
 

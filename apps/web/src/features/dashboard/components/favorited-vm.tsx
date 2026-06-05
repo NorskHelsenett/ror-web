@@ -14,12 +14,12 @@ import {
   getVmName,
 } from '@/features/vms/utils/vms'
 import { FavoriteStar } from '@/components/ui/favorite-star'
-import { ResourceBar } from '@/features/cluster/components/resource-bar'
+import { ResourceBar } from '@/components/ui/resource-bar'
 import { formatBytes } from '@/features/vms/components/metrics-cell'
 import { VirtualMachine } from '@ror/js-api-client'
 
 const Dot = ({ status }: { status: string }) => (
-  <span className='flex items-center justify-around size-5'>
+  <span className='relative flex items-center justify-center size-5'>
     <span
       className={cn(
         'size-4 rounded-full opacity-75',
@@ -45,16 +45,16 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
 
   const cpuUsage = getStatusCpuUsage(vm) ?? 0
   const cpuTotal = getSpecCpuTotal(vm)
-  const cpuPct = cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0
+  const cpuPct = (cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0).toFixed(2)
 
   const memorySizeBytes = getSpecMemory(vm)
   const memoryUsageBytes = getStatusMemoryUsage(vm) ?? 0
-  const memoryPct = memorySizeBytes ? (memoryUsageBytes / memorySizeBytes) * 100 : 0
+  const memoryPct = (memorySizeBytes ? (memoryUsageBytes / memorySizeBytes) * 100 : 0).toFixed(2)
 
   const disks = getVmDisks(vm)
   const diskTotalBytes = disks.reduce((sum, d) => sum + (d.sizeBytes ?? 0), 0)
   const diskUsedBytes = disks.reduce((sum, d) => sum + (d.usageBytes ?? 0), 0)
-  const diskPct = diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0
+  const diskPct = (diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0).toFixed(2)
 
   const isPoweredOff = powerState === 'poweredOff'
 
@@ -76,7 +76,7 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
             <ResourceBar
               capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
               used={`${cpuUsage} cores`}
-              percentage={cpuPct}
+              percentage={parseFloat(cpuPct)}
             />
           </div>
         </div>
@@ -87,7 +87,7 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
             <ResourceBar
               capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
               used={formatBytes(memoryUsageBytes)}
-              percentage={memoryPct}
+              percentage={parseFloat(memoryPct)}
             />
           </div>
         </div>
@@ -98,12 +98,12 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
             <ResourceBar
               capacity={formatBytes(diskTotalBytes)}
               used={formatBytes(diskUsedBytes)}
-              percentage={diskPct}
+              percentage={parseFloat(diskPct)}
             />
           </div>
         </div>
-        <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
       </div>
+      <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
     </div>
   )
 }
@@ -113,16 +113,16 @@ export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
 
   const cpuUsage = getStatusCpuUsage(vm) ?? 0
   const cpuTotal = getSpecCpuTotal(vm)
-  const cpuPct = cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0
+  const cpuPct = (cpuTotal ? (cpuUsage / cpuTotal) * 100 : 0).toFixed(2)
 
   const memorySizeBytes = getSpecMemory(vm)
   const memoryUsageBytes = getStatusMemoryUsage(vm) ?? 0
-  const memoryPct = memorySizeBytes ? (memoryUsageBytes / memorySizeBytes) * 100 : 0
+  const memoryPct = (memorySizeBytes ? (memoryUsageBytes / memorySizeBytes) * 100 : 0).toFixed(2)
 
   const disks = getVmDisks(vm)
   const diskTotalBytes = disks.reduce((sum, d) => sum + (d.sizeBytes ?? 0), 0)
   const diskUsedBytes = disks.reduce((sum, d) => sum + (d.usageBytes ?? 0), 0)
-  const diskPct = diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0
+  const diskPct = (diskTotalBytes ? (diskUsedBytes / diskTotalBytes) * 100 : 0).toFixed(2)
 
   const isPoweredOff = powerState === 'poweredOff'
 
@@ -142,7 +142,7 @@ export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
           <ResourceBar
             capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
             used={`${cpuUsage} cores`}
-            percentage={cpuPct}
+            percentage={parseFloat(cpuPct)}
           />
         </div>
         <div className='flex items-center gap-2'>
@@ -150,12 +150,16 @@ export const FavoritedVm = ({ vm }: { vm: VirtualMachine }) => {
           <ResourceBar
             capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
             used={formatBytes(memoryUsageBytes)}
-            percentage={memoryPct}
+            percentage={parseFloat(memoryPct)}
           />
         </div>
         <div className='flex items-center gap-2'>
           <span className='text-xs text-muted-foreground w-7 '>Disk</span>
-          <ResourceBar capacity={formatBytes(diskTotalBytes)} used={formatBytes(diskUsedBytes)} percentage={diskPct} />
+          <ResourceBar
+            capacity={formatBytes(diskTotalBytes)}
+            used={formatBytes(diskUsedBytes)}
+            percentage={parseFloat(diskPct)}
+          />
         </div>
       </div>
     </div>
