@@ -10,16 +10,20 @@ import { ClusterListViewItemRowType, OverviewItemsViewRowType, VirtualMachine } 
 import { useCallback, useEffect, useState } from 'react'
 import { loadFavoritedClusters, loadFavoritedVms } from '@/features/dashboard/utils/favorited-item'
 import { FavoritedVm, FavoritedVmRow } from '@/features/dashboard/components/favorited-vm'
-import { getVmUid } from '@/features/vms/utils/vms'
+import { getVmUid, getVmName } from '@/features/vms/utils/vms'
 import { LayoutGrid, LayoutList } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 import { DashboardSearch } from '@/features/dashboard/components/dashboard-search'
+import { useRouter } from 'next/navigation'
+import { routes } from '@/config/routes'
+import { getClusterUidView } from '@/features/cluster/utils/cluster'
 
 interface PageViewProps {
   overviewItems: OverviewItemsViewRowType[]
 }
 
 export const PageView = ({ overviewItems }: PageViewProps) => {
+  const router = useRouter()
   const [favoritedClusters, setFavoritedClusters] = useState<ClusterListViewItemRowType[]>([])
   const [favoritedVms, setFavoritedVms] = useState<VirtualMachine[]>([])
   const [vmView, setVmView] = useState<'card' | 'list'>('card')
@@ -53,6 +57,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         itemId={cluster.clusterUid?.fieldValue ?? globalThis.crypto.randomUUID()}
         isError={cluster.status?.fieldValue === 'error'}
         onUnfavorite={fetchFavorites}
+        onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
       >
         <FavoritedCluster cluster={cluster} />
       </FavoritedBox>
@@ -67,6 +72,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         domain='vms'
         itemId={getVmUid(vm)}
         onUnfavorite={fetchFavorites}
+        onClick={() => router.push(routes.app.vm.getHref(getVmName(vm).toLowerCase()))}
       >
         <FavoritedVm vm={vm} />
       </FavoritedBox>

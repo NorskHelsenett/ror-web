@@ -13,6 +13,7 @@ export interface FavoritedBoxProps {
   children: ReactNode
   className?: string
   onUnfavorite?: () => void
+  onClick?: () => void
 }
 
 export const FavoritedBox = ({
@@ -23,8 +24,9 @@ export const FavoritedBox = ({
   children,
   className,
   onUnfavorite,
+  onClick,
 }: FavoritedBoxProps) => (
-  <DashboardBox className={cn(className, isError && 'bg-red-300 dark:bg-red-900')} title={title}>
+  <DashboardBox className={cn(className, isError && 'bg-red-300 dark:bg-red-900')} title={title} onClick={onClick}>
     <FavoriteStar
       domain={domain}
       itemId={itemId}

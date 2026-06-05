@@ -17,6 +17,8 @@ import { FavoriteStar } from '@/components/ui/favorite-star'
 import { ResourceBar } from '@/components/ui/resource-bar'
 import { formatBytes } from '@/features/vms/components/metrics-cell'
 import { VirtualMachine } from '@ror/js-api-client'
+import { useRouter } from 'next/navigation'
+import { routes } from '@/config/routes'
 
 const Dot = ({ status }: { status: string }) => (
   <span className='relative flex items-center justify-center size-5'>
@@ -41,6 +43,7 @@ const DisplayedPowerState = ({ status, className }: { status: string; className?
 }
 
 export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnfavorite?: () => void }) => {
+  const router = useRouter()
   const powerState = getVmPowerState(vm)
 
   const cpuUsage = getStatusCpuUsage(vm) ?? 0
@@ -60,8 +63,9 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
 
   return (
     <div
+      onClick={() => router.push(routes.app.vm.getHref(getVmName(vm).toLowerCase()))}
       className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity',
+        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
         isPoweredOff && 'opacity-50'
       )}
     >
