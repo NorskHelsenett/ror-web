@@ -18,9 +18,7 @@ import {
   getArgocdUrlViewItem,
   getGrafanaUrlViewItem,
   getStatusViewItem,
-  getClusterUidView,
 } from '@/features/cluster/utils/cluster'
-import { routes } from '@/config/routes'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
   <span className={'flex items-center justify-around size-5'}>
