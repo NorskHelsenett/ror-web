@@ -5,6 +5,7 @@
  */
 
 import { cn } from '@/utils/clsxm'
+import { CopyButton } from './copy-button'
 
 /**
  * Renders a card header with a title and a horizontal rule.
@@ -30,15 +31,25 @@ export const CardHeader = ({ title }: { title: string }) => (
  */
 export const CardItem = ({
   label,
+  value,
   children,
   className,
+  copyable,
 }: {
   label: string
-  children: React.ReactNode
+  value?: string
+  children?: React.ReactNode
   className?: string
+  copyable?: boolean
 }) => (
   <div className={cn('flex flex-col', className)}>
     <p className='font-bold'>{label}</p>
-    <div>{children}</div>
+    {!value && children && <div>{children}</div>}
+    {value && (
+      <div className='flex items-center'>
+        {copyable && value && <CopyButton className='-ml-1 -my-1' value={value} />}
+        <div>{value}</div>
+      </div>
+    )}
   </div>
 )

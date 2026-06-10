@@ -97,8 +97,8 @@ export const ClusterDetails = () => {
       <div className={cardStyling}>
         <CardHeader title='Node information' />
         <div className='flex flex-col gap-2'>
-          <CardItem label='Node pools'>{nodePools}</CardItem>
-          <CardItem label='Nodes'>{nodesAmount}</CardItem>
+          <CardItem label='Node pools' value={nodePools.toString()} />
+          <CardItem label='Nodes' value={nodesAmount.toString()} />
         </div>
       </div>
     ),
@@ -110,21 +110,15 @@ export const ClusterDetails = () => {
       <div className={cardStyling}>
         <CardHeader title='Information' />
         <div className='grid grid-cols-2 gap-2'>
-          <CardItem label='Cluster UID' className='col-span-2'>
-            {clusterUid}
-          </CardItem>
-          <CardItem label='Cluster ID' className='col-span-2'>
-            {clusterId}
-          </CardItem>
+          <CardItem label='Cluster UID' value={clusterUid} className='col-span-2' copyable />
+          <CardItem label='Cluster ID' value={clusterId} className='col-span-2' copyable />
           {/* TODO: ADD PROJECT <CardItem label='Project'>{project}</CardItem> */}
-          <CardItem label='Workspace'>{workspace}</CardItem>
-          <CardItem label='Datacenter'>{datacenter}</CardItem>
-          <CardItem label='Provider'>{provider}</CardItem>
-          <CardItem label='Service ID'>{serviceId}</CardItem>
-          <CardItem label='Availability zone'>{az}</CardItem>
-          <CardItem label='Location'>
-            {region} - {country}
-          </CardItem>
+          <CardItem label='Workspace' value={workspace} copyable />
+          <CardItem label='Datacenter' value={datacenter} copyable />
+          <CardItem label='Provider' value={provider} copyable />
+          <CardItem label='Service ID' value={serviceId} copyable />
+          <CardItem label='Availability zone' value={az} copyable />
+          <CardItem label='Location' value={region + ' - ' + country} copyable />
           {/* TODO: ADD HA (THROUGH CONTROL PLANE OVER 1 <CardItem label='HA control plane'>{getHaClusterPlaneValue(cluster)}</CardItem> */}
           {/* TODO: ADD EGRESS IP<CardItem label='Egress IP'>MOCK EGRESS IP</CardItem> */}
         </div>
@@ -138,10 +132,12 @@ export const ClusterDetails = () => {
       <div className={cardStyling}>
         <CardHeader title='Observed' />
         <div className='flex flex-col gap-2'>
-          <CardItem label='Last observed'>
-            {lastSeen ? formatObservationDate(lastSeen.toString()) : 'Missing…'}
-          </CardItem>
-          <CardItem label='Created'>{created ? formatObservationDate(created.toString()) : 'Missing…'}</CardItem>
+          <CardItem
+            label='Last observed'
+            value={lastSeen ? formatObservationDate(lastSeen.toString()) : 'Missing…'}
+            copyable
+          />
+          <CardItem label='Created' value={created ? formatObservationDate(created.toString()) : 'Missing…'} copyable />
         </div>
       </div>
     ),
@@ -210,9 +206,9 @@ export const ClusterDetails = () => {
       <div className={cardStyling}>
         <CardHeader title='Versions' />
         <div className='flex flex-col gap-3'>
-          <CardItem label='Tooling version'>{nhnToolingVersion}</CardItem>
-          <CardItem label='Agent version'>{rorAgentVersion}</CardItem>
-          <CardItem label='Kubernetes version'>{kubernetesVersion}</CardItem>
+          <CardItem label='Tooling version' value={nhnToolingVersion} copyable />
+          <CardItem label='Agent version' value={rorAgentVersion} copyable />
+          <CardItem label='Kubernetes version' value={kubernetesVersion} copyable />
         </div>
       </div>
     ),
@@ -224,8 +220,8 @@ export const ClusterDetails = () => {
       <div className={cardStyling}>
         <CardHeader title='Prices' />
         <div className='flex flex-col gap-2'>
-          <CardItem label='Monthly price'>{monthlyPrices || 0} kr</CardItem>
-          <CardItem label='Yearly price'>{yearlyPrices || 0} kr</CardItem>
+          <CardItem label='Monthly price' value={`${monthlyPrices} kr`} copyable />
+          <CardItem label='Yearly price' value={`${yearlyPrices} kr`} copyable />
         </div>
       </div>
     ),
