@@ -72,10 +72,13 @@ export const KubernetesClusterSpecTopology = z.object({
   workers: KubernetesClusterWorkers.nullable().optional(), // Contains worker nodes configuration
 })
 
-export const KubernetesClusterSpec = z.object({
-  data: KubernetesClusterSpecData.nullable().optional(),
-  topology: KubernetesClusterSpecTopology.nullable().optional(),
-})
+export const KubernetesClusterSpec = z
+  .object({
+    data: KubernetesClusterSpecData.nullable().optional(),
+    topology: KubernetesClusterSpecTopology.nullable().optional(),
+    slackChannels: z.array(z.string()).nullable().optional(),
+  })
+  .passthrough()
 
 // cpu, memory, gpu, disk
 export const KubernetesClusterStatusClusterStatusResource = z.object({
@@ -154,22 +157,67 @@ export const KubernetesClusterCondition = z.object({
   message: z.string().nullable().optional(), // Message is a human-readable message indicating details about the condition.
 })
 
-export const KubernetesClusterStatus = z.object({
-  state: KubernetesClusterClusterState.nullable().optional(),
-  phase: z.string().nullable().optional(),
-  conditions: z.array(KubernetesClusterCondition).nullable().optional(),
+// Agent status - the current format reported by ror-agent
+export const KubernetesClusterNodeResource = z.object({
+  capacity: z.string().nullable().optional(),
+  allocated: z.string().nullable().optional(),
 })
+
+export const KubernetesClusterAgentNode = z.object({
+  name: z.string().nullable().optional(),
+  cpu: KubernetesClusterNodeResource.nullable().optional(),
+  memory: KubernetesClusterNodeResource.nullable().optional(),
+  architecture: z.string().nullable().optional(),
+  kubernetesVersion: z.string().nullable().optional(),
+})
+
+export const KubernetesClusterAgentNodePool = z.object({
+  name: z.string().nullable().optional(),
+  nodes: z.array(KubernetesClusterAgentNode).nullable().optional(),
+})
+
+export const KubernetesClusterAgentNodes = z.object({
+  controlPlane: z.array(KubernetesClusterAgentNode).nullable().optional(),
+  nodepools: z.array(KubernetesClusterAgentNodePool).nullable().optional(),
+})
+
+export const KubernetesClusterAgentStatus = z
+  .object({
+    clusterId: z.string().nullable().optional(),
+    clusterName: z.string().nullable().optional(),
+    kubernetesProvider: z.string().nullable().optional(),
+    az: z.string().nullable().optional(),
+    region: z.string().nullable().optional(),
+    country: z.string().nullable().optional(),
+    workspaceId: z.string().nullable().optional(),
+    environment: z.string().nullable().optional(),
+    datacenter: z.string().nullable().optional(),
+    nodes: KubernetesClusterAgentNodes.nullable().optional(),
+    versions: z.record(z.string(), z.string()).nullable().optional(),
+    urls: z.record(z.string(), z.string()).nullable().optional(),
+    createdAt: z.string().nullable().optional(),
+    lastSeen: z.string().nullable().optional(),
+  })
+  .passthrough()
+
+export const KubernetesClusterStatus = z
+  .object({
+    state: KubernetesClusterClusterState.nullable().optional(),
+    phase: z.string().nullable().optional(),
+    conditions: z.array(KubernetesClusterCondition).nullable().optional(),
+    agentstatus: KubernetesClusterAgentStatus.nullable().optional(),
+  })
+  .passthrough()
 
 export const KubernetesClusterSchema = V2ResourceSchema.extend({
   kubernetescluster: z
     .object({
       // The spec defines how the cluster is configured and provisioned.
-      // e.g. how it should be
       spec: KubernetesClusterSpec.nullable().optional(),
       // The status defines the current state of the cluster.
-      // e.g. how it is
       status: KubernetesClusterStatus.nullable().optional(),
     })
+    .passthrough()
     .nullable()
     .optional(),
 })

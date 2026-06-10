@@ -43,7 +43,7 @@ import { Button } from '@/components/shadcn/button'
 import { copyToClipboard } from '@/utils/copy-to-clipboard'
 
 export const ClusterDetails = () => {
-  const { cluster } = useClusterContext()
+  const { cluster, kubernetesCluster } = useClusterContext()
 
   const clusterId = getClusterIdViewItem(cluster) || missingText
   const clusterUid = getClusterUidViewItem(cluster) || missingText
@@ -240,7 +240,13 @@ export const ClusterDetails = () => {
 
   return (
     <div>
-      <GridLayoutWrapper preferenceKey={'clusterCards'} standardLayouts={standardLayouts} contentMap={widgetContent} />
+      <GridLayoutWrapper
+        preferenceKey={'clusterCards'}
+        standardLayouts={standardLayouts}
+        contentMap={widgetContent}
+        copyItemTitle='KubernetesCluster'
+        copyItem={kubernetesCluster}
+      />
     </div>
   )
 }
