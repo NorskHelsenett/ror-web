@@ -27,7 +27,7 @@ export const displayDataOptions: Option[] = [
   { value: 'workspace', label: 'Workspace' },
 ]
 
-const OPT_IN_FIELDS: string[] = ['agentVersion', 'kubernetesVersion', 'toolingVersion', 'serviceId', 'region', 'az']
+const OPT_IN_FIELDS: string[] = ['serviceId', 'region', 'az']
 
 export const defaultDisplayData = displayDataOptions.map((o) => o.value).filter((v) => !OPT_IN_FIELDS.includes(v))
 
