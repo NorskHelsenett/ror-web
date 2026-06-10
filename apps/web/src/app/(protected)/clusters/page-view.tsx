@@ -180,8 +180,8 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   const displayedItems = useMemo(() => {
     if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getClusterIdView))
-    return sortedItems.filter((c) => ids.has(getClusterIdView(c)))
+    const ids = new Set(sortedItems.map(getClusterIdView))
+    return searchResults.filter((c) => ids.has(getClusterIdView(c)))
   }, [sortedItems, searchResults])
 
   const effectiveDisplayData = (
