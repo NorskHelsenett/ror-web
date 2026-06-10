@@ -291,6 +291,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         exportAsExcel={exportVmsAsExcel}
         allItems={hydratedItems}
         filteredItems={filteredItems}
+        onViewChange={setClientView}
       />
     </div>
   )

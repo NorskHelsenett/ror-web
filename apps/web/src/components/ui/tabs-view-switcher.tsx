@@ -7,9 +7,10 @@ import { useEffect, useState } from 'react'
 
 interface TabsViewSwitcherProps {
   storageKey?: string
+  onViewChange?: (view: 'grid' | 'list') => void
 }
 
-export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
+export function TabsViewSwitcher({ storageKey, onViewChange }: TabsViewSwitcherProps = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -64,7 +65,7 @@ export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEY, value)
-    // Use current pathname instead of hardcoded route
+    onViewChange?.(value as 'grid' | 'list')
     router.push(params.size === 0 ? pathname : `${pathname}?${params.toString()}`)
     setSelected(value)
   }
