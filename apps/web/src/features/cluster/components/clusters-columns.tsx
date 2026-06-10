@@ -219,9 +219,9 @@ export function getClustersTableColumns(
           <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Price (month/year)
             {column.getIsSorted() === 'asc' ? (
-              <ArrowDown className='h-4 w-4' />
-            ) : column.getIsSorted() === 'desc' ? (
               <ArrowUp className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDown className='h-4 w-4' />
             ) : (
               <ArrowUpDown className='h-4 w-4' />
             )}
