@@ -82,12 +82,14 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
     setClientView(params.view ?? 'grid')
   }, [params.view])
 
-  // On mount, override with localStorage when URL has no ?view
-  // (e.g. navigating back from another page — URL is bare /vms but localStorage says 'list')
+  // On mount (and when navigating to /vms without ?view), prefer localStorage.
+  // If URL contains ?view, keep URL as the source of truth.
   useEffect(() => {
-    const stored = localStorage.getItem('vms:view-mode') as 'grid' | 'list' | null
-    if (stored) setClientView(stored)
-  }, [])
+    if (params.view) return
+
+    const stored = localStorage.getItem('vms:view-mode')
+    if (stored === 'grid' || stored === 'list') setClientView(stored)
+  }, [params.view])
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
