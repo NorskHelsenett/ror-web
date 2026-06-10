@@ -43,7 +43,7 @@ import {
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState, useEffect } from 'react'
+import { useMemo, useCallback, useState } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -75,12 +75,6 @@ const isExpiredBackup = (expiryTime?: string | null) => {
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>(params.view ?? 'grid')
-
-  useEffect(() => {
-    const stored = localStorage.getItem('vms:view-mode') as 'grid' | 'list' | null
-    if (stored) setViewMode(stored)
-  }, [])
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
@@ -397,10 +391,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         expect finished functionality or that all data is present. The development team is working hard on delivering a
         complete product as quick as possible :)
       </NotReadyMessage>
-      <section className='px-12 my-8'>
-        {/* {(searchParams.get('view') ?? params.view) === 'list' ? <TableView /> : <GridView />} */}
-        {viewMode === 'list' ? <TableView /> : <GridView />}
-      </section>
+      <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>
     </div>
   )
 }
