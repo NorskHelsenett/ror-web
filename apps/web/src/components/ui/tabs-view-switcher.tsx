@@ -7,9 +7,10 @@ import { useEffect, useState } from 'react'
 
 interface TabsViewSwitcherProps {
   storageKey?: string
+  onViewChange?: (view: 'grid' | 'list') => void
 }
 
-export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
+export function TabsViewSwitcher({ storageKey, onViewChange }: TabsViewSwitcherProps = {}) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -36,7 +37,12 @@ export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
     setSelected(view)
     setMounted(true)
 
-    // If view doesn't match URL, update the URL to reflect current state
+    // Only update URL if it doesn't already reflect the desired view.
+    // Without this guard, every router.replace triggers a searchParams change
+    // which re-runs this effect, causing a loop that breaks in production.
+    const expectedParam = view === 'grid' ? null : view
+    if (fromUrl === expectedParam) return
+
     const params = new URLSearchParams(searchParams)
     if (view === 'grid') {
       params.delete('view')
@@ -44,8 +50,7 @@ export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
       params.set('view', view)
     }
 
-    // Use current pathname instead of hardcoded route
-    router.replace(params.size === 0 ? pathname : `${pathname}?${params.toString()}`)
+    router.replace(params.size === 0 ? pathname : `${pathname}?${params.toString()}`, { scroll: false })
   }, [searchParams, router, pathname, LOCAL_STORAGE_KEY])
 
   const handleChange = (value: string) => {
@@ -60,7 +65,7 @@ export function TabsViewSwitcher({ storageKey }: TabsViewSwitcherProps = {}) {
     }
 
     localStorage.setItem(LOCAL_STORAGE_KEY, value)
-    // Use current pathname instead of hardcoded route
+    onViewChange?.(value as 'grid' | 'list')
     router.push(params.size === 0 ? pathname : `${pathname}?${params.toString()}`)
     setSelected(value)
   }
