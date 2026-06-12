@@ -11,8 +11,8 @@ import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
-import { fetchClusterViewItem } from '@/features/cluster/services/fetch-clusters'
-import { ClusterListItemView } from '@ror/js-api-client'
+import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
+import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -28,7 +28,6 @@ const {
   clusterVulnerabilities,
   clusterCompliance,
   clusterAbout,
-  clusterRawData,
 } = routes.app
 
 export interface navigationItemObject {
@@ -68,10 +67,6 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
       label: clusterAbout.label,
       href: `${oldRorBaseUrl}cluster/${clusterId}?tab=metadata`,
     },
-    {
-      label: clusterRawData.label,
-      href: clusterRawData.getHref(clusterUid),
-    },
   ]
 }
 
@@ -99,13 +94,16 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   try {
     const clusterList = (await fetchCluster(id)) as ClusterListItemView
     const cluster = clusterList.rows[0]
+    const kubernetesCluster = (await fetchKubernetesCluster(id)) as KubernetesCluster
+
     if (!cluster) {
       redirect('/clusters')
     }
+
     const clusterId = cluster.clusterId?.fieldValue || 'missing'
     const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
     const tabs = createTabNavigationItems(clusterId, clusterUid)
-    const clusterContextValue = { cluster }
+    const clusterContextValue = { cluster, kubernetesCluster }
 
     return (
       <ClusterProvider value={clusterContextValue}>
