@@ -72,10 +72,10 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         domain='vms'
         itemId={getVmUid(vm)}
         onUnfavorite={fetchFavorites}
-        onClick={() => {
-          router.push(routes.app.vm.getHref(getVmUid(vm)))
-          localStorage.setItem('selectedVm', JSON.stringify(vm))
-        }}
+onClick={() => {
+  localStorage.setItem('selectedVm', JSON.stringify(vm))
+  router.push(routes.app.vm.getHref(getVmUid(vm)))
+}}
       >
         <FavoritedVm vm={vm} />
       </FavoritedBox>
