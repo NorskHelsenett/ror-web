@@ -10,7 +10,7 @@ import { ClusterListViewItemRowType, OverviewItemsViewRowType, VirtualMachine } 
 import { useCallback, useEffect, useState } from 'react'
 import { loadFavoritedClusters, loadFavoritedVms } from '@/features/dashboard/utils/favorited-item'
 import { FavoritedVm, FavoritedVmRow } from '@/features/dashboard/components/favorited-vm'
-import { getVmUid, getVmName } from '@/features/vms/utils/vms'
+import { getVmUid } from '@/features/vms/utils/vms'
 import { LayoutGrid, LayoutList } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 import { DashboardSearch } from '@/features/dashboard/components/dashboard-search'
@@ -72,7 +72,10 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         domain='vms'
         itemId={getVmUid(vm)}
         onUnfavorite={fetchFavorites}
-        onClick={() => router.push(routes.app.vm.getHref(getVmName(vm).toLowerCase()))}
+        onClick={() => {
+          router.push(routes.app.vm.getHref(getVmUid(vm)))
+          localStorage.setItem('selectedVm', JSON.stringify(vm))
+        }}
       >
         <FavoritedVm vm={vm} />
       </FavoritedBox>

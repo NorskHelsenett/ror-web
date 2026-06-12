@@ -63,7 +63,10 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
 
   return (
     <div
-      onClick={() => router.push(routes.app.vm.getHref(getVmName(vm).toLowerCase()))}
+      onClick={() => {
+        router.push(routes.app.vm.getHref(getVmUid(vm)))
+        localStorage.setItem('selectedVm', JSON.stringify(vm))
+      }}
       className={cn(
         'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
         isPoweredOff && 'opacity-50'
