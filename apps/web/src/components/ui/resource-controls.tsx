@@ -72,6 +72,7 @@ interface ResourceControlsProps<T> {
   filteredItems: T[]
   allItems: T[]
   searchResetKey?: number
+  onViewChange?: (view: 'grid' | 'list') => void
 }
 
 /**
@@ -124,6 +125,7 @@ export function ResourceControls<T>({
   filteredItems,
   allItems,
   searchResetKey,
+  onViewChange,
 }: ResourceControlsProps<T>) {
   return (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -268,7 +270,7 @@ export function ResourceControls<T>({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <TabsViewSwitcher storageKey={`${domain}:view-mode`} />
+        <TabsViewSwitcher storageKey={`${domain}:view-mode`} onViewChange={onViewChange} />
       </div>
     </div>
   )

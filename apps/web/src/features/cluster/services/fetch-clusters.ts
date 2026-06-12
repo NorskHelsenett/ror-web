@@ -18,7 +18,7 @@
  */
 
 import { getRorApi } from '@/services/ror-api'
-import { ClusterListViewItemRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType, KubernetesCluster } from '@ror/js-api-client'
 
 /**
  * Fetches Kubernetes clusters from both v1 and v2 API endpoints in parallel.
@@ -59,6 +59,12 @@ export async function fetchClusters(
     v2Clusters: v2response?.resources ?? [],
     v1Clusters: v1response?.data ?? [],
   }
+}
+
+export async function fetchKubernetesCluster(id: string): Promise<KubernetesCluster> {
+  const api = await getRorApi()
+  const cluster = api.kubernetesClusters.id(id)
+  return cluster
 }
 
 export async function fetchClusterViewItem(id: string): Promise<ClusterListViewItemRowType> {

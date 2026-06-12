@@ -14,12 +14,16 @@ import { createRoot } from 'react-dom/client'
 import { Button } from '../shadcn/button'
 import { toast } from 'sonner'
 import { ItemsLayouts, Layout, LayoutItem, WidgetItem } from '@/utils/layout-item'
+import { copyToClipboard } from '@/utils/copy-to-clipboard'
+import { Copy } from 'lucide-react'
 
 interface GridLayoutWrapperProps {
   preferenceKey: LayoutKey
   standardLayouts: ItemsLayouts
   contentMap: Record<string, React.ReactNode>
   onLayoutChange?: (layout: Layout[]) => void
+  copyItemTitle?: string
+  copyItem?: unknown
 }
 
 export const breakpoints = {
@@ -37,6 +41,8 @@ export const GridLayoutWrapper = ({
   standardLayouts,
   contentMap,
   onLayoutChange,
+  copyItemTitle,
+  copyItem,
 }: GridLayoutWrapperProps) => {
   const gridContainerRef = useRef<HTMLDivElement | null>(null)
   const gridRef = useRef<GridStack | null>(null)
@@ -198,6 +204,17 @@ export const GridLayoutWrapper = ({
       </Button>
       <Button onClick={resetToSaved}>Reset to saved</Button>
       <Button onClick={resetToDefault}>Reset to default</Button>
+      {copyItemTitle && (
+        <Button
+          onClick={() => {
+            copyToClipboard(JSON.stringify(copyItem))
+          }}
+          className='ml-auto mr-0'
+        >
+          <Copy />
+          Copy {copyItemTitle}
+        </Button>
+      )}
     </div>
   )
 
