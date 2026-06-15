@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 import { clsx } from 'clsx'
 import { toast } from 'sonner'
 import { Button, ButtonSize } from '@ror/react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 export interface CopyButtonProps {
   /**
@@ -85,8 +86,17 @@ export function CopyButton({ onClick, className, children, size = 'md', value }:
   const classes = clsx('r-copy-btn', 'no-drag', className)
 
   return (
-    <Button icon={<Copy />} data-copy-button iconOnly onClick={handleOnClick} className={classes} size={size}>
-      {children}
-    </Button>
+    <TooltipProvider>
+      <Tooltip delayDuration={1200}>
+        <TooltipTrigger asChild>
+          <Button icon={<Copy />} data-copy-button iconOnly onClick={handleOnClick} className={classes} size={size}>
+            {children}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>Copy</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }

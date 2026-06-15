@@ -5,7 +5,7 @@ import { DotIcon } from 'lucide-react'
 import { cn } from '@/utils/clsxm'
 import { HealthStatus } from '@/features/cluster/types/health-status'
 import { ExternalToolButton } from '@/features/cluster/components/external-tool-button'
-import { ResourceBar } from '@/features/cluster/components/resource-bar'
+import { ResourceBar } from '@/components/ui/resource-bar'
 import { RorCliButton } from '@/features/cluster/components/ror-cli-button'
 import {
   getLastSeenViewItem,
@@ -21,16 +21,16 @@ import {
 } from '@/features/cluster/utils/cluster'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
-  <span className={'flex items-center justify-around size-7'}>
+  <span className={'flex items-center justify-around size-5'}>
     <span
       className={cn(
-        'size-5 rounded-full opacity-75',
+        'size-4 rounded-full opacity-75',
         status == 'ok' ? 'bg-emerald-500' : status == 'warning' ? 'bg-yellow-500' : 'bg-red-500'
       )}
     />
     <span
       className={cn(
-        'size-4 absolute z-10 rounded-full',
+        'size-3 absolute z-10 rounded-full',
         status == 'ok' ? 'bg-emerald-700' : status == 'warning' ? 'bg-yellow-700' : 'bg-red-700'
       )}
     />

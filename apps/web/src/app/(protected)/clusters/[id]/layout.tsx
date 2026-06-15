@@ -5,13 +5,14 @@
  */
 
 import { cache, Fragment, ReactNode } from 'react'
+import { redirect } from 'next/navigation'
 import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
-import { fetchClusterViewItem } from '@/features/cluster/services/fetch-clusters'
-import { ClusterListItemView } from '@ror/js-api-client'
+import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
+import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -19,17 +20,14 @@ interface ClusterPageLayoutProps {
   }>
   children: ReactNode
 }
-
-// TODO: Uncomment the following lines when the respective components are available
 const {
   cluster,
-  // clusterIngresses,
-  // clusterNodePools,
-  // clusterPolicies,
+  clusterIngresses,
+  clusterNodePools,
+  clusterPolicies,
   clusterVulnerabilities,
-  // clusterCompliance,
-  // clusterAbout,
-  clusterRawData,
+  clusterCompliance,
+  clusterAbout,
 } = routes.app
 
 export interface navigationItemObject {
@@ -37,39 +35,37 @@ export interface navigationItemObject {
   href: string
 }
 
-const createTabNavigationItems = (clusterId: string) => {
+const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
+
+const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
   return [
     {
       label: 'Details',
-      href: cluster.getHref(clusterId),
+      href: cluster.getHref(clusterUid),
     },
-    // {
-    //   label: clusterIngresses.label,
-    //   href: clusterIngresses.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterNodePools.label,
-    //   href: clusterNodePools.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterPolicies.label,
-    //   href: clusterPolicies.getHref(clusterId),
-    // },
+    {
+      label: clusterIngresses.label,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=ingresses`,
+    },
+    {
+      label: clusterNodePools.label,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=nodepools`,
+    },
+    {
+      label: clusterPolicies.label,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=policyReports`,
+    },
     {
       label: clusterVulnerabilities.label,
-      href: clusterVulnerabilities.getHref(clusterId),
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=vulnerabilityReports`,
     },
-    // {
-    //   label: clusterCompliance.label,
-    //   href: clusterCompliance.getHref(clusterId),
-    // },
-    // {
-    //   label: clusterAbout.label,
-    //   href: clusterAbout.getHref(clusterId),
-    // },
     {
-      label: clusterRawData.label,
-      href: clusterRawData.getHref(clusterId),
+      label: clusterCompliance.label,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=complianceReports`,
+    },
+    {
+      label: clusterAbout.label,
+      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=metadata`,
     },
   ]
 }
@@ -98,8 +94,16 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
   try {
     const clusterList = (await fetchCluster(id)) as ClusterListItemView
     const cluster = clusterList.rows[0]
-    const tabs = createTabNavigationItems(id)
-    const clusterContextValue = { cluster }
+    const kubernetesCluster = (await fetchKubernetesCluster(id)) as KubernetesCluster
+
+    if (!cluster) {
+      redirect('/clusters')
+    }
+
+    const clusterId = cluster.clusterId?.fieldValue || 'missing'
+    const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
+    const tabs = createTabNavigationItems(clusterId, clusterUid)
+    const clusterContextValue = { cluster, kubernetesCluster }
 
     return (
       <ClusterProvider value={clusterContextValue}>

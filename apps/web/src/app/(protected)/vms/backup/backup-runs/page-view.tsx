@@ -16,7 +16,7 @@ import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { SortDefinition, useSorting } from '@/hooks/use-sorting'
 import { loadMoreBackupRuns } from '@/utils/backup-run-actions'
 import { BackupRun } from '@ror/js-api-client'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { RotateCw } from 'lucide-react'
 import { SortSelect } from '@/components/ui/sort-select'
@@ -28,6 +28,8 @@ import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'
+import { HistoryRunChart } from '@/features/backup/backup-run/components/history-run-chart'
+import { useBackupRunsHistoryHydration } from '@/features/vms/backup/services/backup-runs-history-cache'
 
 export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const filtersOpen = params.filters === 'open'
@@ -62,7 +64,30 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   const definitions: SortDefinition<BackupRun>[] = [
     { key: 'source', extractor: (item) => getBackupRunSource(item) },
     { key: 'startTime', extractor: (item) => getBackupRunStartTime(item) },
-    { key: 'endTime', extractor: (item) => getBackupRunEndTime(item) },
+    {
+      key: 'duration',
+      extractor: (item) => {
+        const start = getBackupRunStartTime(item)
+        const end = getBackupRunEndTime(item)
+        if (!start || start === 'No start time' || !end || end === 'No end time') return null
+        const ms = new Date(end).getTime() - new Date(start).getTime()
+        return isNaN(ms) ? null : ms
+      },
+      compareFn: (a, b) => {
+        const aStart = getBackupRunStartTime(a)
+        const aEnd = getBackupRunEndTime(a)
+        const bStart = getBackupRunStartTime(b)
+        const bEnd = getBackupRunEndTime(b)
+
+        if (!aStart || !aEnd) return 1
+        if (!bStart || !bEnd) return -1
+
+        const aDuration = new Date(aEnd).getTime() - new Date(aStart).getTime()
+        const bDuration = new Date(bEnd).getTime() - new Date(bStart).getTime()
+
+        return aDuration - bDuration
+      },
+    },
     { key: 'expiryTime', extractor: (item) => getBackupRunExpiryTime(item) },
     { key: 'backupJobId', extractor: (item) => getBackupRunMappedBackupJobId(item) },
   ]
@@ -115,6 +140,9 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
   }, [resetFilters, setSelectedDisplayData, clearUrl])
 
   const displayedItems = sortedItems
+  const historySummary = useBackupRunsHistoryHydration()
+
+  const [summaryCardsVisible, setSummaryCardsVisible] = useState(false)
 
   const renderControls = () => (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -126,6 +154,15 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
           />
         </div>
         <SortSelect options={sortingOptionsBackupRun} currentSort={params.sort} />
+        <Button
+          variant='outline'
+          aria-label={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          title={summaryCardsVisible ? 'Hide summary cards' : 'Show summary cards'}
+          className='gap-2'
+          onClick={() => setSummaryCardsVisible(!summaryCardsVisible)}
+        >
+          {summaryCardsVisible ? 'Hide' : 'Show'} summary cards
+        </Button>
         <Button
           type='button'
           onClick={handleRefreshFilters}
@@ -166,6 +203,8 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
         expect finished functionality or that all data is present. The development team is working hard on delivering a
         complete product as quick as possible :)
       </NotReadyMessage>
+
+      {summaryCardsVisible && <HistoryRunChart backupRuns={backupRuns} historySummary={historySummary} />}
 
       <section className='px-12 my-8'>
         <TableView />

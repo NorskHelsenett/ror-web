@@ -20,6 +20,7 @@ import { ResourceSearch } from './resource-search'
 import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
 import { ResourceRegexSearch } from './resource-regex-search'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
 
 /**
  * Props for the ResourceControls component.
@@ -46,7 +47,7 @@ import { ResourceRegexSearch } from './resource-regex-search'
  */
 interface ResourceControlsProps<T> {
   safeItems: T[]
-  searchType: "fuzzy" | "regex"
+  searchType: 'fuzzy' | 'regex'
   searchText?: string
   selectedDisplayData: string[]
   onDisplayChange: (selected: Option[]) => void
@@ -71,6 +72,7 @@ interface ResourceControlsProps<T> {
   filteredItems: T[]
   allItems: T[]
   searchResetKey?: number
+  onViewChange?: (view: 'grid' | 'list') => void
 }
 
 /**
@@ -123,6 +125,7 @@ export function ResourceControls<T>({
   filteredItems,
   allItems,
   searchResetKey,
+  onViewChange,
 }: ResourceControlsProps<T>) {
   return (
     <div className='flex flex-wrap items-center justify-between w-full gap-4 [@container(max-width:1000px)]:flex-col [@container(max-width:1000px)]:items-start [@container(max-width:1000px)]:gap-6'>
@@ -214,12 +217,23 @@ export function ResourceControls<T>({
         </Toggle>
 
         {domain === 'clusters' && (
-          <Link href={`/clusters/new-cluster`}>
-            <Button>
-              <Plus />
-              Create Cluster
-            </Button>
-          </Link>
+          // TODO: enable when cluster creation is available in ROR
+          // <Link href={`/clusters/new-cluster`}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
+                <Button disabled>
+                  <Plus />
+                  Create Cluster
+                </Button>
+              </span>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <p>Coming to ROR real soon</p>
+            </TooltipContent>
+          </Tooltip>
+          // </Link>
         )}
 
         <Button
@@ -256,7 +270,7 @@ export function ResourceControls<T>({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <TabsViewSwitcher storageKey={`${domain}:view-mode`} />
+        <TabsViewSwitcher storageKey={`${domain}:view-mode`} onViewChange={onViewChange} />
       </div>
     </div>
   )

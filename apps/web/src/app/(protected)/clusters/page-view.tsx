@@ -35,6 +35,7 @@ import { ClusterCardDisplayData } from '@/features/cluster/types/display-data'
 import {
   getClusterIdView,
   getClusterNameView,
+  getClusterUidView,
   getClustersViewKey,
   getDatacenterView,
   getEnvironmentView,
@@ -180,8 +181,8 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   const displayedItems = useMemo(() => {
     if (!searchResults?.length) return sortedItems
-    const ids = new Set(searchResults.map(getClusterIdView))
-    return sortedItems.filter((c) => ids.has(getClusterIdView(c)))
+    const ids = new Set(sortedItems.map(getClusterIdView))
+    return searchResults.filter((c) => ids.has(getClusterIdView(c)))
   }, [sortedItems, searchResults])
 
   const effectiveDisplayData = (
@@ -192,7 +193,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
     <div>
       <div className='flex flex-row flex-wrap gap-6'>
         {displayedItems.map((cluster, idx) => (
-          <div key={getClusterIdView(cluster) || idx}>
+          <div key={getClusterUidView(cluster) || idx}>
             <ClusterCard cluster={cluster} displayData={effectiveDisplayData} />
           </div>
         ))}

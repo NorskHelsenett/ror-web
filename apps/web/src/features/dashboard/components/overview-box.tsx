@@ -1,36 +1,26 @@
-import { DashboardBox } from './dashboard-box'
-import { cn } from '@/utils/clsxm'
+import { OverviewItemsViewRowType } from '@ror/js-api-client'
 
-export interface OverviewItem {
-  title: { fieldValue: string }
-  greenItemTitle: { fieldValue: string }
-  greenItemNumber: { fieldValue: number }
-  yellowItemTitle: { fieldValue: string }
-  yellowItemNumber: { fieldValue: number }
-  redItemTitle: { fieldValue: string }
-  redItemNumber: { fieldValue: number }
-}
-
-const colorMap = {
-  green: { bg: 'bg-green-600', text: 'text-green-900', border: 'border-green-900' },
-  yellow: { bg: 'bg-yellow-600', text: 'text-yellow-900', border: 'border-yellow-900' },
-  red: { bg: 'bg-red-600', text: 'text-red-900', border: 'border-red-900' },
-}
-
-const BoxRow = ({ color, title, value }: { color: keyof typeof colorMap; title: string; value: number }) => {
-  const cm = colorMap[color]
+const StatItem = ({ color, value, label }: { color: 'emerald' | 'yellow' | 'red'; value: number; label: string }) => {
+  const numColor = {
+    emerald: 'text-emerald-500',
+    yellow: 'text-yellow-500',
+    red: 'text-red-500',
+  }[color]
   return (
-    <div className='flex justify-between'>
-      <span>{title}</span>
-      <span className={cn(cm.bg, cm.text, cm.border, 'border w-10 text-center rounded-md')}>{value}</span>
+    <div className='flex flex-col items-center'>
+      <span className={`text-3xl font-bold tabular-nums leading-none ${numColor}`}>{value}</span>
+      <span className='text-xs text-muted-foreground leading-tight'>{label}</span>
     </div>
   )
 }
 
-export const OverviewBox = ({ item }: { item: OverviewItem }) => (
-  <DashboardBox title={item.title.fieldValue} className='flex flex-col gap-1' half>
-    <BoxRow color={'green'} title={item.greenItemTitle.fieldValue} value={item.greenItemNumber.fieldValue} />
-    <BoxRow color={'yellow'} title={item.yellowItemTitle.fieldValue} value={item.yellowItemNumber.fieldValue} />
-    <BoxRow color={'red'} title={item.redItemTitle.fieldValue} value={item.redItemNumber.fieldValue} />
-  </DashboardBox>
+export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => (
+  <div className='bg-(--r-layer) rounded-lg px-4 py-3 flex flex-col gap-3 min-w-[210px]'>
+    <p className='text-xl font-semibold'>{item.itemName?.fieldValue ?? 'Unknown'}</p>
+    <div className='flex gap-4 justify-center'>
+      <StatItem color='emerald' value={item.greenNumber?.fieldValue ?? 0} label={item.greenTitle?.fieldValue ?? ''} />
+      <StatItem color='yellow' value={item.yellowNumber?.fieldValue ?? 0} label={item.yellowTitle?.fieldValue ?? ''} />
+      <StatItem color='red' value={item.redNumber?.fieldValue ?? 0} label={item.redTitle?.fieldValue ?? ''} />
+    </div>
+  </div>
 )

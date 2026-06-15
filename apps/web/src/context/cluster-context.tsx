@@ -1,10 +1,11 @@
 'use client'
 
-import { ClusterListViewItemRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType, KubernetesCluster } from '@ror/js-api-client'
 import { createContext, useContext } from 'react'
 
 export interface ClusterContextData {
   cluster: ClusterListViewItemRowType
+  kubernetesCluster: KubernetesCluster
 }
 
 // Create a context

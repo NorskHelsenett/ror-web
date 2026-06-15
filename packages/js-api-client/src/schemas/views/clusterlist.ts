@@ -47,6 +47,6 @@ export const ClusterListViewSchema = z
   .object({
     type: z.string(),
     columns: z.array(ViewColumn),
-    rows: z.array(ClusterListViewRow),
+    rows: z.array(ClusterListViewRow).default([]),
   })
   .loose()

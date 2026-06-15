@@ -12,6 +12,7 @@
     "dev:web": "npm --workspace @ror/web run dev",
     "dev:services": "docker compose up",
     "dev:all": "bash scripts/dev-with-compose.sh",
+    "dev:api": "bash scripts/dev-with-api.sh",
     "build": "turbo build",
     "lint": "turbo lint",
     "clean": "turbo clean && rm -rf node_modules && rm -rf .turbo",
@@ -26,11 +27,11 @@
   },
   "devDependencies": {
     "@swc/core": "1.13.3",
-    "@turbo/gen": "2.5.2",
+    "@turbo/gen": "2.9.18",
     "@types/babel__core": "7.20.5",
     "@types/gridstack": "0.5.0",
     "@types/jest": "30.0.0",
-    "esbuild": "0.25.9",
+    "esbuild": "0.28.1",
     "eslint": "8.57.0",
     "husky": "9.1.7",
     "jest": "30.0.5",
@@ -39,7 +40,7 @@
     "ts-jest": "29.4.1",
     "ts-node": "10.9.2",
     "ts-to-zod": "3.15.0",
-    "turbo": "2.5.2",
+    "turbo": "2.9.14",
     "typescript": "5.6.2"
   },
   "msw": {

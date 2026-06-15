@@ -50,6 +50,6 @@ export const ClusterListItemViewSchema = z
   .object({
     type: z.string(),
     columns: z.array(ViewColumn),
-    rows: z.array(ClusterListItemViewRow),
+    rows: z.array(ClusterListItemViewRow).default([]),
   })
   .loose()

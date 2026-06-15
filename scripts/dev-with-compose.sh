@@ -25,5 +25,5 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo "Starting Next.js dev server (@ror/web)..."
-exec npm --workspace @ror/web run dev
+echo "Starting Next.js dev server (@ror/web) with mocking enabled..."
+exec env NEXT_PUBLIC_MOCKING_ENABLED=true npm --workspace @ror/web run dev

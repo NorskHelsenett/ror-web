@@ -43,7 +43,7 @@ import {
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
-import { useMemo, useCallback, useState } from 'react'
+import { useMemo, useCallback, useState, useEffect } from 'react'
 import { VMCard } from '@/features/vms/components/vm-card'
 import { VMCardData } from '@/features/vms/types/vm-types'
 import { displayDataOptions, sortingOptions } from '@/features/vms/config/page-view-options'
@@ -62,7 +62,8 @@ import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { loadMoreVMs } from '@/utils/vms-actions'
 import { VmFilterSection } from '@/features/vms/components/vm-filter-section'
-import { useBackupInfoHydration } from '@/features/vms/backup/services/backup-cache'
+import { useBackupRunInfoHydration } from '@/features/vms/backup/services/vm-backup-run-cache'
+import { useVmBackupJobsHydration } from '@/features/vms/backup/services/vm-backup-jobs-cache'
 import { VmSearchWithOptions } from '@/features/vms/components/vm-search-with-options'
 
 const isExpiredBackup = (expiryTime?: string | null) => {
@@ -74,6 +75,21 @@ const isExpiredBackup = (expiryTime?: string | null) => {
 export const PageView = ({ className, vms, params }: PageViewProps) => {
   const filtersOpen = params.filterPanel === 'open'
   const [searchResetKey, setSearchResetKey] = useState(0)
+  const [clientView, setClientView] = useState<'grid' | 'list'>(params.view ?? 'grid')
+
+  // Sync when URL param changes (e.g. user clicks the toggle → router.push → params updates)
+  useEffect(() => {
+    setClientView(params.view ?? 'grid')
+  }, [params.view])
+
+  // On mount (and when navigating to /vms without ?view), prefer localStorage.
+  // If URL contains ?view, keep URL as the source of truth.
+  useEffect(() => {
+    if (params.view) return
+
+    const stored = localStorage.getItem('vms:view-mode')
+    if (stored === 'grid' || stored === 'list') setClientView(stored)
+  }, [params.view])
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<VirtualMachine | VMWithBackupStatus>({
     initial: vms,
     sort: params.sort,
@@ -94,7 +110,8 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
-  const hydratedItems = useBackupInfoHydration(items)
+  const itemsWithBackupStatus = useVmBackupJobsHydration(items)
+  const hydratedItems = useBackupRunInfoHydration(itemsWithBackupStatus)
 
   const safeItems = useMemo(
     () => hydratedItems.filter((c) => getVmOperatingSystem(c) && typeof getVmOperatingSystem(c) === 'object'),
@@ -276,6 +293,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         exportAsExcel={exportVmsAsExcel}
         allItems={hydratedItems}
         filteredItems={filteredItems}
+        onViewChange={setClientView}
       />
     </div>
   )
@@ -389,7 +407,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
         expect finished functionality or that all data is present. The development team is working hard on delivering a
         complete product as quick as possible :)
       </NotReadyMessage>
-      <section className='px-12 my-8'>{params.view === 'list' ? <TableView /> : <GridView />}</section>
+      <section className='px-12 my-8'>{clientView === 'list' ? <TableView /> : <GridView />}</section>
     </div>
   )
 }

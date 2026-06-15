@@ -40,9 +40,10 @@ import { HealthCircle } from './health-circle'
 import { Environment } from '../types/environment'
 import { routes } from '@/config/routes'
 import { useRouter } from 'next/navigation'
-import { ResourceBar } from './resource-bar'
+import { ResourceBar } from '../../../components/ui/resource-bar'
 import { ExternalToolButton } from './external-tool-button'
 import { RorCliButton } from './ror-cli-button'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -124,6 +125,7 @@ const infoSectionCls =
  * @returns A clickable card component linking to the cluster details page.
  */
 const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
+  const clusterUid = getClusterUidView(cluster) || globalThis.crypto.randomUUID()
   const clusterName = getClusterNameView(cluster) || missingText
   const provider = getProviderView(cluster) || missingText
   const datacenter = getDatacenterView(cluster) || missingText
@@ -192,16 +194,23 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
       }}
     >
       <CardHeader className='m-0 mb-7 p-0 w-full'>
-        <CardTitle className={cn('text-2xl rounded-t-xl px-6 py-2 flex', envColor[0], envColor[1])}>
+        <CardTitle
+          className={cn(
+            'text-2xl rounded-t-xl pl-2 pr-6 py-2 flex items-center gap-1.5 h-14',
+            envColor[0],
+            envColor[1]
+          )}
+        >
+          <FavoriteStar domain='cluster' itemId={clusterUid} className='w-11 h-11' scale='scale-75' />
           {(clusterName || 'Unnamed Cluster') as string}
         </CardTitle>
-        <HealthCircle className='ml-auto mr-4 -mt-6 w-13 h-13 ' healthCondition={healthCondition} />
+        <HealthCircle className='ml-auto mr-4 -mt-7 w-13 h-13' healthCondition={healthCondition} />
       </CardHeader>
 
       <CardContent className='text-sm flex flex-col gap-3'>
         {basicItems.length > 0 && (
           <>
-            <section className='flex items-center gap-2'>
+            <section className='flex items-center gap-1'>
               {basicItems.map((item, index) => (
                 <React.Fragment key={index}>
                   {index > 0 && <Dot />}

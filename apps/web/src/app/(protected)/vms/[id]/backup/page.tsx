@@ -1,7 +1,7 @@
 'use client'
 
 import { useVMContext } from '@/context/vm-context'
-import { BackupOverview } from '@/features/vms/backup/components'
+import { BackupOverview } from '@/features/vms/backup/components/backup-overview'
 import type { VMWithBackupStatus } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { useEffect, useMemo, useState } from 'react'
 import type { BackupRun } from '@ror/js-api-client'

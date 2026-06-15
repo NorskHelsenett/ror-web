@@ -1,25 +1,38 @@
 'use client'
 
-import { Star } from 'lucide-react'
 import { DashboardBox } from './dashboard-box'
 import { ReactNode } from 'react'
 import { cn } from '@/utils/clsxm'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 
 export interface FavoritedBoxProps {
   title: string
+  domain: string
+  itemId: string
   isError?: boolean
   children: ReactNode
   className?: string
+  onUnfavorite?: () => void
+  onClick?: () => void
 }
 
-export const FavoritedBox = ({ title, isError = false, children, className }: FavoritedBoxProps) => (
-  <DashboardBox className={cn(className, isError && 'bg-red-900')} title={title}>
-    <Star
-      onClick={() => console.log('function to unfavorite')}
-      className='absolute right-3 top-3'
-      size={32}
-      stroke='none'
-      fill='yellow'
+export const FavoritedBox = ({
+  title,
+  domain,
+  itemId,
+  isError = false,
+  children,
+  className,
+  onUnfavorite,
+  onClick,
+}: FavoritedBoxProps) => (
+  <DashboardBox className={cn(className, isError && 'bg-red-300 dark:bg-red-900')} title={title} onClick={onClick}>
+    <FavoriteStar
+      domain={domain}
+      itemId={itemId}
+      scale='scale-50'
+      className='absolute right-1.5 top-1.5'
+      onUnfavorite={onUnfavorite}
     />
     {children}
   </DashboardBox>

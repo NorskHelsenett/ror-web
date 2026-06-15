@@ -11,11 +11,8 @@ export const displayDataOptions: Option[] = [
   { value: 'argocd', label: 'ArgoCD' },
   { value: 'grafana', label: 'Grafana' },
   { value: 'rorcli', label: 'ROR CLI' },
-  { value: 'kubectl', label: 'Kubectl' },
   { value: 'cpu', label: 'CPU usage' },
   { value: 'memory', label: 'Memory usage' },
-  { value: 'gpu', label: 'GPU usage' },
-  { value: 'disk', label: 'Disk usage' },
   { value: 'nodes', label: 'Num of nodes' },
   { value: 'price', label: 'Price' },
   { value: 'agentVersion', label: 'ROR agent version' },
@@ -24,14 +21,13 @@ export const displayDataOptions: Option[] = [
   { value: 'datacenterName', label: 'Datacenter name' },
   { value: 'datacenterProvider', label: 'Datacenter provider' },
   { value: 'environment', label: 'Environment' },
-  { value: 'serviceTags', label: 'Service tags' },
   { value: 'serviceId', label: 'Service ID' },
   { value: 'region', label: 'Region' },
   { value: 'az', label: 'Availability zone' },
   { value: 'workspace', label: 'Workspace' },
 ]
 
-const OPT_IN_FIELDS: string[] = ['agentVersion', 'kubernetesVersion', 'toolingVersion', 'serviceId', 'region', 'az']
+const OPT_IN_FIELDS: string[] = ['serviceId', 'region', 'az']
 
 export const defaultDisplayData = displayDataOptions.map((o) => o.value).filter((v) => !OPT_IN_FIELDS.includes(v))
 

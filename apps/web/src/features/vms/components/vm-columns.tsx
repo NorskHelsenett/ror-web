@@ -23,6 +23,7 @@ import {
   getVmToolVersion,
   getVmVersion,
   getVmFamily,
+  getVmUid,
 } from '../utils/vms'
 import { changePowerStateValues } from '../types/powerState'
 import { PowerStatusIcon } from './power-status-icon'
@@ -56,10 +57,10 @@ export const getVMTableColumns = (selectedDisplayData?: VMColumnsData[]): DataTa
       cell: (info) => {
         const name = String(info.getValue() ?? '')
         const vm = info.row.original
-        const vmName = getVmName(vm) || ''
+        const vmUid = getVmUid(vm)
         return (
           <Link
-            href={routes.app.vm.getHref(vmName.toLowerCase())}
+            href={routes.app.vm.getHref(vmUid)}
             className='pr-2 text-blue-600 dark:text-blue-500 underline break-all'
             onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}
           >

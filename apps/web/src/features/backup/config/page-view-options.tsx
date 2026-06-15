@@ -5,7 +5,7 @@ export const sortingOptionsBackupJob = [
 
 export const sortingOptionsBackupRun = [
   { label: 'Start time', value: 'startTime' },
-  { label: 'End time', value: 'endTime' },
+  { label: 'Duration', value: 'duration' },
   { label: 'Expiry time', value: 'expiryTime' },
   { label: 'Source', value: 'source' },
 ]

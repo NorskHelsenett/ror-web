@@ -28,8 +28,10 @@ import {
   getRegionView,
   getCountryView,
   getAZView,
+  getStatusView,
 } from '../utils/cluster'
 import { Button } from '@/components/shadcn/button'
+import { HealthCircle } from './health-circle'
 
 const missingText = 'Missing ...'
 
@@ -78,15 +80,27 @@ export function getClustersTableColumns(
         </Link>
       ),
     }),
-    // columnHelper.accessor(getStatusView, {
-    //   id: 'health',
-    //   size: 80,
-    //   header: () => <p className='text-sm'>Status</p>,
-    //   cell: (info) => <HealthCircle className='w-12 h-12 scale-90' healthCondition={info.getValue()} />,
-    // }),
+    columnHelper.accessor(getStatusView, {
+      id: 'health',
+      size: 112,
+      header: ({ column }) => (
+        <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Status
+          {column.getIsSorted() === 'asc' ? (
+            <ArrowDown className='h-4 w-4' />
+          ) : column.getIsSorted() === 'desc' ? (
+            <ArrowUp className='h-4 w-4' />
+          ) : (
+            <ArrowUpDown className='h-4 w-4' />
+          )}
+        </Button>
+      ),
+      enableSorting: true,
+      cell: (info) => <HealthCircle className='size-12 mx-auto' healthCondition={info.getValue()} />,
+    }),
     columnHelper.accessor(getEnvironmentView, {
       id: 'environment',
-      size: 180,
+      size: 150,
       header: ({ column }) => {
         return (
           <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -105,7 +119,7 @@ export function getClustersTableColumns(
       cell: (info) => {
         const env = info.getValue()
         return (
-          <Pill variant={envColors[(env as keyof typeof envColors) ?? missingText]} className='px-3'>
+          <Pill variant={envColors[(env as keyof typeof envColors) ?? missingText]} className='px-3 mx-auto'>
             {(env ?? missingText).charAt(0).toUpperCase() + (env ?? missingText).slice(1)}
           </Pill>
         )
@@ -198,7 +212,7 @@ export function getClustersTableColumns(
     isVisible('nodes') &&
       columnHelper.accessor(getNodePoolsView, {
         id: 'nodes',
-        size: 160,
+        size: 128,
         header: () => <p className='text-sm'>Num of nodes</p>,
         enableSorting: false,
         cell: (info) => {
@@ -219,9 +233,9 @@ export function getClustersTableColumns(
           <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
             Price (month/year)
             {column.getIsSorted() === 'asc' ? (
-              <ArrowDown className='h-4 w-4' />
-            ) : column.getIsSorted() === 'desc' ? (
               <ArrowUp className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowDown className='h-4 w-4' />
             ) : (
               <ArrowUpDown className='h-4 w-4' />
             )}
@@ -241,22 +255,61 @@ export function getClustersTableColumns(
     isVisible('agentVersion') &&
       columnHelper.accessor(getRorAgentVersionView, {
         id: 'agentVersion',
-        size: 156,
-        header: () => <p className='text-sm'>Agent version</p>,
+        size: 160,
+        header: ({ column }) => (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Agent version
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        ),
+        enableSorting: true,
+        sortingFn: 'text',
         cell: (info) => <span>{info.getValue() || 'Missing ...'}</span>,
       }),
     isVisible('kubernetesVersion') &&
       columnHelper.accessor(getKubernetesVersionView, {
         id: 'kubernetesVersion',
-        size: 168,
-        header: () => <p className='text-sm'>Kubernetes version</p>,
+        size: 198,
+        header: ({ column }) => (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Kubernetes version
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        ),
+        enableSorting: true,
+        sortingFn: 'text',
         cell: (info) => <span>{info.getValue() || 'Missing ...'}</span>,
       }),
     isVisible('toolingVersion') &&
       columnHelper.accessor(getNhnToolVersionView, {
         id: 'toolingVersion',
         size: 156,
-        header: () => <p className='text-sm'>Tooling version</p>,
+        header: ({ column }) => (
+          <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+            Tooling version
+            {column.getIsSorted() === 'asc' ? (
+              <ArrowDown className='h-4 w-4' />
+            ) : column.getIsSorted() === 'desc' ? (
+              <ArrowUp className='h-4 w-4' />
+            ) : (
+              <ArrowUpDown className='h-4 w-4' />
+            )}
+          </Button>
+        ),
+        enableSorting: true,
+        sortingFn: 'text',
         cell: (info) => <span>{info.getValue() || 'Missing ...'}</span>,
       }),
     isVisible('argocd') &&
@@ -267,7 +320,7 @@ export function getClustersTableColumns(
           const argo = getArgocdUrlView(info.row.original)
           return argo ? (
             <a
-              href={`https://${argo}`}
+              href={`${argo}`}
               target='_blank'
               rel='noreferrer'
               className='flex items-center gap-2 text-blue-600 dark:text-blue-500'
@@ -287,7 +340,7 @@ export function getClustersTableColumns(
           const grafana = getGrafanaUrlView(info.row.original)
           return grafana ? (
             <a
-              href={`https://${grafana}`}
+              href={`${grafana}`}
               target='_blank'
               rel='noreferrer'
               className='flex items-center gap-2 text-blue-600 dark:text-blue-500'

@@ -39,7 +39,8 @@ const projects: ProjectListSchema = {
     {
       active: true,
       created: '2023-03-09T11:24:28.447Z',
-      description: 'NHNs verktøy for å administrere alle K8s clustre\nRelease, Operate and Report\nURL: ror.nhn.no',
+      description:
+        'NHNs verktøy for å administrere alle K8s clustre\nRelease, Operate and Report\nURL: legacy.ror.nhn.no',
       id: '6409c1ec068ef078d52cff13',
       name: 'ROR By NHN',
       projectMetadata: {
