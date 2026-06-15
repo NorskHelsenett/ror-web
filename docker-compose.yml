@@ -10,6 +10,8 @@ services:
     depends_on:
       init-dex-db:
         condition: service_completed_successfully
+      mocc:
+        condition: service_started
     ports:
       - "6554:6554"
       - "6556:6556"
@@ -38,5 +40,130 @@ services:
       - PORT=6006
     volumes:
       - ${ROR_ASSETS_PATH:-./volumes-for-compose}/users.yaml:/config/users.yaml:ro
+
+  # --- API backend services (start with: docker compose --profile api up -d) ---
+
+  rabbitmq:
+    image: ${DOCKER_MIRROR}rabbitmq:4-management-alpine
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=S3cret!
+    volumes:
+      - ${DOCKER_VOLUME_PATH:-~/.rormounts}/rabbitmq:/var/log/rabbitmq
+    ports:
+      - "6672:5672"
+      - "16672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 20s
+      timeout: 15s
+      retries: 10
+    profiles:
+      - api
+
+  mongodb:
+    image: ${DOCKER_MIRROR}mongo:8-noble
+    volumes:
+      - ${DOCKER_VOLUME_PATH:-~/.rormounts}/mongodb:/data/db:rw
+      - ../ror-api/hacks/assets/mongodb:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_DATABASE=nhn-ror
+      - MONGO_INITDB_ROOT_USERNAME=someone
+      - MONGO_INITDB_ROOT_PASSWORD=S3cret!
+      - MONGODB_DISABLE_SYSTEM_LOG=false
+      - MONGODB_SYSTEM_LOG_VERBOSITY=5
+    ports:
+      - "28017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    profiles:
+      - api
+
+  valkey:
+    image: ${DOCKER_MIRROR}valkey/valkey
+    environment:
+      VALKEY_EXTRA_FLAGS: "--requirepass S3cret!"
+    volumes:
+      - ${DOCKER_VOLUME_PATH:-~/.rormounts}/valkey/data:/data
+    ports:
+      - "7379:6379"
+      - "9001:8001"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+    profiles:
+      - api
+
+  openldap:
+    image: ${DOCKER_MIRROR}osixia/openldap:1.5.0
+    command: ["--copy-service"]
+    environment:
+      LDAP_TLS_VERIFY_CLIENT: try
+      LDAP_ORGANISATION: "ROR by NHN"
+      LDAP_DOMAIN: ror.dev
+    volumes:
+      - ../ror-api/hacks/assets/openldap/config-ldap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/custom-config.ldif
+    ports:
+      - "1389:389"
+    profiles:
+      - api
+
+  vault:
+    image: ${DOCKER_MIRROR}hashicorp/vault:1.18.3
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - VAULT_ADDR=http:/vault:8200
+      - VAULT_FORMAT=json
+      - APPROLE_ROLE_ID=test
+    volumes:
+      - ${DOCKER_VOLUME_PATH:-~/.rormounts}/vault/secrets:/tmp/secrets
+      - ${DOCKER_VOLUME_PATH:-~/.rormounts}/vault/data:/vault/data:rw
+      - ../ror-api/hacks/assets/vault/entrypoint.sh:/vault/entrypoint.sh:rw
+      - ../ror-api/hacks/assets/vault/policies:/policies
+      - ../ror-api/hacks/assets/vault/ldapconfig.json:/vault/config/ldapconfig.json
+      - ../ror-api/.env:/vault/config/envfile:rw
+    entrypoint:
+      - "/vault/entrypoint.sh"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    ports:
+      - "9200:8200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http:/vault:8200/v1/sys/health"]
+      interval: 5s
+      retries: 5
+      start_period: 8s
+      timeout: 2s
+    profiles:
+      - api
+
+  ror-api:
+    image: ${ROR_REPO:-ghcr.io/norskhelsenett/}ror-api:${ROR_BUILD_TAG:-latest}
+    restart: unless-stopped
+    env_file:
+      - ../ror-api/.env
+      - ../ror-api/.env.docker
+    volumes:
+      - ../ror-api/hacks/assets/mocc/users.yaml:/hacks/assets/mocc/users.yaml:ro
+    depends_on:
+      vault:
+        condition: service_healthy
+    ports:
+      - "10000:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    profiles:
+      - api
+
 volumes:
   data: {}
