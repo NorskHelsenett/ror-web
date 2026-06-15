@@ -5,11 +5,11 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 cd "$ROOT_DIR"
 
-echo "Starting Docker Compose services (detached)..."
+echo "Starting Docker Compose API services (detached)..."
 if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-  docker compose up --detach
+  docker compose --profile api up --detach
 else
-  echo "WARN: Docker Compose not available; skipping 'docker compose up'."
+  echo "WARN: Docker Compose not available; skipping 'docker compose --profile api up'."
 fi
 
 cleanup() {
@@ -19,11 +19,11 @@ cleanup() {
   fi
 
   if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
-    echo "Stopping Docker Compose services..."
-    docker compose down
+    echo "Stopping Docker Compose API services..."
+    docker compose --profile api down
   fi
 }
 trap cleanup EXIT INT TERM
 
-echo "Starting Next.js dev server (@ror/web) with mocking enabled..."
-exec env NEXT_PUBLIC_MOCKING_ENABLED=true npm --workspace @ror/web run dev
+echo "Starting Next.js dev server (@ror/web) with API..."
+exec env NEXT_PUBLIC_MOCKING_ENABLED=false npm --workspace @ror/web run dev
