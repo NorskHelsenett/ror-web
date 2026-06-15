@@ -211,10 +211,7 @@ const VMCard = ({ className, vm, vmDisplayData }: VMCardProps) => {
   }
 
   return (
-    <Link
-      href={routes.app.vm.getHref(name?.toLowerCase())}
-      onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}
-    >
+    <Link href={routes.app.vm.getHref(vmUid)} onClick={() => localStorage.setItem('selectedVm', JSON.stringify(vm))}>
       <Card
         className={cn(
           'group w-sm min-w-64 pt-0 hover:bg-[#ededed] dark:hover:bg-neutral-800 hover:cursor-pointer @vm vm',
