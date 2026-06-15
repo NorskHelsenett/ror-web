@@ -22,15 +22,23 @@ To run without dex, run the following command:
 npm run dev
 ```
 
-#### With dex
+#### With dex + mock
 
-To run with dex, run the following command:
+To run with dex and mock, run the following command:
 
 ```bash
 npm run dev:all
 ```
 
 The `:all` suffix runs the [`scripts/dev-with-compose.sh`](/scripts/dev-with-compose.sh) script, that runs both `docker-compose up` and `npm run dev`.
+
+#### With dex + api
+
+To run with dex and ror-api, run the following command:
+
+```bash
+npm run dev:api
+```
 
 ### Setup environmental variables
 

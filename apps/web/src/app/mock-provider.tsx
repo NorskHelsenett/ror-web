@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, use } from 'react'
+import { handlers } from '@/__mocks__/handlers'
 import { onUnhandledRequest } from '@/__mocks__/utils/on-unhandled-request'
 
 /**
@@ -12,54 +13,52 @@ import { onUnhandledRequest } from '@/__mocks__/utils/on-unhandled-request'
 
 const mockingEnabledPromise =
   typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MOCKING_ENABLED === 'true'
-    ? Promise.all([import('@/__mocks__/browser'), import('@/__mocks__/handlers')]).then(
-        async ([{ worker }, { handlers }]) => {
-          try {
-            console.log('[MSW] Starting service worker...')
+    ? import('@/__mocks__/browser').then(async ({ worker }) => {
+        try {
+          console.log('[MSW] Starting service worker...')
 
-            // Check if service worker is already registered
-            const registrations = await navigator.serviceWorker.getRegistrations()
-            const hasMockWorker = registrations.some(
-              (reg) => reg.active && reg.active.scriptURL.includes('mockServiceWorker.js')
+          // Check if service worker is already registered
+          const registrations = await navigator.serviceWorker.getRegistrations()
+          const hasMockWorker = registrations.some(
+            (reg) => reg.active && reg.active.scriptURL.includes('mockServiceWorker.js')
+          )
+
+          if (hasMockWorker) {
+            console.log('[MSW] Mock service worker already registered, unregistering first')
+            await Promise.all(
+              registrations
+                .filter((reg) => reg.active && reg.active.scriptURL.includes('mockServiceWorker.js'))
+                .map((reg) => reg.unregister())
             )
-
-            if (hasMockWorker) {
-              console.log('[MSW] Mock service worker already registered, unregistering first')
-              await Promise.all(
-                registrations
-                  .filter((reg) => reg.active && reg.active.scriptURL.includes('mockServiceWorker.js'))
-                  .map((reg) => reg.unregister())
-              )
-            }
-
-            // Start with a fresh worker
-            await worker
-              .start({
-                onUnhandledRequest: onUnhandledRequest,
-                serviceWorker: {
-                  url: '/mockServiceWorker.js',
-                  options: {
-                    scope: '/',
-                  },
-                },
-              })
-              .catch((e) => {
-                console.error('[MSW] Failed to start worker:', e)
-                // Return a friendlier error for users
-                throw new Error(
-                  'MSW initialization failed. Try disabling NEXT_PUBLIC_MOCKING_ENABLED or refreshing the page.'
-                )
-              })
-
-            worker.use(...handlers)
-
-            console.log('[MSW] Service worker started successfully!')
-            console.log('[MSW] Registered handlers:', worker.listHandlers().length)
-          } catch (error) {
-            console.error('[MSW] Service worker registration failed:', error)
           }
+
+          // Start with a fresh worker
+          await worker
+            .start({
+              onUnhandledRequest: onUnhandledRequest,
+              serviceWorker: {
+                url: '/mockServiceWorker.js',
+                options: {
+                  scope: '/',
+                },
+              },
+            })
+            .catch((e) => {
+              console.error('[MSW] Failed to start worker:', e)
+              // Return a friendlier error for users
+              throw new Error(
+                'MSW initialization failed. Try disabling NEXT_PUBLIC_MOCKING_ENABLED or refreshing the page.'
+              )
+            })
+
+          worker.use(...handlers)
+
+          console.log('[MSW] Service worker started successfully!')
+          console.log('[MSW] Registered handlers:', worker.listHandlers().length)
+        } catch (error) {
+          console.error('[MSW] Service worker registration failed:', error)
         }
-      )
+      })
     : Promise.resolve()
 
 export function MSWProvider({
