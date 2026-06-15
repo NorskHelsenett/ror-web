@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@swc/core": "1.13.3",
-    "@turbo/gen": "2.5.2",
+    "@turbo/gen": "2.9.18",
     "@types/babel__core": "7.20.5",
     "@types/gridstack": "0.5.0",
     "@types/jest": "30.0.0",
