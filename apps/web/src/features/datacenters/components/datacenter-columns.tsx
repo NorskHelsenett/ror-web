@@ -21,7 +21,7 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
     id: 'datacenter',
     header: 'Datacenter',
     size: 300,
-    accessorFn: (row) => row.datacenter.legacy?.name ?? '',
+    accessorFn: (row) => row.datacenter.legacy?.name ?? row.datacenter.legacy?.id ?? '',
     cell: ({ row }) => {
       const legacy = row.original.datacenter.legacy
       const id = legacy?.id
