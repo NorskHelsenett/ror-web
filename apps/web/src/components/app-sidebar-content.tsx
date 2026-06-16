@@ -122,7 +122,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Datacenters',
-        url: `${oldRorBaseUrl}admin/datacenter`, // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
+        url: routes.app.dataCenters.getHref(), // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
       },
       {
         title: 'Policy reports',
