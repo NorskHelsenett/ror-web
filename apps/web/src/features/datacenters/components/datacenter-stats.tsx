@@ -1,5 +1,5 @@
 import { DataCenter } from '@ror/js-api-client'
-import { CircleCheck, Flag, Globe, Server } from 'lucide-react'
+import { Flag, Globe, Server } from 'lucide-react'
 import { ReactNode } from 'react'
 
 interface DatacenterStatsProps {
