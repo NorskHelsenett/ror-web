@@ -36,6 +36,7 @@ import { VirtualMachineVulnerabilityInfo, CVE } from '../schemas/vm-vulnerabilit
 import { ClusterListViewRow, ClusterListViewSchema } from '../schemas/views/clusterlist'
 import type { ClusterListItemViewRow, ClusterListItemViewSchema } from '../schemas/views/clusterlistitem'
 import type { OverviewItemsViewRow, OverviewItemsViewSchema } from '../schemas/views/overviewitems'
+import type { ResourcePolicyReportType } from '../schemas/policy-report'
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
@@ -88,6 +89,7 @@ export type VirtualMachineTeam = z.infer<typeof VirtualMachineTag>
 //BackupJob and BackupRun matches the v2 resource
 export type BackupJob = z.infer<typeof BackupJobSchema>
 export type BackupRun = z.infer<typeof BackupRunSchema>
+export type PolicyReport = z.infer<typeof ResourcePolicyReportType>
 
 export type VirtualMachineVulnerabilityInfoType = z.infer<typeof VirtualMachineVulnerabilityInfo>
 export type CVEType = z.infer<typeof CVE>
