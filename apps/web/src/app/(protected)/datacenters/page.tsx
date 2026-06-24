@@ -9,6 +9,7 @@ import { Header } from '@/components/layout/app-shell/header'
 import { DataCenter } from '@ror/js-api-client'
 import { getRorApi } from '@/services/ror-api'
 import { datacenterColumns } from '@/features/datacenters/components/datacenter-columns'
+import { DatacenterStats } from '@/features/datacenters/components/datacenter-stats'
 import { DataTable } from '@/components/ui/data-table'
 
 /**
@@ -28,7 +29,8 @@ const DatacentersPage = async () => {
   return (
     <div className='w-full flex flex-col'>
       <Header title='Datacenters' />
-      <div className='mx-6 my-8'>
+      <div className='mx-12 my-8 flex flex-col gap-6'>
+        <DatacenterStats items={items} />
         <DataTable columns={datacenterColumns} data={items} />
       </div>
     </div>
