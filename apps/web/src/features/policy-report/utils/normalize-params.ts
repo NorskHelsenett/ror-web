@@ -10,7 +10,7 @@ export function normalizeParams(parameters: Record<string, string | string[] | u
     typeof parameters[key] === 'string' ? (parameters[key] as string) : undefined
 
   const page = Number(get('page') ?? '1') || 1
-  const limit = Number(get('limit') ?? '10') || 10
+  const limit = Number(get('limit') ?? '50') || 50
   const sort = get('sort')
   const order: 'asc' | 'desc' = get('order') === 'desc' ? 'desc' : 'asc'
 

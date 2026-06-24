@@ -2,11 +2,13 @@
 
 import { Server, Box, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Badge } from '@/components/shadcn/badge'
 import type { ClusterGroup, NamespaceGroup, PolicyReportSummary } from '../utils/policy-report'
 import { cn } from '@/utils/clsxm'
 import { routes } from '@/config/routes'
+import { fetchClusterNamespaceGroups } from '../utils/policy-reports-actions'
 
 // -------------------------
 // Bi-color pass/fail progress bar
@@ -60,8 +62,6 @@ const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: stri
       <Link
         href={`${routes.app.clusterPolicies.getHref(clusterUid)}?namespace=${encodeURIComponent(ns.namespace)}`}
         className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground shrink-0 ml-2'
-        onClick={(e) => e.stopPropagation()}
-        onPointerDown={(e) => e.stopPropagation()}
       >
         View policies <ChevronRight className='size-4' />
       </Link>
@@ -81,9 +81,23 @@ export const ClusterPolicyReportCard = ({ group }: ClusterPolicyReportCardProps)
   const totalFail = group.summary.fail + group.summary.error
   const totalPass = group.summary.pass
 
+  const [loadedNamespaces, setLoadedNamespaces] = useState<NamespaceGroup[] | null>(null)
+  const [isLoadingNamespaces, setIsLoadingNamespaces] = useState(false)
+
+  const handleAccordionChange = async (value: string) => {
+    if (value && loadedNamespaces === null && !isLoadingNamespaces) {
+      setIsLoadingNamespaces(true)
+      const namespaces = await fetchClusterNamespaceGroups(group.clusterUid)
+      setLoadedNamespaces(namespaces)
+      setIsLoadingNamespaces(false)
+    }
+  }
+
+  const namespacesToRender = loadedNamespaces ?? group.namespaces
+
   return (
     <div className='rounded-xl border border-(--r-border-subtle) bg-card overflow-hidden'>
-      <Accordion type='single' collapsible>
+      <Accordion type='single' collapsible onValueChange={handleAccordionChange}>
         <AccordionItem value={group.clusterUid} className='border-b-0'>
           <AccordionTrigger className='px-6 py-4 hover:no-underline hover:bg-muted/40 [&[data-state=open]]:bg-muted/40'>
             <div className='flex items-center gap-4 flex-1 min-w-0'>
@@ -117,11 +131,15 @@ export const ClusterPolicyReportCard = ({ group }: ClusterPolicyReportCardProps)
 
           <AccordionContent className='px-6 pb-4'>
             <p className='text-sm text-muted-foreground mb-3'>Namespaces</p>
-            <div className='flex flex-col gap-2'>
-              {group.namespaces.map((ns) => (
-                <NamespaceRow key={ns.namespace} ns={ns} clusterUid={group.clusterUid} />
-              ))}
-            </div>
+            {isLoadingNamespaces ? (
+              <p className='text-sm text-muted-foreground'>Loading…</p>
+            ) : (
+              <div className='flex flex-col gap-2'>
+                {namespacesToRender.map((ns) => (
+                  <NamespaceRow key={ns.namespace} ns={ns} clusterUid={group.clusterUid} />
+                ))}
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
