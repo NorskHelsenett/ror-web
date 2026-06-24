@@ -20,8 +20,7 @@ export const createPolicyReportService = (request: (requestOptions: RequestOptio
     const params = new URLSearchParams()
     params.set('apiversion', 'wgpolicyk8s.io/v1alpha2')
     params.set('kind', 'PolicyReport')
-    params.set('ownerScope', 'cluster')
-    params.set('ownerSubject', clusterId)
+    params.set('ownerrefs', JSON.stringify([{ scope: 'KubernetesCluster', subject: clusterId }]))
 
     const response = await request({
       method: 'GET',
