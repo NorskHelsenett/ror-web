@@ -61,6 +61,7 @@ const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: stri
         href={`${routes.app.clusterPolicies.getHref(clusterUid)}?namespace=${encodeURIComponent(ns.namespace)}`}
         className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground shrink-0 ml-2'
         onClick={(e) => e.stopPropagation()}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         View policies <ChevronRight className='size-4' />
       </Link>

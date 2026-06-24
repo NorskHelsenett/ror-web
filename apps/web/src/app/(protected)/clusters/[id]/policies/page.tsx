@@ -16,9 +16,7 @@ export default async function ClusterPoliciesPage({
   const expandedNamespace = typeof sp.namespace === 'string' ? sp.namespace : undefined
 
   const api = await getRorApi()
-  const listParams = new URLSearchParams()
-  listParams.set('ownerSubject', clusterUid)
-  const policyReportsResponse = await api.policyReport.list(listParams)
+  const policyReportsResponse = await api.policyReport.listByCluster(clusterUid)
   const reports = policyReportsResponse?.resources ?? []
 
   const namespaceGroups = groupByNamespaceAndPolicy(reports)

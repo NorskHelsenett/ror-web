@@ -16,6 +16,21 @@ export const createPolicyReportService = (request: (requestOptions: RequestOptio
 
     return validateResponse(response, ResourcePolicyReportSchema)
   },
+  listByCluster: async (clusterId: string) => {
+    const params = new URLSearchParams()
+    params.set('apiversion', 'wgpolicyk8s.io/v1alpha2')
+    params.set('kind', 'PolicyReport')
+    params.set('ownerScope', 'cluster')
+    params.set('ownerSubject', clusterId)
+
+    const response = await request({
+      method: 'GET',
+      path: '/v2/resources',
+      params,
+    })
+
+    return validateResponse(response, ResourcePolicyReportSchema)
+  },
   id: async (id: string) => {
     try {
       const response = await request({
