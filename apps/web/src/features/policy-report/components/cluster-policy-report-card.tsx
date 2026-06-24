@@ -2,7 +2,7 @@
 
 import { Server, Box, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Badge } from '@/components/shadcn/badge'
 import type { ClusterGroup, NamespaceGroup, PolicyReportSummary } from '../utils/policy-report'
@@ -84,6 +84,20 @@ interface ClusterPolicyReportCardProps {
 export const ClusterPolicyReportCard = ({ group, filters }: ClusterPolicyReportCardProps) => {
   const [loadedReports, setLoadedReports] = useState<PolicyReport[] | null>(null)
   const [isLoadingNamespaces, setIsLoadingNamespaces] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    setIsLoadingNamespaces(true)
+    fetchClusterReports(group.clusterUid).then((reports) => {
+      if (!cancelled) {
+        setLoadedReports(reports)
+        setIsLoadingNamespaces(false)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [group.clusterUid])
 
   const handleAccordionChange = async (value: string) => {
     if (value && loadedReports === null && !isLoadingNamespaces) {

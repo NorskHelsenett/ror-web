@@ -42,7 +42,7 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
   const safeItems = useMemo(() => items.filter((c) => c.metadata?.uid), [items])
 
   const resultOptions = useMemo(() => getUniqueFilterValues(safeItems, 'result'), [safeItems])
-  const severityOptions = useMemo(() => getUniqueFilterValues(safeItems, 'severity'), [safeItems])
+  //const severityOptions = useMemo(() => getUniqueFilterValues(safeItems, 'severity'), [safeItems])
   const categoryOptions = useMemo(() => getUniqueFilterValues(safeItems, 'category'), [safeItems])
 
   const clusterGroups = useMemo(
@@ -56,7 +56,6 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
         filters={filters}
         onFilterChange={setFilters}
         resultOptions={resultOptions}
-        severityOptions={severityOptions}
         categoryOptions={categoryOptions}
       />
       <div className='flex flex-col gap-4'>

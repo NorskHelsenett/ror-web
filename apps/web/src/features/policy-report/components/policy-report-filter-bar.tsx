@@ -7,7 +7,6 @@ interface PolicyReportFilterBarProps {
   filters: PolicyReportFilters
   onFilterChange: (filters: PolicyReportFilters) => void
   resultOptions: string[]
-  severityOptions: string[]
   categoryOptions: string[]
 }
 
@@ -15,7 +14,6 @@ export const PolicyReportFilterBar = ({
   filters,
   onFilterChange,
   resultOptions,
-  severityOptions,
   categoryOptions,
 }: PolicyReportFilterBarProps) => {
   const set = (key: keyof PolicyReportFilters) => (value: string) => onFilterChange({ ...filters, [key]: value })
@@ -44,11 +42,15 @@ export const PolicyReportFilterBar = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value='all'>All severities</SelectItem>
-          {severityOptions.map((opt) => (
-            <SelectItem key={opt} value={opt} className='capitalize'>
-              {opt}
-            </SelectItem>
-          ))}
+          <SelectItem value='low' className='capitalize'>
+            low
+          </SelectItem>
+          <SelectItem value='medium' className='capitalize'>
+            medium
+          </SelectItem>
+          <SelectItem value='high' className='capitalize'>
+            high
+          </SelectItem>
         </SelectContent>
       </Select>
 
