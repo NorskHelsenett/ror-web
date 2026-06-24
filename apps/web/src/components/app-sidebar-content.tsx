@@ -122,9 +122,10 @@ const sections: Section[] = [
     items: [
       {
         title: 'Datacenters',
-        url: `${oldRorBaseUrl}admin/datacenter`, // TODO: revert back to routes.app.dataCenters.getHref() when backend is ready
+        url: routes.app.dataCenters.getHref(),
       },
       {
+        // TODO: Move from legacy to new ROR when backend is available
         title: 'Policy reports',
         url: `${oldRorBaseUrl}admin/policyreports`,
       },
@@ -133,14 +134,17 @@ const sections: Section[] = [
       //             url: '#',
       //         },
       {
+        // TODO: Move from legacy to new ROR when backend is available
         title: 'Projects',
         url: `${oldRorBaseUrl}admin/projects`,
       },
       {
+        // (Last) TODO: Move from legacy to new ROR when backend is available
         title: 'Vulnerability reports',
         url: `${oldRorBaseUrl}admin/vulnerabilityreports`,
       },
       {
+        // TODO: Move from legacy to new ROR when backend is available
         title: 'Workspaces',
         url: `${oldRorBaseUrl}workspaces`,
       },
