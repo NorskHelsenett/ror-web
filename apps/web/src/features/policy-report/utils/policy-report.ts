@@ -75,7 +75,7 @@ export const groupPolicyReportsByCluster = (
   for (const report of reports) {
     const clusterUid = report.rormeta?.ownerref?.subject ?? 'unknown'
     const namespace = report.metadata?.namespace ?? 'unknown'
-    const results = report.policyReport?.results ?? []
+    const results = report.policyreport?.results ?? []
 
     if (!clusterMap.has(clusterUid)) clusterMap.set(clusterUid, new Map())
     const nsMap = clusterMap.get(clusterUid)!
@@ -111,7 +111,7 @@ export const groupPolicyReportsByCluster = (
 export const getUniqueFilterValues = (reports: PolicyReport[], field: 'result' | 'severity' | 'category'): string[] => {
   const values = new Set<string>()
   for (const report of reports) {
-    for (const r of report.policyReport?.results ?? []) {
+    for (const r of report.policyreport?.results ?? []) {
       const val = r[field]
       if (val) values.add(val)
     }
@@ -120,15 +120,15 @@ export const getUniqueFilterValues = (reports: PolicyReport[], field: 'result' |
 }
 
 export const getPolicyReportResults = (policyReport: PolicyReport) => {
-  return policyReport.policyReport?.results ?? []
+  return policyReport.policyreport?.results ?? []
 }
 
 export const getPolicyReportSummary = (policyReport: PolicyReport) => {
-  return policyReport.policyReport?.summary ?? {}
+  return policyReport.policyreport?.summary ?? {}
 }
 
 export const getPolicyReportLastReported = (policyReport: PolicyReport): string => {
-  return policyReport.policyReport?.lastReported ?? ''
+  return policyReport.policyreport?.lastReported ?? ''
 }
 
 export const getPolicyReportUid = (policyReport: PolicyReport): string => {
@@ -143,7 +143,7 @@ export const groupByNamespaceAndPolicy = (reports: PolicyReport[]): NamespacePol
 
   for (const report of reports) {
     const ns = report.metadata?.namespace ?? 'unknown'
-    const results = report.policyReport?.results ?? []
+    const results = report.policyreport?.results ?? []
 
     if (!nsMap.has(ns)) nsMap.set(ns, new Map())
     const policyMap = nsMap.get(ns)!

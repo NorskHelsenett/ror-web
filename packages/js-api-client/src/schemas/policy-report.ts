@@ -35,7 +35,7 @@ export const ResourcePolicyReportResults = z.object({
 // -------------------------
 
 export const ResourcePolicyReportType = V2ResourceSchema.extend({
-  policyReport: z
+  policyreport: z
     .object({
       results: z.array(ResourcePolicyReportResults).nullable().optional(),
       summary: ResourcePolicyReportSummary.nullable().optional(),

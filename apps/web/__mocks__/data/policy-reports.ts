@@ -85,7 +85,7 @@ export const policyReports = {
           ownerref: { scope: 'KubernetesCluster', subject: cluster.subject },
           action: 'Add',
         },
-        policyReport: {
+        policyreport: {
           results,
           summary: { error: 0, fail, pass, skip: 0, warn: 0 },
         },
