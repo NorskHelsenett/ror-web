@@ -61,7 +61,7 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
       />
       <div className='flex flex-col gap-4'>
         {clusterGroups.map((group) => (
-          <ClusterPolicyReportCard key={group.clusterUid} group={group} />
+          <ClusterPolicyReportCard key={group.clusterUid} group={group} filters={filters} />
         ))}
       </div>
       {hasMore && <div ref={sentinelRef} className='h-8' />}

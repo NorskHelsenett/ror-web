@@ -2,13 +2,16 @@
 
 import { Server, Box, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Badge } from '@/components/shadcn/badge'
 import type { ClusterGroup, NamespaceGroup, PolicyReportSummary } from '../utils/policy-report'
 import { cn } from '@/utils/clsxm'
 import { routes } from '@/config/routes'
-import { fetchClusterNamespaceGroups } from '../utils/policy-reports-actions'
+import { fetchClusterReports } from '../utils/policy-reports-actions'
+import { groupPolicyReportsByCluster } from '../utils/policy-report'
+import type { PolicyReportFilters } from '../utils/policy-report'
+import type { PolicyReport } from '@ror/js-api-client'
 
 // -------------------------
 // Bi-color pass/fail progress bar
@@ -75,25 +78,33 @@ const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: stri
 
 interface ClusterPolicyReportCardProps {
   group: ClusterGroup
+  filters: PolicyReportFilters
 }
 
-export const ClusterPolicyReportCard = ({ group }: ClusterPolicyReportCardProps) => {
-  const totalFail = group.summary.fail + group.summary.error
-  const totalPass = group.summary.pass
-
-  const [loadedNamespaces, setLoadedNamespaces] = useState<NamespaceGroup[] | null>(null)
+export const ClusterPolicyReportCard = ({ group, filters }: ClusterPolicyReportCardProps) => {
+  const [loadedReports, setLoadedReports] = useState<PolicyReport[] | null>(null)
   const [isLoadingNamespaces, setIsLoadingNamespaces] = useState(false)
 
   const handleAccordionChange = async (value: string) => {
-    if (value && loadedNamespaces === null && !isLoadingNamespaces) {
+    if (value && loadedReports === null && !isLoadingNamespaces) {
       setIsLoadingNamespaces(true)
-      const namespaces = await fetchClusterNamespaceGroups(group.clusterUid)
-      setLoadedNamespaces(namespaces)
+      const reports = await fetchClusterReports(group.clusterUid)
+      setLoadedReports(reports)
       setIsLoadingNamespaces(false)
     }
   }
 
-  const namespacesToRender = loadedNamespaces ?? group.namespaces
+  const loadedGroups = useMemo(() => {
+    if (loadedReports === null) return null
+    const groups = groupPolicyReportsByCluster(loadedReports, filters)
+    return groups[0] ?? null
+  }, [loadedReports, filters])
+
+  const namespacesToRender = loadedGroups?.namespaces ?? group.namespaces
+  const summaryToRender = loadedGroups?.summary ?? group.summary
+
+  const displayFail = summaryToRender.fail + summaryToRender.error
+  const displayPass = summaryToRender.pass
 
   return (
     <div className='rounded-xl border border-(--r-border-subtle) bg-card overflow-hidden'>
@@ -104,25 +115,25 @@ export const ClusterPolicyReportCard = ({ group }: ClusterPolicyReportCardProps)
               <Server className='size-4 text-muted-foreground shrink-0' />
               <span className='text-base font-semibold truncate'>{group.clusterName}</span>
               <div className='flex-1 min-w-24 max-w-72'>
-                <PassFailBar summary={group.summary} />
+                <PassFailBar summary={summaryToRender} />
               </div>
               <div className='flex items-center gap-2 shrink-0'>
-                {totalFail > 0 && (
+                {displayFail > 0 && (
                   <Badge
                     variant='outline'
                     className='border-red-500/60 text-red-600 dark:text-red-400 bg-red-500/10 gap-1'
                   >
                     <span>×</span>
-                    {totalFail.toLocaleString()} failed
+                    {displayFail.toLocaleString()} failed
                   </Badge>
                 )}
-                {totalPass > 0 && (
+                {displayPass > 0 && (
                   <Badge
                     variant='outline'
                     className='border-green-500/60 text-green-600 dark:text-green-400 bg-green-500/10 gap-1'
                   >
                     <span>✓</span>
-                    {totalPass.toLocaleString()} passed
+                    {displayPass.toLocaleString()} passed
                   </Badge>
                 )}
               </div>
