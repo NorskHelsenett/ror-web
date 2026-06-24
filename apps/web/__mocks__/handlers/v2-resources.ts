@@ -8,6 +8,7 @@ import { mockVms } from '../data/vms'
 import { mockVmVulnerabilityInfo } from '../data/vms-vulnerability-info'
 import { mockBackupJobs } from '../data/backup-job'
 import { mockBackupRuns } from '../data/backup-run'
+import { policyReports } from '../data/policy-reports'
 
 type Resource = (typeof clustersVersion2.resources)[number]
 type NotFound = { message: string }
@@ -43,6 +44,12 @@ export const v2ResourcesHandlers = [
         return HttpResponse.json(ingressesResponse) // Return all ingress data
       case 'Datacenter':
         return HttpResponse.json(datacenters) // Return all datacenter data
+      case 'PolicyReport': {
+        const filteredReports = ownerSubject
+          ? policyReports.resources.filter((r) => r.rormeta?.ownerref?.subject === ownerSubject)
+          : policyReports.resources
+        return HttpResponse.json({ resources: filteredReports })
+      }
       case 'VulnerabilityReport':
         return HttpResponse.json(vulnerabilityReports) // Return all vulnerability report data
       case 'VirtualMachine': {

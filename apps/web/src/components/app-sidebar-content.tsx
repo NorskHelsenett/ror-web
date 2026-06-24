@@ -126,7 +126,7 @@ const sections: Section[] = [
       },
       {
         title: 'Policy reports',
-        url: `${oldRorBaseUrl}admin/policyreports`,
+        url: routes.app.policyReports.getHref(),
       },
       //         {
       //             title: 'Admin price list',
