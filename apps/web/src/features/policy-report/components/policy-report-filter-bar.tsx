@@ -20,8 +20,6 @@ export const PolicyReportFilterBar = ({
 
   return (
     <div className='flex flex-wrap items-center gap-3 mb-6'>
-      <span className='text-sm text-muted-foreground font-medium'>Filter:</span>
-
       <Select value={filters.result} onValueChange={set('result')}>
         <SelectTrigger className='w-40'>
           <SelectValue placeholder='All results' />

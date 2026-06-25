@@ -30,7 +30,7 @@ const makeResults = (seed: number) => [
     category: 'Pod Security Standards (Baseline)',
     properties: null,
     severity: 'high',
-    result: 'pass',
+    result: 'fail',
     resources: null,
   },
   {

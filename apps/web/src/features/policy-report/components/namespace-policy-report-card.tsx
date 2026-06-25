@@ -102,7 +102,7 @@ const PolicyCard = ({ policy }: { policy: PolicyGroup }) => {
           <div className='w-50 shrink-0'>
             <PassFailBar pass={policy.summary.pass} fail={policy.summary.fail} />
           </div>
-          <div className='w-28 shrink-0 flex items-center gap-2 justify-end'>
+          <div className='w-44 shrink-0 flex items-center gap-2 justify-end'>
             {policy.summary.fail > 0 && (
               <Badge
                 variant='outline'
