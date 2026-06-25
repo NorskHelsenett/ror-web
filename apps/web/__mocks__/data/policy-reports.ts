@@ -1,6 +1,6 @@
 const clusters = [
   { subject: '2607fdb0-da0a-4a97-9fb9-73127224533f', namespaces: ['kyverno', 'kube-system', 'monitoring', 'argocd'] },
-  { subject: '21fca0d4-051b-46cf-8b16-e77ce974ffb1', namespaces: ['default', 'cert-manager', 'ingress-nginx'] },
+  { subject: '17e03119-1801-4f11-9307-8f905fe4ac46', namespaces: ['default', 'cert-manager', 'ingress-nginx'] },
 ]
 
 const resultVariants: Array<'pass' | 'fail'> = ['pass', 'fail']

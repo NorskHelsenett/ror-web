@@ -18,8 +18,8 @@ const PassFailBar = ({ pass, fail }: { pass: number; fail: number }) => {
   const passPct = (pass / total) * 100
   return (
     <div className='relative h-2 w-full rounded-full overflow-hidden bg-muted flex'>
-      <div className='h-full bg-red-500' style={{ width: `${failPct}%` }} />
-      <div className='h-full bg-green-500' style={{ width: `${passPct}%` }} />
+      <div className='h-full bg-orange-500' style={{ width: `${failPct}%` }} />
+      <div className='h-full bg-blue-500' style={{ width: `${passPct}%` }} />
     </div>
   )
 }
@@ -86,25 +86,27 @@ const PolicyCard = ({ policy }: { policy: PolicyGroup }) => {
       <AccordionTrigger className='px-4 py-3 hover:no-underline hover:bg-muted/40 [&[data-state=open]]:bg-muted/40'>
         <div className='flex items-center gap-3 flex-1 min-w-0'>
           <Shield className='size-4 text-muted-foreground shrink-0' />
-          <span className='text-sm font-semibold truncate'>{policy.policyName}</span>
-          {policy.category && (
-            <Badge variant='outline' className='text-xs shrink-0'>
-              {policy.category}
-            </Badge>
-          )}
-          {policy.severity && (
-            <Badge variant='outline' className={cn('text-xs shrink-0 capitalize', severityClass(policy.severity))}>
-              {policy.severity}
-            </Badge>
-          )}
-          <div className='flex-1 min-w-16 max-w-48'>
+          <div className='flex-1 min-w-0 flex items-center gap-2'>
+            <span className='text-sm font-semibold truncate'>{policy.policyName}</span>
+            {policy.category && (
+              <Badge variant='outline' className='text-xs shrink-0'>
+                {policy.category}
+              </Badge>
+            )}
+            {policy.severity && (
+              <Badge variant='outline' className={cn('text-xs shrink-0 capitalize', severityClass(policy.severity))}>
+                {policy.severity}
+              </Badge>
+            )}
+          </div>
+          <div className='w-50 shrink-0'>
             <PassFailBar pass={policy.summary.pass} fail={policy.summary.fail} />
           </div>
-          <div className='flex items-center gap-2 shrink-0'>
+          <div className='w-28 shrink-0 flex items-center gap-2 justify-end'>
             {policy.summary.fail > 0 && (
               <Badge
                 variant='outline'
-                className='border-red-500/60 text-red-600 dark:text-red-400 bg-red-500/10 text-xs'
+                className='border-orange-500/60 text-orange-600 dark:text-orange-400 bg-orange-500/10 text-xs'
               >
                 {policy.summary.fail} failed
               </Badge>
@@ -112,7 +114,7 @@ const PolicyCard = ({ policy }: { policy: PolicyGroup }) => {
             {policy.summary.pass > 0 && (
               <Badge
                 variant='outline'
-                className='border-green-500/60 text-green-600 dark:text-green-400 bg-green-500/10 text-xs'
+                className='border-blue-500/60 text-blue-600 dark:text-blue-400 bg-blue-500/10 text-xs'
               >
                 {policy.summary.pass} passed
               </Badge>
@@ -148,11 +150,11 @@ export const NamespacePolicyReportCard = ({ group, defaultOpen = false }: Namesp
         <Box className='size-4 text-muted-foreground shrink-0' />
         <span className='text-base font-semibold'>{group.namespace}</span>
         {group.summary.fail > 0 && (
-          <span className='text-sm text-red-500 dark:text-red-400'>{group.summary.fail} failed</span>
+          <span className='text-sm text-orange-500 dark:text-orange-400'>{group.summary.fail} failed</span>
         )}
         {group.summary.fail > 0 && group.summary.pass > 0 && <span className='text-sm text-muted-foreground'>·</span>}
         {group.summary.pass > 0 && (
-          <span className='text-sm text-green-500 dark:text-green-400'>{group.summary.pass} passed</span>
+          <span className='text-sm text-blue-500 dark:text-blue-400'>{group.summary.pass} passed</span>
         )}
         <ChevronDown className='size-4 text-muted-foreground ml-auto transition-transform group-data-[state=open]:rotate-180' />
       </CollapsibleTrigger>
