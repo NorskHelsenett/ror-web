@@ -14,6 +14,7 @@ import { getVmUid } from '@/features/vms/utils/vms'
 import { LayoutGrid, LayoutList } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 import { DashboardSearch } from '@/features/dashboard/components/dashboard-search'
+import { ReleaseCard } from '@/features/dashboard/components/release-card'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/config/routes'
 import { getClusterUidView } from '@/features/cluster/utils/cluster'
@@ -72,10 +73,10 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
         domain='vms'
         itemId={getVmUid(vm)}
         onUnfavorite={fetchFavorites}
-onClick={() => {
-  localStorage.setItem('selectedVm', JSON.stringify(vm))
-  router.push(routes.app.vm.getHref(getVmUid(vm)))
-}}
+        onClick={() => {
+          localStorage.setItem('selectedVm', JSON.stringify(vm))
+          router.push(routes.app.vm.getHref(getVmUid(vm)))
+        }}
       >
         <FavoritedVm vm={vm} />
       </FavoritedBox>
@@ -94,6 +95,9 @@ onClick={() => {
             site is saved locally in the browser. This means that if you clear the cache of the site, your overview
             items will be set back to standard and favorited items will be erased.
           </NotReadyMessage>
+        </div>
+        <div className='mx-7 mt-6'>
+          <ReleaseCard view='dashboard' />
         </div>
         <div className='mb-6 pt-5 max-w-2xl mx-7'>
           <DashboardSearch onFavorite={fetchFavorites} />

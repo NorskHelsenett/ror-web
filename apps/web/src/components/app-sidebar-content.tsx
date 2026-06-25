@@ -156,6 +156,10 @@ const sections: Section[] = [
     isActive: true,
     items: [
       {
+        title: 'Release notes',
+        url: routes.app.releaseNotes.getHref(),
+      },
+      {
         title: 'Documentation',
         url: 'https://docs.nhn.no/',
       },
@@ -167,10 +171,6 @@ const sections: Section[] = [
       //   title: "About",
       //   url: "#",
       // },
-      // {
-      //   title: "Release notes",
-      //   url: "#",
-      // }
     ],
   },
   {
