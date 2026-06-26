@@ -8,10 +8,10 @@ interface DatacenterStatsProps {
 
 export function DatacenterStats({ items }: DatacenterStatsProps) {
   const regions = new Set(
-    items.map((i) => i.datacenter.legacy?.location?.region || i.datacenter.status?.location?.region).filter(Boolean)
+    items.map((i) => i.datacenter?.legacy?.location?.region || i.datacenter?.status?.location?.region).filter(Boolean)
   )
   const countries = new Set(
-    items.map((i) => i.datacenter.legacy?.location?.country || i.datacenter.status?.location?.country).filter(Boolean)
+    items.map((i) => i.datacenter?.legacy?.location?.country || i.datacenter?.status?.location?.country).filter(Boolean)
   )
 
   return (

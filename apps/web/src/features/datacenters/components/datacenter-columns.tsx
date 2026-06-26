@@ -21,9 +21,9 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
     id: 'datacenter',
     header: 'Datacenter',
     size: 300,
-    accessorFn: (row) => row.datacenter.legacy?.name || row.datacenter.legacy?.id || row.metadata?.name || '',
+    accessorFn: (row) => row.datacenter?.legacy?.name || row.datacenter?.legacy?.id || row.metadata?.name || '',
     cell: ({ row }) => {
-      const legacy = row.original.datacenter.legacy
+      const legacy = row.original.datacenter?.legacy
       const id = legacy?.id
       const name = legacy?.name
       const provider = legacy?.provider
@@ -45,9 +45,9 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
   {
     id: 'provider',
     header: 'Provider',
-    accessorFn: (row) => row.datacenter.legacy?.provider || '',
+    accessorFn: (row) => row.datacenter?.legacy?.provider || '',
     cell: ({ row }) => {
-      const provider = row.original.datacenter.legacy?.provider
+      const provider = row.original.datacenter?.legacy?.provider
       return (
         <div className='flex items-center gap-2'>
           <div className={`${getProviderColorClass(provider)} size-3 rounded-full flex-shrink-0`} />
@@ -60,10 +60,10 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
     id: 'region',
     header: 'Region',
     size: 200,
-    accessorFn: (row) => row.datacenter.legacy?.location?.region || row.datacenter.status?.location?.region || '',
+    accessorFn: (row) => row.datacenter?.legacy?.location?.region || row.datacenter?.status?.location?.region || '',
     cell: ({ row }) => {
       const region =
-        row.original.datacenter.legacy?.location?.region || row.original.datacenter.status?.location?.region
+        row.original.datacenter?.legacy?.location?.region || row.original.datacenter?.status?.location?.region
       return (
         <div className='flex items-center gap-2'>
           <Globe className='size-4 text-muted-foreground flex-shrink-0' />
@@ -75,10 +75,10 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
   {
     id: 'country',
     header: 'Country',
-    accessorFn: (row) => row.datacenter.legacy?.location?.country || row.datacenter.status?.location?.country || '',
+    accessorFn: (row) => row.datacenter?.legacy?.location?.country || row.datacenter?.status?.location?.country || '',
     cell: ({ row }) => {
       const country =
-        row.original.datacenter.legacy?.location?.country || row.original.datacenter.status?.location?.country
+        row.original.datacenter?.legacy?.location?.country || row.original.datacenter?.status?.location?.country
       return <span>{country}</span>
     },
   },
