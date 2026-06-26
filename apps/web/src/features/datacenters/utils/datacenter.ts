@@ -7,7 +7,7 @@ import { DataCenter } from '@ror/js-api-client'
  * @returns The legacy name of the datacenter if available; otherwise, undefined.
  */
 export function getDatacenterName(datacenter: DataCenter) {
-  return datacenter.datacenter.legacy?.name
+  return datacenter?.datacenter?.legacy?.name
 }
 
 /**
@@ -17,7 +17,7 @@ export function getDatacenterName(datacenter: DataCenter) {
  * @returns The provider of the datacenter if available; otherwise, undefined.
  */
 export function getDatacenterProvider(datacenter: DataCenter) {
-  return datacenter.datacenter.legacy?.provider
+  return datacenter?.datacenter?.legacy?.provider
 }
 
 /**
@@ -27,7 +27,7 @@ export function getDatacenterProvider(datacenter: DataCenter) {
  * @returns The region string if available, otherwise undefined.
  */
 export function getDatacenterRegion(datacenter: DataCenter) {
-  return datacenter.datacenter.legacy?.location?.region
+  return datacenter?.datacenter?.legacy?.location?.region
 }
 
 /**
@@ -37,5 +37,5 @@ export function getDatacenterRegion(datacenter: DataCenter) {
  * @returns The country of the datacenter if available; otherwise, undefined.
  */
 export function getDatacenterCountry(datacenter: DataCenter) {
-  return datacenter.datacenter.legacy?.location?.country
+  return datacenter?.datacenter?.legacy?.location?.country
 }
