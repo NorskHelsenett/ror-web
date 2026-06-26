@@ -27,17 +27,20 @@ const DatacenterSpecSchema = z.object({
 })
 
 const DatacenterStatusSchema = z.object({
-  workspaces: z.array(WorkspaceSchema),
+  workspaces: z.array(WorkspaceSchema).nullable().optional(),
   location: DatacenterLocationSchema.nullable().optional(),
   apiEndpoint: z.string().nullable().optional(),
 })
 
 export const DatacenterSchema = V2ResourceSchema.extend({
-  datacenter: z.object({
-    spec: DatacenterSpecSchema.nullable().optional(),
-    status: DatacenterStatusSchema.nullable().optional(),
-    legacy: DatacenterLegacySchema.nullable().optional(),
-  }),
+  datacenter: z
+    .object({
+      spec: DatacenterSpecSchema.nullable().optional(),
+      status: DatacenterStatusSchema.nullable().optional(),
+      legacy: DatacenterLegacySchema.nullable().optional(),
+    })
+    .nullable()
+    .optional(),
 })
 
 export const DatacenterResponseSchema = createV2ResourceResponseSchema(DatacenterSchema)
