@@ -29,9 +29,17 @@ import {
   getCountryView,
   getAZView,
   getStatusView,
+  getDatacenterView,
+  getResourcesCpuUsedMilliView,
+  getResourcesCpuUsedPercentNumberView,
+  getResourcesCpuView,
+  getResourcesMemoryUsedPercentNumberView,
+  getResourcesMemoryUsedView,
+  getResourcesMemoryView,
 } from '../utils/cluster'
 import { Button } from '@/components/shadcn/button'
 import { HealthCircle } from './health-circle'
+import { ResourceBar } from '@/components/ui/resource-bar'
 
 const missingText = 'Missing ...'
 
@@ -125,62 +133,66 @@ export function getClustersTableColumns(
         )
       },
     }),
-    // isVisible('cpu') &&
-    //   columnHelper.accessor((row) => getClusterResource(row, 'cpu'), {
-    //     id: 'cpu',
-    //     size: 124,
-    //     header: ({ column }) => {
-    //       return (
-    //         <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //           CPU
-    //           {column.getIsSorted() === 'asc' ? (
-    //             <ArrowDown className='h-4 w-4' />
-    //           ) : column.getIsSorted() === 'desc' ? (
-    //             <ArrowUp className='h-4 w-4' />
-    //           ) : (
-    //             <ArrowUpDown className='h-4 w-4' />
-    //           )}
-    //         </Button>
-    //       )
-    //     },
-    //     enableSorting: true,
-    //     cell: (info) => {
-    //       const res = info.getValue()
-    //       return (
-    //         <span>
-    //           {res.used || 0} (of {res.capacity || 0})
-    //         </span>
-    //       )
-    //     },
-    //   }),
-    // isVisible('memory') &&
-    //   columnHelper.accessor((row) => getClusterResource(row, 'memory'), {
-    //     id: 'memory',
-    //     size: 124,
-    //     header: ({ column }) => {
-    //       return (
-    //         <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //           Memory
-    //           {column.getIsSorted() === 'asc' ? (
-    //             <ArrowDown className='h-4 w-4' />
-    //           ) : column.getIsSorted() === 'desc' ? (
-    //             <ArrowUp className='h-4 w-4' />
-    //           ) : (
-    //             <ArrowUpDown className='h-4 w-4' />
-    //           )}
-    //         </Button>
-    //       )
-    //     },
-    //     enableSorting: true,
-    //     cell: (info) => {
-    //       const res = info.getValue()
-    //       return (
-    //         <span>
-    //           {res.used || 0} (of {res.capacity || 0})
-    //         </span>
-    //       )
-    //     },
-    //   }),
+    isVisible('cpu') &&
+      columnHelper.accessor(getResourcesCpuUsedPercentNumberView, {
+        id: 'cpu',
+        size: 124,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              CPU
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
+        cell: (info) => {
+          const cluster = info.row.original
+          return (
+            <ResourceBar
+              capacity={getResourcesCpuView(cluster) || missingText}
+              used={getResourcesCpuUsedMilliView(cluster) || missingText}
+              percentage={info.getValue()}
+            />
+          )
+        },
+      }),
+    isVisible('memory') &&
+      columnHelper.accessor(getResourcesMemoryUsedPercentNumberView, {
+        id: 'memory',
+        size: 124,
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              Memory
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
+        cell: (info) => {
+          const cluster = info.row.original
+          return (
+            <ResourceBar
+              capacity={getResourcesMemoryView(cluster) || missingText}
+              used={getResourcesMemoryUsedView(cluster) || missingText}
+              percentage={info.getValue()}
+            />
+          )
+        },
+      }),
     // isVisible('gpu') &&
     //   columnHelper.accessor((row) => getClusterResource(row, 'gpu'), {
     //     id: 'gpu',
@@ -355,6 +367,7 @@ export function getClustersTableColumns(
     isVisible('rorcli') &&
       columnHelper.display({
         id: 'rorcli',
+        size: 88,
         header: () => <p className='text-sm'>ROR CLI</p>,
         cell: (info) => {
           const rorLoginUrl = getRorLoginView(info.row.original)
@@ -367,26 +380,26 @@ export function getClustersTableColumns(
           )
         },
       }),
-    // isVisible('datacenterName') &&
-    //   columnHelper.accessor(getDatacenter, {
-    //     id: 'datacenterName',
-    //     header: ({ column }) => {
-    //       return (
-    //         <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //           Datacenter
-    //           {column.getIsSorted() === 'asc' ? (
-    //             <ArrowDown className='h-4 w-4' />
-    //           ) : column.getIsSorted() === 'desc' ? (
-    //             <ArrowUp className='h-4 w-4' />
-    //           ) : (
-    //             <ArrowUpDown className='h-4 w-4' />
-    //           )}
-    //         </Button>
-    //       )
-    //     },
-    //     enableSorting: true,
-    //     cell: (info) => <span>{info.getValue() || 'Unknown'}</span>,
-    //   }),
+    isVisible('datacenterName') &&
+      columnHelper.accessor(getDatacenterView, {
+        id: 'datacenterName',
+        header: ({ column }) => {
+          return (
+            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+              Datacenter
+              {column.getIsSorted() === 'asc' ? (
+                <ArrowDown className='h-4 w-4' />
+              ) : column.getIsSorted() === 'desc' ? (
+                <ArrowUp className='h-4 w-4' />
+              ) : (
+                <ArrowUpDown className='h-4 w-4' />
+              )}
+            </Button>
+          )
+        },
+        enableSorting: true,
+        cell: (info) => <span>{info.getValue() || 'Unknown'}</span>,
+      }),
     isVisible('datacenterProvider') &&
       columnHelper.accessor(getProviderView, {
         id: 'datacenterProvider',
