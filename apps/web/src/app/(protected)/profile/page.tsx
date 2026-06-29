@@ -25,16 +25,20 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
   const self = await api.users.self()
 
   const acls: string[] = self.user.groups
-  const aclsBeingUsed: Acl[] = []
-  const aclsNotBeingUsed: string[] = []
+  let aclsBeingUsed: Acl[] = []
+  let aclsNotBeingUsed: string[] = []
 
-  for (const acl of acls) {
-    const res = await api.acl.getByName(acl)
-    if (res.data.length > 0) {
-      aclsBeingUsed.push(...res.data)
-    } else {
-      aclsNotBeingUsed.push(acl)
+  try {
+    for (const acl of acls) {
+      const res = await api.acl.getByName(acl)
+      if (res.data.length > 0) {
+        aclsBeingUsed.push(...res.data)
+      } else {
+        aclsNotBeingUsed.push(acl)
+      }
     }
+  } catch {
+    aclsNotBeingUsed = acls
   }
 
   const sp = (await searchParams) ?? {}
