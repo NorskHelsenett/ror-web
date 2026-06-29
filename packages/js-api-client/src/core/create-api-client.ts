@@ -23,6 +23,7 @@ import { createApiKeyService } from '../services/api-keys'
 import { createClusterListViewService } from '../services/views/clusterlist'
 import { createClusterListItemViewService } from '../services/views/clusterlistitem'
 import { createOverviewItemsViewService } from '../services/views/overviewitems'
+import { createPolicyReportService } from '../services/policy-report'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -71,6 +72,7 @@ export function createApiClient(config: ApiClientConfig) {
     virtualMachineVulnerabilityInfo: createVirtualMachineVulnerabilityInfoService(request),
     backupJob: createBackupJobService(request),
     backupRun: createBackupRunService(request),
+    policyReport: createPolicyReportService(request),
     // views
     clusterListView: createClusterListViewService(request),
     clusterListItemView: createClusterListItemViewService(request),
