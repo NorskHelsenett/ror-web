@@ -12,8 +12,14 @@ import {
 import { loadMorePolicyReports } from '@/features/policy-report/utils/policy-reports-actions'
 import { useMemo, useState } from 'react'
 import type { PolicyReportFilters } from '@/features/policy-report/utils/policy-report'
+import type { ClusterGroup } from '@/features/policy-report/utils/policy-report'
 import { PolicyReportFilterBar } from '@/features/policy-report/components/policy-report-filter-bar'
+import type { ClusterGroupSortBy } from '@/features/policy-report/components/policy-report-filter-bar'
 import { ClusterPolicyReportCard } from '@/features/policy-report/components/cluster-policy-report-card'
+import { ClusterGroupSearch } from '@/features/policy-report/components/cluster-group-search'
+import { ClusterGroupSort } from '@/features/policy-report/components/cluster-group-sort'
+import { Toggle } from '@/components/shadcn/toggle'
+import { Funnel } from 'lucide-react'
 
 interface PageViewProps {
   className?: string
@@ -26,6 +32,9 @@ const defaultFilters: PolicyReportFilters = { result: 'all', severity: 'all', ca
 
 export const PageView = ({ className, policyReports, clusterNameMap, params }: PageViewProps) => {
   const [filters, setFilters] = useState<PolicyReportFilters>(defaultFilters)
+  const [sortBy, setSortBy] = useState<ClusterGroupSortBy>('name-asc')
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [filteredClusterGroups, setFilteredClusterGroups] = useState<ClusterGroup[]>([])
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<PolicyReport>({
     initial: policyReports,
@@ -50,16 +59,45 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
     [safeItems, filters, clusterNameMap]
   )
 
+  const sortedGroups = useMemo(() => {
+    const copy = [...filteredClusterGroups]
+    switch (sortBy) {
+      case 'name-asc':
+        return copy.sort((a, b) => a.clusterName.localeCompare(b.clusterName))
+      case 'name-desc':
+        return copy.sort((a, b) => b.clusterName.localeCompare(a.clusterName))
+      case 'failures-desc':
+        return copy.sort((a, b) => b.summary.fail - a.summary.fail)
+      case 'failures-asc':
+        return copy.sort((a, b) => a.summary.fail - b.summary.fail)
+    }
+  }, [filteredClusterGroups, sortBy])
+
   return (
     <div className={className}>
-      <PolicyReportFilterBar
-        filters={filters}
-        onFilterChange={setFilters}
-        resultOptions={resultOptions}
-        categoryOptions={categoryOptions}
-      />
+      <div className='flex items-center gap-3 mb-6'>
+        <ClusterGroupSearch items={clusterGroups} onResultsChange={setFilteredClusterGroups} />
+        <ClusterGroupSort value={sortBy} onChange={setSortBy} />
+        <Toggle
+          pressed={filtersOpen}
+          onPressedChange={setFiltersOpen}
+          variant='outline'
+          aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
+        >
+          <Funnel aria-hidden className='-mr-1' />
+          {filtersOpen ? 'Close' : 'Open'} filters
+        </Toggle>
+      </div>
+      {filtersOpen && (
+        <PolicyReportFilterBar
+          filters={filters}
+          onFilterChange={setFilters}
+          resultOptions={resultOptions}
+          categoryOptions={categoryOptions}
+        />
+      )}
       <div className='flex flex-col gap-4'>
-        {clusterGroups.map((group) => (
+        {sortedGroups.map((group) => (
           <ClusterPolicyReportCard key={group.clusterUid} group={group} filters={filters} />
         ))}
       </div>

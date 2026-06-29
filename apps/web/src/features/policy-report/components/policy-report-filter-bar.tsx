@@ -3,6 +3,8 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
 import type { PolicyReportFilters } from '../utils/policy-report'
 
+export type ClusterGroupSortBy = 'name-asc' | 'name-desc' | 'failures-desc' | 'failures-asc'
+
 interface PolicyReportFilterBarProps {
   filters: PolicyReportFilters
   onFilterChange: (filters: PolicyReportFilters) => void
