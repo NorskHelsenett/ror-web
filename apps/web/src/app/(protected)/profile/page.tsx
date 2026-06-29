@@ -38,7 +38,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       }
     }
   } catch {
-    aclsNotBeingUsed = acls
+    aclsBeingUsed = []
+    aclsNotBeingUsed = [...acls]
   }
 
   const sp = (await searchParams) ?? {}

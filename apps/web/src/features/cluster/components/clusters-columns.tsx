@@ -156,12 +156,10 @@ export function getClustersTableColumns(
           const cluster = info.row.original
           return (
             <ResourceBar
-              capacity={getResourcesCpuView(cluster)}
-              used={getResourcesCpuUsedMilliView(cluster)}
+              capacity={getResourcesCpuView(cluster) || missingText}
+              used={getResourcesCpuUsedMilliView(cluster) || missingText}
               percentage={info.getValue()}
-              showPercentage={false}
             />
-          )
         },
       }),
     isVisible('memory') &&
@@ -187,12 +185,10 @@ export function getClustersTableColumns(
           const cluster = info.row.original
           return (
             <ResourceBar
-              capacity={getResourcesMemoryView(cluster)}
-              used={getResourcesMemoryUsedView(cluster)}
+              capacity={getResourcesMemoryView(cluster) || missingText}
+              used={getResourcesMemoryUsedView(cluster) || missingText}
               percentage={info.getValue()}
-              showPercentage={false}
             />
-          )
         },
       }),
     // isVisible('gpu') &&
