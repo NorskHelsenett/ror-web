@@ -160,6 +160,7 @@ export function getClustersTableColumns(
               used={getResourcesCpuUsedMilliView(cluster) || missingText}
               percentage={info.getValue()}
             />
+          )
         },
       }),
     isVisible('memory') &&
@@ -189,6 +190,7 @@ export function getClustersTableColumns(
               used={getResourcesMemoryUsedView(cluster) || missingText}
               percentage={info.getValue()}
             />
+          )
         },
       }),
     // isVisible('gpu') &&
