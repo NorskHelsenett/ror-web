@@ -127,7 +127,7 @@ const sections: Section[] = [
       {
         // TODO: Move from legacy to new ROR when backend is available
         title: 'Policy reports',
-        url: `${oldRorBaseUrl}admin/policyreports`,
+        url: routes.app.policyReports.getHref(),
       },
       //         {
       //             title: 'Admin price list',

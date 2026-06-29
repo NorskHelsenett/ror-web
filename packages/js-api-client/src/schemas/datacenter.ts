@@ -27,7 +27,7 @@ const DatacenterSpecSchema = z.object({
 })
 
 const DatacenterStatusSchema = z.object({
-  workspaces: z.array(WorkspaceSchema),
+  workspaces: z.array(WorkspaceSchema).nullable().optional(),
   location: DatacenterLocationSchema.nullable().optional(),
   apiEndpoint: z.string().nullable().optional(),
 })

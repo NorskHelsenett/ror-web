@@ -53,7 +53,7 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
     },
     {
       label: clusterPolicies.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=policyReports`,
+      href: clusterPolicies.getHref(clusterUid),
     },
     {
       label: clusterVulnerabilities.label,
