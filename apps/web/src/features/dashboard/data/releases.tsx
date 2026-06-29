@@ -5,6 +5,8 @@ import type { ReactNode } from 'react'
 export type ReleaseTag = 'New' | 'Improved' | 'Beta'
 
 export interface Release {
+  /** Stable slug used to activate a ReleaseSpotlight on the target page */
+  id?: string
   day: number
   month: string
   year: number
@@ -39,6 +41,7 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'policy-reports-cluster-tab',
     day: 24,
     month: 'JUN',
     year: 2026,
@@ -51,6 +54,7 @@ export const releases: Release[] = [
     href: '',
   },
   {
+    id: 'policy-reports-page',
     day: 23,
     month: 'JUN',
     year: 2026,

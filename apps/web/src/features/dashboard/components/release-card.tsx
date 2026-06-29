@@ -6,6 +6,7 @@ import { routes } from '@/config/routes'
 import { cn } from '@/utils/clsxm'
 import { releases, type ReleaseTag } from '../data/releases'
 import { useState } from 'react'
+import { useActiveRelease } from '@/hooks/use-active-release'
 
 const tagStyles: Record<ReleaseTag, string> = {
   New: 'bg-cyan-900 border-cyan-600 text-cyan-300',
@@ -15,6 +16,7 @@ const tagStyles: Record<ReleaseTag, string> = {
 
 export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) => {
   const [collapsed, setCollapsed] = useState(false)
+  const { setActiveReleaseId } = useActiveRelease()
 
   return (
     <div className='bg-(--r-layer) rounded-lg px-6 pt-5 pb-2 w-full'>
@@ -50,6 +52,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
             <Link
               key={i}
               href={release.href}
+              onClick={() => release.id && setActiveReleaseId(release.id)}
               className='flex items-center gap-4 py-4 group hover:bg-muted/5 -mx-6 px-6 transition-colors border-t border-border'
             >
               {/* Date */}
