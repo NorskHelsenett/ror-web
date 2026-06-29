@@ -6,7 +6,7 @@ export interface NormalizeParamsResult {
 }
 
 export function normalizeParams(parameters: Record<string, string | string[] | undefined>): NormalizeParamsResult {
-    typeof parameters[key] === 'string' ? (parameters[key] as string) : undefined
+  const get = (key: string) => (typeof parameters[key] === 'string' ? (parameters[key] as string) : undefined)
 
   const page = Number(get('page') ?? '1') || 1
   const limit = Number(get('limit') ?? '50') || 50
