@@ -5,12 +5,16 @@ import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Badge } from '@/components/shadcn/badge'
-import type { ClusterGroup, NamespaceGroup, PolicyReportSummary } from '../utils/policy-report'
+import type {
+  ClusterGroup,
+  NamespaceGroup,
+  PolicyReportSummary,
+  PolicyReportFilters,
+} from '../types/policy-report-types'
 import { cn } from '@/utils/clsxm'
 import { routes } from '@/config/routes'
 import { fetchClusterReports } from '../utils/policy-reports-actions'
 import { groupPolicyReportsByCluster } from '../utils/policy-report'
-import type { PolicyReportFilters } from '../utils/policy-report'
 import type { PolicyReport } from '@ror/js-api-client'
 import { FaSpinner } from 'react-icons/fa'
 
