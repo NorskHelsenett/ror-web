@@ -40,7 +40,6 @@ import {
   getLocation,
   getProvider,
 } from '@/features/vms/utils/vms'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { SearchX } from 'lucide-react'
 import { useMemo, useCallback, useState, useEffect } from 'react'

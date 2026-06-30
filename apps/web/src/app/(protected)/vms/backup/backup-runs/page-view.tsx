@@ -24,7 +24,6 @@ import { sortingOptionsBackupRun } from '@/features/backup/config/page-view-opti
 import { Button } from '@/components/shadcn/button'
 import { DataTable } from '@/components/ui/data-table'
 import { getBackupRunTableColumns } from '@/features/backup/backup-run/components/backup-run-columns'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { cn } from '@/utils/clsxm'
 import { BackupRunColumnsData } from '@/features/backup/backup-run/types/backup-run-types'
 import { BackupSearchWithOptions } from '@/features/vms/backup/components/backup-search-with-options'

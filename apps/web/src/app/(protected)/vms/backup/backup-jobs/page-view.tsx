@@ -18,7 +18,6 @@ import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
 import { getBackupJobTableColumns } from '@/features/backup/backup-job/components/backup-job-columns'
 import { cn } from '@/utils/clsxm'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { SortSelect } from '@/components/ui/sort-select'

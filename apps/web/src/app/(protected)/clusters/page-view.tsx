@@ -26,7 +26,6 @@
 'use client'
 import { Option } from '@/components/shadcn/multiselect'
 import { DataTable } from '@/components/ui/data-table'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { ClusterCard } from '@/features/cluster/components/cluster-card'
 import { ClusterFilterSection } from '@/features/cluster/components/cluster-filter-section'
 import { defaultDisplayData, displayDataOptions, sortingOptions } from '@/features/cluster/config/page-view-options'
