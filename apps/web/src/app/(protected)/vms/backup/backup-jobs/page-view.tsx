@@ -18,7 +18,6 @@ import { useDisplayData } from '@/hooks/use-display-data'
 import type { BackupJobColumnsData } from '@/features/backup/backup-job/types/backup-job-types'
 import { getBackupJobTableColumns } from '@/features/backup/backup-job/components/backup-job-columns'
 import { cn } from '@/utils/clsxm'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { SortSelect } from '@/components/ui/sort-select'
@@ -252,12 +251,6 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
           {renderControls()}
         </div>
       </div>
-      <NotReadyMessage className='mx-12 my-6'>
-        Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
-        expect finished functionality or that all data is present. The development team is working hard on delivering a
-        complete product as quick as possible :)
-      </NotReadyMessage>
-
       {summaryCardsVisible && (
         <SummaryCards
           totalJobs={summary.totalJobs}

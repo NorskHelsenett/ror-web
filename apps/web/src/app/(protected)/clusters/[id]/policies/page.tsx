@@ -1,6 +1,7 @@
 import { getRorApi } from '@/services/ror-api'
 import { groupByNamespaceAndPolicy } from '@/features/policy-report/utils/policy-report'
 import { NamespacePolicyReportCard } from '@/features/policy-report/components/namespace-policy-report-card'
+import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,14 +27,24 @@ export default async function ClusterPoliciesPage({
   }
 
   return (
-    <div className='flex flex-col gap-3'>
-      {namespaceGroups.map((group) => (
-        <NamespacePolicyReportCard
-          key={group.namespace}
-          group={group}
-          defaultOpen={group.namespace === expandedNamespace}
-        />
-      ))}
-    </div>
+    <ReleaseSpotlight
+      releaseId='policy-reports-cluster-tab'
+      step={1}
+      totalSteps={1}
+      title='Policy reports'
+      description='View policy report results grouped by namespace for this cluster.'
+      side='top'
+      align='start'
+    >
+      <div className='flex flex-col gap-3'>
+        {namespaceGroups.map((group) => (
+          <NamespacePolicyReportCard
+            key={group.namespace}
+            group={group}
+            defaultOpen={group.namespace === expandedNamespace}
+          />
+        ))}
+      </div>
+    </ReleaseSpotlight>
   )
 }
