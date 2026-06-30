@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/shadcn/collapsible'
 import { Badge } from '@/components/shadcn/badge'
 import { cn } from '@/utils/clsxm'
-import type { NamespacePolicyGroup, PolicyGroup, PolicyResultItem } from '../utils/policy-report'
+import type { NamespacePolicyGroup, PolicyGroup, PolicyResultItem } from '../types/policy-report-types'
 
 // -------------------------
 // Pass/fail progress bar

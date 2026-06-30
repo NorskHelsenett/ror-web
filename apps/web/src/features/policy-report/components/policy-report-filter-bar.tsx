@@ -1,7 +1,7 @@
 'use client'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
-import type { PolicyReportFilters } from '../utils/policy-report'
+import type { PolicyReportFilters } from '../types/policy-report-types'
 
 export type ClusterGroupSortBy = 'name-asc' | 'name-desc' | 'failures-desc' | 'failures-asc'
 

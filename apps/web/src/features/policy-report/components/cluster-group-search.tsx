@@ -5,7 +5,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { Input } from '@/components/shadcn/input'
 import { Search } from 'lucide-react'
 import { useClusterGroupSearch } from '../hooks/use-cluster-group-search'
-import type { ClusterGroup } from '../utils/policy-report'
+import type { ClusterGroup } from '../types/policy-report-types'
 
 interface ClusterGroupSearchProps {
   items: ClusterGroup[]
