@@ -58,6 +58,7 @@ export type {
   BackupRun,
   VirtualMachineVulnerabilityInfoType,
   CVEType,
+  PolicyReport,
   // Views
   ClusterListView,
   ClusterListViewRowType,
