@@ -12,7 +12,7 @@ const ReleaseNotesPage = () => {
         <div className='mx-7'>
           <Alert className='mb-6'>
             <Info />
-            <AlertTitle>Ror-web is under active development</AlertTitle>
+            <AlertTitle>ROR web is under active development</AlertTitle>
             <AlertDescription>
               New features, improvements, and fixes are continuously being added. This page lets you easily keep track
               of what new functionality has been released and what has changed between versions.
