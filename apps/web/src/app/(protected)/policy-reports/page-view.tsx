@@ -19,6 +19,7 @@ import { ClusterGroupSearch } from '@/features/policy-report/components/cluster-
 import { ClusterGroupSort } from '@/features/policy-report/components/cluster-group-sort'
 import { Toggle } from '@/components/shadcn/toggle'
 import { Funnel } from 'lucide-react'
+import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
 
 interface PageViewProps {
   className?: string
@@ -74,19 +75,42 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
 
   return (
     <div className={className}>
-      <div className='flex items-center gap-3 mb-6'>
-        <ClusterGroupSearch items={clusterGroups} onResultsChange={setFilteredClusterGroups} />
-        <ClusterGroupSort value={sortBy} onChange={setSortBy} />
-        <Toggle
-          pressed={filtersOpen}
-          onPressedChange={setFiltersOpen}
-          variant='outline'
-          aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
-        >
-          <Funnel aria-hidden className='-mr-1' />
-          {filtersOpen ? 'Close' : 'Open'} filters
-        </Toggle>
-      </div>
+      {/* Step 1: The whole controls bar */}
+      <ReleaseSpotlight
+        releaseId='policy-reports-page'
+        step={1}
+        totalSteps={3}
+        title='Search, sort and filter'
+        description='Search on cluster name, sort by name or failures, and use the filter panel to narrow results by result, severity, and category.'
+        side='bottom'
+        align='start'
+        className='mb-6'
+      >
+        <div className='flex items-center gap-3'>
+          <ClusterGroupSearch items={clusterGroups} onResultsChange={setFilteredClusterGroups} />
+          <ClusterGroupSort value={sortBy} onChange={setSortBy} />
+          {/* Step 2: Spotlight specifically on the filter toggle */}
+          <ReleaseSpotlight
+            releaseId='policy-reports-page'
+            step={2}
+            totalSteps={3}
+            title='Open filters'
+            description='Click here to open the filter panel and narrow down results by result, severity, and category.'
+            side='left'
+            align='end'
+          >
+            <Toggle
+              pressed={filtersOpen}
+              onPressedChange={setFiltersOpen}
+              variant='outline'
+              aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
+            >
+              <Funnel aria-hidden className='-mr-1' />
+              {filtersOpen ? 'Close' : 'Open'} filters
+            </Toggle>
+          </ReleaseSpotlight>
+        </div>
+      </ReleaseSpotlight>
       {filtersOpen && (
         <PolicyReportFilterBar
           filters={filters}
@@ -95,11 +119,22 @@ export const PageView = ({ className, policyReports, clusterNameMap, params }: P
           categoryOptions={categoryOptions}
         />
       )}
-      <div className='flex flex-col gap-4'>
-        {sortedGroups.map((group) => (
-          <ClusterPolicyReportCard key={group.clusterUid} group={group} filters={filters} />
-        ))}
-      </div>
+      {/* Step 3: The policy report cards */}
+      <ReleaseSpotlight
+        releaseId='policy-reports-page'
+        step={3}
+        totalSteps={3}
+        title='Policy report cards'
+        description='Each card shows policy reports grouped by cluster. Expand a card to see the full list of reports and their result status.'
+        side='top'
+        align='start'
+      >
+        <div className='flex flex-col gap-4'>
+          {sortedGroups.map((group) => (
+            <ClusterPolicyReportCard key={group.clusterUid} group={group} filters={filters} />
+          ))}
+        </div>
+      </ReleaseSpotlight>
       {hasMore && <div ref={sentinelRef} className='h-8' />}
       {isLoading && <p className='text-sm text-muted-foreground text-center py-4'>Loading…</p>}
     </div>

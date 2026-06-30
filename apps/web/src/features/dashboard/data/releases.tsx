@@ -1,8 +1,9 @@
 import { Bug, Server, LayoutDashboard, Table, Filter } from 'lucide-react'
 import { routes } from '@/config/routes'
+import { getFirstClusterUid } from '@/utils/cluster-actions'
 import type { ReactNode } from 'react'
 
-export type ReleaseTag = 'New' | 'Improved' | 'Beta'
+export type ReleaseTag = 'New' | 'Improved' | 'V2'
 
 export interface Release {
   /** Stable slug used to activate a ReleaseSpotlight on the target page */
@@ -16,6 +17,8 @@ export interface Release {
   description: string
   tags: ReleaseTag[]
   href: string
+  /** Optional async resolver that overrides href once resolved */
+  resolveHref?: () => Promise<string>
 }
 
 const icons = {
@@ -50,8 +53,12 @@ export const releases: Release[] = [
     title: 'Policy reports on cluster page',
     description:
       'Moved from legacy.ror.nhn.no. View policy reports for a specific cluster on the cluster page under policy reports tab.',
-    tags: ['New', 'Beta'],
-    href: '',
+    tags: ['New', 'V2'],
+    href: routes.app.clusters.getHref(),
+    resolveHref: async () => {
+      const uid = await getFirstClusterUid()
+      return uid ? routes.app.clusterPolicies.getHref(uid) : routes.app.clusters.getHref()
+    },
   },
   {
     id: 'policy-reports-page',
@@ -63,31 +70,7 @@ export const releases: Release[] = [
     title: 'Policy reports page',
     description:
       'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',
-    tags: ['New', 'Beta'],
+    tags: ['New', 'V2'],
     href: routes.app.policyReports.getHref(),
-  },
-  {
-    day: 10,
-    month: 'JUN',
-    year: 2026,
-    icon: icons.Filter,
-    iconBg: 'bg-violet-950',
-    title: 'Copy button on KubernetesCluster',
-    description:
-      'Added copy button to copy the entire KubernetesCluster data. This release also removed the raw data tab from the cluster page',
-    tags: ['Improved'],
-    href: routes.app.clusters.getHref(),
-  },
-  {
-    day: 3,
-    month: 'JUN',
-    year: 2026,
-    icon: icons.Filter,
-    iconBg: 'bg-violet-950',
-    title: 'Search and filter on dashboard',
-    description:
-      'Easily search and filter data on the dashboard to find the information you need quickly. On search it is also possible to favorite clusters and VMs from the list of search results.',
-    tags: ['New'],
-    href: routes.app.dashboard.getHref(),
   },
 ]

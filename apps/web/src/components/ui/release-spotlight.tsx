@@ -8,6 +8,10 @@ import { useActiveRelease } from '@/hooks/use-active-release'
 interface ReleaseSpotlightProps {
   /** Must match the `id` field on the corresponding Release entry in releases.tsx */
   releaseId: string
+  /** Which step in the tour this spotlight represents (1-based) */
+  step: number
+  /** Total number of steps in this release's tour */
+  totalSteps: number
   title: string
   description: string
   children: React.ReactNode
@@ -17,22 +21,16 @@ interface ReleaseSpotlightProps {
 }
 
 /**
- * Wraps any element with a glowing highlight ring and an anchored popover
- * when the release matching `releaseId` is the currently active release.
+ * Wraps any element with a glowing highlight ring and an anchored step-by-step popover
+ * when its step is the currently active one for the given release.
  *
- * Usage:
- * ```tsx
- * <ReleaseSpotlight
- *   releaseId="policy-reports-page"
- *   title="Policy reports page"
- *   description="View policy reports across clusters and namespaces."
- * >
- *   <MyComponent />
- * </ReleaseSpotlight>
- * ```
+ * - "Next →" advances to the next step.
+ * - "Got it ✓" (last step), X, Escape, or clicking outside clears the whole tour.
  */
 export function ReleaseSpotlight({
   releaseId,
+  step,
+  totalSteps,
   title,
   description,
   children,
@@ -40,8 +38,9 @@ export function ReleaseSpotlight({
   align = 'start',
   className,
 }: ReleaseSpotlightProps) {
-  const { activeReleaseId, clearActiveRelease } = useActiveRelease()
-  const isActive = activeReleaseId === releaseId
+  const { activeRelease, advanceStep, clearActiveRelease } = useActiveRelease()
+  const isActive = activeRelease?.releaseId === releaseId && activeRelease?.step === step
+  const isLast = step === totalSteps
 
   return (
     <Popover open={isActive}>
@@ -61,10 +60,13 @@ export function ReleaseSpotlight({
         side={side}
         align={align}
         className='w-80'
-        onInteractOutside={clearActiveRelease}
         onEscapeKeyDown={clearActiveRelease}
+        // onInteractOutside is intentionally omitted: focus restoration when a step closes
+        // would immediately fire it on the next step's freshly-opened popover, killing the tour.
+        // Dismissal is handled explicitly via the X button and Escape key.
       >
         <div className='flex flex-col gap-3'>
+          {/* Header */}
           <div className='flex items-start justify-between gap-2'>
             <div className='flex items-center gap-2'>
               <Sparkles className='size-4 text-cyan-400 shrink-0' />
@@ -72,19 +74,34 @@ export function ReleaseSpotlight({
             </div>
             <button
               onClick={clearActiveRelease}
-              aria-label='Dismiss'
+              aria-label='Dismiss tour'
               className='text-muted-foreground hover:text-foreground transition-colors shrink-0'
             >
               <X className='size-4' />
             </button>
           </div>
+
+          {/* Description */}
           <p className='text-sm text-muted-foreground pl-6'>{description}</p>
-          <div className='pl-6'>
+
+          {/* Footer: step dots + action button */}
+          <div className='flex items-center pl-6'>
+            <div className='flex items-center gap-1 flex-1'>
+              {Array.from({ length: totalSteps }, (_, i) => (
+                <span
+                  key={i}
+                  className={cn(
+                    'size-1.5 rounded-full transition-colors',
+                    i + 1 === step ? 'bg-cyan-400' : 'bg-muted-foreground/30'
+                  )}
+                />
+              ))}
+            </div>
             <button
-              onClick={clearActiveRelease}
+              onClick={isLast ? clearActiveRelease : advanceStep}
               className='text-xs font-medium text-cyan-400 hover:text-cyan-300 transition-colors'
             >
-              Got it ✓
+              {isLast ? 'Got it ✓' : 'Next →'}
             </button>
           </div>
         </div>

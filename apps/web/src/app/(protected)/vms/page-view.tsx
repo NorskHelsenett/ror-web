@@ -401,12 +401,6 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
           setSelectedFilters={setSelectedFilters}
         />
       </div>
-
-      <NotReadyMessage className='mx-12 my-6'>
-        Welcome to the new ROR web! This site is currently under development, so feel free to look around, but do not
-        expect finished functionality or that all data is present. The development team is working hard on delivering a
-        complete product as quick as possible :)
-      </NotReadyMessage>
       <section className='px-12 my-8'>{clientView === 'list' ? <TableView /> : <GridView />}</section>
     </div>
   )

@@ -5,18 +5,37 @@ import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { routes } from '@/config/routes'
 import { cn } from '@/utils/clsxm'
 import { releases, type ReleaseTag } from '../data/releases'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useActiveRelease } from '@/hooks/use-active-release'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 const tagStyles: Record<ReleaseTag, string> = {
   New: 'bg-cyan-900 border-cyan-600 text-cyan-300',
   Improved: 'bg-orange-900 border-orange-300 text-orange-300',
-  Beta: 'bg-violet-900 border-violet-600 text-violet-300',
+  V2: 'bg-violet-900 border-violet-600 text-violet-300',
+}
+
+const tagTooltips: Record<ReleaseTag, string> = {
+  New: 'Brand new functionality',
+  Improved: 'Existing functionality that has been enhanced or refined.',
+  V2: 'Version 2 of existing functionality that was available in legacy.ror.nhn.no',
 }
 
 export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) => {
   const [collapsed, setCollapsed] = useState(false)
-  const { setActiveReleaseId } = useActiveRelease()
+  const { setActiveRelease } = useActiveRelease()
+  const [resolvedHrefs, setResolvedHrefs] = useState<Record<number, string>>({})
+
+  useEffect(() => {
+    const releasesToShow = view === 'dashboard' ? releases.slice(0, 4) : releases
+    releasesToShow.forEach((release, i) => {
+      if (release.resolveHref) {
+        release.resolveHref().then((href) => {
+          setResolvedHrefs((prev) => ({ ...prev, [i]: href }))
+        })
+      }
+    })
+  }, [view])
 
   return (
     <div className='bg-(--r-layer) rounded-lg px-6 pt-5 pb-2 w-full'>
@@ -51,8 +70,8 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
           {(view === 'dashboard' ? releases.slice(0, 4) : releases).map((release, i) => (
             <Link
               key={i}
-              href={release.href}
-              onClick={() => release.id && setActiveReleaseId(release.id)}
+              href={resolvedHrefs[i] ?? release.href}
+              onClick={() => release.id && setActiveRelease(release.id)}
               className='flex items-center gap-4 py-4 group hover:bg-muted/5 -mx-6 px-6 transition-colors border-t border-border'
             >
               {/* Date */}
@@ -77,15 +96,19 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
               {/* Tags + arrow */}
               <div className='flex items-center gap-2 shrink-0'>
                 {release.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className={cn(
-                      'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium',
-                      tagStyles[tag]
-                    )}
-                  >
-                    {tag}
-                  </span>
+                  <Tooltip key={tag}>
+                    <TooltipTrigger asChild>
+                      <span
+                        className={cn(
+                          'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium cursor-default',
+                          tagStyles[tag]
+                        )}
+                      >
+                        {tag}
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent>{tagTooltips[tag]}</TooltipContent>
+                  </Tooltip>
                 ))}
                 <ArrowRight className='size-4 text-muted-foreground group-hover:text-foreground transition-colors' />
               </div>
