@@ -3,6 +3,7 @@ import { clustersHandlers } from './handlers/clusters'
 import { overviewItemsViewHandler } from './handlers/overviewitemview'
 import { pricesHandlers } from './handlers/prices'
 import { projectsHandlers } from './handlers/projects'
+import { workspaceListViewHandler } from './handlers/workspacelistview'
 import { v2ResourcesHandlers } from './handlers/v2-resources'
 
 /**
@@ -14,5 +15,6 @@ export const handlers = [
   ...clustersHandlers,
   ...projectsHandlers,
   ...clusterListViewHandler,
+  ...workspaceListViewHandler,
   ...overviewItemsViewHandler,
 ]
