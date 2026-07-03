@@ -2,8 +2,7 @@
 
 import { getRorApi } from '@/services/ror-api'
 import type { KubernetesCluster } from '@ror/js-api-client'
-
-type LoadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
+import { LoadMoreOpts } from './load-more-options'
 
 export async function getFirstClusterUid(): Promise<string | null> {
   const api = await getRorApi()
