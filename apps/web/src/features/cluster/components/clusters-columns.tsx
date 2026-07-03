@@ -40,6 +40,7 @@ import {
 import { Button } from '@/components/shadcn/button'
 import { HealthCircle } from './health-circle'
 import { ResourceBar } from '@/components/ui/resource-bar'
+import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
 
 const missingText = 'Missing ...'
 
@@ -139,16 +140,26 @@ export function getClustersTableColumns(
         size: 124,
         header: ({ column }) => {
           return (
-            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-              CPU
-              {column.getIsSorted() === 'asc' ? (
-                <ArrowDown className='h-4 w-4' />
-              ) : column.getIsSorted() === 'desc' ? (
-                <ArrowUp className='h-4 w-4' />
-              ) : (
-                <ArrowUpDown className='h-4 w-4' />
-              )}
-            </Button>
+            <ReleaseSpotlight
+              releaseId='cluster-table-updates'
+              step={1}
+              totalSteps={3}
+              title='CPU'
+              description='Shows CPU usage for cluster'
+              side='bottom'
+              align='end'
+            >
+              <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                CPU
+                {column.getIsSorted() === 'asc' ? (
+                  <ArrowDown className='h-4 w-4' />
+                ) : column.getIsSorted() === 'desc' ? (
+                  <ArrowUp className='h-4 w-4' />
+                ) : (
+                  <ArrowUpDown className='h-4 w-4' />
+                )}
+              </Button>
+            </ReleaseSpotlight>
           )
         },
         enableSorting: true,
@@ -169,16 +180,26 @@ export function getClustersTableColumns(
         size: 124,
         header: ({ column }) => {
           return (
-            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-              Memory
-              {column.getIsSorted() === 'asc' ? (
-                <ArrowDown className='h-4 w-4' />
-              ) : column.getIsSorted() === 'desc' ? (
-                <ArrowUp className='h-4 w-4' />
-              ) : (
-                <ArrowUpDown className='h-4 w-4' />
-              )}
-            </Button>
+            <ReleaseSpotlight
+              releaseId='cluster-table-updates'
+              step={2}
+              totalSteps={3}
+              title='Memory'
+              description='Shows memory usage for cluster'
+              side='bottom'
+              align='end'
+            >
+              <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                Memory
+                {column.getIsSorted() === 'asc' ? (
+                  <ArrowDown className='h-4 w-4' />
+                ) : column.getIsSorted() === 'desc' ? (
+                  <ArrowUp className='h-4 w-4' />
+                ) : (
+                  <ArrowUpDown className='h-4 w-4' />
+                )}
+              </Button>
+            </ReleaseSpotlight>
           )
         },
         enableSorting: true,
@@ -385,16 +406,26 @@ export function getClustersTableColumns(
         id: 'datacenterName',
         header: ({ column }) => {
           return (
-            <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-              Datacenter
-              {column.getIsSorted() === 'asc' ? (
-                <ArrowDown className='h-4 w-4' />
-              ) : column.getIsSorted() === 'desc' ? (
-                <ArrowUp className='h-4 w-4' />
-              ) : (
-                <ArrowUpDown className='h-4 w-4' />
-              )}
-            </Button>
+            <ReleaseSpotlight
+              releaseId='cluster-table-updates'
+              step={3}
+              totalSteps={3}
+              title='Datacenter'
+              description='Shows datacenter the cluster is located in'
+              side='bottom'
+              align='end'
+            >
+              <Button variant='ghost' onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                Datacenter
+                {column.getIsSorted() === 'asc' ? (
+                  <ArrowDown className='h-4 w-4' />
+                ) : column.getIsSorted() === 'desc' ? (
+                  <ArrowUp className='h-4 w-4' />
+                ) : (
+                  <ArrowUpDown className='h-4 w-4' />
+                )}
+              </Button>
+            </ReleaseSpotlight>
           )
         },
         enableSorting: true,

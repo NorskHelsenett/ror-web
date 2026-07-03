@@ -44,6 +44,18 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'cluster-table-updates',
+    day: 29,
+    month: 'JUN',
+    year: 2026,
+    icon: icons.Table,
+    iconBg: 'bg-emerald-950',
+    title: 'Cluster table updates',
+    description: 'Added datacenter, CPU and memory to the cluster table.',
+    tags: ['Improved'],
+    href: routes.app.clusters.getHref(),
+  },
+  {
     id: 'policy-reports-cluster-tab',
     day: 24,
     month: 'JUN',
@@ -72,5 +84,31 @@ export const releases: Release[] = [
       'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',
     tags: ['New', 'V2'],
     href: routes.app.policyReports.getHref(),
+  },
+  {
+    id: 'dashboard-updates',
+    day: 3,
+    month: 'JUN',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-950',
+    title: 'Dashboard updates',
+    description:
+      'The user can search on cluster and vms from the dashboard, and add VMs and clusters to favorites from the search results.',
+    tags: ['New', 'Improved'],
+    href: routes.app.dashboard.getHref(),
+  },
+  {
+    id: 'favorite-cards',
+    day: 29,
+    month: 'MAY',
+    year: 2026,
+    icon: icons.Table,
+    iconBg: 'bg-emerald-950',
+    title: 'Favorite cards',
+    description:
+      'Added favorite cards to the dashboard. The user can add clusters and VMs to favorites, and they will be shown on the dashboard. The cards will also redirect to the cluster or VM page when clicked.',
+    tags: ['New'],
+    href: routes.app.dashboard.getHref(),
   },
 ]

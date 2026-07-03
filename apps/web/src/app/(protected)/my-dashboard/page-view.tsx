@@ -18,6 +18,7 @@ import { ReleaseCard } from '@/features/dashboard/components/release-card'
 import { useRouter } from 'next/navigation'
 import { routes } from '@/config/routes'
 import { getClusterUidView } from '@/features/cluster/utils/cluster'
+import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
 
 interface PageViewProps {
   overviewItems: OverviewItemsViewRowType[]
@@ -101,41 +102,53 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
           <DashboardSearch onFavorite={fetchFavorites} />
         </div>
         <OverviewSection allItems={overviewItems} />
-        <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
-        <div className='mx-7'>
-          <div className='flex justify-between items-center'>
-            <h3>VMs</h3>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setVmView((v) => (v === 'card' ? 'list' : 'card'))}
-                  className='text-muted-foreground hover:text-foreground transition-colors p-1'
-                  aria-label='Toggle VM view'
-                >
-                  {vmView === 'card' ? <LayoutList className='size-6' /> : <LayoutGrid className='size-6' />}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{vmView === 'card' ? 'List-view' : 'Card-view'}</TooltipContent>
-            </Tooltip>
+        <ReleaseSpotlight
+          releaseId='favorite-cards'
+          step={1}
+          totalSteps={1}
+          title='Favorite cards'
+          description='Favorite cards for VMs and clusters'
+          side='top'
+          align='end'
+        >
+          <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
+          <div className='mx-7'>
+            <div className='flex justify-between items-center'>
+              <h3>VMs</h3>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setVmView((v) => (v === 'card' ? 'list' : 'card'))}
+                    className='text-muted-foreground hover:text-foreground transition-colors p-1'
+                    aria-label='Toggle VM view'
+                  >
+                    {vmView === 'card' ? <LayoutList className='size-6' /> : <LayoutGrid className='size-6' />}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{vmView === 'card' ? 'List-view' : 'Card-view'}</TooltipContent>
+              </Tooltip>
+            </div>
+            {vmView === 'card' ? (
+              <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
+                {favoritedVmBoxes.length
+                  ? favoritedVmBoxes.map((item) => (
+                      <div key={item.nodeId} className='relative'>
+                        {item.node}
+                      </div>
+                    ))
+                  : 'No items present'}
+              </div>
+            ) : (
+              <div className='flex flex-col gap-1 pt-2.5'>
+                {favoritedVms.length
+                  ? favoritedVms.map((vm) => (
+                      <FavoritedVmRow key={getVmUid(vm)} vm={vm} onUnfavorite={fetchFavorites} />
+                    ))
+                  : 'No items present'}
+              </div>
+            )}
           </div>
-          {vmView === 'card' ? (
-            <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
-              {favoritedVmBoxes.length
-                ? favoritedVmBoxes.map((item) => (
-                    <div key={item.nodeId} className='relative'>
-                      {item.node}
-                    </div>
-                  ))
-                : 'No items present'}
-            </div>
-          ) : (
-            <div className='flex flex-col gap-1 pt-2.5'>
-              {favoritedVms.length
-                ? favoritedVms.map((vm) => <FavoritedVmRow key={getVmUid(vm)} vm={vm} onUnfavorite={fetchFavorites} />)
-                : 'No items present'}
-            </div>
-          )}
-        </div>
+        </ReleaseSpotlight>
       </div>
     </div>
   )
