@@ -19,7 +19,7 @@ function readFromStorage(): Set<string> {
 function writeToStorage(ids: Set<string>): void {
   if (typeof window === 'undefined') return
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...ids]))
-  window.dispatchEvent(new CustomEvent<string[]>(EVENT_NAME, { detail: [...ids] }))
+  window.dispatchEvent(new CustomEvent(EVENT_NAME))
 }
 
 /**
