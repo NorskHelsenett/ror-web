@@ -37,6 +37,7 @@ import { ClusterListViewRow, ClusterListViewSchema } from '../schemas/views/clus
 import type { ClusterListItemViewRow, ClusterListItemViewSchema } from '../schemas/views/clusterlistitem'
 import type { OverviewItemsViewRow, OverviewItemsViewSchema } from '../schemas/views/overviewitems'
 import type { ResourcePolicyReportType } from '../schemas/policy-report'
+import type { WorkspaceListViewRow, WorkspaceListViewSchema } from '../schemas/views/workspacelist'
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
@@ -102,3 +103,6 @@ export type ClusterListViewItemRowType = z.infer<typeof ClusterListItemViewRow>
 
 export type OverviewItemsView = z.infer<typeof OverviewItemsViewSchema>
 export type OverviewItemsViewRowType = z.infer<typeof OverviewItemsViewRow>
+
+export type WorkspaceListView = z.infer<typeof WorkspaceListViewSchema>
+export type WorkspaceListViewsRowType = z.infer<typeof WorkspaceListViewRow>

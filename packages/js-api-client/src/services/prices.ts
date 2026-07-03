@@ -1,7 +1,6 @@
-import z from 'zod'
 import type { RequestOptions } from '../core/request'
 import { validateResponse } from '../core/validation'
-import { PriceListSchema, PriceResponseSchema, PriceSchema } from '../schemas/price'
+import { PriceListSchema } from '../schemas/price'
 
 export const createPriceService = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
   list: async () => {
