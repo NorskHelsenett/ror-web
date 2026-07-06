@@ -145,8 +145,7 @@ const sections: Section[] = [
       },
       {
         title: 'Workspaces',
-        // url: routes.app.workspaces.getHref(),
-        url: `${oldRorBaseUrl}admin/workspaces`,
+        url: routes.app.workspaces.getHref(),
       },
     ],
   },
