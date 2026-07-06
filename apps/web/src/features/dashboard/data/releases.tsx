@@ -43,18 +43,19 @@ const icons = {
  * The dashboard will automatically show the 4 most recent.
  */
 export const releases: Release[] = [
-  // {
-  //   id: 'workspace-page',
-  //   day: 6,
-  //   month: 'JUL',
-  //   year: 2026,
-  //   icon: icons.LayoutDashboard,
-  //   iconBg: 'bg-blue-950',
-  //   title: 'Workspace page',
-  //   description: 'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',
-  //   tags: ['New', 'V2'],
-  //   href: routes.app.workspaces.getHref(),
-  // },
+  {
+    id: 'workspace-page',
+    day: 6,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Workspace page',
+    description:
+      'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',
+    tags: ['New', 'V2'],
+    href: routes.app.workspaces.getHref(),
+  },
   {
     id: 'policy-reports-cluster-tab',
     day: 24,

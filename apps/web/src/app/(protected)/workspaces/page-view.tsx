@@ -22,6 +22,7 @@ import { Input } from '@/components/shadcn/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
 import { Toggle } from '@/components/shadcn/toggle'
 import { Funnel, Search } from 'lucide-react'
+import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
 
 /**
  * Props for the PageView component.
@@ -175,115 +176,146 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
 
   return (
     <div className={cn(className, '@container')}>
-      <div className='mb-6 flex flex-wrap items-center gap-3'>
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label='Search workspaces'
-          placeholder='Find workspaces...'
-          icon={<Search className='w-4 h-4' />}
-          iconPosition='left'
-          className='min-w-72'
-        />
-
-        <Select value={sortBy} onValueChange={(value) => setSortBy(value as WorkspaceSortBy)}>
-          <SelectTrigger className='w-56'>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='name-asc'>Name (A-Z)</SelectItem>
-            <SelectItem value='name-desc'>Name (Z-A)</SelectItem>
-            <SelectItem value='datacenter-asc'>Datacenter (A-Z)</SelectItem>
-            <SelectItem value='datacenter-desc'>Datacenter (Z-A)</SelectItem>
-            <SelectItem value='storage-asc'>Storage class (A-Z)</SelectItem>
-            <SelectItem value='storage-desc'>Storage class (Z-A)</SelectItem>
-            <SelectItem value='machine-asc'>Machine class (A-Z)</SelectItem>
-            <SelectItem value='machine-desc'>Machine class (Z-A)</SelectItem>
-            <SelectItem value='clusters-desc'>Most clusters</SelectItem>
-            <SelectItem value='clusters-asc'>Fewest clusters</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Toggle
-          pressed={filtersOpen}
-          onPressedChange={setFiltersOpen}
-          variant='outline'
-          aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
-        >
-          <Funnel aria-hidden className='-mr-1' />
-          {filtersOpen ? 'Close' : 'Open'} filters
-        </Toggle>
-      </div>
-
-      {filtersOpen && (
+      <ReleaseSpotlight
+        releaseId='workspace-page'
+        step={1}
+        totalSteps={3}
+        title='Search, sort and filter'
+        description='Search on workspace name, sort by name, datacenter, machine class, storage class or amount of clusters, and use the filter panel to narrow results by datacenter, machine class and storage class.'
+        side='bottom'
+        align='start'
+        className='mb-6'
+      >
         <div className='mb-6 flex flex-wrap items-center gap-3'>
-          <Select
-            value={filters.datacenter}
-            onValueChange={(value) => setFilters((prev) => ({ ...prev, datacenter: value }))}
-          >
-            <SelectTrigger className='w-52'>
-              <SelectValue placeholder='All datacenters' />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label='Search workspaces'
+            placeholder='Find workspaces...'
+            icon={<Search className='w-4 h-4' />}
+            iconPosition='left'
+            className='min-w-72'
+          />
+
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value as WorkspaceSortBy)}>
+            <SelectTrigger className='w-56'>
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>All datacenters</SelectItem>
-              {datacenterOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
+              <SelectItem value='name-asc'>Name (A-Z)</SelectItem>
+              <SelectItem value='name-desc'>Name (Z-A)</SelectItem>
+              <SelectItem value='datacenter-asc'>Datacenter (A-Z)</SelectItem>
+              <SelectItem value='datacenter-desc'>Datacenter (Z-A)</SelectItem>
+              <SelectItem value='storage-asc'>Storage class (A-Z)</SelectItem>
+              <SelectItem value='storage-desc'>Storage class (Z-A)</SelectItem>
+              <SelectItem value='machine-asc'>Machine class (A-Z)</SelectItem>
+              <SelectItem value='machine-desc'>Machine class (Z-A)</SelectItem>
+              <SelectItem value='clusters-desc'>Most clusters</SelectItem>
+              <SelectItem value='clusters-asc'>Fewest clusters</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select
-            value={filters.storageClass}
-            onValueChange={(value) => setFilters((prev) => ({ ...prev, storageClass: value }))}
+          <ReleaseSpotlight
+            releaseId='workspace-page'
+            step={2}
+            totalSteps={3}
+            title='Open filters'
+            description='Click here to open the filter panel and narrow down results by datacenter, machine class and storage class.'
+            side='left'
+            align='end'
           >
-            <SelectTrigger className='w-56'>
-              <SelectValue placeholder='All storage classes' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All storage classes</SelectItem>
-              {storageClassOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={filters.machineClass}
-            onValueChange={(value) => setFilters((prev) => ({ ...prev, machineClass: value }))}
-          >
-            <SelectTrigger className='w-56'>
-              <SelectValue placeholder='All machine classes' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='all'>All machine classes</SelectItem>
-              {machineClassOptions.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Toggle
+              pressed={filtersOpen}
+              onPressedChange={setFiltersOpen}
+              variant='outline'
+              aria-label={filtersOpen ? 'Close filters' : 'Open filters'}
+            >
+              <Funnel aria-hidden className='-mr-1' />
+              {filtersOpen ? 'Close' : 'Open'} filters
+            </Toggle>
+          </ReleaseSpotlight>
         </div>
-      )}
 
-      <div className='flex flex-col gap-4'>
-        {visibleItems.map((group, index) => {
-          const key = getWorkspaceUidView(group) || `workspace-${index}`
-          return (
-            <WorkspaceRowCard
-              key={key}
-              group={group}
-              workspaceWithClusters={workspacesWithClusters.find(
-                (wsc) => wsc.workspace.workspaceUid?.fieldValue === group.workspaceUid?.fieldValue
-              )}
-            />
-          )
-        })}
-      </div>
+        {filtersOpen && (
+          <div className='mb-6 flex flex-wrap items-center gap-3'>
+            <Select
+              value={filters.datacenter}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, datacenter: value }))}
+            >
+              <SelectTrigger className='w-52'>
+                <SelectValue placeholder='All datacenters' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All datacenters</SelectItem>
+                {datacenterOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={filters.storageClass}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, storageClass: value }))}
+            >
+              <SelectTrigger className='w-56'>
+                <SelectValue placeholder='All storage classes' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All storage classes</SelectItem>
+                {storageClassOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={filters.machineClass}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, machineClass: value }))}
+            >
+              <SelectTrigger className='w-56'>
+                <SelectValue placeholder='All machine classes' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='all'>All machine classes</SelectItem>
+                {machineClassOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </ReleaseSpotlight>
+
+      <ReleaseSpotlight
+        releaseId='workspace-page'
+        step={3}
+        totalSteps={3}
+        title='Workspace cards'
+        description='Each card shows a workspace and its clusters. Expand a card to inspect cluster-level details.'
+        side='top'
+        align='start'
+      >
+        <div className='flex flex-col gap-4'>
+          {visibleItems.map((group, index) => {
+            const key = getWorkspaceUidView(group) || `workspace-${index}`
+            return (
+              <WorkspaceRowCard
+                key={key}
+                group={group}
+                workspaceWithClusters={workspacesWithClusters.find(
+                  (wsc) => wsc.workspace.workspaceUid?.fieldValue === group.workspaceUid?.fieldValue
+                )}
+              />
+            )
+          })}
+        </div>
+      </ReleaseSpotlight>
       {hasMore && <div ref={sentinelRef} className='h-8' />}
       {isLoading && <p className='text-sm text-muted-foreground text-center py-4'>Loading…</p>}
     </div>
