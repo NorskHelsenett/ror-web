@@ -1,6 +1,6 @@
 'use client'
 
-import { Boxes, BriefcaseBusiness, GitFork, Waypoints } from 'lucide-react'
+import { Boxes, BriefcaseBusiness, Waypoints } from 'lucide-react'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 
 import type { WorkspaceListViewsRowType } from '@ror/js-api-client'
