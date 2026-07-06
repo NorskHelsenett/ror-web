@@ -17,7 +17,7 @@ export const datacenters: DatacenterResponse = {
       apiVersion: 'v1',
       metadata: {
         name: 'trd1',
-        uid: faker.string.uuid(),
+        uid: '9f48a459-c622-4c86-9428-23c4062997fc',
         resourceVersion: faker.string.numeric(6),
         creationTimestamp: '2025-01-15T12:00:00Z',
         labels: {},
@@ -61,7 +61,7 @@ export const datacenters: DatacenterResponse = {
       apiVersion: 'v1',
       metadata: {
         name: 'osl1',
-        uid: faker.string.uuid(),
+        uid: '1cec99e8-d67d-42de-affe-2e4728690203',
         resourceVersion: faker.string.numeric(6),
         creationTimestamp: '2025-01-15T12:00:00Z',
         labels: {},
@@ -103,7 +103,7 @@ export const datacenters: DatacenterResponse = {
       apiVersion: 'v1',
       metadata: {
         name: 'trd1cl02',
-        uid: faker.string.uuid(),
+        uid: '45113e62-736b-4e4b-8159-d55b7bf12893',
         resourceVersion: faker.string.numeric(6),
         creationTimestamp: '2025-01-15T12:00:00Z',
         labels: {},
@@ -145,7 +145,7 @@ export const datacenters: DatacenterResponse = {
       apiVersion: 'v1',
       metadata: {
         name: 'norwayeast',
-        uid: faker.string.uuid(),
+        uid: '2fdb4f7f-c56f-44a2-8f55-4db6f649f6f2',
         resourceVersion: faker.string.numeric(6),
         creationTimestamp: '2025-01-15T12:00:00Z',
         labels: {},
@@ -186,8 +186,8 @@ export const datacenters: DatacenterResponse = {
       kind: 'Datacenter',
       apiVersion: 'v1',
       metadata: {
-        name: 'trd1',
-        uid: faker.string.uuid(),
+        name: 'trd1-talos',
+        uid: '0c467413-fa0a-49f3-bf1c-d8d9be2ce1f0',
         resourceVersion: faker.string.numeric(6),
         creationTimestamp: '2025-01-15T12:00:00Z',
         labels: {},

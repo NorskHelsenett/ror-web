@@ -11,7 +11,10 @@ import type { Metadata } from 'next'
 import { Header } from '@/components/layout/app-shell/header'
 import { normalizeParams } from '@/features/cluster/utils/normalize-params'
 import { WorkspaceListViewsRowType } from '@ror/js-api-client'
-import { matchClustersToWorkspaces } from '@/features/workspace/utils/workspace-actions'
+import {
+  matchClustersToWorkspaces,
+  resolveWorkspaceDatacenterNames,
+} from '@/features/workspace/utils/workspace-actions'
 import { PageView } from './page-view'
 
 export const metadata: Metadata = {
@@ -43,7 +46,8 @@ export default async function WorkspacePage({
   if (params.page && params.limit) listParams.set('offset', String((params.page - 1) * params.limit))
 
   const workspaceList = await api.workspaceListView.getWorkspaceList(listParams)
-  const workspaces: WorkspaceListViewsRowType[] = workspaceList.rows
+  const workspaceRows: WorkspaceListViewsRowType[] = workspaceList.rows
+  const workspaces = await resolveWorkspaceDatacenterNames(workspaceRows)
   const workspacesWithClusters = await matchClustersToWorkspaces(workspaces)
 
   return (

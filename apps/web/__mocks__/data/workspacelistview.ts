@@ -54,13 +54,13 @@ export const workspaceListView = {
   rows: [
     {
       clusters: {
-        fieldValue: '42',
+        fieldValue: '12',
       },
       datacenterId: {
-        fieldValue: 'trd.north.no',
+        fieldValue: 'bgo.west.no',
       },
       datacenterName: {
-        fieldValue: 'Trondheim',
+        fieldValue: 'Bergen',
       },
       defaultMachineClass: {
         fieldValue: 'best-effort-medium',
@@ -69,21 +69,21 @@ export const workspaceListView = {
         fieldValue: 'standard',
       },
       workspaceName: {
-        fieldValue: 'trd1cl02-sfm-prod',
+        fieldValue: 'bgo-mgmt',
       },
       workspaceUid: {
-        fieldValue: 'f0a1fb2e-5d77-4d08-918a-a73d0eb3db9e',
+        fieldValue: 'b5e6cfd3-2f4b-4f1e-8b58-2d8a4e3b5c01',
       },
     },
     {
       clusters: {
-        fieldValue: '26',
+        fieldValue: '4',
       },
       datacenterId: {
-        fieldValue: 'trd.north.no',
+        fieldValue: 'osl.east.no',
       },
       datacenterName: {
-        fieldValue: 'Trondheim',
+        fieldValue: 'Oslo',
       },
       defaultMachineClass: {
         fieldValue: 'best-effort-small',
@@ -92,33 +92,10 @@ export const workspaceListView = {
         fieldValue: 'premium',
       },
       workspaceName: {
-        fieldValue: 'trd1cl02-test',
+        fieldValue: 'osl-prod',
       },
       workspaceUid: {
-        fieldValue: 'c8777b9d-7e0c-4fe3-8421-94784fc8fdb9',
-      },
-    },
-    {
-      clusters: {
-        fieldValue: '14',
-      },
-      datacenterId: {
-        fieldValue: 'trd.north.no',
-      },
-      datacenterName: {
-        fieldValue: 'Trondheim',
-      },
-      defaultMachineClass: {
-        fieldValue: 'best-effort-medium',
-      },
-      defaultStorageClass: {
-        fieldValue: 'standard',
-      },
-      workspaceName: {
-        fieldValue: 'trd1-amk',
-      },
-      workspaceUid: {
-        fieldValue: '2f9a9195-8b94-4951-aa5d-f0b8d7687dc9',
+        fieldValue: 'f47e2d92-1d2d-4d19-baa0-ff16d18f55ac',
       },
     },
   ],
