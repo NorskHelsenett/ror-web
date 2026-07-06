@@ -2,7 +2,7 @@
 
 import { getRorApi } from '@/services/ror-api'
 import { LoadMoreOpts } from '@/utils/load-more-options'
-import { ClusterListViewItemRowType, DataCenter, WorkspaceListViewsRowType } from '@ror/js-api-client'
+import { ClusterListViewItemRowType, DataCenter, WorkspaceListViewRowType } from '@ror/js-api-client'
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -23,8 +23,8 @@ function buildDatacenterNameMap(datacenters: DataCenter[]): Map<string, string> 
 }
 
 export async function resolveWorkspaceDatacenterNames(
-  workspaces: WorkspaceListViewsRowType[]
-): Promise<WorkspaceListViewsRowType[]> {
+  workspaces: WorkspaceListViewRowType[]
+): Promise<WorkspaceListViewRowType[]> {
   if (workspaces.length === 0) return workspaces
 
   const needsLookup = workspaces.some((ws) => {
@@ -61,16 +61,6 @@ export async function resolveWorkspaceDatacenterNames(
   }
 }
 
-// export async function fetchWorkspaces(clusterUid: string): Promise<WorkspaceListViewsRowType[]> {
-//   const api = await getRorApi()
-//   try {
-//     const res = await api.workspaceListView.getWorkspaceList(new URLSearchParams())
-//     return res?.resources ?? []
-//   } catch {
-//     return []
-//   }
-// }
-
 export async function loadMoreWorkspaces({ offset, limit, sort, order }: LoadMoreOpts) {
   const api = await getRorApi()
   const params = new URLSearchParams()
@@ -96,7 +86,7 @@ export async function loadMoreWorkspaces({ offset, limit, sort, order }: LoadMor
  * Maps workspaces to their associated clusters
  */
 export interface WorkspaceWithClusters {
-  workspace: WorkspaceListViewsRowType
+  workspace: WorkspaceListViewRowType
   clusters: ClusterListViewItemRowType[]
 }
 
@@ -105,7 +95,7 @@ export interface WorkspaceWithClusters {
  * Returns workspaces with their associated clusters.
  */
 export async function matchClustersToWorkspaces(
-  workspaces: WorkspaceListViewsRowType[]
+  workspaces: WorkspaceListViewRowType[]
 ): Promise<WorkspaceWithClusters[]> {
   const api = await getRorApi()
 

@@ -67,7 +67,7 @@ export type {
   OverviewItemsView,
   OverviewItemsViewRowType,
   WorkspaceListView,
-  WorkspaceListViewsRowType,
+  WorkspaceListViewRowType,
 } from './types/entities'
 
 export { CreateApiKeyRequestSchema } from './schemas/api-key'

@@ -3,7 +3,7 @@
 import { Boxes, BriefcaseBusiness, Waypoints } from 'lucide-react'
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 
-import type { WorkspaceListViewsRowType } from '@ror/js-api-client'
+import type { WorkspaceListViewRowType } from '@ror/js-api-client'
 import {
   AccordionContentRow,
   accordionContentStyling,
@@ -46,7 +46,7 @@ import { routes } from '@/config/routes'
 // -------------------------
 
 interface WorkspaceRowCardProps {
-  group: WorkspaceListViewsRowType
+  group: WorkspaceListViewRowType
   workspaceWithClusters?: WorkspaceWithClusters
 }
 

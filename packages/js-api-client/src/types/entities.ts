@@ -105,4 +105,4 @@ export type OverviewItemsView = z.infer<typeof OverviewItemsViewSchema>
 export type OverviewItemsViewRowType = z.infer<typeof OverviewItemsViewRow>
 
 export type WorkspaceListView = z.infer<typeof WorkspaceListViewSchema>
-export type WorkspaceListViewsRowType = z.infer<typeof WorkspaceListViewRow>
+export type WorkspaceListViewRowType = z.infer<typeof WorkspaceListViewRow>

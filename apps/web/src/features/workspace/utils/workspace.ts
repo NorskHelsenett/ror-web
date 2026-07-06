@@ -1,26 +1,26 @@
-import { WorkspaceListViewsRowType } from '@ror/js-api-client'
+import { WorkspaceListViewRowType } from '@ror/js-api-client'
 
-export const getWorkspaceUidView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceUidView = (workspace: WorkspaceListViewRowType): string =>
   workspace.workspaceUid?.fieldValue || ''
 
-export const getWorkspaceNameView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceNameView = (workspace: WorkspaceListViewRowType): string =>
   workspace.workspaceName?.fieldValue || ''
 
-export const getWorkspaceDatacenterIdView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceDatacenterIdView = (workspace: WorkspaceListViewRowType): string =>
   workspace.datacenterId?.fieldValue || ''
 
-export const getWorkspaceDatacenterNameView = (workspace: WorkspaceListViewsRowType): string => {
+export const getWorkspaceDatacenterNameView = (workspace: WorkspaceListViewRowType): string => {
   return workspace.datacenterName?.fieldValue || ''
 }
 
-export const getWorkspaceDefaultMachineClassView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceDefaultMachineClassView = (workspace: WorkspaceListViewRowType): string =>
   workspace.defaultMachineClass?.fieldValue || ''
 
-export const getWorkspaceDefaultStorageClassView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceDefaultStorageClassView = (workspace: WorkspaceListViewRowType): string =>
   workspace.defaultStorageClass?.fieldValue || ''
 
-export const getWorkspaceClustersView = (workspace: WorkspaceListViewsRowType): string =>
+export const getWorkspaceClustersView = (workspace: WorkspaceListViewRowType): string =>
   workspace.clusters?.fieldValue || ''
 
-export const getWorkspaceKey = (policyReport: WorkspaceListViewsRowType[] = []): string =>
+export const getWorkspaceKey = (policyReport: WorkspaceListViewRowType[] = []): string =>
   Array.isArray(policyReport) ? policyReport.map(getWorkspaceUidView).join(',') : ''

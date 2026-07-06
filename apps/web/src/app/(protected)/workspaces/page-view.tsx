@@ -5,7 +5,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { useSearch } from '@/hooks/use-search'
 import { cn } from '@/utils/clsxm'
 import { Params } from '@/types/resources-page'
-import { WorkspaceListViewsRowType } from '@ror/js-api-client'
+import { WorkspaceListViewRowType } from '@ror/js-api-client'
 import {
   getWorkspaceDatacenterNameView,
   getWorkspaceDefaultMachineClassView,
@@ -34,7 +34,7 @@ import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
  */
 interface PageViewProps {
   className?: string
-  workspaces: WorkspaceListViewsRowType[]
+  workspaces: WorkspaceListViewRowType[]
   workspacesWithClusters: WorkspaceWithClusters[]
   params: Params
 }
@@ -67,7 +67,7 @@ function uniqueValues(values: string[]): string[] {
   return [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b))
 }
 
-function workspaceClusterCount(workspace: WorkspaceListViewsRowType): number {
+function workspaceClusterCount(workspace: WorkspaceListViewRowType): number {
   const raw = getWorkspaceClustersView(workspace)
   const parsed = Number.parseInt(raw, 10)
   return Number.isNaN(parsed) ? 0 : parsed
@@ -87,7 +87,7 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
   const [filters, setFilters] = useState<WorkspaceFilters>(defaultFilters)
   const debouncedQuery = useDebouncedValue(query, 120)
 
-  const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<WorkspaceListViewsRowType>({
+  const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<WorkspaceListViewRowType>({
     initial: workspaces,
     sort: params.sort,
     pageSize: 50,
