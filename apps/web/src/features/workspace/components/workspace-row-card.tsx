@@ -42,68 +42,6 @@ import Link from 'next/link'
 import { routes } from '@/config/routes'
 
 // -------------------------
-// Bi-color pass/fail progress bar
-// -------------------------
-
-// const PassFailBar = ({ summary }: { summary: PolicyReportSummary }) => {
-//   const total = summary.pass + summary.fail + summary.error + summary.warn + summary.skip
-//   if (total === 0) return <div className='h-2 rounded-full bg-muted w-full' />
-//   const failPct = ((summary.fail + summary.error) / total) * 100
-//   const passPct = (summary.pass / total) * 100
-//   return (
-//     <div className='relative h-2 w-full rounded-full overflow-hidden bg-muted flex'>
-//       <div className='h-full bg-orange-500' style={{ width: `${failPct}%` }} />
-//       <div className='h-full bg-blue-500' style={{ width: `${passPct}%` }} />
-//     </div>
-//   )
-// }
-
-// -------------------------
-// Namespace row
-// -------------------------
-
-// const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: string }) => {
-//   const [isNavigating, setIsNavigating] = useState(false)
-//   const total = ns.summary.pass + ns.summary.fail + ns.summary.error + ns.summary.warn + ns.summary.skip
-//   return (
-//     <div className='flex items-center gap-4 px-4 py-3 rounded-lg border border-(--r-border-subtle) bg-card'>
-//       <Box className='size-4 text-muted-foreground shrink-0' />
-//       <span className='w-44 shrink-0 truncate text-sm font-medium'>{ns.namespace}</span>
-//       <div className='w-40 shrink-0'>
-//         <PassFailBar summary={ns.summary} />
-//       </div>
-//       <div className='shrink-0 flex items-center gap-2'>
-//         {ns.summary.fail + ns.summary.error > 0 && (
-//           <Badge
-//             variant='outline'
-//             className={cn('border-orange-500/60 text-orange-600 dark:text-orange-400 bg-orange-500/10 gap-1')}
-//           >
-//             <span>×</span>
-//             {(ns.summary.fail + ns.summary.error).toLocaleString()} failed
-//           </Badge>
-//         )}
-//         {ns.summary.pass > 0 && (
-//           <Badge variant='outline' className='border-blue-500/60 text-blue-600 dark:text-blue-400 bg-blue-500/10 gap-1'>
-//             <span>✓</span>
-//             {ns.summary.pass.toLocaleString()} passed
-//           </Badge>
-//         )}
-//         {total === 0 && <span className='text-xs text-muted-foreground'>No results</span>}
-//       </div>
-//       <div className='flex-1' />
-//       <Link
-//         href={`${routes.app.clusterPolicies.getHref(clusterUid)}?namespace=${encodeURIComponent(ns.namespace)}`}
-//         className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground shrink-0'
-//         onClick={() => setIsNavigating(true)}
-//       >
-//         View policies <ChevronRight className='size-4' />
-//       </Link>
-//       {isNavigating && <FaSpinner className='size-4 text-muted-foreground shrink-0 animate-spin' />}
-//     </div>
-//   )
-// }
-
-// -------------------------
 // Workspace row
 // -------------------------
 
