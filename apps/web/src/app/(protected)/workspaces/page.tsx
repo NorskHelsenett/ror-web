@@ -25,10 +25,8 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 /**
- * Renders the Clusters page for authenticated users.
- *
  * @param searchParams - A promise resolving to the search parameters from the URL.
- * @returns The rendered Clusters page as a React element.
+ * @returns The rendered Workspace page as a React element.
  */
 export default async function WorkspacePage({
   searchParams,

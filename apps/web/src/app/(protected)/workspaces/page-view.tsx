@@ -28,8 +28,8 @@ import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
  * Props for the PageView component.
  *
  * @property {string} [className] - Optional CSS class name for custom styling.
- * @property {User} user - The current user object.
- * @property {ClusterListViewRowType[]} clusters - Array of Kubernetes clusters to display.
+ * @property {WorkspaceListViewsRowType[]} workspaces - Initial list of workspaces to display.
+ * @property {WorkspaceWithClusters[]} workspacesWithClusters - Workspaces with their associated clusters.
  * @property {Params} params - Route or query parameters relevant to the page view.
  */
 interface PageViewProps {
