@@ -28,7 +28,7 @@ import { ReleaseSpotlight } from '@/components/ui/release-spotlight'
  * Props for the PageView component.
  *
  * @property {string} [className] - Optional CSS class name for custom styling.
- * @property {WorkspaceListViewsRowType[]} workspaces - Initial list of workspaces to display.
+ * @property {WorkspaceListViewRowType[]} workspaces - Initial list of workspaces to display.
  * @property {WorkspaceWithClusters[]} workspacesWithClusters - Workspaces with their associated clusters.
  * @property {Params} params - Route or query parameters relevant to the page view.
  */
@@ -174,6 +174,15 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
     }
   }, [searchedItems, sortBy])
 
+  const workspaceWithClustersByUid = useMemo(() => {
+    const map = new Map<string, WorkspaceWithClusters>()
+    for (const item of workspacesWithClusters) {
+      const uid = item.workspace.workspaceUid?.fieldValue
+      if (uid) map.set(uid, item)
+    }
+    return map
+  }, [workspacesWithClusters])
+
   return (
     <div className={cn(className, '@container')}>
       <ReleaseSpotlight
@@ -304,13 +313,12 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
         <div className='flex flex-col gap-4'>
           {visibleItems.map((group, index) => {
             const key = getWorkspaceUidView(group) || `workspace-${index}`
+            const workspaceUid = group.workspaceUid?.fieldValue
             return (
               <WorkspaceRowCard
                 key={key}
                 group={group}
-                workspaceWithClusters={workspacesWithClusters.find(
-                  (wsc) => wsc.workspace.workspaceUid?.fieldValue === group.workspaceUid?.fieldValue
-                )}
+                workspaceWithClusters={workspaceUid ? workspaceWithClustersByUid.get(workspaceUid) : undefined}
               />
             )
           })}
