@@ -3,17 +3,9 @@
 import { getRorApi } from '@/services/ror-api'
 import { BackupRun } from '@ror/js-api-client'
 import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
+import { LoadMoreOptsWithSearch } from './load-more-options'
 
-type LoadMoreOpts = {
-  offset: number
-  limit: number
-  sort?: string
-  order?: 'asc' | 'desc'
-  search?: string
-  searchField?: string
-}
-
-export async function loadMoreBackupRuns({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
+export async function loadMoreBackupRuns({ offset, limit, sort, order, search, searchField }: LoadMoreOptsWithSearch) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()

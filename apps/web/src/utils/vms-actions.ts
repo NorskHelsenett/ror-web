@@ -6,17 +6,9 @@ import { fetchBackupJobs } from '@/features/vms/backup/services/fetch-backupJobs
 import { fetchBackupRuns } from '@/features/vms/backup/services/fetch-backupRuns'
 import { mapBackupToVM } from '@/features/vms/backup/utils/map-backup-to-vm'
 import { buildRegexSearchFilter } from '@/features/vms/utils/regex-search'
+import { LoadMoreOptsWithSearch } from './load-more-options'
 
-type LoadMoreOpts = {
-  offset: number
-  limit: number
-  sort?: string
-  order?: 'asc' | 'desc'
-  search?: string
-  searchField?: string
-}
-
-export async function loadMoreVMs({ offset, limit, sort, order, search, searchField }: LoadMoreOpts) {
+export async function loadMoreVMs({ offset, limit, sort, order, search, searchField }: LoadMoreOptsWithSearch) {
   const api = await getRorApi()
 
   const params = new URLSearchParams()

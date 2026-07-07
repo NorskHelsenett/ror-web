@@ -144,9 +144,8 @@ const sections: Section[] = [
         url: `${oldRorBaseUrl}admin/vulnerabilityreports`,
       },
       {
-        // TODO: Move from legacy to new ROR when backend is available
         title: 'Workspaces',
-        url: `${oldRorBaseUrl}workspaces`,
+        url: routes.app.workspaces.getHref(),
       },
     ],
   },

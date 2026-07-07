@@ -66,6 +66,8 @@ export type {
   ClusterListViewItemRowType,
   OverviewItemsView,
   OverviewItemsViewRowType,
+  WorkspaceListView,
+  WorkspaceListViewRowType,
 } from './types/entities'
 
 export { CreateApiKeyRequestSchema } from './schemas/api-key'

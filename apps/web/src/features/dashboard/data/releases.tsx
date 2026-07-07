@@ -44,6 +44,19 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'workspace-page',
+    day: 6,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Workspace page',
+    description:
+      'Moved from legacy.ror.nhn.no. Browse workspaces and inspect their clusters with search, sorting, and filters for datacenter, machine class, and storage class.',
+    tags: ['New', 'V2'],
+    href: routes.app.workspaces.getHref(),
+  },
+  {
     id: 'policy-reports-cluster-tab',
     day: 24,
     month: 'JUN',
