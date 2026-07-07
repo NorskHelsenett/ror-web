@@ -114,12 +114,15 @@ export async function matchClustersToWorkspaces(
     }))
 
     // Match clusters to workspaces by comparing workspace field
-    clusters.forEach((cluster) => {
-      const clusterWorkspace = cluster.workspace?.fieldValue?.toLowerCase() || ''
-      const workspaceEntry = result.find(
-        (entry) => entry.workspace.workspaceName?.fieldValue?.toLowerCase() === clusterWorkspace
-      )
+    const workspaceByName = new Map<string, WorkspaceWithClusters>()
+    for (const entry of result) {
+      const key = entry.workspace.workspaceName?.fieldValue?.toLowerCase() ?? ''
+      if (key) workspaceByName.set(key, entry)
+    }
 
+    clusters.forEach((cluster) => {
+      const clusterWorkspace = cluster.workspace?.fieldValue?.toLowerCase() ?? ''
+      const workspaceEntry = workspaceByName.get(clusterWorkspace)
       if (workspaceEntry) {
         workspaceEntry.clusters.push(cluster)
       }
