@@ -22,5 +22,5 @@ export const getWorkspaceDefaultStorageClassView = (workspace: WorkspaceListView
 export const getWorkspaceClustersView = (workspace: WorkspaceListViewRowType): string =>
   workspace.clusters?.fieldValue || ''
 
-export const getWorkspaceKey = (policyReport: WorkspaceListViewRowType[] = []): string =>
-  Array.isArray(policyReport) ? policyReport.map(getWorkspaceUidView).join(',') : ''
+export const getWorkspaceKey = (workspaces: WorkspaceListViewRowType[] = []): string =>
+  Array.isArray(workspaces) ? workspaces.map(getWorkspaceUidView).join(',') : ''

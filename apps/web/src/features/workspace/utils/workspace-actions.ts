@@ -72,13 +72,15 @@ export async function loadMoreWorkspaces({ offset, limit, sort, order }: LoadMor
   try {
     const res = await api.workspaceListView.getWorkspaceList(params)
     const items = await resolveWorkspaceDatacenterNames(res?.rows ?? [])
+    const workspacesWithClusters = await matchClustersToWorkspaces(items)
     return {
       items,
       hasMore: items.length === limit,
       nextOffset: items.length === limit ? offset + limit : null,
+      workspacesWithClusters,
     }
   } catch {
-    return { items: [], hasMore: false, nextOffset: null }
+    return { items: [], hasMore: false, nextOffset: null, workspacesWithClusters: [] }
   }
 }
 

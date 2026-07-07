@@ -85,6 +85,9 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
   const [sortBy, setSortBy] = useState<WorkspaceSortBy>('name-asc')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [filters, setFilters] = useState<WorkspaceFilters>(defaultFilters)
+  const [loadedWorkspaceWithClustersByUid, setLoadedWorkspaceWithClustersByUid] = useState<
+    Record<string, WorkspaceWithClusters>
+  >({})
   const debouncedQuery = useDebouncedValue(query, 120)
 
   const { items, sentinelRef, isLoading, hasMore } = useInfiniteLoader<WorkspaceListViewRowType>({
@@ -95,6 +98,19 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
     getItemsKey: getWorkspaceKey,
     loadMore: async (offset, limit) => {
       const res = await loadMoreWorkspaces({ offset, limit, sort: params.sort })
+      if (res.workspacesWithClusters?.length) {
+        const nextEntries: Record<string, WorkspaceWithClusters> = {}
+        for (const item of res.workspacesWithClusters) {
+          const uid = item.workspace.workspaceUid?.fieldValue
+          if (uid) {
+            nextEntries[uid] = item
+          }
+        }
+
+        if (Object.keys(nextEntries).length > 0) {
+          setLoadedWorkspaceWithClustersByUid((prev) => ({ ...prev, ...nextEntries }))
+        }
+      }
       return { items: res.items ?? [], hasMore: res.hasMore }
     },
   })
@@ -174,14 +190,21 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
     }
   }, [searchedItems, sortBy])
 
-  const workspaceWithClustersByUid = useMemo(() => {
-    const map = new Map<string, WorkspaceWithClusters>()
+  const initialWorkspaceWithClustersByUid = useMemo(() => {
+    const mapped: Record<string, WorkspaceWithClusters> = {}
     for (const item of workspacesWithClusters) {
       const uid = item.workspace.workspaceUid?.fieldValue
-      if (uid) map.set(uid, item)
+      if (uid) {
+        mapped[uid] = item
+      }
     }
-    return map
+    return mapped
   }, [workspacesWithClusters])
+
+  const workspaceWithClustersByUid = useMemo(
+    () => ({ ...initialWorkspaceWithClustersByUid, ...loadedWorkspaceWithClustersByUid }),
+    [initialWorkspaceWithClustersByUid, loadedWorkspaceWithClustersByUid]
+  )
 
   return (
     <div className={cn(className, '@container')}>
@@ -318,7 +341,7 @@ export const PageView = ({ className, workspaces, workspacesWithClusters, params
               <WorkspaceRowCard
                 key={key}
                 group={group}
-                workspaceWithClusters={workspaceUid ? workspaceWithClustersByUid.get(workspaceUid) : undefined}
+                workspaceWithClusters={workspaceUid ? workspaceWithClustersByUid[workspaceUid] : undefined}
               />
             )
           })}

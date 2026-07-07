@@ -1,11 +1,3 @@
-/*
- * FILE OVERVIEW:
- *
- * Server component that fetches and displays the list of Kubernetes clusters
- * for the authenticated user. Supports pagination, sorting, and filtering.
- * Renders the PageView component with fetched data.
- */
-
 import { getRorApi } from '@/services/ror-api'
 import type { Metadata } from 'next'
 import { Header } from '@/components/layout/app-shell/header'
@@ -18,8 +10,8 @@ import {
 import { PageView } from './page-view'
 
 export const metadata: Metadata = {
-  title: 'ROR - Clusters',
-  description: 'View clusters',
+  title: 'ROR - Workspaces',
+  description: 'View workspaces',
 }
 
 export const dynamic = 'force-dynamic'

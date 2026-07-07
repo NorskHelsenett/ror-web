@@ -71,14 +71,14 @@ export const WorkspaceRowCard = ({ group, workspaceWithClusters }: WorkspaceRowC
             <AccordionTriggerRowElement
               title='Default storage class'
               text={getWorkspaceDefaultStorageClassView(group)}
-              className='w-46 shrink-0'
+              className='w-48 shrink-0'
             />
 
             <div className='flex-1' />
             <div className='shrink-0 flex items-center gap-2'>
               <span className='flex items-center gap-2 w-32 px-3 py-1.5 border rounded-full'>
                 <Boxes size='16' />
-                {workspaceWithClusters?.clusters.length} clusters
+                {workspaceWithClusters?.clusters.length ?? 0} clusters
               </span>
             </div>
           </div>
@@ -86,8 +86,8 @@ export const WorkspaceRowCard = ({ group, workspaceWithClusters }: WorkspaceRowC
         <AccordionContent className={accordionContentStyling}>
           <p className={contentTitleStyling}>Clusters</p>
           <div className={contentRowsStyling}>
-            {workspaceWithClusters?.clusters.map((c, index) => (
-              <Link key={index} href={routes.app.cluster.getHref(getClusterUidView(c))}>
+            {workspaceWithClusters?.clusters.map((c) => (
+              <Link key={getClusterUidView(c)} href={routes.app.cluster.getHref(getClusterUidView(c))}>
                 <AccordionContentRow
                   icon={<Boxes className='size-4 text-muted-foreground shrink-0' />}
                   title={c.clusterName?.fieldValue || 'Unknown name'}

@@ -2,7 +2,7 @@ import { Accordion } from '../shadcn/accordion'
 import { ReactNode } from 'react'
 
 interface AccordionTableRowProps {
-  handleAccordionChange?: (value: string) => Promise<void>
+  handleAccordionChange?: (value: string) => void | Promise<void>
   children: ReactNode
 }
 
