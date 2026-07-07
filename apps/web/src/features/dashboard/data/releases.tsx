@@ -53,6 +53,7 @@ export const releases: Release[] = [
     title: 'Workspace page',
     description:
       'Moved from legacy.ror.nhn.no. Browse workspaces and inspect their clusters with search, sorting, and filters for datacenter, machine class, and storage class.',
+    tags: ['New', 'V2'],
     href: routes.app.workspaces.getHref(),
   },
   {
