@@ -52,8 +52,7 @@ export const releases: Release[] = [
     iconBg: 'bg-blue-950',
     title: 'Workspace page',
     description:
-      'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',
-    tags: ['New', 'V2'],
+      'Moved from legacy.ror.nhn.no. Browse workspaces and inspect their clusters with search, sorting, and filters for datacenter, machine class, and storage class.',
     href: routes.app.workspaces.getHref(),
   },
   {
