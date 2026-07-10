@@ -111,9 +111,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
           <div className='border-b'>
             <ClusterHeader tabs={tabs} />
           </div>
-          <NotReadyMessage className='mx-6 mt-8'>
-            The page is still under development, so some data and functionality is missing.
-          </NotReadyMessage>
           <div className='pt-2 px-6 md:px-6 md:pt-8'>{children}</div>
         </Fragment>
       </ClusterProvider>
