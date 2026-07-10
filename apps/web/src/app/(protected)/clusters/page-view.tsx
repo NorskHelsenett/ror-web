@@ -1,34 +1,14 @@
-/**
- * Cluster Management Component
- *
- * FILE OVERVIEW
- * ----------------------
- * This file defines the main React component (`PageView`) responsible for displaying and managing Kubernetes clusters
- * in the ROR web application.
- *
- * Architecture:
- * - Logic is split into dedicated hooks:
- *   • useInfiniteClusters — handles incremental loading and scroll detection
- *   • useClusterFilters — manages filter state and derived filtered data
- *   • useClusterSorting — applies dynamic sorting logic
- *   • useDisplayData — controls which cluster fields are shown in the UI
- *
- * - Layout Components:
- *   • <ClusterControls /> — top toolbar for search, sort, export, and view toggling
- *   • <ClusterFilterSection /> — collapsible filter selection area
- *   • <ClustersTable /> / <ClusterCard /> — list and grid cluster displays
- *
- * Developer Notes:
- * - URL helpers (`buildToggledParams`, `buildSortParams`) standardize query parameter management
- * - All cluster-related UI logic is centralized in this component for maintainability
- */
-
 'use client'
 import { Option } from '@/components/shadcn/multiselect'
 import { DataTable } from '@/components/ui/data-table'
 import { ClusterCard } from '@/features/cluster/components/cluster-card'
 import { ClusterFilterSection } from '@/features/cluster/components/cluster-filter-section'
-import { defaultDisplayData, displayDataOptions, sortingOptions } from '@/features/cluster/config/page-view-options'
+import {
+  defaultDisplayData,
+  displayDataOptions,
+  sortingDefinitions,
+  sortingOptions,
+} from '@/features/cluster/config/page-view-options'
 import { useDisplayData } from '@/hooks/use-display-data'
 import { ClusterCardDisplayData } from '@/features/cluster/types/display-data'
 import {
@@ -38,12 +18,7 @@ import {
   getClustersViewKey,
   getDatacenterView,
   getEnvironmentView,
-  getNodesView,
-  getPriceMonthView,
-  getPriceYearView,
   getProviderView,
-  getResourcesCpuView,
-  getResourcesMemoryView,
   getWorkspaceView,
 } from '@/features/cluster/utils/cluster'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
@@ -58,7 +33,7 @@ import { ResourceControls } from '@/components/ui/resource-controls'
 import { exportClustersAsCSV, exportClustersAsExcel } from '@/features/cluster/utils/export-helpers'
 import { Params } from '@/types/resources-page'
 import { useFilters } from '@/hooks/use-filters'
-import { SortDefinition, useSorting } from '@/hooks/use-sorting'
+import { useSorting } from '@/hooks/use-sorting'
 
 /**
  * Props for the PageView component.
@@ -121,28 +96,18 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
     { key: 'Workspaces', extractor: getWorkspaceView },
   ]
 
-  const definitions: SortDefinition<ClusterListViewRowType>[] = [
-    { key: 'clusterName', extractor: getClusterNameView },
-    { key: 'cpu', extractor: getResourcesCpuView },
-    { key: 'memory', extractor: getResourcesMemoryView },
-    {
-      key: 'nodes',
-      extractor: getNodesView,
-    },
-    { key: 'monthlyPrice', extractor: getPriceMonthView },
-    { key: 'yearlyPrice', extractor: getPriceYearView },
-    { key: 'datacenterName', extractor: getDatacenterView },
-    { key: 'datacenterProvider', extractor: getProviderView },
-    { key: 'environment', extractor: getEnvironmentView },
-  ]
-
   const { selectedFilters, setSelectedFilters, filteredItems, resetFilters } = useFilters<ClusterListViewRowType>(
     safeItems,
     filterDefinitions
   )
   const { selectedDisplayData, setSelectedDisplayData } = useDisplayData<ClusterCardDisplayData>('clusters')
   const [searchResults, setSearchResults] = useState<ClusterListViewRowType[]>(safeItems)
-  const sortedItems = useSorting({ items: filteredItems, sortKey: params.sort, sortOrder: params.order, definitions })
+  const sortedItems = useSorting({
+    items: filteredItems,
+    sortKey: params.sort,
+    sortOrder: params.order,
+    definitions: sortingDefinitions,
+  })
 
   // Handler for display data changes
   const onDisplayChange = (selected: Option[]) =>
@@ -180,9 +145,17 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
 
   const displayedItems = useMemo(() => {
     if (!searchResults?.length) return sortedItems
-    const ids = new Set(sortedItems.map(getClusterIdView))
-    return searchResults.filter((c) => ids.has(getClusterIdView(c)))
-  }, [sortedItems, searchResults])
+
+    const isSearchActive = getClustersViewKey(searchResults) !== getClustersViewKey(safeItems)
+
+    if (isSearchActive) {
+      // Search relevance order wins, but still respect active filters
+      const allowedIds = new Set(sortedItems.map(getClusterIdView))
+      return searchResults.filter((c) => allowedIds.has(getClusterIdView(c)))
+    }
+
+    return sortedItems
+  }, [sortedItems, searchResults, safeItems])
 
   const effectiveDisplayData = (
     selectedDisplayData?.length > 0 ? selectedDisplayData : defaultDisplayData
