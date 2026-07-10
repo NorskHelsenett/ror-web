@@ -10,7 +10,6 @@ import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
 
