@@ -16,6 +16,7 @@ import {
 } from '../utils/cluster'
 import { SortDefinition } from '@/hooks/use-sorting'
 import { ClusterListViewRowType } from '@ror/js-api-client'
+import { ValueLabel } from '@/types/value-label'
 
 /**
  * An array of selectable options for displaying cluster-related data in the page view.
@@ -67,19 +68,15 @@ export const sortingIdValues = [
 ] as const
 
 /**
- * Represents the possible sorting IDsa for a cluster.
+ * Represents the possible sorting IDs for a cluster.
  */
 export type SortingIds = (typeof sortingIdValues)[number]
 
-/**
- * Represents ClusterOption, with value of type SortingIds and label of type string
- */
-export interface ClusterOption {
+interface ClusterSortingValueLabel extends ValueLabel {
   value: SortingIds
-  label: string
 }
 
-interface ClusterOptionWithExtractor extends ClusterOption {
+interface ClusterOptionWithExtractor extends ClusterSortingValueLabel {
   extractor: (item: ClusterListViewRowType) => string | number | null | undefined
 }
 
@@ -102,47 +99,16 @@ const sortingOptionsValueOptionsExtractors: ClusterOptionWithExtractor[] = [
  * An array of sorting options for cluster page views.
  * Each option includes a `value` used for sorting and a `label` for display.
  *
- * @see ClusterOption
+ * @see ClusterSortingValueLabel
  */
-export const sortingOptions: ClusterOption[] = sortingOptionsValueOptionsExtractors.map((option) => ({
+export const sortingOptions: ClusterSortingValueLabel[] = sortingOptionsValueOptionsExtractors.map((option) => ({
   value: option.value,
   label: option.label,
 }))
-// [
-//   { value: 'clusterName', label: 'Cluster name' },
-//   { value: 'cpu', label: 'CPU usage' },
-//   { value: 'memory', label: 'Memory usage' },
-//   { value: 'nodes', label: 'Num of nodes' },
-//   { value: 'monthlyPrice', label: 'Price' },
-//   { value: 'datacenterName', label: 'Datacenter' },
-//   { value: 'datacenterProvider', label: 'Datacenter provider' },
-//   { value: 'environment', label: 'Environment' },
-//   { value: 'status', label: 'Status' },
-//   { value: 'toolingVersion', label: 'NHN tooling version' },
-//   { value: 'agentVersion', label: 'ROR agent version' },
-//   { value: 'kubernetesVersion', label: 'Kubernetes version' },
-// ]
 
 export const sortingDefinitions: SortDefinition<ClusterListViewRowType>[] = sortingOptionsValueOptionsExtractors.map(
   (option) => ({ key: option.value, extractor: option.extractor })
 )
-// [
-//   { key: 'clusterName', extractor: getClusterNameView },
-//   { key: 'cpu', extractor: getResourcesCpuView },
-//   { key: 'memory', extractor: getResourcesMemoryView },
-//   {
-//     key: 'nodes',
-//     extractor: getNodesView,
-//   },
-//   { key: 'monthlyPrice', extractor: getPriceMonthView },
-//   { key: 'datacenterName', extractor: getDatacenterView },
-//   { key: 'datacenterProvider', extractor: getProviderView },
-//   { key: 'environment', extractor: getEnvironmentView },
-//   { key: 'status', extractor: getStatusView },
-//   { key: 'toolingVersion', extractor: getNhnToolVersionView },
-//   { key: 'agentVersion', extractor: getRorAgentVersionView },
-//   { key: 'kubernetesVersion', extractor: getKubernetesVersionView },
-// ]
 
 /**
  * Converts an environment string to a human-readable label.

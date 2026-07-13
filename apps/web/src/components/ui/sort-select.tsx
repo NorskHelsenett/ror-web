@@ -11,9 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn/select'
+import { ValueLabel } from '@/types/value-label'
 
 interface SortSelectProps {
-  options: { value: string; label: string }[]
+  options: ValueLabel[]
   currentSort: string | undefined
 }
 

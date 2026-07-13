@@ -144,9 +144,9 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
   const toggleSortParams = useMemo(() => buildSortParams(params, 'clusters'), [params])
 
   const displayedItems = useMemo(() => {
-    if (!searchResults?.length) return sortedItems
-
-    const isSearchActive = getClustersViewKey(searchResults) !== getClustersViewKey(safeItems)
+    const searchResultsKey = getClustersViewKey(searchResults)
+    const safeItemsKey = getClustersViewKey(safeItems)
+    const isSearchActive = searchResultsKey !== safeItemsKey
 
     if (isSearchActive) {
       // Search relevance order wins, but still respect active filters
