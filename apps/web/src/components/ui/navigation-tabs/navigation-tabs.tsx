@@ -10,6 +10,7 @@ import clsxm from '@/utils/clsxm'
 interface TabItem {
   label: string
   href: string
+  icon?: React.ReactNode
 }
 interface NavigationTabsProps {
   className?: string
@@ -47,8 +48,13 @@ export function NavigationTabs({ items, className, tabColor, contextLabel = 'Clu
                 })}
               >
                 <Link href={item.href} aria-current={isActive ? 'page' : undefined}>
-                  <span className='sr-only'>{contextLabel} </span>
-                  <span aria-hidden='true'>{item.label}</span>
+                  <span className='sr-only'>
+                    {contextLabel} {item.label}
+                  </span>
+                  <span aria-hidden='true' className='inline-flex items-center'>
+                    {item.label}
+                    {item.icon && <span className='ml-1'>{item.icon}</span>}
+                  </span>
                   {isActive ? (
                     <motion.div
                       layoutId='active-indicator'

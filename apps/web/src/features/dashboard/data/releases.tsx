@@ -44,6 +44,18 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'vulnerability-page',
+    day: 14,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Vulnerability integration',
+    description: 'Integrated against SPAM-tool. View your vulnerabilities in SPAM.',
+    tags: ['New'],
+    href: 'https://spam.sikkerhet.nhn.no/clusters',
+  },
+  {
     id: 'workspace-page',
     day: 6,
     month: 'JUL',
