@@ -58,13 +58,9 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterVulnerabilities.label,
-      href: clusterName
-        ? `https://spam.sikkerhet.nhn.no/cluster/${clusterName}`
-        : clusterId
-          ? `https://spam.sikkerhet.nhn.no/cluster/${clusterId}`
-          : clusterUid
-            ? `https://spam.sikkerhet.nhn.no/cluster/${clusterUid}`
-            : 'https://spam.sikkerhet.nhn.no/cluster/',
+      href: clusterName || clusterId || clusterUid
+        ? `https://spam.sikkerhet.nhn.no/cluster/${encodeURIComponent(clusterName || clusterId || clusterUid)}`
+        : 'https://spam.sikkerhet.nhn.no/cluster/',
       icon: <ExternalLink size={16} />,
     },
     {
