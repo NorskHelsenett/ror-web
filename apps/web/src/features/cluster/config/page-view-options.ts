@@ -1,5 +1,22 @@
 import { Option } from '@/components/shadcn/multiselect'
 import { Environment, environmentValues } from '../types/environment'
+import {
+  getClusterNameView,
+  getResourcesCpuView,
+  getResourcesMemoryView,
+  getNodesView,
+  getPriceMonthView,
+  getDatacenterView,
+  getProviderView,
+  getEnvironmentView,
+  getStatusView,
+  getNhnToolVersionView,
+  getRorAgentVersionView,
+  getKubernetesVersionView,
+} from '../utils/cluster'
+import { SortDefinition } from '@/hooks/use-sorting'
+import { ClusterListViewRowType } from '@ror/js-api-client'
+import { ValueLabel } from '@/types/value-label'
 
 /**
  * An array of selectable options for displaying cluster-related data in the page view.
@@ -32,21 +49,66 @@ const OPT_IN_FIELDS: string[] = ['serviceId', 'region', 'az']
 export const defaultDisplayData = displayDataOptions.map((o) => o.value).filter((v) => !OPT_IN_FIELDS.includes(v))
 
 /**
+ * List of possible sorting IDs values for clusters.
+ */
+export const sortingIdValues = [
+  'clusterName',
+  'cpu',
+  'memory',
+  'nodes',
+  'monthlyPrice',
+  'yearlyPrice',
+  'datacenterName',
+  'datacenterProvider',
+  'environment',
+  'status',
+  'toolingVersion',
+  'agentVersion',
+  'kubernetesVersion',
+] as const
+
+/**
+ * Represents the possible sorting IDs for a cluster.
+ */
+export type SortingIds = (typeof sortingIdValues)[number]
+
+interface ClusterSortingValueLabel extends ValueLabel {
+  value: SortingIds
+}
+
+interface ClusterOptionWithExtractor extends ClusterSortingValueLabel {
+  extractor: (item: ClusterListViewRowType) => string | number | null | undefined
+}
+
+const sortingOptionsValueOptionsExtractors: ClusterOptionWithExtractor[] = [
+  { value: 'clusterName', label: 'Cluster name', extractor: getClusterNameView },
+  { value: 'cpu', label: 'CPU usage', extractor: getResourcesCpuView },
+  { value: 'memory', label: 'Memory usage', extractor: getResourcesMemoryView },
+  { value: 'nodes', label: 'Num of nodes', extractor: getNodesView },
+  { value: 'monthlyPrice', label: 'Price', extractor: getPriceMonthView },
+  { value: 'datacenterName', label: 'Datacenter', extractor: getDatacenterView },
+  { value: 'datacenterProvider', label: 'Datacenter provider', extractor: getProviderView },
+  { value: 'environment', label: 'Environment', extractor: getEnvironmentView },
+  { value: 'status', label: 'Status', extractor: getStatusView },
+  { value: 'toolingVersion', label: 'NHN tooling version', extractor: getNhnToolVersionView },
+  { value: 'agentVersion', label: 'ROR agent version', extractor: getRorAgentVersionView },
+  { value: 'kubernetesVersion', label: 'Kubernetes version', extractor: getKubernetesVersionView },
+]
+
+/**
  * An array of sorting options for cluster page views.
  * Each option includes a `value` used for sorting and a `label` for display.
  *
- * @see Option
+ * @see ClusterSortingValueLabel
  */
-export const sortingOptions: Option[] = [
-  { value: 'clusterName', label: 'Cluster name' },
-  { value: 'cpu', label: 'CPU usage' },
-  { value: 'memory', label: 'Memory usage' },
-  { value: 'nodes', label: 'Num of nodes' },
-  { value: 'monthlyPrice', label: 'Price' },
-  { value: 'datacenterName', label: 'Datacenter' },
-  { value: 'datacenterProvider', label: 'Datacenter provider' },
-  { value: 'environment', label: 'Environment' },
-]
+export const sortingOptions: ClusterSortingValueLabel[] = sortingOptionsValueOptionsExtractors.map((option) => ({
+  value: option.value,
+  label: option.label,
+}))
+
+export const sortingDefinitions: SortDefinition<ClusterListViewRowType>[] = sortingOptionsValueOptionsExtractors.map(
+  (option) => ({ key: option.value, extractor: option.extractor })
+)
 
 /**
  * Converts an environment string to a human-readable label.

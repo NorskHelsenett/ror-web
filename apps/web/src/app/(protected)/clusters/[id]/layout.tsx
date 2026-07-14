@@ -10,7 +10,6 @@ import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
 
@@ -111,9 +110,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
           <div className='border-b'>
             <ClusterHeader tabs={tabs} />
           </div>
-          <NotReadyMessage className='mx-6 mt-8'>
-            The page is still under development, so some data and functionality is missing.
-          </NotReadyMessage>
           <div className='pt-2 px-6 md:px-6 md:pt-8'>{children}</div>
         </Fragment>
       </ClusterProvider>
