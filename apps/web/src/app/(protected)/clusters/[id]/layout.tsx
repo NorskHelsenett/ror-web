@@ -12,7 +12,7 @@ import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
 import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
-import { getClusterId, getClusterIdView, getClusterNameView, getClusterUidView } from '@/features/cluster/utils/cluster'
+import { getClusterIdView, getClusterNameView, getClusterUidView } from '@/features/cluster/utils/cluster'
 import { ExternalLink } from 'lucide-react'
 
 interface ClusterPageLayoutProps {
