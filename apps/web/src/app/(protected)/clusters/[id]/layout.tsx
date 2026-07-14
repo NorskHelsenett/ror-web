@@ -12,6 +12,8 @@ import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
 import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
+import { getClusterId, getClusterIdView, getClusterNameView, getClusterUidView } from '@/features/cluster/utils/cluster'
+import { ExternalLink } from 'lucide-react'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -36,7 +38,7 @@ export interface navigationItemObject {
 
 const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
 
-const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
+const createTabNavigationItems = (clusterId: string, clusterUid: string, clusterName: string) => {
   return [
     {
       label: 'Details',
@@ -56,7 +58,8 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
     },
     {
       label: clusterVulnerabilities.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=vulnerabilityReports`,
+      href: `https://spam.sikkerhet.nhn.no/cluster/${clusterName}`,
+      icon: <ExternalLink size={16} />,
     },
     {
       label: clusterCompliance.label,
@@ -99,9 +102,12 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
       redirect('/clusters')
     }
 
-    const clusterId = cluster.clusterId?.fieldValue || 'missing'
-    const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
-    const tabs = createTabNavigationItems(clusterId, clusterUid)
+    // const clusterId = cluster.clusterId?.fieldValue || 'missing'
+    // const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
+    const clusterId = getClusterIdView(cluster)
+    const clusterUid = getClusterUidView(cluster)
+    const clusterName = getClusterNameView(cluster)
+    const tabs = createTabNavigationItems(clusterId, clusterUid, clusterName)
     const clusterContextValue = { cluster, kubernetesCluster }
 
     return (
