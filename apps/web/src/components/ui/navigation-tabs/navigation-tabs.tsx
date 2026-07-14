@@ -51,7 +51,7 @@ export function NavigationTabs({ items, className, tabColor, contextLabel = 'Clu
                   <span className='sr-only'>{contextLabel} </span>
                   <span aria-hidden='true'>{item.label}</span>
                   <span aria-hidden='true' className='flex items-center'>
-                    {'icon' in item && <span className='ml-1'>{item.icon}</span>}
+                    {item.icon && <span className='ml-1'>{item.icon}</span>}
                   </span>
                   {isActive ? (
                     <motion.div

@@ -224,7 +224,7 @@ export function AppSidebarContent() {
                             {'url' in item ? (
                               <Link href={item.url}>
                                 {item.title}
-                                {'icon' in item && <span>{item.icon}</span>}
+                                {item.icon && <span>{item.icon}</span>}
                               </Link>
                             ) : (
                               <span>{item.title}</span>

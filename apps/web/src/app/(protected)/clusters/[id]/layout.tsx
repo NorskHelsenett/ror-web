@@ -58,7 +58,13 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterVulnerabilities.label,
-      href: `https://spam.sikkerhet.nhn.no/cluster/${clusterName}`,
+      href: clusterName
+        ? `https://spam.sikkerhet.nhn.no/cluster/${clusterName}`
+        : clusterId
+          ? `https://spam.sikkerhet.nhn.no/cluster/${clusterId}`
+          : clusterUid
+            ? `https://spam.sikkerhet.nhn.no/cluster/${clusterUid}`
+            : 'https://spam.sikkerhet.nhn.no/cluster/',
       icon: <ExternalLink size={16} />,
     },
     {
@@ -102,8 +108,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
       redirect('/clusters')
     }
 
-    // const clusterId = cluster.clusterId?.fieldValue || 'missing'
-    // const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
     const clusterId = getClusterIdView(cluster)
     const clusterUid = getClusterUidView(cluster)
     const clusterName = getClusterNameView(cluster)
