@@ -44,6 +44,18 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'projects-page',
+    day: 17,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Projects page',
+    description: 'Moved from legacy.ror.nhn.no. View projects.',
+    tags: ['New', 'V2'],
+    href: routes.app.projects.getHref(),
+  },
+  {
     id: 'statistics-page',
     day: 17,
     month: 'JUL',
