@@ -10,7 +10,6 @@ import {
   getNhnToolVersionViewCount,
   getProviderViewCount,
   getRegionViewCount,
-  getServiceIdViewCount,
   getStatusViewCount,
   getWorkspaceViewCount,
 } from '@/features/cluster/utils/cluster'
