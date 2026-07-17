@@ -1,9 +1,8 @@
 'use server'
 
 import { getRorApi } from '@/services/ror-api'
+import { LoadMoreOpts } from '@/utils/load-more-options'
 import { PolicyReport } from '@ror/js-api-client'
-
-type loadMoreOpts = { offset: number; limit: number; sort?: string; order?: 'asc' | 'desc' }
 
 export async function fetchClusterReports(clusterUid: string): Promise<PolicyReport[]> {
   const api = await getRorApi()
@@ -15,7 +14,7 @@ export async function fetchClusterReports(clusterUid: string): Promise<PolicyRep
   }
 }
 
-export async function loadMorePolicyReports({ offset, limit, sort, order }: loadMoreOpts) {
+export async function loadMorePolicyReports({ offset, limit, sort, order }: LoadMoreOpts) {
   const api = await getRorApi()
   const params = new URLSearchParams()
   params.set('limit', String(limit))

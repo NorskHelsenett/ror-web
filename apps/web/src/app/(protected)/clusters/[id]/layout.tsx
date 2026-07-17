@@ -10,9 +10,10 @@ import { routes } from '@/config/routes'
 import { ClusterHeader } from '@/features/cluster/components/cluster-header'
 import { ClusterProvider } from '@/context/cluster-context'
 import { RenderApiError } from '@/utils/renderApiError'
-import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { fetchClusterViewItem, fetchKubernetesCluster } from '@/features/cluster/services/fetch-clusters'
 import { ClusterListItemView, KubernetesCluster } from '@ror/js-api-client'
+import { getClusterIdView, getClusterNameView, getClusterUidView } from '@/features/cluster/utils/cluster'
+import { ExternalLink } from 'lucide-react'
 
 interface ClusterPageLayoutProps {
   params: Promise<{
@@ -37,7 +38,7 @@ export interface navigationItemObject {
 
 const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
 
-const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
+const createTabNavigationItems = (clusterId: string, clusterUid: string, clusterName: string) => {
   return [
     {
       label: 'Details',
@@ -57,7 +58,10 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string) => {
     },
     {
       label: clusterVulnerabilities.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=vulnerabilityReports`,
+      href: clusterName || clusterId || clusterUid
+        ? `https://spam.sikkerhet.nhn.no/cluster/${encodeURIComponent(clusterName || clusterId || clusterUid)}`
+        : 'https://spam.sikkerhet.nhn.no/cluster/',
+      icon: <ExternalLink size={16} />,
     },
     {
       label: clusterCompliance.label,
@@ -100,9 +104,10 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
       redirect('/clusters')
     }
 
-    const clusterId = cluster.clusterId?.fieldValue || 'missing'
-    const clusterUid = cluster.clusterUid?.fieldValue || 'missing'
-    const tabs = createTabNavigationItems(clusterId, clusterUid)
+    const clusterId = getClusterIdView(cluster)
+    const clusterUid = getClusterUidView(cluster)
+    const clusterName = getClusterNameView(cluster)
+    const tabs = createTabNavigationItems(clusterId, clusterUid, clusterName)
     const clusterContextValue = { cluster, kubernetesCluster }
 
     return (
@@ -111,9 +116,6 @@ export default async function ClusterPageLayout({ params, children }: ClusterPag
           <div className='border-b'>
             <ClusterHeader tabs={tabs} />
           </div>
-          <NotReadyMessage className='mx-6 mt-8'>
-            The page is still under development, so some data and functionality is missing.
-          </NotReadyMessage>
           <div className='pt-2 px-6 md:px-6 md:pt-8'>{children}</div>
         </Fragment>
       </ClusterProvider>

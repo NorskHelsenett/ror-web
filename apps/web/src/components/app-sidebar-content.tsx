@@ -10,6 +10,7 @@ import {
   Monitor,
   Boxes,
   House,
+  ExternalLink,
 } from 'lucide-react'
 import Link from 'next/link'
 import {
@@ -21,9 +22,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from './shadcn/sidebar'
+import type { ReactNode } from 'react'
 import { routes } from '@/config/routes'
 
-export type SidebarItem = { title: string } | { title: string; url: string }
+export type SidebarItem = { title: string } | { title: string; url: string; icon?: ReactNode }
 
 interface Section {
   title: string
@@ -42,16 +44,6 @@ const oldRorBaseUrl = 'https://legacy.ror.nhn.no/'
  * TODO: Add sections as they are created
  */
 const sections: Section[] = [
-  //   {
-  //     title: "Favorites",
-  //     icon: Star,
-  //     isActive: true,
-  //     items: [
-  //       {
-  //         title: "No current favorites",
-  //       }
-  //     ]
-  //   },
   {
     title: 'Overview',
     icon: House,
@@ -100,7 +92,7 @@ const sections: Section[] = [
     items: [
       {
         title: 'Statistics',
-        url: `${oldRorBaseUrl}metrics`, // TODO: revert to routes.app.statistics.getHref() when backend is available
+        url: routes.app.statistics.getHref(),
       },
     ],
   },
@@ -139,14 +131,13 @@ const sections: Section[] = [
         // url: routes.app.projects.getHref(),
       },
       {
-        // (Last) TODO: Move from legacy to new ROR when backend is available
         title: 'Vulnerability reports',
-        url: `${oldRorBaseUrl}admin/vulnerabilityreports`,
+        url: 'https://spam.sikkerhet.nhn.no/clusters',
+        icon: <ExternalLink size={16} />,
       },
       {
-        // TODO: Move from legacy to new ROR when backend is available
         title: 'Workspaces',
-        url: `${oldRorBaseUrl}workspaces`,
+        url: routes.app.workspaces.getHref(),
       },
     ],
   },
@@ -230,7 +221,14 @@ export function AppSidebarContent() {
                       {section.items.map((item, index) => (
                         <SidebarMenuSubItem key={index}>
                           <SidebarMenuButton asChild>
-                            {'url' in item ? <Link href={item.url}>{item.title}</Link> : <span>{item.title}</span>}
+                            {'url' in item ? (
+                              <Link href={item.url}>
+                                {item.title}
+                                {item.icon && <span>{item.icon}</span>}
+                              </Link>
+                            ) : (
+                              <span>{item.title}</span>
+                            )}
                           </SidebarMenuButton>
                         </SidebarMenuSubItem>
                       ))}

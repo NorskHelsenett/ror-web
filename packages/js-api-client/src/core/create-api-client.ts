@@ -23,6 +23,7 @@ import { createApiKeyService } from '../services/api-keys'
 import { createClusterListViewService } from '../services/views/clusterlist'
 import { createClusterListItemViewService } from '../services/views/clusterlistitem'
 import { createOverviewItemsViewService } from '../services/views/overviewitems'
+import { createWorkspaceListViewService } from '../services/views/workspacelist'
 import { createPolicyReportService } from '../services/policy-report'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
@@ -77,6 +78,7 @@ export function createApiClient(config: ApiClientConfig) {
     clusterListView: createClusterListViewService(request),
     clusterListItemView: createClusterListItemViewService(request),
     overviewItemsView: createOverviewItemsViewService(request),
+    workspaceListView: createWorkspaceListViewService(request),
   }
 
   return services

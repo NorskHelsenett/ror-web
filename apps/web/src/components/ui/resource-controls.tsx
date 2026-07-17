@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
 import { ResourceRegexSearch } from './resource-regex-search'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
+import { ValueLabel } from '@/types/value-label'
 
 /**
  * Props for the ResourceControls component.
@@ -38,7 +39,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
  * @property {boolean} filtersOpen - Indicates whether the filters panel is open.
  * @property {{ sort?: string }} params - Additional parameters, such as sorting.
  * @property {string} domain - The domain or context for the resource controls.
- * @property {Option[]} sortingOptions - Available sorting options.
+ * @property {ValueLabel[]} sortingOptions - Available sorting options.
  * @property {string[]} searchKeys - Keys to use for searching within items.
  * @property {(item: T) => Record<string, unknown>} mapItem - Function to map an item to a displayable record.
  * @property {(items: T[]) => string} getItemsKey - Function to generate a unique key for a set of items.
@@ -63,7 +64,7 @@ interface ResourceControlsProps<T> {
   filtersOpen: boolean
   params: { sort?: string }
   domain: string
-  sortingOptions: Option[]
+  sortingOptions: ValueLabel[]
   searchKeys: string[]
   mapItem: (item: T) => Record<string, unknown>
   getItemsKey: (items: T[]) => string

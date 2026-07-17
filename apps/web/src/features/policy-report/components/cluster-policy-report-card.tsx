@@ -3,7 +3,7 @@
 import { Server, Box, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo, useState, useEffect } from 'react'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Badge } from '@/components/shadcn/badge'
 import type {
   ClusterGroup,
@@ -17,6 +17,17 @@ import { fetchClusterReports } from '../utils/policy-reports-actions'
 import { groupPolicyReportsByCluster } from '../utils/policy-report'
 import type { PolicyReport } from '@ror/js-api-client'
 import { FaSpinner } from 'react-icons/fa'
+import {
+  AccordionContentRow,
+  accordionContentStyling,
+  accordionItemStyling,
+  AccordionTableRow,
+  accordionTriggerStyling,
+  contentRowsStyling,
+  contentTitleStyling,
+  triggerOuterDivStyling,
+  triggerTitleStyling,
+} from '@/components/ui/AccordionTableRow'
 
 // -------------------------
 // Bi-color pass/fail progress bar
@@ -39,13 +50,11 @@ const PassFailBar = ({ summary }: { summary: PolicyReportSummary }) => {
 // Namespace row
 // -------------------------
 
-const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: string }) => {
+const NamespaceRowContent = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: string }) => {
   const [isNavigating, setIsNavigating] = useState(false)
   const total = ns.summary.pass + ns.summary.fail + ns.summary.error + ns.summary.warn + ns.summary.skip
   return (
-    <div className='flex items-center gap-4 px-4 py-3 rounded-lg border border-(--r-border-subtle) bg-card'>
-      <Box className='size-4 text-muted-foreground shrink-0' />
-      <span className='w-44 shrink-0 truncate text-sm font-medium'>{ns.namespace}</span>
+    <>
       <div className='w-40 shrink-0'>
         <PassFailBar summary={ns.summary} />
       </div>
@@ -76,7 +85,7 @@ const NamespaceRow = ({ ns, clusterUid }: { ns: NamespaceGroup; clusterUid: stri
         View policies <ChevronRight className='size-4' />
       </Link>
       {isNavigating && <FaSpinner className='size-4 text-muted-foreground shrink-0 animate-spin' />}
-    </div>
+    </>
   )
 }
 
@@ -129,64 +138,67 @@ export const ClusterPolicyReportCard = ({ group, filters }: ClusterPolicyReportC
   const displayPass = summaryToRender.pass
 
   return (
-    <div className='rounded-xl border border-(--r-border-subtle) bg-card overflow-hidden'>
-      <Accordion type='single' collapsible onValueChange={handleAccordionChange}>
-        <AccordionItem value={group.clusterUid} className='border-b-0'>
-          <AccordionTrigger className='px-6 py-4 hover:no-underline hover:bg-muted/40 [&[data-state=open]]:bg-muted/40'>
-            <div className='flex items-center gap-4 flex-1 min-w-0'>
-              <Server className='size-4 text-muted-foreground shrink-0' />
-              <span className='w-48 shrink-0 truncate text-base font-semibold'>{group.clusterName}</span>
-              <div className='w-40 shrink-0'>
-                {isLoadingNamespaces ? (
-                  <div className='h-2 rounded-full bg-muted w-full animate-pulse' />
-                ) : (
-                  <PassFailBar summary={summaryToRender} />
-                )}
-              </div>
-              <div className='flex-1' />
-              <div className='shrink-0 flex items-center gap-2'>
-                {isLoadingNamespaces ? (
-                  <FaSpinner className='size-4 text-muted-foreground animate-spin' />
-                ) : (
-                  <>
-                    {displayFail > 0 && (
-                      <Badge
-                        variant='outline'
-                        className='border-orange-500/60 text-orange-600 dark:text-orange-400 bg-orange-500/10 gap-1'
-                      >
-                        <span>×</span>
-                        {displayFail.toLocaleString()} failed
-                      </Badge>
-                    )}
-                    {displayPass > 0 && (
-                      <Badge
-                        variant='outline'
-                        className='border-blue-500/60 text-blue-600 dark:text-blue-400 bg-blue-500/10 gap-1'
-                      >
-                        <span>✓</span>
-                        {displayPass.toLocaleString()} passed
-                      </Badge>
-                    )}
-                  </>
-                )}
-              </div>
+    <AccordionTableRow handleAccordionChange={handleAccordionChange}>
+      <AccordionItem value={group.clusterUid} className={accordionItemStyling}>
+        <AccordionTrigger className={accordionTriggerStyling}>
+          <div className={triggerOuterDivStyling}>
+            <Server className='size-4 text-muted-foreground shrink-0' />
+            <span className={triggerTitleStyling}>{group.clusterName}</span>
+            <div className='w-40 shrink-0'>
+              {isLoadingNamespaces ? (
+                <div className='h-2 rounded-full bg-muted w-full animate-pulse' />
+              ) : (
+                <PassFailBar summary={summaryToRender} />
+              )}
             </div>
-          </AccordionTrigger>
-
-          <AccordionContent className='px-6 pb-4'>
-            <p className='text-sm text-muted-foreground mb-3 mt-2'>Namespaces</p>
-            {isLoadingNamespaces ? (
-              <p className='text-sm text-muted-foreground'>Loading…</p>
-            ) : (
-              <div className='flex flex-col gap-2'>
-                {namespacesToRender.map((ns) => (
-                  <NamespaceRow key={ns.namespace} ns={ns} clusterUid={group.clusterUid} />
-                ))}
-              </div>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </div>
+            <div className='flex-1' />
+            <div className='shrink-0 flex items-center gap-2'>
+              {isLoadingNamespaces ? (
+                <FaSpinner className='size-4 text-muted-foreground animate-spin' />
+              ) : (
+                <>
+                  {displayFail > 0 && (
+                    <Badge
+                      variant='outline'
+                      className='border-orange-500/60 text-orange-600 dark:text-orange-400 bg-orange-500/10 gap-1'
+                    >
+                      <span>×</span>
+                      {displayFail.toLocaleString()} failed
+                    </Badge>
+                  )}
+                  {displayPass > 0 && (
+                    <Badge
+                      variant='outline'
+                      className='border-blue-500/60 text-blue-600 dark:text-blue-400 bg-blue-500/10 gap-1'
+                    >
+                      <span>✓</span>
+                      {displayPass.toLocaleString()} passed
+                    </Badge>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent className={accordionContentStyling}>
+          <p className={contentTitleStyling}>Namespaces</p>
+          {isLoadingNamespaces ? (
+            <p className='text-sm text-muted-foreground'>Loading…</p>
+          ) : (
+            <div className={contentRowsStyling}>
+              {namespacesToRender.map((ns) => (
+                <AccordionContentRow
+                  key={ns.namespace}
+                  icon={<Box className='size-4 text-muted-foreground shrink-0' />}
+                  title={ns.namespace}
+                >
+                  <NamespaceRowContent ns={ns} clusterUid={group.clusterUid} />
+                </AccordionContentRow>
+              ))}
+            </div>
+          )}
+        </AccordionContent>
+      </AccordionItem>
+    </AccordionTableRow>
   )
 }

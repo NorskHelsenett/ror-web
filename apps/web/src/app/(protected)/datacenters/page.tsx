@@ -11,6 +11,12 @@ import { getRorApi } from '@/services/ror-api'
 import { datacenterColumns } from '@/features/datacenters/components/datacenter-columns'
 import { DatacenterStats } from '@/features/datacenters/components/datacenter-stats'
 import { DataTable } from '@/components/ui/data-table'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'ROR - Datacenters',
+  description: 'View clusters',
+}
 
 /**
  * Asynchronous React component that renders the Datacenters page.
