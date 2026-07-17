@@ -1,14 +1,16 @@
 import { CodeSnippet } from '@/components/ui/code-snippet'
 import { getRorApi } from '@/services/ror-api'
+import { Project } from '@ror/js-api-client'
+import { PageView } from './page-view'
 
 const ProjectsPage = async () => {
   const api = await getRorApi()
-  const projects = await api.projects.list()
+  const projectList = await api.projects.list()
+  const projects: Project[] = projectList.data
 
   return (
     <div className='w-full flex flex-col'>
-      <p>Projects</p>
-      <CodeSnippet type={'multi'}>{JSON.stringify(projects)}</CodeSnippet>
+      <PageView projects={projects} />
     </div>
   )
 }
