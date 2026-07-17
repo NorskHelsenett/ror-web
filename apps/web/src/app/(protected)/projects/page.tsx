@@ -1,6 +1,5 @@
-import { CodeSnippet } from '@/components/ui/code-snippet'
 import { getRorApi } from '@/services/ror-api'
-import { Project } from '@ror/js-api-client'
+import type { Project } from '@ror/js-api-client'
 import { PageView } from './page-view'
 
 const ProjectsPage = async () => {

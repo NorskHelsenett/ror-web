@@ -8,11 +8,11 @@ import { HealthCircle } from '@/features/cluster/components/health-circle'
 import { localizeDate } from '@/utils/time-and-date'
 import { Folder } from 'lucide-react'
 
-interface ClusterPolicyReportCardProps {
+interface ProjectCard {
   project: Project
 }
 
-export const ProjectCard = ({ project }: ClusterPolicyReportCardProps) => (
+export const ProjectCard = ({ project }: ProjectCard) => (
   <div className='rounded-xl border border-(--r-border-subtle) bg-card overflow-hidden'>
     <Accordion type='single' collapsible>
       <AccordionItem value={project.id} className='border-b-0'>

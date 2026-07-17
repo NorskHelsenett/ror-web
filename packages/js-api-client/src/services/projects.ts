@@ -4,6 +4,7 @@ import { ProjectResponseSchema } from '../schemas/project'
 
 export const createProjectService = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
   list: async () => {
+    // Pulled directly from swagger, temporary until available in v2
     const response = await request({
       method: 'POST',
       path: '/v1/projects/filter',
