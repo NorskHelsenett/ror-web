@@ -127,8 +127,7 @@ const sections: Section[] = [
       //         },
       {
         title: 'Projects',
-        url: `${oldRorBaseUrl}admin/projects`,
-        // url: routes.app.projects.getHref(),
+        url: routes.app.projects.getHref(),
       },
       {
         title: 'Vulnerability reports',
