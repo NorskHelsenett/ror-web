@@ -3,22 +3,7 @@ import { validateResponse } from '../core/validation'
 import { KubernetesClusterSchema, type KubernetesClusterNodePoolType } from '../schemas/kubernetes-cluster'
 import { ClusterSchema, ClustersResponseSchema } from '../schemas/kubernetes-cluster-v1'
 import { z } from 'zod'
-
-export interface Filter {
-  field: string
-  value: string
-  matchMode: string
-}
-
-export interface FilterRequestOptions {
-  limit?: number
-  skip?: number
-  sort?: {
-    sortField: string
-    sortOrder: number
-  }[]
-  filter?: Filter[]
-}
+import type { FilterRequestOptions } from '../types/filter'
 
 export const createKubernetesClusterService = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
   /**
