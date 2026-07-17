@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from 'react'
 
-type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl'
+export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl'
 
 const queries: Array<[Breakpoint, string]> = [
   ['6xl', '(min-width: 2560px)'],
