@@ -16,7 +16,6 @@ interface PageViewProps {
   environmentCount: CountMap
   kubernetesVersionCount: CountMap
   nhnToolVersionCount: CountMap
-  serviceIdCount: CountMap
   statusCount: CountMap
 }
 
