@@ -135,7 +135,8 @@ const sections: Section[] = [
       //         },
       {
         title: 'Projects',
-        url: routes.app.projects.getHref(),
+        url: `${oldRorBaseUrl}admin/projects`,
+        // url: routes.app.projects.getHref(),
       },
       {
         // (Last) TODO: Move from legacy to new ROR when backend is available
