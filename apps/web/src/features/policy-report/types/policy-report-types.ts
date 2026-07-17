@@ -46,3 +46,9 @@ export type NamespacePolicyGroup = {
   summary: { pass: number; fail: number }
   policies: PolicyGroup[]
 }
+
+export type PolicyReportFilters = {
+  result: string
+  severity: string
+  category: string
+}
