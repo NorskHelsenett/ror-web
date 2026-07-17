@@ -3,7 +3,7 @@ import { getRorApi } from '@/services/ror-api'
 
 const ProjectsPage = async () => {
   const api = await getRorApi()
-  const projects = api.projects.list()
+  const projects = await api.projects.list()
 
   return (
     <div className='w-full flex flex-col'>
