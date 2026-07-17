@@ -8,11 +8,22 @@ export const createProjectService = (request: (requestOptions: RequestOptions) =
       method: 'POST',
       path: '/v1/projects/filter',
       body: {
-        filters: [],
-        globalFilter: '',
+        filters: [
+          {
+            field: 'string',
+            matchMode: 'unknown',
+            value: 'string',
+          },
+        ],
+        globalFilter: 'string',
         limit: 0,
         skip: 0,
-        sort: [],
+        sort: [
+          {
+            sortField: 'string',
+            sortOrder: 0,
+          },
+        ],
       },
     })
     return validateResponse(response, ProjectResponseSchema)
