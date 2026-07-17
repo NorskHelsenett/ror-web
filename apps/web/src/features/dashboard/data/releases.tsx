@@ -25,7 +25,7 @@ const icons = {
   // Used for new pages or dashboard layout
   LayoutDashboard: <LayoutDashboard className='size-5 text-blue-400' />,
 
-  //Used for new components
+  // Used for new components
   Table: <Table className='size-5 text-emerald-400' />,
 
   // Used for new functionality
@@ -43,6 +43,18 @@ const icons = {
  * The dashboard will automatically show the 4 most recent.
  */
 export const releases: Release[] = [
+  {
+    id: 'statistics-page',
+    day: 17,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Statistics page',
+    description: 'Moved from legacy.ror.nhn.no. View statistics of several different metrics.',
+    tags: ['New', 'V2'],
+    href: routes.app.statistics.getHref(),
+  },
   {
     id: 'vulnerability-page',
     day: 14,

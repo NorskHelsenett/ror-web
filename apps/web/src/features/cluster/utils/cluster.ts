@@ -575,7 +575,7 @@ export const getProviderViewCount = (clusters: ClusterListViewRowType[]): CountM
 export const getDatacenterViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getDatacenterView)
 
-export const getAZViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getAZView) // adjust to your actual extractor name
+export const getAZViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getAZView)
 
 export const getCountryViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getCountryView)
 

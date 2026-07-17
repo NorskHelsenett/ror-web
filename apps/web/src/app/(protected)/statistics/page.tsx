@@ -32,7 +32,6 @@ const StatisticsPage = async () => {
   const environmentCount = getEnvironmentViewCount(clusters)
   const kubernetesVersionCount = getKubernetesVersionViewCount(clusters)
   const nhnToolVersionCount = getNhnToolVersionViewCount(clusters)
-  const serviceIdCount = getServiceIdViewCount(clusters)
   const statusCount = getStatusViewCount(clusters)
 
   return (
@@ -48,7 +47,6 @@ const StatisticsPage = async () => {
         environmentCount={environmentCount}
         kubernetesVersionCount={kubernetesVersionCount}
         nhnToolVersionCount={nhnToolVersionCount}
-        serviceIdCount={serviceIdCount}
         statusCount={statusCount}
       />
     </div>
