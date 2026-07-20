@@ -23,10 +23,10 @@ export const datacenterColumns: ColumnDef<DataCenter>[] = [
       'Unknown datacenter',
     cell: ({ row }) => {
       const uid = row.original.metadata.uid
-      const name = row.original.metadata.name
+      const name = row.original.metadata.name ?? row.original.datacenter.legacy?.name
       const provider = row.original.datacenter.legacy?.provider
       const id = row.original.datacenter.legacy?.id
-      const primaryLabel = name ?? uid
+      const primaryLabel = name ?? uid ?? id ?? 'Unknown datacenter'
       const subtitle = id && name && id !== name ? id : undefined
 
       return (
