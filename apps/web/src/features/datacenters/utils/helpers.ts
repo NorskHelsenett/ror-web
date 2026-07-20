@@ -26,7 +26,7 @@ export function getRegionByName(name: string | undefined): string {
   if (name === undefined) {
     return ''
   }
-  const startOfName = name.substring(0, 3)
+  const startOfName = name.substring(0, 3).toLowerCase()
   if (startOfName === 'osl') {
     return 'Oslo'
   } else if (startOfName === 'trd') {
