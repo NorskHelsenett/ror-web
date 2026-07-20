@@ -49,7 +49,7 @@ export function getCountryByName(name: string | undefined): string {
   if (name === undefined) {
     return ''
   }
-  const startOfName = name.substring(0, 3)
+  const startOfName = name.substring(0, 3).toLowerCase()
   const countryIsNorwayCondition =
     startOfName === 'osl' || startOfName === 'trd' || startOfName === 'bgo' || startOfName === 'tos'
   if (countryIsNorwayCondition) {
