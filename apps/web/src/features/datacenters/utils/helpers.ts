@@ -43,7 +43,7 @@ export function getRegionByName(name: string | undefined): string {
  * Matches datacenter name to country
  *
  * @param name - name of datacenter
- * @returns Region of datacenter, based on name
+ * @returns Country of datacenter, based on name
  */
 export function getCountryByName(name: string | undefined): string {
   if (name === undefined) {
