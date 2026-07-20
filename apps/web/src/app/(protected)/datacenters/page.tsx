@@ -35,6 +35,7 @@ const DatacentersPage = async () => {
   return (
     <div className='w-full flex flex-col'>
       <Header title='Datacenters' />
+
       <div className='mx-12 my-8 flex flex-col gap-6'>
         <DatacenterStats items={items} />
         <DataTable columns={datacenterColumns} data={items} />
