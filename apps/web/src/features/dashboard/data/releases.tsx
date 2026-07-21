@@ -44,7 +44,7 @@ const icons = {
  */
 export const releases: Release[] = [
   {
-    id: 'policy-reports-cluster-tab',
+    id: 'node-pools-cluster-tab',
     day: 21,
     month: 'JUL',
     year: 2026,
@@ -57,7 +57,7 @@ export const releases: Release[] = [
     href: routes.app.clusters.getHref(),
     resolveHref: async () => {
       const uid = await getFirstClusterUid()
-      return uid ? routes.app.clusterPolicies.getHref(uid) : routes.app.clusters.getHref()
+      return uid ? routes.app.clusterNodePools.getHref(uid) : routes.app.clusters.getHref()
     },
   },
   {
