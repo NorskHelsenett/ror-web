@@ -53,9 +53,6 @@ const NodeCard = ({ node }: { node: Node }) => {
  * Displays a list of node pools with their details, and allows users to create new node pools or edit existing ones.
  * Each node pool row can be expanded to show the nodes within the pool.
  *
- * @param {PageViewProps} props - The props for the PageView component.
- * @param {string} props.id - The cluster ID.
- *
  * @returns {JSX.Element} The rendered node pools page view.
  */
 export function PageView() {
