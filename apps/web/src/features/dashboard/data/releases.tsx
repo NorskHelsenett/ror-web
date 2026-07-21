@@ -44,6 +44,35 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'policy-reports-cluster-tab',
+    day: 21,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Node pools on cluster page',
+    description:
+      'Moved from legacy.ror.nhn.no. View node pools for a specific cluster on the cluster page under the node pools tab.',
+    tags: ['New', 'V2'],
+    href: routes.app.clusters.getHref(),
+    resolveHref: async () => {
+      const uid = await getFirstClusterUid()
+      return uid ? routes.app.clusterPolicies.getHref(uid) : routes.app.clusters.getHref()
+    },
+  },
+  {
+    id: 'datacenter-table',
+    day: 20,
+    month: 'JUL',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-950',
+    title: 'Datacenter page',
+    description: 'Added data for datacenters on datacenter page.',
+    tags: ['New', 'V2'],
+    href: routes.app.dataCenters.getHref(),
+  },
+  {
     id: 'projects-page',
     day: 17,
     month: 'JUL',
