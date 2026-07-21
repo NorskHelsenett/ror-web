@@ -555,8 +555,8 @@ export const getCreatedViewItem = (cluster: ClusterListViewItemRowType): string 
 
 export const getLastSeenViewItem = (cluster: ClusterListViewItemRowType): string => cluster.lastSeen?.fieldValue || ''
 
-export const getNodepoolsViewItem = (cluster: ClusterListViewItemRowType): unknown[] | string =>
-  cluster.nodepools?.fieldValue || ''
+export const getNodepoolsViewItem = (cluster: ClusterListViewItemRowType): unknown[] =>
+  cluster.nodepools?.fieldValue ?? []
 
 export const getClustersViewKeyItem = (clusters: ClusterListViewItemRowType[] = []): string =>
   Array.isArray(clusters) ? clusters.map(getClusterIdViewItem).join('|') : ''
