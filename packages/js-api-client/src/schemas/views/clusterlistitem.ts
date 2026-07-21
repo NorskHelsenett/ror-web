@@ -28,7 +28,7 @@ export const ClusterListItemViewRow = z
     resourcesCpuUsedPercent: ViewElementNumberFieldUnit.nullish(),
     resourcesMemoryUsedPercent: ViewElementNumberFieldUnit.nullish(),
     nodes: ViewElementNumber.nullish(),
-    nodePools: ViewElementNumber.nullish(),
+    nodepoolsCount: ViewElementNumber.nullish(),
     priceMonth: ViewElementNumber.nullish(),
     priceYear: ViewElementNumber.nullish(),
     argocdURL: ViewElementString.nullish(),
@@ -43,6 +43,7 @@ export const ClusterListItemViewRow = z
     lastSeen: ViewElementString.nullish(),
     project: ViewElementString.nullish(),
     slackChannels: ViewElementArray.nullish(),
+    nodepools: ViewElementArray.nullish(),
   })
   .loose()
 

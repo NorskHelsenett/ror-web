@@ -1,6 +1,7 @@
 import z from 'zod'
 import {
   ViewColumn,
+  ViewElementArray,
   ViewElementNumber,
   ViewElementNumberFieldUnit,
   ViewElementString,
@@ -27,7 +28,7 @@ export const ClusterListViewRow = z
     resourcesCpuUsedPercent: ViewElementNumberFieldUnit.nullish(),
     resourcesMemoryUsedPercent: ViewElementNumberFieldUnit.nullish(),
     nodes: ViewElementNumber.nullish(),
-    nodePools: ViewElementNumber.nullish(),
+    nodepoolsCount: ViewElementNumber.nullish(),
     priceMonth: ViewElementNumber.nullish(),
     priceYear: ViewElementNumber.nullish(),
     argocdURL: ViewElementString.nullish(),
@@ -40,6 +41,7 @@ export const ClusterListViewRow = z
     status: ViewElementString.nullish(),
     created: ViewElementString.nullish(),
     lastSeen: ViewElementString.nullish(),
+    nodepools: ViewElementArray.nullish(),
   })
   .loose()
 
