@@ -18,7 +18,7 @@ import {
   getKubernetesVersionViewItem,
   getLastSeenViewItem,
   getNhnToolVersionViewItem,
-  getNodePoolsViewItem,
+  getNodepoolsCountViewItem,
   getNodesViewItem,
   getPriceMonthViewItem,
   getPriceYearViewItem,
@@ -60,7 +60,7 @@ export const ClusterDetails = () => {
   const cpuUsedPercentNumber = getResourcesCpuUsedPercentNumberViewItem(cluster)
   const memoryUsedPercentNumber = getResourcesMemoryUsedPercentNumberViewItem(cluster)
   const nodesAmount = getNodesViewItem(cluster) || 0
-  const nodePools = getNodePoolsViewItem(cluster) || 0
+  const nodePools = getNodepoolsCountViewItem(cluster) || 0
   const monthlyPrices = getPriceMonthViewItem(cluster)
   const yearlyPrices = getPriceYearViewItem(cluster)
   const argocdUrl = getArgocdUrlViewItem(cluster)

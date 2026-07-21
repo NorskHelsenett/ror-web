@@ -18,7 +18,7 @@ import {
   getGrafanaUrlView,
   getKubernetesVersionView,
   getNhnToolVersionView,
-  getNodePoolsView,
+  getNodepoolsCountView,
   getNodesView,
   getPriceMonthView,
   getPriceYearView,
@@ -141,7 +141,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const cpuUsedPercentNumber = getResourcesCpuUsedPercentNumberView(cluster)
   const memoryUsedPercentNumber = getResourcesMemoryUsedPercentNumberView(cluster)
   const nodesAmount = getNodesView(cluster) || 0
-  const nodePools = getNodePoolsView(cluster) || 0
+  const nodePools = getNodepoolsCountView(cluster) || 0
   const monthlyPrices = getPriceMonthView(cluster)
   const yearlyPrices = getPriceYearView(cluster)
   const argocdUrl = getArgocdUrlView(cluster)

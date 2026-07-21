@@ -93,3 +93,11 @@ export function convertMemory(memory: string): string {
     localizeOptions: { language: 'en', plurals: { one: 'Byte', other: 'Bytes' } },
   })
 }
+/**
+ * Format cores to string, showing millicores for values < 1.
+ *
+ * @param {number} cores - number of cores
+ */
+export function formatCores(cores: number): string {
+  return cores < 1 ? `${(cores * 1000).toFixed(0)}m` : `${cores.toFixed(2)}`
+}
