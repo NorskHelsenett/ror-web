@@ -12,7 +12,7 @@ import type { ClusterCardDisplayData } from '../types/display-data'
 import {
   getClusterNameView,
   getEnvironmentView,
-  getNodePoolsView,
+  getNodepoolsCountView,
   getNodesView,
   getPriceMonthView,
   getPriceYearView,
@@ -222,7 +222,7 @@ export function getClustersTableColumns(
     //     },
     //   }),
     isVisible('nodes') &&
-      columnHelper.accessor(getNodePoolsView, {
+      columnHelper.accessor(getNodepoolsCountView, {
         id: 'nodes',
         size: 128,
         header: () => <p className='text-sm'>Num of nodes</p>,

@@ -28,7 +28,7 @@ import { ResourceBar } from '@/components/ui/resource-bar'
 import {
   getClusterUidView,
   getEnvironmentView,
-  getNodePoolsView,
+  getNodepoolsCountView,
   getNodesView,
   getResourcesCpuUsedMilliView,
   getResourcesCpuUsedPercentNumberView,
@@ -120,7 +120,7 @@ export const WorkspaceRowCard = ({ group, workspaceWithClusters }: WorkspaceRowC
                   <div className='flex-1' />
                   <span className='shrink-0 flex items-center gap-2 w-44 px-3 py-1.5 border rounded-full'>
                     <Waypoints size='16' />
-                    {`${getNodesView(c)} nodes (${getNodePoolsView(c)} pools)`}
+                    {`${getNodesView(c)} nodes (${getNodepoolsCountView(c)} pools)`}
                   </span>
                 </AccordionContentRow>
               </Link>

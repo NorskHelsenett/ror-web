@@ -11,7 +11,7 @@ import {
   getClusterNameView,
   getEnvironmentView,
   getKubernetesVersionView,
-  getNodePoolsView,
+  getNodepoolsCountView,
   getPriceMonthView,
   getPriceYearView,
   getProviderView,
@@ -33,7 +33,7 @@ const exportableFromCluster = (cluster: ClusterListViewRowType) => {
     clusterName: getClusterNameView(cluster),
     provider: getProviderView(cluster),
     environment: getEnvironmentView(cluster),
-    nodePoolCount: getNodePoolsView(cluster),
+    nodePoolCount: getNodepoolsCountView(cluster),
     // TODO: Set up resources
     cpu: getResourcesCpuUsedPercentNumberView(cluster),
     memory: getResourcesCpuUsedPercentNumberView(cluster),
