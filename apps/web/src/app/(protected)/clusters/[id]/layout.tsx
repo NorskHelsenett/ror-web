@@ -50,7 +50,7 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterNodePools.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=nodepools`,
+      href: clusterNodePools.getHref(clusterUid),
     },
     {
       label: clusterPolicies.label,
@@ -58,9 +58,10 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterVulnerabilities.label,
-      href: clusterName || clusterId || clusterUid
-        ? `https://spam.sikkerhet.nhn.no/cluster/${encodeURIComponent(clusterName || clusterId || clusterUid)}`
-        : 'https://spam.sikkerhet.nhn.no/cluster/',
+      href:
+        clusterName || clusterId || clusterUid
+          ? `https://spam.sikkerhet.nhn.no/cluster/${encodeURIComponent(clusterName || clusterId || clusterUid)}`
+          : 'https://spam.sikkerhet.nhn.no/cluster/',
       icon: <ExternalLink size={16} />,
     },
     {
