@@ -3,17 +3,23 @@
 import { ResourceBar } from '@/components/ui/resource-bar'
 import { useClusterContext } from '@/context/cluster-context'
 import { Node, Nodepool } from '@/features/cluster/types/nodepool'
-import { convertMemory, formatCores } from '@/utils/bytes'
+import { convertMemory } from '@/utils/bytes'
 import { parseQuantity } from '@/utils/parse-quantity'
 import React, { Fragment } from 'react'
 
+/** Format cores to string, showing millicores for values < 1. */
+function formatCores(cores: number): string {
+  return cores < 1 ? `${(cores * 1000).toFixed(0)}m` : `${cores.toFixed(2)}`
+}
+
 const NodeCard = ({ node }: { node: Node }) => {
-  const cpuCapacityCores = parseQuantity(node.cpu.capacity)
-  const cpuAllocatedCores = parseQuantity(node.cpu.allocated)
+  // Safely parse quantity values with fallbacks
+  const cpuCapacityCores = node.cpu.capacity ? parseQuantity(node.cpu.capacity) : 0
+  const cpuAllocatedCores = node.cpu.allocated ? parseQuantity(node.cpu.allocated) : 0
   const cpuPercent = cpuCapacityCores > 0 ? (cpuAllocatedCores / cpuCapacityCores) * 100 : 0
 
-  const memCapacityBytes = parseQuantity(node.memory.capacity)
-  const memAllocatedBytes = parseQuantity(node.memory.allocated)
+  const memCapacityBytes = node.memory.capacity ? parseQuantity(node.memory.capacity) : 0
+  const memAllocatedBytes = node.memory.allocated ? parseQuantity(node.memory.allocated) : 0
   const memPercent = memCapacityBytes > 0 ? (memAllocatedBytes / memCapacityBytes) * 100 : 0
 
   return (
@@ -25,23 +31,23 @@ const NodeCard = ({ node }: { node: Node }) => {
       <div className='grid grid-cols-2 gap-y-2 items-center'>
         <b>CPU</b>
         <ResourceBar
-          capacity={`${node.cpu.capacity} cores`}
-          used={formatCores(cpuAllocatedCores)}
-          percentage={parseFloat(cpuPercent.toFixed(1))}
+          capacity={`${node.cpu.capacity ?? 'N/A'} cores`}
+          used={node.cpu.allocated ? formatCores(cpuAllocatedCores) : 'N/A'}
+          percentage={node.cpu.capacity && node.cpu.allocated ? parseFloat(cpuPercent.toFixed(1)) : null}
         />
 
         <b>Memory</b>
         <ResourceBar
-          capacity={convertMemory(node.memory.capacity)}
-          used={convertMemory(node.memory.allocated)}
-          percentage={parseFloat(memPercent.toFixed(1))}
+          capacity={node.memory.capacity ? convertMemory(node.memory.capacity) : 'N/A'}
+          used={node.memory.allocated ? convertMemory(node.memory.allocated) : 'N/A'}
+          percentage={node.memory.capacity && node.memory.allocated ? parseFloat(memPercent.toFixed(1)) : null}
         />
 
         <b>Architecture</b>
-        <p>{node.architecture}</p>
+        <p>{node.architecture ?? 'N/A'}</p>
 
         <b>Kubernetes version</b>
-        <p>{node.kubernetesVersion}</p>
+        <p>{node.kubernetesVersion ?? 'N/A'}</p>
       </div>
     </div>
   )
