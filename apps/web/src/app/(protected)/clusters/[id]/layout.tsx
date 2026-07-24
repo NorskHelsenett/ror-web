@@ -70,7 +70,7 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterAbout.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=metadata`,
+      href: clusterAbout.getHref(clusterUid),
     },
   ]
 }
