@@ -57,6 +57,19 @@ export const releases: Release[] = [
     href: routes.app.clusters.getHref(),
   },
   {
+    id: 'rediect-from-search-on-dashboard',
+    day: 4,
+    month: 'AUG',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-950',
+    title: 'Redirect from search on dashboard',
+    description:
+      'In the dashboard search bar, the user is able to click on one of the vms/clusters in the results list and be redirected to the correct page.',
+    tags: ['Improved'],
+    href: routes.app.dashboard.getHref(),
+  },
+  {
     id: 'node-pools-cluster-tab',
     day: 21,
     month: 'JUL',
