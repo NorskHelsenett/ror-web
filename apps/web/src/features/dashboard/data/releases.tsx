@@ -44,6 +44,19 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'resizable-tables',
+    day: 5,
+    month: 'AUG',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-950',
+    title: 'Resizable tables',
+    description:
+      'The user is now able to resize the columns of tables in the size they prefer. The sizes will be saved in local storage and will be used the next time the user visits the page.',
+    tags: ['Improved'],
+    href: routes.app.clusters.getHref(),
+  },
+  {
     id: 'node-pools-cluster-tab',
     day: 21,
     month: 'JUL',
