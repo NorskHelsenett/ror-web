@@ -185,6 +185,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
           hasMore={hasMore}
           isLoading={isLoading}
           sentinelRef={sentinelRef}
+          resizable
         />
       </div>
     )

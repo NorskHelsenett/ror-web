@@ -383,6 +383,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
           hasMore={hasMore}
           isLoading={isLoading && !isSearching}
           sentinelRef={sentinelRef}
+          resizable
         />
       </div>
     )

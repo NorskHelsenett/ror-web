@@ -239,6 +239,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
           hasMore={hasMore}
           isLoading={isLoading}
           sentinelRef={sentinelRef}
+          resizable
         />
       </div>
     )

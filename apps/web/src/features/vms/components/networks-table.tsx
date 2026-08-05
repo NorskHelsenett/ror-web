@@ -5,5 +5,5 @@ import type { VirtualMachineNetworks } from '@ror/js-api-client'
 import { networksColumns } from '../components/networks-columns'
 
 export const NetworksTable = ({ items }: { items: VirtualMachineNetworks[] }) => (
-  <DataTable<VirtualMachineNetworks> columns={networksColumns} data={items} />
+  <DataTable<VirtualMachineNetworks> columns={networksColumns} data={items} resizable />
 )
