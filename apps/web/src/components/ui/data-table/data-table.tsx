@@ -20,7 +20,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import type { ColumnDef, ColumnSizingState, PaginationState, Row } from '@tanstack/react-table'
-import { Fragment, useId, useState } from 'react'
+import { Fragment, useEffect, useId, useState } from 'react'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 /**
@@ -71,13 +71,42 @@ export interface DataTableProps<TData> extends Omit<TableProps, 'gridTemplateCol
    * @default false
    */
   resizable?: boolean
+  /**
+   * localStorage key for persisting column widths. Only saves when the user has resized a column.
+   */
+  storageKey?: string
 }
 
 export function DataTable<TData>(props: DataTableProps<TData>) {
-  const { cellPadding, title, subtitle, columns = [], data = [], expandable = false, resizable = false } = props
+  const {
+    cellPadding,
+    title,
+    subtitle,
+    columns = [],
+    data = [],
+    expandable = false,
+    resizable = false,
+    storageKey,
+  } = props
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({})
+
+  // Load after mount — localStorage is unavailable during SSR so cannot use lazy initializer
+  useEffect(() => {
+    if (!storageKey) return
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) setColumnSizing(JSON.parse(saved) as ColumnSizingState)
+    } catch {
+      // ignore corrupted data
+    }
+  }, [storageKey])
+
+  useEffect(() => {
+    if (!storageKey || Object.keys(columnSizing).length === 0) return
+    localStorage.setItem(storageKey, JSON.stringify(columnSizing))
+  }, [columnSizing, storageKey])
 
   const tableTitleId = useId()
   const tableSubtitleId = useId()
@@ -175,7 +204,7 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                       {resizable && (
                         <div
                           className={`pointer-events-none absolute right-0 top-0 h-full transition-all ${
-                            cell.column.getIsResizing() ? 'w-0.5 bg-blue-500' : 'w-px bg-[var(--r-border-subtle)]'
+                            cell.column.getIsResizing() ? 'w-0.5 bg-blue-500' : 'w-px bg-[var(--r-border-primary)]'
                           }`}
                         />
                       )}

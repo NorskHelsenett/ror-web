@@ -186,6 +186,7 @@ export const PageView = ({ className, backupRuns, params }: PageViewProps) => {
           isLoading={isLoading}
           sentinelRef={sentinelRef}
           resizable
+          storageKey='backup-runs-table-columns-size'
         />
       </div>
     )

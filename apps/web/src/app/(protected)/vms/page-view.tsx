@@ -384,6 +384,7 @@ export const PageView = ({ className, vms, params }: PageViewProps) => {
           isLoading={isLoading && !isSearching}
           sentinelRef={sentinelRef}
           resizable
+          storageKey='vms-table-columns-size'
         />
       </div>
     )

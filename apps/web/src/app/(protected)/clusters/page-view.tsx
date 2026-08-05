@@ -184,6 +184,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
       isLoading={isLoading}
       sentinelRef={sentinelRef}
       resizable
+      storageKey='clusters-table-columns-size'
     />
   )
 

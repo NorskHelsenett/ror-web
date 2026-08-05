@@ -240,6 +240,7 @@ export const PageView = ({ className, backupJobs, backupRuns = [], params }: Pag
           isLoading={isLoading}
           sentinelRef={sentinelRef}
           resizable
+          storageKey='backup-jobs-table-columns-size'
         />
       </div>
     )
