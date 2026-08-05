@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw'
 import nodes from '../data/nodes'
 import { ingressesResponse } from '../data/ingresses'
 import { clustersVersion2 } from '../data/clusters'
+import { clusterListViewItem } from '../data/clusterlistview'
 import datacenters from '../data/datacenters'
 import { vulnerabilityReports } from '../data/vulnerability-reports'
 import { mockVms } from '../data/vms'
@@ -240,13 +241,64 @@ export const v2ResourcesHandlers = [
       (res) => res.kind === 'KubernetesCluster' && res.metadata.uid === id
     )
 
-    // Return 404 if not found
-    if (!cluster) {
-      return HttpResponse.json({ message: 'Not found' }, { status: 404 })
+    if (cluster) {
+      return HttpResponse.json([cluster])
     }
 
-    // Return the found cluster resource
-    return HttpResponse.json([cluster])
+    // Fall back to clusterListViewItem for UIDs added in a8e0bf92 that aren't in clustersVersion2
+    const viewRow = clusterListViewItem.rows.find((row) => row.clusterUid?.fieldValue === id)
+    if (viewRow) {
+      const syntheticCluster = {
+        kind: 'KubernetesCluster',
+        apiVersion: 'general.ror.internal/v1alpha1',
+        metadata: {
+          name: viewRow.clusterId?.fieldValue ?? id,
+          uid: id,
+          creationTimestamp: viewRow.created?.fieldValue ?? null,
+        },
+        rormeta: {
+          version: 'v2',
+          ownerref: { scope: 'cluster', subject: viewRow.clusterId?.fieldValue ?? id },
+          action: 'Update',
+        },
+        kubernetescluster: {
+          spec: { slackChannels: null },
+          status: {
+            agentstatus: {
+              clusterId: viewRow.clusterId?.fieldValue ?? id,
+              clusterName: viewRow.clusterName?.fieldValue ?? id,
+              kubernetesProvider: viewRow.provider?.fieldValue ?? 'unknown',
+              az: viewRow.availabilityZone?.fieldValue ?? '',
+              region: viewRow.region?.fieldValue ?? '',
+              country: viewRow.country?.fieldValue ?? '',
+              workspaceId: viewRow.workspace?.fieldValue ?? '',
+              environment: viewRow.environment?.fieldValue ?? '',
+              datacenter: viewRow.datacenter?.fieldValue ?? '',
+              nodes: {
+                controlPlane: [],
+                nodepools: (viewRow.nodepools?.fieldValue ?? []).map((pool: { name: string; nodes: unknown[] }) => ({
+                  name: pool.name,
+                  nodes: pool.nodes ?? [],
+                })),
+              },
+              versions: {
+                NhnTooling: viewRow.nhnToolVersion?.fieldValue ?? '',
+                RorAgent: viewRow.rorAgentVersion?.fieldValue ?? '',
+              },
+              urls: {
+                Argocd: viewRow.argocdURL?.fieldValue ?? '',
+                Grafana: viewRow.grafanaURL?.fieldValue ?? '',
+              },
+              createdAt: viewRow.created?.fieldValue ?? null,
+              lastSeen: viewRow.lastSeen?.fieldValue ?? null,
+            },
+          },
+        },
+      }
+      return HttpResponse.json([syntheticCluster])
+    }
+
+    return HttpResponse.json({ message: 'Not found' }, { status: 404 })
   }),
 
   http.put<{ id: string }, Resource | NotFound, Resource | NotFound>(
@@ -256,7 +308,7 @@ export const v2ResourcesHandlers = [
       const updated = (await request.json()) as Resource
 
       const i = clustersVersion2.resources.findIndex(
-        (res) => res.kind === 'KubernetesCluster' && res.kubernetescluster?.spec?.data?.clusterId === id
+        (res) => res.kind === 'KubernetesCluster' && res.kubernetescluster?.status?.agentstatus?.clusterId === id
       )
       if (i === -1) {
         return HttpResponse.json<NotFound>({ message: 'Not found' }, { status: 404 })
