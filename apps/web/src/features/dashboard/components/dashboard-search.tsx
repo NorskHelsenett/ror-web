@@ -174,12 +174,13 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
                   return (
                     <div key={uid} className='flex items-center justify-between px-3 py-2 hover:bg-muted/50'>
                       <div>
-                        <p
-                          className='text-sm font-medium cursor-pointer hover:underline'
+                        <button
+                          type='button'
+                          className='text-sm font-medium text-left cursor-pointer hover:underline'
                           onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
                         >
                           {name}
-                        </p>
+                        </button>
                         <p className='text-xs text-muted-foreground'>
                           {[cluster.datacenter?.fieldValue, cluster.environment?.fieldValue]
                             .filter(Boolean)
