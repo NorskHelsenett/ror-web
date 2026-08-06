@@ -105,7 +105,16 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 
   useEffect(() => {
     if (!storageKey || Object.keys(columnSizing).length === 0) return
-    localStorage.setItem(storageKey, JSON.stringify(columnSizing))
+
+    const t = window.setTimeout(() => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(columnSizing))
+      } catch {
+        // ignore storage write errors (quota, disabled, etc.)
+      }
+    }, 200)
+
+    return () => window.clearTimeout(t)
   }, [columnSizing, storageKey])
 
   const tableTitleId = useId()
