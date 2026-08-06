@@ -19,8 +19,9 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import type { ColumnDef, PaginationState, Row } from '@tanstack/react-table'
-import { Fragment, useId, useState } from 'react'
+import type { ColumnDef, ColumnSizingState, PaginationState, Row } from '@tanstack/react-table'
+import { Fragment, useEffect, useId, useState } from 'react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 /**
  * DataTableColumnDef is a type that represents a column definition for a DataTable.
@@ -65,12 +66,56 @@ export interface DataTableProps<TData> extends Omit<TableProps, 'gridTemplateCol
   hasMore?: boolean
   isLoading?: boolean
   sentinelRef?: React.RefObject<HTMLDivElement>
+  /**
+   * If true, columns can be resized by dragging the header borders
+   * @default false
+   */
+  resizable?: boolean
+  /**
+   * localStorage key for persisting column widths. Only saves when the user has resized a column.
+   */
+  storageKey?: string
 }
 
 export function DataTable<TData>(props: DataTableProps<TData>) {
-  const { cellPadding, title, subtitle, columns = [], data = [], expandable = false } = props
+  const {
+    cellPadding,
+    title,
+    subtitle,
+    columns = [],
+    data = [],
+    expandable = false,
+    resizable = false,
+    storageKey,
+  } = props
 
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({})
+
+  // Load after mount — localStorage is unavailable during SSR so cannot use lazy initializer
+  useEffect(() => {
+    if (!storageKey) return
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) setColumnSizing(JSON.parse(saved) as ColumnSizingState)
+    } catch {
+      // ignore corrupted data
+    }
+  }, [storageKey])
+
+  useEffect(() => {
+    if (!storageKey || Object.keys(columnSizing).length === 0) return
+
+    const t = window.setTimeout(() => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(columnSizing))
+      } catch {
+        // ignore storage write errors (quota, disabled, etc.)
+      }
+    }, 200)
+
+    return () => window.clearTimeout(t)
+  }, [columnSizing, storageKey])
 
   const tableTitleId = useId()
   const tableSubtitleId = useId()
@@ -83,7 +128,10 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
     getSortedRowModel: getSortedRowModel(),
     state: {
       sorting,
+      columnSizing,
     },
+    onColumnSizingChange: setColumnSizing,
+    columnResizeMode: 'onChange',
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => expandable,
   })
@@ -126,8 +174,29 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
                     : flexRender(header.column.columnDef.header, header.getContext())
 
                   return (
-                    <TableHeader key={header.id} id={header.id} colSpan={header.colSpan}>
+                    <TableHeader
+                      key={header.id}
+                      id={header.id}
+                      colSpan={header.colSpan}
+                      className={resizable ? 'relative' : undefined}
+                    >
                       {child}
+                      {resizable && header.column.getCanResize() && (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div
+                              onMouseDown={header.getResizeHandler()}
+                              onTouchStart={header.getResizeHandler()}
+                              className={`absolute right-0 top-0 h-full cursor-col-resize select-none touch-none transition-all ${
+                                header.column.getIsResizing()
+                                  ? 'w-0.5 bg-blue-500'
+                                  : 'w-px bg-[var(--r-border-subtle)] hover:w-0.5 hover:bg-blue-500'
+                              }`}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent side='top'>Adjust column width</TooltipContent>
+                        </Tooltip>
+                      )}
                     </TableHeader>
                   )
                 })}
@@ -139,7 +208,16 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
               <Fragment key={row.id}>
                 <TableRow>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id} className={resizable ? 'relative' : undefined}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {resizable && (
+                        <div
+                          className={`pointer-events-none absolute right-0 top-0 h-full transition-all ${
+                            cell.column.getIsResizing() ? 'w-0.5 bg-blue-500' : 'w-px bg-[var(--r-border-primary)]'
+                          }`}
+                        />
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
                 {row.getIsExpanded() && props.renderExpandedRow?.(row)}
