@@ -462,8 +462,7 @@ export const getCreatedView = (cluster: ClusterListViewRowType): string => clust
 
 export const getLastSeenView = (cluster: ClusterListViewRowType): string => cluster.lastSeen?.fieldValue || ''
 
-export const getNodepoolsView = (cluster: ClusterListViewRowType): unknown[] =>
-  cluster.nodepools?.fieldValue ?? []
+export const getNodepoolsView = (cluster: ClusterListViewRowType): unknown[] => cluster.nodepools?.fieldValue ?? []
 
 export const getClustersViewKey = (clusters: ClusterListViewRowType[] = []): string =>
   Array.isArray(clusters) ? clusters.map(getClusterIdView).join('|') : ''
@@ -555,8 +554,23 @@ export const getCreatedViewItem = (cluster: ClusterListViewItemRowType): string 
 
 export const getLastSeenViewItem = (cluster: ClusterListViewItemRowType): string => cluster.lastSeen?.fieldValue || ''
 
+export const getProjectView = (cluster: ClusterListViewItemRowType): string => cluster.project?.fieldValue || ''
+
 export const getNodepoolsViewItem = (cluster: ClusterListViewItemRowType): unknown[] =>
   cluster.nodepools?.fieldValue ?? []
+
+// export const getCriticalityViewItem = (cluster: ClusterListViewItemRowType): number | null | undefined =>
+// cluster.criticality?.fieldValue
+
+// export const getSensitivityViewItem = (cluster: ClusterListViewItemRowType): number | null | undefined =>
+// cluster.sensitivity?.fieldValue
+
+// export const getWorkorderViewItem = (cluster: ClusterListViewItemRowType): string => cluster.workorder?.fieldValue || ''
+
+// export const getRolesViewItem = (cluster: ClusterListViewItemRowType): unknown[] => cluster.roles?.fieldValue ?? []
+
+// export const getDescriptionViewItem = (cluster: ClusterListViewItemRowType): string =>
+//   cluster.description?.fieldValue || ''
 
 export const getClustersViewKeyItem = (clusters: ClusterListViewItemRowType[] = []): string =>
   Array.isArray(clusters) ? clusters.map(getClusterIdViewItem).join('|') : ''

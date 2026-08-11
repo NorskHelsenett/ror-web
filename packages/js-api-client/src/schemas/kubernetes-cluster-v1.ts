@@ -25,7 +25,25 @@ const ProjectModel = z.object({
 })
 
 const MetadataModel = z.object({
+  projectId: z.string().optional(),
   project: ProjectModel.optional(),
+  criticality: z.number(),
+  sensitivity: z.number(),
+  description: z.string(),
+  serviceTags: z.record(z.string(), z.string()),
+  billing: z.object({
+    workorder: z.string(),
+  }),
+  roles: z.array(
+    z.object({
+      contactInfo: z.object({
+        upn: z.string(),
+        email: z.string(),
+        phone: z.string(),
+      }),
+      roleDefinition: z.string(),
+    })
+  ),
 })
 
 const DatacenterModel = z.object({
