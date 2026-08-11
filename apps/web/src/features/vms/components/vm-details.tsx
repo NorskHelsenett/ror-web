@@ -82,8 +82,6 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
   const tags = getTags(vm)
   const tagKey = Object.keys(tags)
 
-  console.log(user)
-
   const ConfigurationCard = () => (
     <Card className='bg-slate-50 dark:bg-slate-900/50'>
       <ShadcnCardHeader>
