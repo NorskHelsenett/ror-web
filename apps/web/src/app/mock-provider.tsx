@@ -15,8 +15,6 @@ const mockingEnabledPromise =
   typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MOCKING_ENABLED === 'true'
     ? import('@/__mocks__/browser').then(async ({ worker }) => {
         try {
-          console.log('[MSW] Starting service worker...')
-
           // Check if service worker is already registered
           const registrations = await navigator.serviceWorker.getRegistrations()
           const hasMockWorker = registrations.some(
@@ -24,7 +22,6 @@ const mockingEnabledPromise =
           )
 
           if (hasMockWorker) {
-            console.log('[MSW] Mock service worker already registered, unregistering first')
             await Promise.all(
               registrations
                 .filter((reg) => reg.active && reg.active.scriptURL.includes('mockServiceWorker.js'))
@@ -52,9 +49,6 @@ const mockingEnabledPromise =
             })
 
           worker.use(...handlers)
-
-          console.log('[MSW] Service worker started successfully!')
-          console.log('[MSW] Registered handlers:', worker.listHandlers().length)
         } catch (error) {
           console.error('[MSW] Service worker registration failed:', error)
         }

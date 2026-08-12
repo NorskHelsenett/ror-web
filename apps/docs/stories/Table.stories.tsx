@@ -65,7 +65,6 @@ export const Sortable: Story = {
   render: ({ cellPadding, gridTemplateColumns, ...args }) => {
     const handleOnSort = (id: string, direction: SortDirection, event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
-      console.log('Sorting...', id, direction)
     }
 
     return (
@@ -108,7 +107,6 @@ export const WithPagination: Story = {
   render: ({ cellPadding, gridTemplateColumns, ...args }) => {
     const handleOnSort = (id: string, direction: SortDirection, event: MouseEvent<HTMLButtonElement>) => {
       event.preventDefault()
-      console.log('Sorting...', id, direction)
     }
 
     return (

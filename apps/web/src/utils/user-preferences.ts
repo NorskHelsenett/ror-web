@@ -70,8 +70,6 @@ export function saveUserPreferencesObject(key: string, preferenceObject: Prefere
     const validPrefs = userPreferencesSchema.parse(preferenceObject)
     const stringifiedObject = JSON.stringify(validPrefs)
 
-    console.log('lagerer i localstorage; ', key, stringifiedObject)
-
     window.localStorage.setItem(key, stringifiedObject)
   } catch (error) {
     console.error('Could not save user preferences: ', error)
