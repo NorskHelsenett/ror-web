@@ -1,6 +1,6 @@
-import { PriceListSchema } from '@ror/js-api-client'
+import { Price } from '@ror/js-api-client'
 
-const prices: PriceListSchema = [
+const prices: Price[] = [
   {
     id: '62b1ad7161ecad60301b45aa',
     provider: 'tanzu',
