@@ -37,11 +37,6 @@ export interface Network {
   mask?: string
 }
 
-export interface VMDetailsProps {
-  user?: User
-  className?: string
-}
-
 export interface VmSearchProps {
   items: VirtualMachine[]
   onSelect?: (item: VirtualMachine) => void

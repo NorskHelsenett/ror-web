@@ -57,7 +57,6 @@ export const sortingIdValues = [
   'memory',
   'nodes',
   'monthlyPrice',
-  'yearlyPrice',
   'datacenterName',
   'datacenterProvider',
   'environment',

@@ -464,3 +464,62 @@ export const getClustersViewKeyItem = (clusters: ClusterListViewItemRowType[] = 
 /** @see getRorLoginView */
 export const getRorLoginViewItem = (cluster: ClusterListViewItemRowType): string =>
   `ror login ${getClusterIdViewItem(cluster)}`
+
+/**
+ * Groups `clusters` by the value returned from `extractor` and counts how
+ * many clusters fall into each group.
+ *
+ * @param clusters - The clusters to group and count.
+ * @param extractor - Derives the grouping key from a cluster (e.g. its provider or status).
+ * @returns A map from each distinct key to the number of clusters with that key.
+ */
+export const countBy = (
+  clusters: ClusterListViewRowType[],
+  extractor: (cluster: ClusterListViewRowType) => string
+): CountMap => {
+  const count = new Map<string, number>()
+  for (const cluster of clusters) {
+    const key = extractor(cluster)
+    count.set(key, (count.get(key) ?? 0) + 1)
+  }
+  return count
+}
+
+/** Cluster count providers */
+export const getProviderViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getProviderView)
+
+/** Cluster count datacenters */
+export const getDatacenterViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getDatacenterView)
+
+/** Cluster count availability zones */
+export const getAZViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getAZView)
+
+/** Cluster count countries */
+export const getCountryViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getCountryView)
+
+/** Cluster count regions */
+export const getRegionViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getRegionView)
+
+/** Cluster count workspaces */
+export const getWorkspaceViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getWorkspaceView)
+
+/** Cluster count environments */
+export const getEnvironmentViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getEnvironmentView)
+
+/** Cluster count kubernetes versions */
+export const getKubernetesVersionViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getKubernetesVersionView)
+
+/** Cluster count nhn tooling versions */
+export const getNhnToolVersionViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getNhnToolVersionView)
+
+/** Cluster count service IDs  */
+export const getServiceIdViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
+  countBy(clusters, getServiceIdView)
+
+/** Cluster count statuses */
+export const getStatusViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getStatusView)
