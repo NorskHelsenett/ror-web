@@ -490,6 +490,14 @@ const SidebarMenuButton = React.forwardRef<
     const Comp = asChild ? Slot : 'button'
     const { isMobile, state } = useSidebar()
     const [open, setOpen] = React.useState(false)
+    const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const scheduleClose = () => {
+      closeTimer.current = setTimeout(() => setOpen(false), 50)
+    }
+    const cancelClose = () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current)
+    }
 
     const button = (
       <Comp
@@ -502,7 +510,11 @@ const SidebarMenuButton = React.forwardRef<
         onClick={(e) => {
           props.onClick?.(e as React.MouseEvent<HTMLButtonElement>)
         }}
-        onMouseEnter={() => state === 'collapsed' && setOpen(true)}
+        onMouseEnter={() => {
+          cancelClose()
+          if (state === 'collapsed') setOpen(true)
+        }}
+        onMouseLeave={scheduleClose}
         {...props}
       />
     )
@@ -518,16 +530,14 @@ const SidebarMenuButton = React.forwardRef<
           side='right'
           align='start'
           hidden={state !== 'collapsed' || isMobile}
-          className='min-w-[12rem] p-2'
-          onMouseLeave={() => setOpen(false)}
+          className='min-w-48 p-2'
+          onMouseEnter={cancelClose}
+          onMouseLeave={scheduleClose}
           onMouseDown={() => setOpen(false)}
         >
           {popoverContent.items.length === 1 ? (
             'url' in popoverContent.items[0] ? (
-              <Link
-                className='block hover:bg-[var(--r-layer)] rounded-md px-2 pt-1 pb-1'
-                href={popoverContent.items[0].url}
-              >
+              <Link className='block hover:bg-(--r-layer) rounded-md px-2 pt-1 pb-1' href={popoverContent.items[0].url}>
                 {popoverContent.items[0].title}
               </Link>
             ) : (
@@ -539,7 +549,7 @@ const SidebarMenuButton = React.forwardRef<
                 {popoverContent.items.map((item) => (
                   <div key={item.title}>
                     {'url' in item ? (
-                      <Link href={item.url} className='block hover:bg-[var(--r-layer)] rounded-md px-2 pt-2 pb-1'>
+                      <Link href={item.url} className='block hover:bg-(--r-layer) rounded-md px-2 pt-2 pb-1'>
                         {item.title}
                       </Link>
                     ) : (
@@ -616,7 +626,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
       data-slot='sidebar-menu-sub'
       data-sidebar='menu-sub'
       className={cn(
-        'border-neutral-400 dark:border-neutral-700 ml-[14px] flex min-w-0 translate-x-px flex-col gap-1 border-l px-2.5 py-0.5 group-data-[collapsible=icon]:hidden',
+        'border-neutral-400 dark:border-neutral-700 ml-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l px-2.5 py-0.5 group-data-[collapsible=icon]:hidden',
         className
       )}
       {...props}
