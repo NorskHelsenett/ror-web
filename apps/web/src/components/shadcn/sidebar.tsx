@@ -40,6 +40,7 @@ type PopoverContent = {
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
+/** Throws if used outside a {@link SidebarProvider}. */
 function useSidebar() {
   const context = React.useContext(SidebarContext)
   if (!context) {
@@ -49,6 +50,13 @@ function useSidebar() {
   return context
 }
 
+/**
+ * Provides sidebar open/collapsed state to the component tree, with separate
+ * desktop (`open`) and mobile (`openMobile`) state. Desktop state can be
+ * controlled externally via `open`/`onOpenChange`, or left uncontrolled
+ * (defaults to `defaultOpen`). Persists desktop state to a cookie so it
+ * survives page reloads, and registers a `Cmd/Ctrl+B` shortcut to toggle it.
+ */
 function SidebarProvider({
   defaultOpen = true,
   open: openProp,
@@ -147,6 +155,11 @@ function SidebarProvider({
   )
 }
 
+/**
+ * The sidebar itself. Renders as a `Sheet` on mobile regardless of `variant`/
+ * `collapsible`. On desktop, `collapsible='none'` renders a plain static
+ * div with no collapse behavior at all.
+ */
 function Sidebar({
   side = 'left',
   variant = 'sidebar',
@@ -246,6 +259,7 @@ function Sidebar({
   )
 }
 
+/** Button that toggles the sidebar open/closed. */
 function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
   const { toggleSidebar } = useSidebar()
 
@@ -271,6 +285,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
   )
 }
 
+/** Invisible edge-of-sidebar drag handle that also toggles the sidebar on click. */
 function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
   const { toggleSidebar } = useSidebar()
 
@@ -296,6 +311,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
   )
 }
 
+/** Main content area next to the sidebar. */
 function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
   return (
     <main
@@ -310,6 +326,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
   )
 }
 
+/** Styled `Input`, typically used for a search box inside the sidebar. */
 function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input>) {
   return (
     <Input
@@ -321,6 +338,7 @@ function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input
   )
 }
 
+/** Fixed header region at the top of the sidebar. */
 function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -332,6 +350,7 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+/** Fixed footer region at the bottom of the sidebar. */
 function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -343,6 +362,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+/** Horizontal divider between sidebar sections. */
 function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {
   return (
     <Separator
@@ -354,6 +374,7 @@ function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof S
   )
 }
 
+/** Scrollable region holding the sidebar's groups. */
 function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -368,6 +389,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+/** A labeled section within the sidebar. */
 function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -379,6 +401,7 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+/** Label for a {@link SidebarGroup}. Hidden when the sidebar is icon-collapsed. */
 const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<'div'> & { asChild?: boolean }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'div'
@@ -397,8 +420,10 @@ const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentProps<
     )
   }
 )
+
 SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 
+/** Small action button pinned to a group's label row (e.g. an "add" icon). */
 const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentProps<'button'> & { asChild?: boolean }>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
@@ -418,8 +443,10 @@ const SidebarGroupAction = React.forwardRef<HTMLButtonElement, React.ComponentPr
     )
   }
 )
+
 SidebarGroupAction.displayName = 'SidebarGroupAction'
 
+/** Wraps a group's actual menu content. */
 function SidebarGroupContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -431,6 +458,7 @@ function SidebarGroupContent({ className, ...props }: React.ComponentProps<'div'
   )
 }
 
+/** List container for {@link SidebarMenuItem}s. */
 function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
   return (
     <ul
@@ -442,6 +470,7 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
   )
 }
 
+/** A single row in a {@link SidebarMenu}. */
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
   return (
     <li
@@ -475,6 +504,13 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
+/**
+ * The clickable row inside a {@link SidebarMenuItem}. When `popoverContent`
+ * is given and the sidebar is collapsed to icon-only, hovering the button
+ * shows its label(s) in a popover instead of relying on truncated text.
+ * The popover has a short close delay so the cursor can move from the
+ * button into the popover without it disappearing.
+ */
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<'button'> & {
@@ -568,6 +604,7 @@ const SidebarMenuButton = React.forwardRef<
 
 SidebarMenuButton.displayName = 'SidebarMenuButton'
 
+/** Small badge (e.g. an unread count) pinned to a menu button's row. */
 function SidebarMenuBadge({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
@@ -587,6 +624,7 @@ function SidebarMenuBadge({ className, ...props }: React.ComponentProps<'div'>) 
   )
 }
 
+/** Loading placeholder for a menu row, with a randomized label width per render. */
 function SidebarMenuSkeleton({
   className,
   showIcon = false,
@@ -620,6 +658,7 @@ function SidebarMenuSkeleton({
   )
 }
 
+/** Nested list container for sub-items under a {@link SidebarMenuItem}. */
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
   return (
     <ul
@@ -634,6 +673,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
   )
 }
 
+/** A single row within a {@link SidebarMenuSub}. */
 function SidebarMenuSubItem({ className, ...props }: React.ComponentProps<'li'>) {
   return (
     <li
@@ -645,6 +685,7 @@ function SidebarMenuSubItem({ className, ...props }: React.ComponentProps<'li'>)
   )
 }
 
+/** The clickable link/button inside a {@link SidebarMenuSubItem}. */
 const SidebarMenuSubButton = React.forwardRef<
   HTMLAnchorElement,
   React.ComponentProps<'a'> & {
