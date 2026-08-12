@@ -529,11 +529,27 @@ const SidebarMenuButton = React.forwardRef<
     const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const scheduleClose = () => {
-      closeTimer.current = setTimeout(() => setOpen(false), 50)
+      if (closeTimer.current) clearTimeout(closeTimer.current)
+      closeTimer.current = setTimeout(() => {
+        closeTimer.current = null
+        setOpen(false)
+      }, 50)
     }
     const cancelClose = () => {
-      if (closeTimer.current) clearTimeout(closeTimer.current)
+      if (closeTimer.current) {
+        clearTimeout(closeTimer.current)
+        closeTimer.current = null
+      }
     }
+
+    React.useEffect(() => {
+      return () => {
+        if (closeTimer.current) {
+          clearTimeout(closeTimer.current)
+          closeTimer.current = null
+        }
+      }
+    }, [])
 
     const button = (
       <Comp
