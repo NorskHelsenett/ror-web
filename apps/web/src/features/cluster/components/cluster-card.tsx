@@ -14,6 +14,7 @@ import {
   getClusterUidView,
   getCountryView,
   getDatacenterView,
+  getEgressIPView,
   getEnvironmentView,
   getGrafanaUrlView,
   getKubernetesVersionView,
@@ -150,6 +151,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
   const kubernetesVersion = getKubernetesVersionView(cluster) || missingText
   const nhnToolingVersion = getNhnToolVersionView(cluster) || missingText
   const serviceId = getServiceIdView(cluster) || missingText
+  const egressIP = getEgressIPView(cluster) || missingText
   const healthCondition = getStatusView(cluster)
   // TODO: implement tags when view has tags
   // const serviceTags = getTagsView(cluster) || []
@@ -222,7 +224,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
           </>
         )}
 
-        {shows('nodes', 'cpu', 'memory', 'price', 'workspace') && (
+        {shows('nodes', 'cpu', 'memory', 'price', 'workspace', 'egressIP') && (
           <>
             <section className={infoSectionCls}>
               {shows('nodes') && (
@@ -244,6 +246,7 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
                 <Info label='Price (month/year)' value={getPriceString(monthlyPrices, yearlyPrices)} />
               )}
               {shows('workspace') && <Info label='Workspace' value={workspace} />}
+              {shows('egressIP') && <Info label='Egress IP' value={egressIP} />}
             </section>
             <hr />
           </>
