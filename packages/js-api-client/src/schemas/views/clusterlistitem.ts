@@ -44,6 +44,7 @@ export const ClusterListItemViewRow = z
     project: ViewElementString.nullish(),
     slackChannels: ViewElementArray.nullish(),
     nodepools: ViewElementArray.nullish(),
+    egressIP: ViewElementString.nullish(),
   })
   .loose()
 

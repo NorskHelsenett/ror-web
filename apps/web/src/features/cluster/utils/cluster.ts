@@ -324,6 +324,9 @@ export const getServiceIdView = (cluster: ClusterListViewRowType): string => fie
 export const getTagsView = (cluster: ClusterListViewRowType): Record<string, unknown> | null | undefined =>
   cluster.tags?.fieldValue || undefined
 
+/** Egress IP address. */
+export const getEgressIPView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.egressIP)
+
 /** Cluster status. */
 export const getStatusView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.status)
 
@@ -443,6 +446,9 @@ export const getServiceIdViewItem = (cluster: ClusterListViewItemRowType): strin
 /** @see getTagsView */
 export const getTagsViewItem = (cluster: ClusterListViewItemRowType): Record<string, unknown> | null | undefined =>
   cluster.tags?.fieldValue || undefined
+
+/** @see getEgressIPView */
+export const getEgressIPViewItem = (cluster: ClusterListViewRowType): string => fieldStr(cluster.egressIP)
 
 /** @see getStatusView */
 export const getStatusViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.status)

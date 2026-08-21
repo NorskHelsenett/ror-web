@@ -36,6 +36,7 @@ import {
   getResourcesMemoryUsedPercentNumberView,
   getResourcesMemoryUsedView,
   getResourcesMemoryView,
+  getEgressIPView,
 } from '../utils/cluster'
 import { Button } from '@/components/shadcn/button'
 import { HealthCircle } from './health-circle'
@@ -425,6 +426,13 @@ export function getClustersTableColumns(
         id: 'serviceId',
         size: 160,
         header: () => <p className='text-sm'>Service ID</p>,
+        cell: (info) => <span>{info.getValue() || missingText}</span>,
+      }),
+    isVisible('egressIP') &&
+      columnHelper.accessor(getEgressIPView, {
+        id: 'egressIP',
+        size: 160,
+        header: () => <p className='text-sm'>Egress IP</p>,
         cell: (info) => <span>{info.getValue() || missingText}</span>,
       }),
     isVisible('region') &&

@@ -42,6 +42,7 @@ export const ClusterListViewRow = z
     created: ViewElementString.nullish(),
     lastSeen: ViewElementString.nullish(),
     nodepools: ViewElementArray.nullish(),
+    egressIP: ViewElementString.nullish(),
   })
   .loose()
 
