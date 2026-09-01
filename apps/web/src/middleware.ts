@@ -54,13 +54,26 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // ── 3. Reject unauthenticated prefetch requests ──────
-  // Next.js <Link> prefetches send Next-Router-Prefetch: 1. If unauthenticated,
-  // returning a redirect here causes the sign-in route to set next-auth.callback-url
-  // to the prefetched path (e.g. /statistics), overwriting the real callbackUrl and
-  // landing the user on the wrong page after login. Return 401 instead so Next.js
-  // discards the cache entry and re-evaluates on actual navigation.
-  const isPrefetch = req.headers.get('next-router-prefetch') === '1'
+  // ── 3. Reject unauthenticated background requests ───
+  // Only direct browser navigations (Sec-Fetch-Mode: navigate) should trigger
+  // the sign-in redirect. RSC fetches, prefetches, and other background requests
+  // (Sec-Fetch-Mode: cors / no-cors / absent-with-RSC-header) must return 401 instead.
+  // If they redirect to /sign-in they race with the real navigation and overwrite
+  // the in-flight PKCE/state cookies, causing "Try signing in with a different account".
+  const secFetchMode = req.headers.get('sec-fetch-mode')
+  const isRsc = req.headers.get('rsc') === '1'
+  // Treat as a direct navigation only when the browser explicitly says so.
+  // Absent sec-fetch-mode with no RSC header is treated as navigate (legacy/proxy safe).
+  const isDirectNavigation = secFetchMode === 'navigate' || (!secFetchMode && !isRsc)
+
+  if (debug)
+    console.log('[AUTH][MW] request-type', {
+      path,
+      secFetchMode,
+      isRsc,
+      isPrefetch: req.headers.get('next-router-prefetch') === '1',
+      isDirectNavigation,
+    })
 
   // ── 4. Get session token ─────────────────────────────
   // This reads the NextAuth JWT (stored in cookies).
@@ -77,7 +90,7 @@ export async function middleware(req: NextRequest) {
 
   // If no token found -> redirect to sign-in and remember where to go back
   if (!token) {
-    if (isPrefetch) return new NextResponse(null, { status: 401 })
+    if (!isDirectNavigation) return new NextResponse(null, { status: 401 })
     const url = new URL('/sign-in', origin)
     url.searchParams.set('callbackUrl', req.nextUrl.pathname + req.nextUrl.search)
     if (debug) console.log('[AUTH][MW] no token -> redirect', { to: url.toString() })
@@ -103,7 +116,7 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to sign-in if session is expired or a previous refresh attempt failed
   if (!expMs || Date.now() >= expMs || token.error === 'RefreshAccessTokenError') {
-    if (isPrefetch) return new NextResponse(null, { status: 401 })
+    if (!isDirectNavigation) return new NextResponse(null, { status: 401 })
     const url = new URL('/sign-in', origin)
     url.searchParams.set('callbackUrl', req.nextUrl.pathname + req.nextUrl.search)
     if (debug)
