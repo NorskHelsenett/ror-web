@@ -4,6 +4,7 @@ import type { User } from 'next-auth'
 import { Popover, PopoverContent, PopoverPortal, PopoverTrigger } from '@radix-ui/react-popover'
 import { User as UserIcon } from 'lucide-react'
 import Link from 'next/link'
+import { SignOutButton } from '@/features/auth/components/sign-out-button'
 import s from './profile.module.scss'
 
 interface ProfileClientProps {
@@ -33,7 +34,7 @@ export function ProfileClient({ user, className }: ProfileClientProps) {
                   <Link href='/profile'>Profile</Link>
                 </li>
                 <li>
-                  <Link href='/api/auth/signout'>Sign out</Link>
+                  <SignOutButton />
                 </li>
               </ul>
             </div>
