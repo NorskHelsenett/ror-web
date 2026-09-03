@@ -78,12 +78,7 @@ export function generateRequest(config: ApiClientConfig): ApiRequestFunction {
         handleErrorResponse(response)
       }
 
-      const json = await response.json()
-      // A null body on a 2xx response is treated as not found
-      if (json === null) {
-        throw new NotFoundError('Empty response from API')
-      }
-      return json
+      return await response.json()
     } catch (error) {
       // Enhanced error logging with environment information
       const additionalInfo = {
