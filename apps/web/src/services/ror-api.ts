@@ -41,11 +41,11 @@ export const rorApiClient = (accessToken: string) => {
 export async function getRorApi({ redirectOnFail = true } = {}) {
   const session = await auth()
 
-  if (!session?.accessToken) {
+  if (!session?.accessToken || session.error === 'RefreshAccessTokenError') {
     if (redirectOnFail) {
       redirect(routes.auth.signIn.getHref())
     } else {
-      throw new Error('Missing access token')
+      throw new Error('Missing or expired access token')
     }
   }
 

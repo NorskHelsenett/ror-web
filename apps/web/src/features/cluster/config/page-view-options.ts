@@ -42,6 +42,7 @@ export const displayDataOptions: Option[] = [
   { value: 'region', label: 'Region' },
   { value: 'az', label: 'Availability zone' },
   { value: 'workspace', label: 'Workspace' },
+  { value: 'egressIP', label: 'Egress IP' },
 ]
 
 const OPT_IN_FIELDS: string[] = ['serviceId', 'region', 'az']
@@ -57,7 +58,6 @@ export const sortingIdValues = [
   'memory',
   'nodes',
   'monthlyPrice',
-  'yearlyPrice',
   'datacenterName',
   'datacenterProvider',
   'environment',

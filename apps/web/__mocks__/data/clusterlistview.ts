@@ -218,6 +218,13 @@ export const clusterListView = {
       default: true,
       type: 'array',
     },
+    {
+      name: 'egressIP',
+      description: 'The egress IPs of the cluster',
+      order: 25,
+      default: true,
+      type: 'string',
+    },
   ],
   rows: [
     {
@@ -367,6 +374,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
       },
+      egressIP: {
+        fieldValue: '10.0.0.0',
+      },
     },
     {
       argocdURL: {
@@ -514,6 +524,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-avi-system',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.1',
       },
     },
     {
@@ -663,6 +676,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'bgo-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.0.2',
+      },
     },
     {
       argocdURL: {
@@ -811,6 +827,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-contracts',
       },
+      egressIP: {
+        fieldValue: '10.0.0.3',
+      },
     },
     {
       argocdURL: {
@@ -942,6 +961,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ops-v92o',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.4',
       },
     },
     {
@@ -1091,6 +1113,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-amk-3sad',
       },
+      egressIP: {
+        fieldValue: '10.0.0.5',
+      },
     },
     {
       argocdURL: {
@@ -1239,6 +1264,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.0.6',
+      },
     },
     {
       argocdURL: {
@@ -1386,6 +1414,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.7',
       },
     },
     {
@@ -1567,6 +1598,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-app',
       },
+      egressIP: {
+        fieldValue: '10.0.0.8',
+      },
     },
     {
       argocdURL: {
@@ -1714,6 +1748,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-hndevops-97x4',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.9',
       },
     },
     {
@@ -1863,6 +1900,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-bird-durt',
       },
+      egressIP: {
+        fieldValue: '10.0.0.10',
+      },
     },
     {
       argocdURL: {
@@ -2010,6 +2050,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-inn',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.11',
       },
     },
     {
@@ -2159,6 +2202,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-inn-web',
       },
+      egressIP: {
+        fieldValue: '10.0.0.12',
+      },
     },
     {
       argocdURL: {
@@ -2307,6 +2353,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.0.13',
+      },
     },
     {
       argocdURL: {
@@ -2438,6 +2487,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-kd-ze8h',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.14',
       },
     },
     {
@@ -2587,6 +2639,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-team-kjernejournal-portal',
       },
+      egressIP: {
+        fieldValue: '10.0.0.15',
+      },
     },
     {
       argocdURL: {
@@ -2702,6 +2757,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-kollektivet-u2ze',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.16',
       },
     },
     {
@@ -2851,6 +2909,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-komlink',
       },
+      egressIP: {
+        fieldValue: '10.0.0.17',
+      },
     },
     {
       argocdURL: {
@@ -2982,6 +3043,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-komsat',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.18',
       },
     },
     {
@@ -3131,6 +3195,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
       },
+      egressIP: {
+        fieldValue: '10.0.0.19',
+      },
     },
     {
       argocdURL: {
@@ -3278,6 +3345,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-mtj-ee7e',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.20',
       },
     },
     {
@@ -3443,6 +3513,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-ncpeh',
       },
+      egressIP: {
+        fieldValue: '10.0.0.21',
+      },
     },
     {
       argocdURL: {
@@ -3591,6 +3664,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-ncpehp',
       },
+      egressIP: {
+        fieldValue: '10.0.0.22',
+      },
     },
     {
       argocdURL: {
@@ -3722,6 +3798,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-nst-hqjx',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.23',
       },
     },
     {
@@ -3871,6 +3950,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdel-xb9h',
       },
+      egressIP: {
+        fieldValue: '10.0.0.24',
+      },
     },
     {
       argocdURL: {
@@ -4002,6 +4084,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-dokdel-xb9h',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.25',
       },
     },
     {
@@ -4135,6 +4220,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-xcais',
       },
+      egressIP: {
+        fieldValue: '10.0.0.26',
+      },
     },
     {
       argocdURL: {
@@ -4266,6 +4354,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-papla-prxe',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.27',
       },
     },
     {
@@ -4414,6 +4505,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-par',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.28',
       },
     },
     {
@@ -4579,6 +4673,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-per-test',
       },
+      egressIP: {
+        fieldValue: '10.0.0.29',
+      },
     },
     {
       argocdURL: {
@@ -4711,6 +4808,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.30',
       },
     },
     {
@@ -4860,6 +4960,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-pps',
       },
+      egressIP: {
+        fieldValue: '10.0.0.31',
+      },
     },
     {
       argocdURL: {
@@ -5007,6 +5110,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pts',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.32',
       },
     },
     {
@@ -5156,6 +5262,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-team-pts',
       },
+      egressIP: {
+        fieldValue: '10.0.0.33',
+      },
     },
     {
       argocdURL: {
@@ -5303,6 +5412,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.34',
       },
     },
     {
@@ -5452,6 +5564,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-rf-it',
       },
+      egressIP: {
+        fieldValue: '10.0.0.35',
+      },
     },
     {
       argocdURL: {
@@ -5600,6 +5715,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
       },
+      egressIP: {
+        fieldValue: '10.0.0.36',
+      },
     },
     {
       argocdURL: {
@@ -5710,6 +5828,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-team-selvbetjening',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.37',
       },
     },
     {
@@ -5858,6 +5979,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.38',
       },
     },
     {
@@ -6022,6 +6146,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sfm-x6yv',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.39',
       },
     },
     {
@@ -6251,6 +6378,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.0.40',
+      },
     },
     {
       argocdURL: {
@@ -6399,6 +6529,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-stackops-yfki',
       },
+      egressIP: {
+        fieldValue: '10.0.0.41',
+      },
     },
     {
       argocdURL: {
@@ -6531,6 +6664,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-stat',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.42',
       },
     },
     {
@@ -6680,6 +6816,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-pastrans',
       },
+      egressIP: {
+        fieldValue: '10.0.0.43',
+      },
     },
     {
       argocdURL: {
@@ -6827,6 +6966,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-taa',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.44',
       },
     },
     {
@@ -6976,6 +7118,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-taa-tafc',
       },
+      egressIP: {
+        fieldValue: '10.0.0.45',
+      },
     },
     {
       argocdURL: {
@@ -7123,6 +7268,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-taa-69n3',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.46',
       },
     },
     {
@@ -7303,6 +7451,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-tp',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.47',
       },
     },
     {
@@ -7592,6 +7743,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-tp',
       },
+      egressIP: {
+        fieldValue: '10.0.0.48',
+      },
     },
     {
       argocdURL: {
@@ -7756,6 +7910,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-tp',
       },
+      egressIP: {
+        fieldValue: '10.0.0.49',
+      },
     },
     {
       argocdURL: {
@@ -7903,6 +8060,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-atlas',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.50',
       },
     },
     {
@@ -8052,6 +8212,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
       },
+      egressIP: {
+        fieldValue: '10.0.0.51',
+      },
     },
     {
       argocdURL: {
@@ -8183,6 +8346,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.52',
       },
     },
     {
@@ -8332,6 +8498,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-ek',
       },
+      egressIP: {
+        fieldValue: '10.0.0.53',
+      },
     },
     {
       argocdURL: {
@@ -8479,6 +8648,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.54',
       },
     },
     {
@@ -8628,6 +8800,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-fts-6fsr',
       },
+      egressIP: {
+        fieldValue: '10.0.0.55',
+      },
     },
     {
       argocdURL: {
@@ -8775,6 +8950,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-tu',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.56',
       },
     },
     {
@@ -8924,6 +9102,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-xcads-rr2d',
       },
+      egressIP: {
+        fieldValue: '10.0.0.57',
+      },
     },
     {
       argocdURL: {
@@ -9071,6 +9252,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-dokdel-xb9h',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.58',
       },
     },
     {
@@ -9220,6 +9404,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdel-xb9h',
       },
+      egressIP: {
+        fieldValue: '10.0.0.59',
+      },
     },
     {
       argocdURL: {
@@ -9367,6 +9554,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-xcads-sd8k',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.60',
       },
     },
     {
@@ -9516,6 +9706,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdel-p7et',
       },
+      egressIP: {
+        fieldValue: '10.0.0.61',
+      },
     },
     {
       argocdURL: {
@@ -9664,6 +9857,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-vkp',
       },
+      egressIP: {
+        fieldValue: '10.0.0.62',
+      },
     },
     {
       argocdURL: {
@@ -9795,6 +9991,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pm-r92m',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.63',
       },
     },
     {
@@ -9928,6 +10127,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'team-meldingsflyt',
       },
+      egressIP: {
+        fieldValue: '10.0.0.64',
+      },
     },
     {
       argocdURL: {
@@ -10059,6 +10261,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pm-37vp',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.65',
       },
     },
     {
@@ -10208,6 +10413,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-team-melding',
       },
+      egressIP: {
+        fieldValue: '10.0.0.66',
+      },
     },
     {
       argocdURL: {
@@ -10355,6 +10563,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.67',
       },
     },
     {
@@ -10519,6 +10730,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.68',
       },
     },
     {
@@ -10700,6 +10914,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-portal',
       },
+      egressIP: {
+        fieldValue: '10.0.0.69',
+      },
     },
     {
       argocdURL: {
@@ -10847,6 +11064,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.70',
       },
     },
     {
@@ -11011,6 +11231,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-amk-3sad',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.71',
       },
     },
     {
@@ -11206,6 +11429,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.0.72',
+      },
     },
     {
       argocdURL: {
@@ -11353,6 +11579,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.73',
       },
     },
     {
@@ -11502,6 +11731,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.0.74',
+      },
     },
     {
       argocdURL: {
@@ -11649,6 +11881,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.75',
       },
     },
     {
@@ -11893,6 +12128,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'Azure',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.76',
       },
     },
     {
@@ -12185,6 +12423,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'Azure',
       },
+      egressIP: {
+        fieldValue: '10.0.0.77',
+      },
     },
     {
       argocdURL: {
@@ -12332,6 +12573,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-kj-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.78',
       },
     },
     {
@@ -12481,6 +12725,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-kj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.79',
+      },
     },
     {
       argocdURL: {
@@ -12629,6 +12876,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-kj-qa',
       },
+      egressIP: {
+        fieldValue: '10.0.0.80',
+      },
     },
     {
       argocdURL: {
@@ -12771,6 +13021,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-kj-qa',
       },
+      egressIP: {
+        fieldValue: '10.0.0.81',
+      },
     },
     {
       argocdURL: {
@@ -12886,6 +13139,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'p-ai',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.82',
       },
     },
     {
@@ -13034,6 +13290,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-ops',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.83',
       },
     },
     {
@@ -13263,6 +13522,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.84',
+      },
     },
     {
       argocdURL: {
@@ -13491,6 +13753,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.85',
+      },
     },
     {
       argocdURL: {
@@ -13638,6 +13903,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-amk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.86',
       },
     },
     {
@@ -13787,6 +14055,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-cry-prod-d801',
       },
+      egressIP: {
+        fieldValue: '10.0.0.87',
+      },
     },
     {
       argocdURL: {
@@ -13918,6 +14189,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-lda-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.88',
       },
     },
     {
@@ -14083,6 +14357,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-bird-prod-bj1k',
       },
+      egressIP: {
+        fieldValue: '10.0.0.89',
+      },
     },
     {
       argocdURL: {
@@ -14230,6 +14507,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-cyberactionteam-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.90',
       },
     },
     {
@@ -14395,6 +14675,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-cat-prod-5mdd',
       },
+      egressIP: {
+        fieldValue: '10.0.0.91',
+      },
     },
     {
       argocdURL: {
@@ -14542,6 +14825,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.92',
       },
     },
     {
@@ -14691,6 +14977,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-forgejo-prod-3rhc',
       },
+      egressIP: {
+        fieldValue: '10.0.0.93',
+      },
     },
     {
       argocdURL: {
@@ -14839,6 +15128,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-cry-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.94',
+      },
     },
     {
       argocdURL: {
@@ -14971,6 +15263,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-cry-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.95',
       },
     },
     {
@@ -15119,6 +15414,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-database-prod-e64d',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.96',
       },
     },
     {
@@ -15284,6 +15582,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'p-dcn',
       },
+      egressIP: {
+        fieldValue: '10.0.0.97',
+      },
     },
     {
       argocdURL: {
@@ -15431,6 +15732,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-dd-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.98',
       },
     },
     {
@@ -15580,6 +15884,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-ldp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.99',
+      },
     },
     {
       argocdURL: {
@@ -15727,6 +16034,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.100',
       },
     },
     {
@@ -15892,6 +16202,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-lda',
       },
+      egressIP: {
+        fieldValue: '10.0.0.101',
+      },
     },
     {
       argocdURL: {
@@ -16040,6 +16353,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-edi-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.102',
+      },
     },
     {
       argocdURL: {
@@ -16187,6 +16503,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-edi-l10w',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.103',
       },
     },
     {
@@ -16368,6 +16687,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-devops-prod-pnxu',
       },
+      egressIP: {
+        fieldValue: '10.0.0.104',
+      },
     },
     {
       argocdURL: {
@@ -16515,6 +16837,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-shp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.105',
       },
     },
     {
@@ -16664,6 +16989,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-forgejo-prod-3rhc',
       },
+      egressIP: {
+        fieldValue: '10.0.0.106',
+      },
     },
     {
       argocdURL: {
@@ -16812,6 +17140,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.107',
+      },
     },
     {
       argocdURL: {
@@ -16943,6 +17274,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-amk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.108',
       },
     },
     {
@@ -17171,6 +17505,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.109',
       },
     },
     {
@@ -17448,6 +17785,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.110',
+      },
     },
     {
       argocdURL: {
@@ -17595,6 +17935,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.111',
       },
     },
     {
@@ -17744,6 +18087,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-inn',
       },
+      egressIP: {
+        fieldValue: '10.0.0.112',
+      },
     },
     {
       argocdURL: {
@@ -17892,6 +18238,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-inn-web',
       },
+      egressIP: {
+        fieldValue: '10.0.0.113',
+      },
     },
     {
       argocdURL: {
@@ -18039,6 +18388,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-internutv',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.114',
       },
     },
     {
@@ -18236,6 +18588,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-kaf-int',
       },
+      egressIP: {
+        fieldValue: '10.0.0.115',
+      },
     },
     {
       argocdURL: {
@@ -18383,6 +18738,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-komlink-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.116',
       },
     },
     {
@@ -18532,6 +18890,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-komsat-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.117',
+      },
     },
     {
       argocdURL: {
@@ -18679,6 +19040,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-lb',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.118',
       },
     },
     {
@@ -18828,6 +19192,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-ldp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.119',
+      },
     },
     {
       argocdURL: {
@@ -18975,6 +19342,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-lmgd-prod-uyhl',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.120',
       },
     },
     {
@@ -19124,6 +19494,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-innrapp-prod-7169',
       },
+      egressIP: {
+        fieldValue: '10.0.0.121',
+      },
     },
     {
       argocdURL: {
@@ -19271,6 +19644,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-mitt-nettverk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.122',
       },
     },
     {
@@ -19436,6 +19812,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-mot-prod-0u9n',
       },
+      egressIP: {
+        fieldValue: '10.0.0.123',
+      },
     },
     {
       argocdURL: {
@@ -19583,6 +19962,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-mrs-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.124',
       },
     },
     {
@@ -19732,6 +20114,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mtj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.125',
+      },
     },
     {
       argocdURL: {
@@ -19879,6 +20264,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-team-nav-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.126',
       },
     },
     {
@@ -20076,6 +20464,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.127',
+      },
     },
     {
       argocdURL: {
@@ -20270,6 +20661,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-dhp-nav-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.128',
+      },
     },
     {
       argocdURL: {
@@ -20418,6 +20812,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-ncpeh-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.129',
+      },
     },
     {
       argocdURL: {
@@ -20565,6 +20962,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.130',
       },
     },
     {
@@ -20730,6 +21130,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mfp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.131',
+      },
     },
     {
       argocdURL: {
@@ -20877,6 +21280,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-nmkp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.132',
       },
     },
     {
@@ -21026,6 +21432,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-nn-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.133',
+      },
     },
     {
       argocdURL: {
@@ -21174,6 +21583,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-oct-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.134',
+      },
     },
     {
       argocdURL: {
@@ -21306,6 +21718,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-ori-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.135',
+      },
     },
     {
       argocdURL: {
@@ -21437,6 +21852,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-os-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.136',
       },
     },
     {
@@ -21586,6 +22004,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-xcads-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.137',
+      },
     },
     {
       argocdURL: {
@@ -21734,6 +22155,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-oss-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.138',
+      },
     },
     {
       argocdURL: {
@@ -21865,6 +22289,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pai-prod-6tw4',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.139',
       },
     },
     {
@@ -22014,6 +22441,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-papla-prod-12c1',
       },
+      egressIP: {
+        fieldValue: '10.0.0.140',
+      },
     },
     {
       argocdURL: {
@@ -22162,6 +22592,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-par-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.141',
+      },
     },
     {
       argocdURL: {
@@ -22309,6 +22742,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-prod-aoqr',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.142',
       },
     },
     {
@@ -22490,6 +22926,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-per-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.143',
+      },
     },
     {
       argocdURL: {
@@ -22670,6 +23109,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-per-prod-y0t5',
       },
+      egressIP: {
+        fieldValue: '10.0.0.144',
+      },
     },
     {
       argocdURL: {
@@ -22817,6 +23259,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pers-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.145',
       },
     },
     {
@@ -22966,6 +23411,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-personell-if3d',
       },
+      egressIP: {
+        fieldValue: '10.0.0.146',
+      },
     },
     {
       argocdURL: {
@@ -23098,6 +23546,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-pers-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.147',
+      },
     },
     {
       argocdURL: {
@@ -23229,6 +23680,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-pjdmon-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.148',
       },
     },
     {
@@ -23378,6 +23832,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-plm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.149',
+      },
     },
     {
       argocdURL: {
@@ -23525,6 +23982,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-plm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.150',
       },
     },
     {
@@ -23704,6 +24164,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-pps-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.151',
+      },
     },
     {
       argocdURL: {
@@ -23868,6 +24331,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'central-az1',
       },
+      egressIP: {
+        fieldValue: '10.0.0.152',
+      },
     },
     {
       argocdURL: {
@@ -24000,6 +24466,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.153',
       },
     },
     {
@@ -24149,6 +24618,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-pastrans-prod-aoqr',
       },
+      egressIP: {
+        fieldValue: '10.0.0.154',
+      },
     },
     {
       argocdURL: {
@@ -24280,6 +24752,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-prod-aoqr',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.155',
       },
     },
     {
@@ -24429,6 +24904,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-pts-prod-pqp1',
       },
+      egressIP: {
+        fieldValue: '10.0.0.156',
+      },
     },
     {
       argocdURL: {
@@ -24576,6 +25054,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-team-pts-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.157',
       },
     },
     {
@@ -24725,6 +25206,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rap-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.158',
+      },
     },
     {
       argocdURL: {
@@ -24872,6 +25356,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-rasj',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.159',
       },
     },
     {
@@ -25021,6 +25508,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rf-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.160',
+      },
     },
     {
       argocdURL: {
@@ -25169,6 +25659,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rf-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.161',
+      },
     },
     {
       argocdURL: {
@@ -25300,6 +25793,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-rgt-prod-9c58',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.162',
       },
     },
     {
@@ -25448,6 +25944,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.163',
       },
     },
     {
@@ -25603,6 +26102,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ror-prod-q8mx',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.164',
       },
     },
     {
@@ -25784,6 +26286,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-ror-prod-q8mx',
       },
+      egressIP: {
+        fieldValue: '10.0.0.165',
+      },
     },
     {
       argocdURL: {
@@ -25915,6 +26420,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-stats-prod-ixtu',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.166',
       },
     },
     {
@@ -26064,6 +26572,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-sb-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.167',
+      },
     },
     {
       argocdURL: {
@@ -26212,6 +26723,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-sb-prod-30ze',
       },
+      egressIP: {
+        fieldValue: '10.0.0.168',
+      },
     },
     {
       argocdURL: {
@@ -26359,6 +26873,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.169',
       },
     },
     {
@@ -26540,6 +27057,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.170',
+      },
     },
     {
       argocdURL: {
@@ -26704,6 +27224,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.171',
+      },
     },
     {
       argocdURL: {
@@ -26851,6 +27374,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.172',
       },
     },
     {
@@ -27000,6 +27526,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.173',
+      },
     },
     {
       argocdURL: {
@@ -27147,6 +27676,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.174',
       },
     },
     {
@@ -27296,6 +27828,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.175',
+      },
     },
     {
       argocdURL: {
@@ -27443,6 +27978,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sfm-prod-0kvt',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.176',
       },
     },
     {
@@ -27623,6 +28161,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.177',
       },
     },
     {
@@ -27836,6 +28377,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.178',
+      },
     },
     {
       argocdURL: {
@@ -28016,6 +28560,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.179',
+      },
     },
     {
       argocdURL: {
@@ -28195,6 +28742,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.180',
       },
     },
     {
@@ -28406,6 +28956,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.181',
+      },
     },
     {
       argocdURL: {
@@ -28616,6 +29169,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.182',
+      },
     },
     {
       argocdURL: {
@@ -28780,6 +29336,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.183',
+      },
     },
     {
       argocdURL: {
@@ -28927,6 +29486,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.184',
       },
     },
     {
@@ -29124,6 +29686,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.185',
+      },
     },
     {
       argocdURL: {
@@ -29271,6 +29836,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.186',
       },
     },
     {
@@ -29452,6 +30020,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.187',
+      },
     },
     {
       argocdURL: {
@@ -29590,6 +30161,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.188',
       },
     },
     {
@@ -29738,6 +30312,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.189',
       },
     },
     {
@@ -29918,6 +30495,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod2',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.190',
       },
     },
     {
@@ -30131,6 +30711,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-smax-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.191',
+      },
     },
     {
       argocdURL: {
@@ -30278,6 +30861,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-soc-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.192',
       },
     },
     {
@@ -30427,6 +31013,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-soc-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.193',
+      },
     },
     {
       argocdURL: {
@@ -30574,6 +31163,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-spe-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.194',
       },
     },
     {
@@ -30723,6 +31315,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mon-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.195',
+      },
     },
     {
       argocdURL: {
@@ -30855,6 +31450,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-database-prod-lfme',
       },
+      egressIP: {
+        fieldValue: '10.0.0.196',
+      },
     },
     {
       argocdURL: {
@@ -30986,6 +31584,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-stat-prod-6f8x',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.197',
       },
     },
     {
@@ -31135,6 +31736,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-taa-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.198',
+      },
     },
     {
       argocdURL: {
@@ -31282,6 +31886,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-tp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.199',
       },
     },
     {
@@ -31478,6 +32085,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-tp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.200',
       },
     },
     {
@@ -31857,6 +32467,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-tp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.201',
+      },
     },
     {
       argocdURL: {
@@ -32004,6 +32617,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-ek',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.202',
       },
     },
     {
@@ -32153,6 +32769,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-ek-prod-77mi',
       },
+      egressIP: {
+        fieldValue: '10.0.0.203',
+      },
     },
     {
       argocdURL: {
@@ -32284,6 +32903,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-pjdmon-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.204',
       },
     },
     {
@@ -32433,6 +33055,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-obao-prod-yeps',
       },
+      egressIP: {
+        fieldValue: '10.0.0.205',
+      },
     },
     {
       argocdURL: {
@@ -32581,6 +33206,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-pam-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.206',
+      },
     },
     {
       argocdURL: {
@@ -32696,6 +33324,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.207',
       },
     },
     {
@@ -32828,6 +33459,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.208',
       },
     },
     {
@@ -32977,6 +33611,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-soc-prod-5e7b',
       },
+      egressIP: {
+        fieldValue: '10.0.0.209',
+      },
     },
     {
       argocdURL: {
@@ -33124,6 +33761,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.210',
       },
     },
     {
@@ -33273,6 +33913,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-tsc-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.211',
+      },
     },
     {
       argocdURL: {
@@ -33420,6 +34063,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-tu-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.212',
       },
     },
     {
@@ -33617,6 +34263,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-uni-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.213',
+      },
     },
     {
       argocdURL: {
@@ -33764,6 +34413,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-virk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.214',
       },
     },
     {
@@ -33929,6 +34581,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-virk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.215',
+      },
     },
     {
       argocdURL: {
@@ -34076,6 +34731,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-vk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.216',
       },
     },
     {
@@ -34257,6 +34915,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-videotj-agoi',
       },
+      egressIP: {
+        fieldValue: '10.0.0.217',
+      },
     },
     {
       argocdURL: {
@@ -34388,6 +35049,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-produktvm',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.218',
       },
     },
     {
@@ -34521,6 +35185,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-ptvm-resl',
       },
+      egressIP: {
+        fieldValue: '10.0.0.219',
+      },
     },
     {
       argocdURL: {
@@ -34652,6 +35319,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ptvm-prod-x5j7',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.220',
       },
     },
     {
@@ -34832,6 +35502,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-team-melding-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.221',
       },
     },
     {
@@ -35029,6 +35702,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.0.222',
+      },
     },
     {
       argocdURL: {
@@ -35225,6 +35901,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.0.223',
+      },
     },
     {
       argocdURL: {
@@ -35372,6 +36051,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'central-az1',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.224',
       },
     },
     {
@@ -35569,6 +36251,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.0.225',
+      },
     },
     {
       argocdURL: {
@@ -35765,6 +36450,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.0.226',
+      },
     },
     {
       argocdURL: {
@@ -35913,6 +36601,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.0.227',
+      },
     },
     {
       argocdURL: {
@@ -36044,6 +36735,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-lda',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.228',
       },
     },
     {
@@ -36193,6 +36887,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-database-nx0r',
       },
+      egressIP: {
+        fieldValue: '10.0.0.229',
+      },
     },
     {
       argocdURL: {
@@ -36341,6 +37038,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-dd',
       },
+      egressIP: {
+        fieldValue: '10.0.0.230',
+      },
     },
     {
       argocdURL: {
@@ -36488,6 +37188,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-edi',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.231',
       },
     },
     {
@@ -36669,6 +37372,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-devops-xyuw',
       },
+      egressIP: {
+        fieldValue: '10.0.0.232',
+      },
     },
     {
       argocdURL: {
@@ -36817,6 +37523,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.0.233',
+      },
     },
     {
       argocdURL: {
@@ -36964,6 +37673,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.234',
       },
     },
     {
@@ -37145,6 +37857,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.0.235',
+      },
     },
     {
       argocdURL: {
@@ -37292,6 +38007,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.236',
       },
     },
     {
@@ -37441,6 +38159,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-inn',
       },
+      egressIP: {
+        fieldValue: '10.0.0.237',
+      },
     },
     {
       argocdURL: {
@@ -37588,6 +38309,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-inn-web',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.238',
       },
     },
     {
@@ -37737,6 +38461,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mtj',
       },
+      egressIP: {
+        fieldValue: '10.0.0.239',
+      },
     },
     {
       argocdURL: {
@@ -37885,6 +38612,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-ncpeh-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.0.240',
+      },
     },
     {
       argocdURL: {
@@ -38016,6 +38746,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-nmkp',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.241',
       },
     },
     {
@@ -38165,6 +38898,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-xcads',
       },
+      egressIP: {
+        fieldValue: '10.0.0.242',
+      },
     },
     {
       argocdURL: {
@@ -38312,6 +39048,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.243',
       },
     },
     {
@@ -38461,6 +39200,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-plm',
       },
+      egressIP: {
+        fieldValue: '10.0.0.244',
+      },
     },
     {
       argocdURL: {
@@ -38609,6 +39351,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-plm',
       },
+      egressIP: {
+        fieldValue: '10.0.0.245',
+      },
     },
     {
       argocdURL: {
@@ -38741,6 +39486,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.246',
       },
     },
     {
@@ -38890,6 +39638,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
       },
+      egressIP: {
+        fieldValue: '10.0.0.247',
+      },
     },
     {
       argocdURL: {
@@ -39037,6 +39788,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rap',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.248',
       },
     },
     {
@@ -39186,6 +39940,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rf',
       },
+      egressIP: {
+        fieldValue: '10.0.0.249',
+      },
     },
     {
       argocdURL: {
@@ -39334,6 +40091,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rf',
       },
+      egressIP: {
+        fieldValue: '10.0.0.250',
+      },
     },
     {
       argocdURL: {
@@ -39466,6 +40226,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-sb-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.251',
       },
     },
     {
@@ -39614,6 +40377,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.252',
       },
     },
     {
@@ -39823,6 +40589,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-smax',
       },
+      egressIP: {
+        fieldValue: '10.0.0.253',
+      },
     },
     {
       argocdURL: {
@@ -39970,6 +40739,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-taa',
+      },
+      egressIP: {
+        fieldValue: '10.0.0.254',
       },
     },
     {
@@ -40119,6 +40891,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
       },
+      egressIP: {
+        fieldValue: '10.0.0.255',
+      },
     },
     {
       argocdURL: {
@@ -40250,6 +41025,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-etterkontroll-b56q',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.0',
       },
     },
     {
@@ -40398,6 +41176,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.1',
       },
     },
     {
@@ -40579,6 +41360,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.2',
+      },
     },
     {
       argocdURL: {
@@ -40726,6 +41510,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-tsc',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.3',
       },
     },
     {
@@ -40875,6 +41662,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
       },
+      egressIP: {
+        fieldValue: '10.0.1.4',
+      },
     },
     {
       argocdURL: {
@@ -41023,6 +41813,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-pers',
       },
+      egressIP: {
+        fieldValue: '10.0.1.5',
+      },
     },
     {
       argocdURL: {
@@ -41154,6 +41947,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-tp-ttkf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.6',
       },
     },
     {
@@ -41287,6 +42083,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-pers',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.7',
       },
     },
     {
@@ -41436,6 +42235,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-pers',
       },
+      egressIP: {
+        fieldValue: '10.0.1.8',
+      },
     },
     {
       argocdURL: {
@@ -41583,6 +42385,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-virk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.9',
       },
     },
     {
@@ -41732,6 +42537,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-virk-bunf',
       },
+      egressIP: {
+        fieldValue: '10.0.1.10',
+      },
     },
     {
       argocdURL: {
@@ -41879,6 +42687,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-virk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.11',
       },
     },
     {
@@ -42060,6 +42871,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-per',
       },
+      egressIP: {
+        fieldValue: '10.0.1.12',
+      },
     },
     {
       argocdURL: {
@@ -42240,6 +43054,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.1.13',
+      },
     },
     {
       argocdURL: {
@@ -42365,6 +43182,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-diemslett-wbrd',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.14',
       },
     },
     {
@@ -42513,6 +43333,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-ops',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.15',
       },
     },
     {
@@ -42707,6 +43530,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.16',
       },
     },
     {
@@ -42904,6 +43730,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.1.17',
+      },
     },
     {
       argocdURL: {
@@ -43052,6 +43881,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.1.18',
+      },
     },
     {
       argocdURL: {
@@ -43183,6 +44015,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.19',
       },
     },
     {
@@ -43332,6 +44167,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-cry-sozh',
       },
+      egressIP: {
+        fieldValue: '10.0.1.20',
+      },
     },
     {
       argocdURL: {
@@ -43479,6 +44317,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.21',
       },
     },
     {
@@ -43628,6 +44469,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-bird-durt',
       },
+      egressIP: {
+        fieldValue: '10.0.1.22',
+      },
     },
     {
       argocdURL: {
@@ -43776,6 +44620,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.23',
+      },
     },
     {
       argocdURL: {
@@ -43908,6 +44755,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-cry',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.24',
       },
     },
     {
@@ -44057,6 +44907,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-container-tze4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.25',
+      },
     },
     {
       argocdURL: {
@@ -44204,6 +45057,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-database-nx0r',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.26',
       },
     },
     {
@@ -44353,6 +45209,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 't-dcn',
       },
+      egressIP: {
+        fieldValue: '10.0.1.27',
+      },
     },
     {
       argocdURL: {
@@ -44500,6 +45359,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-dd',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.28',
       },
     },
     {
@@ -44649,6 +45511,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.29',
+      },
     },
     {
       argocdURL: {
@@ -44780,6 +45645,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-diemslett-wbrd',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.30',
       },
     },
     {
@@ -44929,6 +45797,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.31',
+      },
     },
     {
       argocdURL: {
@@ -45076,6 +45947,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-shp',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.32',
       },
     },
     {
@@ -45225,6 +46099,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.33',
+      },
     },
     {
       argocdURL: {
@@ -45373,6 +46250,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.1.34',
+      },
     },
     {
       argocdURL: {
@@ -45520,6 +46400,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.35',
       },
     },
     {
@@ -45733,6 +46616,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.36',
+      },
     },
     {
       argocdURL: {
@@ -45945,6 +46831,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-hn-val1',
       },
+      egressIP: {
+        fieldValue: '10.0.1.37',
+      },
     },
     {
       argocdURL: {
@@ -46092,6 +46981,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.38',
       },
     },
     {
@@ -46241,6 +47133,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-il',
       },
+      egressIP: {
+        fieldValue: '10.0.1.39',
+      },
     },
     {
       argocdURL: {
@@ -46389,6 +47284,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-inn',
       },
+      egressIP: {
+        fieldValue: '10.0.1.40',
+      },
     },
     {
       argocdURL: {
@@ -46536,6 +47434,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-inn-web',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.41',
       },
     },
     {
@@ -46717,6 +47618,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-nhn-tooling',
       },
+      egressIP: {
+        fieldValue: '10.0.1.42',
+      },
     },
     {
       argocdURL: {
@@ -46865,6 +47769,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-internutv',
       },
+      egressIP: {
+        fieldValue: '10.0.1.43',
+      },
     },
     {
       argocdURL: {
@@ -47010,6 +47917,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.44',
       },
     },
     {
@@ -47159,6 +48069,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.45',
+      },
     },
     {
       argocdURL: {
@@ -47307,6 +48220,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.1.46',
+      },
     },
     {
       argocdURL: {
@@ -47438,6 +48354,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.47',
       },
     },
     {
@@ -47635,6 +48554,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-kaf-int',
       },
+      egressIP: {
+        fieldValue: '10.0.1.48',
+      },
     },
     {
       argocdURL: {
@@ -47766,6 +48688,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-kant-9b96',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.49',
       },
     },
     {
@@ -47915,6 +48840,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-portal',
       },
+      egressIP: {
+        fieldValue: '10.0.1.50',
+      },
     },
     {
       argocdURL: {
@@ -48062,6 +48990,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-komlink',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.51',
       },
     },
     {
@@ -48211,6 +49142,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-komsat',
       },
+      egressIP: {
+        fieldValue: '10.0.1.52',
+      },
     },
     {
       argocdURL: {
@@ -48359,6 +49293,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.53',
+      },
     },
     {
       argocdURL: {
@@ -48490,6 +49427,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-lb-urm2',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.54',
       },
     },
     {
@@ -48623,6 +49563,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-ldp',
       },
+      egressIP: {
+        fieldValue: '10.0.1.55',
+      },
     },
     {
       argocdURL: {
@@ -48755,6 +49698,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-lmgd-kfr5',
       },
+      egressIP: {
+        fieldValue: '10.0.1.56',
+      },
     },
     {
       argocdURL: {
@@ -48886,6 +49832,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sops-gef8',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.57',
       },
     },
     {
@@ -49025,6 +49974,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.58',
       },
     },
     {
@@ -49174,6 +50126,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
       },
+      egressIP: {
+        fieldValue: '10.0.1.59',
+      },
     },
     {
       argocdURL: {
@@ -49321,6 +50276,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-mon-j9nn',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.60',
       },
     },
     {
@@ -49470,6 +50428,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mrs-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.61',
+      },
     },
     {
       argocdURL: {
@@ -49617,6 +50578,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-mtj',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.62',
       },
     },
     {
@@ -49766,6 +50730,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-mtj-ee7e',
       },
+      egressIP: {
+        fieldValue: '10.0.1.63',
+      },
     },
     {
       argocdURL: {
@@ -49913,6 +50880,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-team-nav',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.64',
       },
     },
     {
@@ -50110,6 +51080,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.1.65',
+      },
     },
     {
       argocdURL: {
@@ -50304,6 +51277,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.1.66',
+      },
     },
     {
       argocdURL: {
@@ -50452,6 +51428,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-ncpeh',
       },
+      egressIP: {
+        fieldValue: '10.0.1.67',
+      },
     },
     {
       argocdURL: {
@@ -50599,6 +51578,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.68',
       },
     },
     {
@@ -50764,6 +51746,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-mfp',
       },
+      egressIP: {
+        fieldValue: '10.0.1.69',
+      },
     },
     {
       argocdURL: {
@@ -50895,6 +51880,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-nmkp',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.70',
       },
     },
     {
@@ -51044,6 +52032,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-nn',
       },
+      egressIP: {
+        fieldValue: '10.0.1.71',
+      },
     },
     {
       argocdURL: {
@@ -51191,6 +52182,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-nn-6omn',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.72',
       },
     },
     {
@@ -51340,6 +52334,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-nxt-port',
       },
+      egressIP: {
+        fieldValue: '10.0.1.73',
+      },
     },
     {
       argocdURL: {
@@ -51488,6 +52485,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-oct',
       },
+      egressIP: {
+        fieldValue: '10.0.1.74',
+      },
     },
     {
       argocdURL: {
@@ -51619,6 +52619,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-ori',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.75',
       },
     },
     {
@@ -51768,6 +52771,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-asky',
       },
+      egressIP: {
+        fieldValue: '10.0.1.76',
+      },
     },
     {
       argocdURL: {
@@ -51915,6 +52921,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-dokdel-xb9h',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.77',
       },
     },
     {
@@ -52064,6 +53073,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-xcads',
       },
+      egressIP: {
+        fieldValue: '10.0.1.78',
+      },
     },
     {
       argocdURL: {
@@ -52196,6 +53208,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-dokdel-p7et',
       },
+      egressIP: {
+        fieldValue: '10.0.1.79',
+      },
     },
     {
       argocdURL: {
@@ -52327,6 +53342,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.80',
       },
     },
     {
@@ -52476,6 +53494,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-oss',
       },
+      egressIP: {
+        fieldValue: '10.0.1.81',
+      },
     },
     {
       argocdURL: {
@@ -52607,6 +53628,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-papla-prxe',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.82',
       },
     },
     {
@@ -52756,6 +53780,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-par',
       },
+      egressIP: {
+        fieldValue: '10.0.1.83',
+      },
     },
     {
       argocdURL: {
@@ -52904,6 +53931,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
       },
+      egressIP: {
+        fieldValue: '10.0.1.84',
+      },
     },
     {
       argocdURL: {
@@ -53051,6 +54081,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-nt-7snh',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.85',
       },
     },
     {
@@ -53215,6 +54248,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-per-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.86',
       },
     },
     {
@@ -53412,6 +54448,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-per-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.87',
+      },
     },
     {
       argocdURL: {
@@ -53608,6 +54647,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-per',
       },
+      egressIP: {
+        fieldValue: '10.0.1.88',
+      },
     },
     {
       argocdURL: {
@@ -53755,6 +54797,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-per-wlt4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.89',
       },
     },
     {
@@ -53936,6 +54981,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-per-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.90',
+      },
     },
     {
       argocdURL: {
@@ -54083,6 +55131,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pps',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.91',
       },
     },
     {
@@ -54232,6 +55283,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.92',
+      },
     },
     {
       argocdURL: {
@@ -54364,6 +55418,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.93',
       },
     },
     {
@@ -54513,6 +55570,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
       },
+      egressIP: {
+        fieldValue: '10.0.1.94',
+      },
     },
     {
       argocdURL: {
@@ -54660,6 +55720,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-pts-adoc',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.95',
       },
     },
     {
@@ -54809,6 +55872,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-team-pts',
       },
+      egressIP: {
+        fieldValue: '10.0.1.96',
+      },
     },
     {
       argocdURL: {
@@ -54956,6 +56022,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.97',
       },
     },
     {
@@ -55105,6 +56174,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-reseptformidleren-9vq8',
       },
+      egressIP: {
+        fieldValue: '10.0.1.98',
+      },
     },
     {
       argocdURL: {
@@ -55253,6 +56325,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-rf',
       },
+      egressIP: {
+        fieldValue: '10.0.1.99',
+      },
     },
     {
       argocdURL: {
@@ -55385,6 +56460,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-register-bfe7',
       },
+      egressIP: {
+        fieldValue: '10.0.1.100',
+      },
     },
     {
       argocdURL: {
@@ -55510,6 +56588,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-selvbet-2478',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.101',
       },
     },
     {
@@ -55691,6 +56772,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.1.102',
+      },
     },
     {
       argocdURL: {
@@ -55822,6 +56906,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-selvbet-2478',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.103',
       },
     },
     {
@@ -55955,6 +57042,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-stat-r6jm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.104',
+      },
     },
     {
       argocdURL: {
@@ -56087,6 +57177,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-sb-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.105',
       },
     },
     {
@@ -56236,6 +57329,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
       },
+      egressIP: {
+        fieldValue: '10.0.1.106',
+      },
     },
     {
       argocdURL: {
@@ -56383,6 +57479,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-sfm-x6yv',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.107',
       },
     },
     {
@@ -56548,6 +57647,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.108',
+      },
     },
     {
       argocdURL: {
@@ -56696,6 +57798,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.109',
+      },
     },
     {
       argocdURL: {
@@ -56843,6 +57948,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.110',
       },
     },
     {
@@ -57072,6 +58180,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.111',
+      },
     },
     {
       argocdURL: {
@@ -57236,6 +58347,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.1.112',
+      },
     },
     {
       argocdURL: {
@@ -57383,6 +58497,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.113',
       },
     },
     {
@@ -57532,6 +58649,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-soc',
       },
+      egressIP: {
+        fieldValue: '10.0.1.114',
+      },
     },
     {
       argocdURL: {
@@ -57680,6 +58800,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-soc-q4sy',
       },
+      egressIP: {
+        fieldValue: '10.0.1.115',
+      },
     },
     {
       argocdURL: {
@@ -57811,6 +58934,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.116',
       },
     },
     {
@@ -57960,6 +59086,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-spe',
       },
+      egressIP: {
+        fieldValue: '10.0.1.117',
+      },
     },
     {
       argocdURL: {
@@ -58107,6 +59236,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-splunk-yd5b',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.118',
       },
     },
     {
@@ -58256,6 +59388,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.1.119',
+      },
     },
     {
       argocdURL: {
@@ -58388,6 +59523,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-db-g5w2',
       },
+      egressIP: {
+        fieldValue: '10.0.1.120',
+      },
     },
     {
       argocdURL: {
@@ -58519,6 +59657,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-stat-r6jm',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.121',
       },
     },
     {
@@ -58668,6 +59809,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-taa',
       },
+      egressIP: {
+        fieldValue: '10.0.1.122',
+      },
     },
     {
       argocdURL: {
@@ -58815,6 +59959,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-teknisktest',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.123',
       },
     },
     {
@@ -58980,6 +60127,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-cat-nkrn',
       },
+      egressIP: {
+        fieldValue: '10.0.1.124',
+      },
     },
     {
       argocdURL: {
@@ -59111,6 +60261,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-cat-nkrn',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.125',
       },
     },
     {
@@ -59308,6 +60461,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-container-tze4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.126',
+      },
     },
     {
       argocdURL: {
@@ -59455,6 +60611,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.127',
       },
     },
     {
@@ -59748,6 +60907,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-amk-3sad',
       },
+      egressIP: {
+        fieldValue: '10.0.1.128',
+      },
     },
     {
       argocdURL: {
@@ -59895,6 +61057,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.129',
       },
     },
     {
@@ -60044,6 +61209,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-ek',
       },
+      egressIP: {
+        fieldValue: '10.0.1.130',
+      },
     },
     {
       argocdURL: {
@@ -60191,6 +61359,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.131',
       },
     },
     {
@@ -60356,6 +61527,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.1.132',
+      },
     },
     {
       argocdURL: {
@@ -60503,6 +61677,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.133',
       },
     },
     {
@@ -60652,6 +61829,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-prehos-i94a',
       },
+      egressIP: {
+        fieldValue: '10.0.1.134',
+      },
     },
     {
       argocdURL: {
@@ -60800,6 +61980,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-obao',
       },
+      egressIP: {
+        fieldValue: '10.0.1.135',
+      },
     },
     {
       argocdURL: {
@@ -60931,6 +62114,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pam',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.136',
       },
     },
     {
@@ -61080,6 +62266,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-proxy-i39q',
       },
+      egressIP: {
+        fieldValue: '10.0.1.137',
+      },
     },
     {
       argocdURL: {
@@ -61227,6 +62416,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-tsc',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.138',
       },
     },
     {
@@ -61424,6 +62616,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1cl02-uni',
       },
+      egressIP: {
+        fieldValue: '10.0.1.139',
+      },
     },
     {
       argocdURL: {
@@ -61571,6 +62766,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-vk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.140',
       },
     },
     {
@@ -61720,6 +62918,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'vitistack-video-uz3e',
       },
+      egressIP: {
+        fieldValue: '10.0.1.141',
+      },
     },
     {
       argocdURL: {
@@ -61867,6 +63068,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1cl02-vkp',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.142',
       },
     },
     {
@@ -62064,6 +63268,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'osl1-wap',
       },
+      egressIP: {
+        fieldValue: '10.0.1.143',
+      },
     },
     {
       argocdURL: {
@@ -62211,6 +63418,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-wap',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.144',
       },
     },
     {
@@ -62392,6 +63602,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-team-melding',
       },
+      egressIP: {
+        fieldValue: '10.0.1.145',
+      },
     },
     {
       argocdURL: {
@@ -62539,6 +63752,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-nhn-tooling',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.146',
       },
     },
     {
@@ -62704,6 +63920,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-kj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.1.147',
+      },
     },
     {
       argocdURL: {
@@ -62851,6 +64070,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'trd1-kj-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.148',
       },
     },
     {
@@ -63000,6 +64222,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-kj-qa',
       },
+      egressIP: {
+        fieldValue: '10.0.1.149',
+      },
     },
     {
       argocdURL: {
@@ -63148,6 +64373,9 @@ export const clusterListView = {
       workspace: {
         fieldValue: 'trd1-kj-qa',
       },
+      egressIP: {
+        fieldValue: '10.0.1.150',
+      },
     },
     {
       argocdURL: {
@@ -63295,6 +64523,9 @@ export const clusterListView = {
       },
       workspace: {
         fieldValue: 'osl1-team-nav',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.151',
       },
     },
   ],
@@ -63570,6 +64801,13 @@ export const clusterListViewItem = {
       default: true,
       type: 'datetime',
     },
+    {
+      name: 'egressIP',
+      description: 'The egress IPs of the cluster',
+      order: 24,
+      default: true,
+      type: 'string',
+    },
   ],
   rows: [
     {
@@ -63719,6 +64957,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'bgo-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.1.152',
+      },
     },
     {
       argocdURL: {
@@ -63866,6 +65107,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 't-per',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.153',
       },
     },
     {
@@ -64015,6 +65259,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'cephtest5',
       },
+      egressIP: {
+        fieldValue: '10.0.1.154',
+      },
     },
     {
       argocdURL: {
@@ -64162,6 +65409,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-ops-v92o',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.155',
       },
     },
     {
@@ -64311,6 +65561,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-amk-3sad',
       },
+      egressIP: {
+        fieldValue: '10.0.1.156',
+      },
     },
     {
       argocdURL: {
@@ -64458,6 +65711,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-andreh',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.157',
       },
     },
     {
@@ -64607,6 +65863,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-hn-uzmx',
       },
+      egressIP: {
+        fieldValue: '10.0.1.158',
+      },
     },
     {
       argocdURL: {
@@ -64754,6 +66013,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-hndevops-97x4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.159',
       },
     },
     {
@@ -64903,6 +66165,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-kd-ze8h',
       },
+      egressIP: {
+        fieldValue: '10.0.1.160',
+      },
     },
     {
       argocdURL: {
@@ -65050,6 +66315,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-test-nyhk',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.161',
       },
     },
     {
@@ -65199,6 +66467,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-kollektivet-u2ze',
       },
+      egressIP: {
+        fieldValue: '10.0.1.162',
+      },
     },
     {
       argocdURL: {
@@ -65346,6 +66617,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.163',
       },
     },
     {
@@ -65495,6 +66769,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-nst-hqjx',
       },
+      egressIP: {
+        fieldValue: '10.0.1.164',
+      },
     },
     {
       argocdURL: {
@@ -65642,6 +66919,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-nst-98g4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.165',
       },
     },
     {
@@ -65791,6 +67071,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-papla-prxe',
       },
+      egressIP: {
+        fieldValue: '10.0.1.166',
+      },
     },
     {
       argocdURL: {
@@ -65938,6 +67221,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pts',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.167',
       },
     },
     {
@@ -66087,6 +67373,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
       },
+      egressIP: {
+        fieldValue: '10.0.1.168',
+      },
     },
     {
       argocdURL: {
@@ -66234,6 +67523,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-taa-tafc',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.169',
       },
     },
     {
@@ -66383,6 +67675,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-taa-69n3',
       },
+      egressIP: {
+        fieldValue: '10.0.1.170',
+      },
     },
     {
       argocdURL: {
@@ -66530,6 +67825,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-aa-l23n',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.171',
       },
     },
     {
@@ -66679,6 +67977,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-atlas',
       },
+      egressIP: {
+        fieldValue: '10.0.1.172',
+      },
     },
     {
       argocdURL: {
@@ -66826,6 +68127,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-atlas',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.173',
       },
     },
     {
@@ -66975,6 +68279,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
       },
+      egressIP: {
+        fieldValue: '10.0.1.174',
+      },
     },
     {
       argocdURL: {
@@ -67122,6 +68429,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.175',
       },
     },
     {
@@ -67271,6 +68581,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-fts-6fsr',
       },
+      egressIP: {
+        fieldValue: '10.0.1.176',
+      },
     },
     {
       argocdURL: {
@@ -67418,6 +68731,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-fts-6fsr',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.177',
       },
     },
     {
@@ -67567,6 +68883,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-xcads-rr2d',
       },
+      egressIP: {
+        fieldValue: '10.0.1.178',
+      },
     },
     {
       argocdURL: {
@@ -67714,6 +69033,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-xcads-sd8k',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.179',
       },
     },
     {
@@ -67863,6 +69185,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-dokdel-p7et',
       },
+      egressIP: {
+        fieldValue: '10.0.1.180',
+      },
     },
     {
       argocdURL: {
@@ -68010,6 +69335,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pm-r92m',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.181',
       },
     },
     {
@@ -68159,6 +69487,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'team-meldingsflyt',
       },
+      egressIP: {
+        fieldValue: '10.0.1.182',
+      },
     },
     {
       argocdURL: {
@@ -68306,6 +69637,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pm-37vp',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.183',
       },
     },
     {
@@ -68455,6 +69789,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-amk-3sad',
       },
+      egressIP: {
+        fieldValue: '10.0.1.184',
+      },
     },
     {
       argocdURL: {
@@ -68602,6 +69939,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-cry-prod-d801',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.185',
       },
     },
     {
@@ -68751,6 +70091,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-forgejo-prod-3rhc',
       },
+      egressIP: {
+        fieldValue: '10.0.1.186',
+      },
     },
     {
       argocdURL: {
@@ -68898,6 +70241,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-database-prod-e64d',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.187',
       },
     },
     {
@@ -69047,6 +70393,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-edi-l10w',
       },
+      egressIP: {
+        fieldValue: '10.0.1.188',
+      },
     },
     {
       argocdURL: {
@@ -69194,6 +70543,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-devops-prod-pnxu',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.189',
       },
     },
     {
@@ -69343,6 +70695,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-forgejo-prod-3rhc',
       },
+      egressIP: {
+        fieldValue: '10.0.1.190',
+      },
     },
     {
       argocdURL: {
@@ -69490,6 +70845,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-lmgd-prod-uyhl',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.191',
       },
     },
     {
@@ -69639,6 +70997,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-innrapp-prod-7169',
       },
+      egressIP: {
+        fieldValue: '10.0.1.192',
+      },
     },
     {
       argocdURL: {
@@ -69786,6 +71147,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-mot-prod-0u9n',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.193',
       },
     },
     {
@@ -69935,6 +71299,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-pai-prod-6tw4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.194',
+      },
     },
     {
       argocdURL: {
@@ -70082,6 +71449,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-prod-aoqr',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.195',
       },
     },
     {
@@ -70231,6 +71601,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-per-prod-y0t5',
       },
+      egressIP: {
+        fieldValue: '10.0.1.196',
+      },
     },
     {
       argocdURL: {
@@ -70378,6 +71751,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-personell-if3d',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.197',
       },
     },
     {
@@ -70527,6 +71903,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-pastrans-prod-aoqr',
       },
+      egressIP: {
+        fieldValue: '10.0.1.198',
+      },
     },
     {
       argocdURL: {
@@ -70674,6 +72053,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pts-prod-pqp1',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.199',
       },
     },
     {
@@ -70823,6 +72205,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-rgt-prod-9c58',
       },
+      egressIP: {
+        fieldValue: '10.0.1.200',
+      },
     },
     {
       argocdURL: {
@@ -70970,6 +72355,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-sb-prod-30ze',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.201',
       },
     },
     {
@@ -71119,6 +72507,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'central-az1',
       },
+      egressIP: {
+        fieldValue: '10.0.1.202',
+      },
     },
     {
       argocdURL: {
@@ -71266,6 +72657,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'west-az1',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.203',
       },
     },
     {
@@ -71415,6 +72809,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-database-prod-lfme',
       },
+      egressIP: {
+        fieldValue: '10.0.1.204',
+      },
     },
     {
       argocdURL: {
@@ -71562,6 +72959,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-stat-prod-6f8x',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.205',
       },
     },
     {
@@ -71711,6 +73111,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-vitistack-ek-prod-qm3u',
       },
+      egressIP: {
+        fieldValue: '10.0.1.206',
+      },
     },
     {
       argocdURL: {
@@ -71858,6 +73261,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-prod-77mi',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.207',
       },
     },
     {
@@ -72007,6 +73413,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-obao-prod-yeps',
       },
+      egressIP: {
+        fieldValue: '10.0.1.208',
+      },
     },
     {
       argocdURL: {
@@ -72154,6 +73563,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.209',
       },
     },
     {
@@ -72303,6 +73715,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
       },
+      egressIP: {
+        fieldValue: '10.0.1.210',
+      },
     },
     {
       argocdURL: {
@@ -72450,6 +73865,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-prod-5e7b',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.211',
       },
     },
     {
@@ -72599,6 +74017,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-soc-pfey',
       },
+      egressIP: {
+        fieldValue: '10.0.1.212',
+      },
     },
     {
       argocdURL: {
@@ -72746,6 +74167,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: '',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.213',
       },
     },
     {
@@ -72895,6 +74319,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-videotj-agoi',
       },
+      egressIP: {
+        fieldValue: '10.0.1.214',
+      },
     },
     {
       argocdURL: {
@@ -73042,6 +74469,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-ptvm-resl',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.215',
       },
     },
     {
@@ -73191,6 +74621,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'central-az1',
       },
+      egressIP: {
+        fieldValue: '10.0.1.216',
+      },
     },
     {
       argocdURL: {
@@ -73338,6 +74771,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-database-nx0r',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.217',
       },
     },
     {
@@ -73487,6 +74923,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-devops-xyuw',
       },
+      egressIP: {
+        fieldValue: '10.0.1.218',
+      },
     },
     {
       argocdURL: {
@@ -73634,6 +75073,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.219',
       },
     },
     {
@@ -73783,6 +75225,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
       },
+      egressIP: {
+        fieldValue: '10.0.1.220',
+      },
     },
     {
       argocdURL: {
@@ -73930,6 +75375,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.221',
       },
     },
     {
@@ -74079,6 +75527,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
       },
+      egressIP: {
+        fieldValue: '10.0.1.222',
+      },
     },
     {
       argocdURL: {
@@ -74226,6 +75677,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-etterkontroll-b56q',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.223',
       },
     },
     {
@@ -74375,6 +75829,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
       },
+      egressIP: {
+        fieldValue: '10.0.1.224',
+      },
     },
     {
       argocdURL: {
@@ -74522,6 +75979,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-sfm',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.225',
       },
     },
     {
@@ -74671,6 +76131,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
       },
+      egressIP: {
+        fieldValue: '10.0.1.226',
+      },
     },
     {
       argocdURL: {
@@ -74818,6 +76281,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-tp-ttkf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.227',
       },
     },
     {
@@ -74967,6 +76433,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-virksomhet-ir7e',
       },
+      egressIP: {
+        fieldValue: '10.0.1.228',
+      },
     },
     {
       argocdURL: {
@@ -75114,6 +76583,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-virk-bunf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.229',
       },
     },
     {
@@ -75263,6 +76735,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-diemslett-wbrd',
       },
+      egressIP: {
+        fieldValue: '10.0.1.230',
+      },
     },
     {
       argocdURL: {
@@ -75410,6 +76885,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-cry-sozh',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.231',
       },
     },
     {
@@ -75559,6 +77037,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-tze4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.232',
+      },
     },
     {
       argocdURL: {
@@ -75706,6 +77187,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.233',
       },
     },
     {
@@ -75855,6 +77339,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-database-nx0r',
       },
+      egressIP: {
+        fieldValue: '10.0.1.234',
+      },
     },
     {
       argocdURL: {
@@ -76002,6 +77489,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.235',
       },
     },
     {
@@ -76151,6 +77641,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: '',
       },
+      egressIP: {
+        fieldValue: '10.0.1.236',
+      },
     },
     {
       argocdURL: {
@@ -76298,6 +77791,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-diemslett-wbrd',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.237',
       },
     },
     {
@@ -76447,6 +77943,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-hn-val1',
       },
+      egressIP: {
+        fieldValue: '10.0.1.238',
+      },
     },
     {
       argocdURL: {
@@ -76594,6 +78093,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.239',
       },
     },
     {
@@ -76743,6 +78245,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-tze4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.240',
+      },
     },
     {
       argocdURL: {
@@ -76890,6 +78395,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.241',
       },
     },
     {
@@ -77039,6 +78547,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-lb-urm2',
       },
+      egressIP: {
+        fieldValue: '10.0.1.242',
+      },
     },
     {
       argocdURL: {
@@ -77186,6 +78697,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-lmgd-kfr5',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.243',
       },
     },
     {
@@ -77335,6 +78849,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-sops-gef8',
       },
+      egressIP: {
+        fieldValue: '10.0.1.244',
+      },
     },
     {
       argocdURL: {
@@ -77482,6 +78999,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-innrapp-b3lf',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.245',
       },
     },
     {
@@ -77631,6 +79151,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-mon-j9nn',
       },
+      egressIP: {
+        fieldValue: '10.0.1.246',
+      },
     },
     {
       argocdURL: {
@@ -77778,6 +79301,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-nn-6omn',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.247',
       },
     },
     {
@@ -77927,6 +79453,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-dokdel-p7et',
       },
+      egressIP: {
+        fieldValue: '10.0.1.248',
+      },
     },
     {
       argocdURL: {
@@ -78074,6 +79603,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-papla-prxe',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.249',
       },
     },
     {
@@ -78223,6 +79755,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
       },
+      egressIP: {
+        fieldValue: '10.0.1.250',
+      },
     },
     {
       argocdURL: {
@@ -78370,6 +79905,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-k468',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.251',
       },
     },
     {
@@ -78519,6 +80057,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-nt-7snh',
       },
+      egressIP: {
+        fieldValue: '10.0.1.252',
+      },
     },
     {
       argocdURL: {
@@ -78666,6 +80207,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-per-tcua',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.253',
       },
     },
     {
@@ -78815,6 +80359,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-per-wlt4',
       },
+      egressIP: {
+        fieldValue: '10.0.1.254',
+      },
     },
     {
       argocdURL: {
@@ -78962,6 +80509,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-pastrans-hvlb',
+      },
+      egressIP: {
+        fieldValue: '10.0.1.255',
       },
     },
     {
@@ -79111,6 +80661,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-pts-adoc',
       },
+      egressIP: {
+        fieldValue: '10.0.2.0',
+      },
     },
     {
       argocdURL: {
@@ -79258,6 +80811,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-reseptformidleren-9vq8',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.1',
       },
     },
     {
@@ -79407,6 +80963,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-register-bfe7',
       },
+      egressIP: {
+        fieldValue: '10.0.2.2',
+      },
     },
     {
       argocdURL: {
@@ -79554,6 +81113,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-sb-3sm5',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.3',
       },
     },
     {
@@ -79703,6 +81265,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-soc-q4sy',
       },
+      egressIP: {
+        fieldValue: '10.0.2.4',
+      },
     },
     {
       argocdURL: {
@@ -79850,6 +81415,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-soc-q4sy',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.5',
       },
     },
     {
@@ -79999,6 +81567,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.2.6',
+      },
     },
     {
       argocdURL: {
@@ -80146,6 +81717,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-splunk-yd5b',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.7',
       },
     },
     {
@@ -80295,6 +81869,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-db-g5w2',
       },
+      egressIP: {
+        fieldValue: '10.0.2.8',
+      },
     },
     {
       argocdURL: {
@@ -80442,6 +82019,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-cat-nkrn',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.9',
       },
     },
     {
@@ -80591,6 +82171,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-cat-nkrn',
       },
+      egressIP: {
+        fieldValue: '10.0.2.10',
+      },
     },
     {
       argocdURL: {
@@ -80738,6 +82321,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 't-test001',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.11',
       },
     },
     {
@@ -80887,6 +82473,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 't-test003',
       },
+      egressIP: {
+        fieldValue: '10.0.2.12',
+      },
     },
     {
       argocdURL: {
@@ -81034,6 +82623,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.13',
       },
     },
     {
@@ -81183,6 +82775,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 't-test-sod-011',
       },
+      egressIP: {
+        fieldValue: '10.0.2.14',
+      },
     },
     {
       argocdURL: {
@@ -81330,6 +82925,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.15',
       },
     },
     {
@@ -81479,6 +83077,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-dokdeling-qr46',
       },
+      egressIP: {
+        fieldValue: '10.0.2.16',
+      },
     },
     {
       argocdURL: {
@@ -81626,6 +83227,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-ek-9iq6',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.17',
       },
     },
     {
@@ -81775,6 +83379,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.2.18',
+      },
     },
     {
       argocdURL: {
@@ -81922,6 +83529,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-asft',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.19',
       },
     },
     {
@@ -82071,6 +83681,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-obao',
       },
+      egressIP: {
+        fieldValue: '10.0.2.20',
+      },
     },
     {
       argocdURL: {
@@ -82218,6 +83831,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-container-tze4',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.21',
       },
     },
     {
@@ -82367,6 +83983,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.2.22',
+      },
     },
     {
       argocdURL: {
@@ -82514,6 +84133,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-video-uz3e',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.23',
       },
     },
     {
@@ -82663,6 +84285,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'vitistack-container-asft',
       },
+      egressIP: {
+        fieldValue: '10.0.2.24',
+      },
     },
     {
       argocdURL: {
@@ -82810,6 +84435,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'vitistack-abjerke-pp3f',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.25',
       },
     },
     {
@@ -82959,6 +84587,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-inn-web',
       },
+      egressIP: {
+        fieldValue: '10.0.2.26',
+      },
     },
     {
       argocdURL: {
@@ -83106,6 +84737,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rap',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.27',
       },
     },
     {
@@ -83255,6 +84889,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-rf',
       },
+      egressIP: {
+        fieldValue: '10.0.2.28',
+      },
     },
     {
       argocdURL: {
@@ -83402,6 +85039,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-taa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.29',
       },
     },
     {
@@ -83551,6 +85191,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-nhn-tooling',
       },
+      egressIP: {
+        fieldValue: '10.0.2.30',
+      },
     },
     {
       argocdURL: {
@@ -83698,6 +85341,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-vkp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.31',
       },
     },
     {
@@ -83847,6 +85493,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.32',
+      },
     },
     {
       argocdURL: {
@@ -83994,6 +85643,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.33',
       },
     },
     {
@@ -84143,6 +85795,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.34',
+      },
     },
     {
       argocdURL: {
@@ -84290,6 +85945,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-kj-qa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.35',
       },
     },
     {
@@ -84439,6 +86097,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pps-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.36',
+      },
     },
     {
       argocdURL: {
@@ -84586,6 +86247,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-komsat',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.37',
       },
     },
     {
@@ -84735,6 +86399,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-sky-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.38',
+      },
     },
     {
       argocdURL: {
@@ -84882,6 +86549,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-team-gdr',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.39',
       },
     },
     {
@@ -85031,6 +86701,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-ek',
       },
+      egressIP: {
+        fieldValue: '10.0.2.40',
+      },
     },
     {
       argocdURL: {
@@ -85178,6 +86851,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-vk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.41',
       },
     },
     {
@@ -85327,6 +87003,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-rasj',
       },
+      egressIP: {
+        fieldValue: '10.0.2.42',
+      },
     },
     {
       argocdURL: {
@@ -85474,6 +87153,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.43',
       },
     },
     {
@@ -85623,6 +87305,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-xcads',
       },
+      egressIP: {
+        fieldValue: '10.0.2.44',
+      },
     },
     {
       argocdURL: {
@@ -85770,6 +87455,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.45',
       },
     },
     {
@@ -85919,6 +87607,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-par-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.46',
+      },
     },
     {
       argocdURL: {
@@ -86066,6 +87757,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-amk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.47',
       },
     },
     {
@@ -86215,6 +87909,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-os-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.48',
+      },
     },
     {
       argocdURL: {
@@ -86362,6 +88059,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-spe-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.49',
       },
     },
     {
@@ -86511,6 +88211,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-nmkp',
       },
+      egressIP: {
+        fieldValue: '10.0.2.50',
+      },
     },
     {
       argocdURL: {
@@ -86658,6 +88361,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-lda-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.51',
       },
     },
     {
@@ -86807,6 +88513,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-ncpeh-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.52',
+      },
     },
     {
       argocdURL: {
@@ -86954,6 +88663,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-taa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.53',
       },
     },
     {
@@ -87103,6 +88815,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-pastrans',
       },
+      egressIP: {
+        fieldValue: '10.0.2.54',
+      },
     },
     {
       argocdURL: {
@@ -87250,6 +88965,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.55',
       },
     },
     {
@@ -87399,6 +89117,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.56',
+      },
     },
     {
       argocdURL: {
@@ -87546,6 +89267,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.57',
       },
     },
     {
@@ -87695,6 +89419,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.58',
+      },
     },
     {
       argocdURL: {
@@ -87842,6 +89569,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-per-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.59',
       },
     },
     {
@@ -87991,6 +89721,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mfp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.60',
+      },
     },
     {
       argocdURL: {
@@ -88138,6 +89871,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod2',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.61',
       },
     },
     {
@@ -88287,6 +90023,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mrs-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.62',
+      },
     },
     {
       argocdURL: {
@@ -88434,6 +90173,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-vk',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.63',
       },
     },
     {
@@ -88583,6 +90325,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-ori-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.64',
+      },
     },
     {
       argocdURL: {
@@ -88730,6 +90475,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-sb-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.65',
       },
     },
     {
@@ -88879,6 +90627,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-nxt-port',
       },
+      egressIP: {
+        fieldValue: '10.0.2.66',
+      },
     },
     {
       argocdURL: {
@@ -89026,6 +90777,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.67',
       },
     },
     {
@@ -89175,6 +90929,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-plm',
       },
+      egressIP: {
+        fieldValue: '10.0.2.68',
+      },
     },
     {
       argocdURL: {
@@ -89322,6 +91079,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-oss',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.69',
       },
     },
     {
@@ -89471,6 +91231,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.70',
+      },
     },
     {
       argocdURL: {
@@ -89618,6 +91381,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rf',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.71',
       },
     },
     {
@@ -89767,6 +91533,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-internutv',
       },
+      egressIP: {
+        fieldValue: '10.0.2.72',
+      },
     },
     {
       argocdURL: {
@@ -89914,6 +91683,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-kj-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.73',
       },
     },
     {
@@ -90063,6 +91835,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.2.74',
+      },
     },
     {
       argocdURL: {
@@ -90210,6 +91985,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pers-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.75',
       },
     },
     {
@@ -90359,6 +92137,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-team-melding',
       },
+      egressIP: {
+        fieldValue: '10.0.2.76',
+      },
     },
     {
       argocdURL: {
@@ -90506,6 +92287,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-edi',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.77',
       },
     },
     {
@@ -90655,6 +92439,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.2.78',
+      },
     },
     {
       argocdURL: {
@@ -90802,6 +92589,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.79',
       },
     },
     {
@@ -90951,6 +92741,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.80',
+      },
     },
     {
       argocdURL: {
@@ -91098,6 +92891,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-tsc',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.81',
       },
     },
     {
@@ -91247,6 +93043,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.2.82',
+      },
     },
     {
       argocdURL: {
@@ -91394,6 +93193,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.83',
       },
     },
     {
@@ -91543,6 +93345,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-team-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.2.84',
+      },
     },
     {
       argocdURL: {
@@ -91690,6 +93495,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.85',
       },
     },
     {
@@ -91839,6 +93647,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.86',
+      },
     },
     {
       argocdURL: {
@@ -91986,6 +93797,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.87',
       },
     },
     {
@@ -92135,6 +93949,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-portal',
       },
+      egressIP: {
+        fieldValue: '10.0.2.88',
+      },
     },
     {
       argocdURL: {
@@ -92282,6 +94099,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-dhp-nav',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.89',
       },
     },
     {
@@ -92431,6 +94251,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.90',
+      },
     },
     {
       argocdURL: {
@@ -92578,6 +94401,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.91',
       },
     },
     {
@@ -92727,6 +94553,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-team-melding-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.92',
+      },
     },
     {
       argocdURL: {
@@ -92874,6 +94703,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.93',
       },
     },
     {
@@ -93023,6 +94855,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.94',
+      },
     },
     {
       argocdURL: {
@@ -93170,6 +95005,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.95',
       },
     },
     {
@@ -93319,6 +95157,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-komlink',
       },
+      egressIP: {
+        fieldValue: '10.0.2.96',
+      },
     },
     {
       argocdURL: {
@@ -93466,6 +95307,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-tp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.97',
       },
     },
     {
@@ -93615,6 +95459,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-team-melding',
       },
+      egressIP: {
+        fieldValue: '10.0.2.98',
+      },
     },
     {
       argocdURL: {
@@ -93762,6 +95609,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.99',
       },
     },
     {
@@ -93911,6 +95761,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.100',
+      },
     },
     {
       argocdURL: {
@@ -94058,6 +95911,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.101',
       },
     },
     {
@@ -94207,6 +96063,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-nmkp',
       },
+      egressIP: {
+        fieldValue: '10.0.2.102',
+      },
     },
     {
       argocdURL: {
@@ -94354,6 +96213,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-avi-system',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.103',
       },
     },
     {
@@ -94503,6 +96365,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pam',
       },
+      egressIP: {
+        fieldValue: '10.0.2.104',
+      },
     },
     {
       argocdURL: {
@@ -94650,6 +96515,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.105',
       },
     },
     {
@@ -94799,6 +96667,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-dhp-nav-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.106',
+      },
     },
     {
       argocdURL: {
@@ -94946,6 +96817,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-teknisktest',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.107',
       },
     },
     {
@@ -95095,6 +96969,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-oct-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.108',
+      },
     },
     {
       argocdURL: {
@@ -95242,6 +97119,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-inn-web',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.109',
       },
     },
     {
@@ -95391,6 +97271,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-tu-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.110',
+      },
     },
     {
       argocdURL: {
@@ -95538,6 +97421,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-edi-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.111',
       },
     },
     {
@@ -95687,6 +97573,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.112',
+      },
     },
     {
       argocdURL: {
@@ -95834,6 +97723,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.113',
       },
     },
     {
@@ -95983,6 +97875,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-rf-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.114',
+      },
     },
     {
       argocdURL: {
@@ -96130,6 +98025,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.115',
       },
     },
     {
@@ -96279,6 +98177,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-pers',
       },
+      egressIP: {
+        fieldValue: '10.0.2.116',
+      },
     },
     {
       argocdURL: {
@@ -96426,6 +98327,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-dd',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.117',
       },
     },
     {
@@ -96575,6 +98479,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.118',
+      },
     },
     {
       argocdURL: {
@@ -96722,6 +98629,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-plm',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.119',
       },
     },
     {
@@ -96871,6 +98781,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.120',
+      },
     },
     {
       argocdURL: {
@@ -97018,6 +98931,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-lda',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.121',
       },
     },
     {
@@ -97167,6 +99083,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-uni-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.122',
+      },
     },
     {
       argocdURL: {
@@ -97314,6 +99233,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-tsc-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.123',
       },
     },
     {
@@ -97463,6 +99385,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.2.124',
+      },
     },
     {
       argocdURL: {
@@ -97610,6 +99535,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.125',
       },
     },
     {
@@ -97759,6 +99687,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.126',
+      },
     },
     {
       argocdURL: {
@@ -97906,6 +99837,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-smax-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.127',
       },
     },
     {
@@ -98055,6 +99989,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pam-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.128',
+      },
     },
     {
       argocdURL: {
@@ -98202,6 +100139,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-per-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.129',
       },
     },
     {
@@ -98351,6 +100291,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-sky-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.130',
+      },
     },
     {
       argocdURL: {
@@ -98498,6 +100441,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-tu',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.131',
       },
     },
     {
@@ -98647,6 +100593,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-ldp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.132',
+      },
     },
     {
       argocdURL: {
@@ -98794,6 +100743,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpehp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.133',
       },
     },
     {
@@ -98943,6 +100895,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.134',
+      },
     },
     {
       argocdURL: {
@@ -99090,6 +101045,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-wap',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.135',
       },
     },
     {
@@ -99239,6 +101197,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.136',
+      },
     },
     {
       argocdURL: {
@@ -99386,6 +101347,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.137',
       },
     },
     {
@@ -99535,6 +101499,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.138',
+      },
     },
     {
       argocdURL: {
@@ -99682,6 +101649,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-amk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.139',
       },
     },
     {
@@ -99831,6 +101801,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-taa-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.140',
+      },
     },
     {
       argocdURL: {
@@ -99978,6 +101951,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-inn',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.141',
       },
     },
     {
@@ -100127,6 +102103,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-contracts',
       },
+      egressIP: {
+        fieldValue: '10.0.2.142',
+      },
     },
     {
       argocdURL: {
@@ -100274,6 +102253,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-ek',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.143',
       },
     },
     {
@@ -100423,6 +102405,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-xcais',
       },
+      egressIP: {
+        fieldValue: '10.0.2.144',
+      },
     },
     {
       argocdURL: {
@@ -100570,6 +102555,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.145',
       },
     },
     {
@@ -100719,6 +102707,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.146',
+      },
     },
     {
       argocdURL: {
@@ -100866,6 +102857,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.147',
       },
     },
     {
@@ -101015,6 +103009,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-lda',
       },
+      egressIP: {
+        fieldValue: '10.0.2.148',
+      },
     },
     {
       argocdURL: {
@@ -101162,6 +103159,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.149',
       },
     },
     {
@@ -101311,6 +103311,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: '',
       },
+      egressIP: {
+        fieldValue: '10.0.2.150',
+      },
     },
     {
       argocdURL: {
@@ -101458,6 +103461,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-kj-qa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.151',
       },
     },
     {
@@ -101607,6 +103613,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-spe',
       },
+      egressIP: {
+        fieldValue: '10.0.2.152',
+      },
     },
     {
       argocdURL: {
@@ -101754,6 +103763,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.153',
       },
     },
     {
@@ -101903,6 +103915,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-tp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.154',
+      },
     },
     {
       argocdURL: {
@@ -102050,6 +104065,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-oss-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.155',
       },
     },
     {
@@ -102199,6 +104217,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-xcads',
       },
+      egressIP: {
+        fieldValue: '10.0.2.156',
+      },
     },
     {
       argocdURL: {
@@ -102346,6 +104367,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rf',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.157',
       },
     },
     {
@@ -102495,6 +104519,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 't-dcn',
       },
+      egressIP: {
+        fieldValue: '10.0.2.158',
+      },
     },
     {
       argocdURL: {
@@ -102642,6 +104669,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-pjdmon-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.159',
       },
     },
     {
@@ -102791,6 +104821,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-team-pts-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.160',
+      },
     },
     {
       argocdURL: {
@@ -102938,6 +104971,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-kj-qa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.161',
       },
     },
     {
@@ -103087,6 +105123,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-per',
       },
+      egressIP: {
+        fieldValue: '10.0.2.162',
+      },
     },
     {
       argocdURL: {
@@ -103234,6 +105273,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-cry-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.163',
       },
     },
     {
@@ -103383,6 +105425,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-cry',
       },
+      egressIP: {
+        fieldValue: '10.0.2.164',
+      },
     },
     {
       argocdURL: {
@@ -103530,6 +105575,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-app',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.165',
       },
     },
     {
@@ -103679,6 +105727,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-kj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.166',
+      },
     },
     {
       argocdURL: {
@@ -103826,6 +105877,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-cry-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.167',
       },
     },
     {
@@ -103975,6 +106029,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.2.168',
+      },
     },
     {
       argocdURL: {
@@ -104122,6 +106179,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-apt-sommer',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.169',
       },
     },
     {
@@ -104271,6 +106331,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mtj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.170',
+      },
     },
     {
       argocdURL: {
@@ -104418,6 +106481,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-sky-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.171',
       },
     },
     {
@@ -104567,6 +106633,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-nn-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.172',
+      },
     },
     {
       argocdURL: {
@@ -104714,6 +106783,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpeh',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.173',
       },
     },
     {
@@ -104863,6 +106935,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pps',
       },
+      egressIP: {
+        fieldValue: '10.0.2.174',
+      },
     },
     {
       argocdURL: {
@@ -105010,6 +107085,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.175',
       },
     },
     {
@@ -105159,6 +107237,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-inn',
       },
+      egressIP: {
+        fieldValue: '10.0.2.176',
+      },
     },
     {
       argocdURL: {
@@ -105306,6 +107387,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.177',
       },
     },
     {
@@ -105455,6 +107539,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-plm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.178',
+      },
     },
     {
       argocdURL: {
@@ -105602,6 +107689,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-virk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.179',
       },
     },
     {
@@ -105751,6 +107841,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mfp',
       },
+      egressIP: {
+        fieldValue: '10.0.2.180',
+      },
     },
     {
       argocdURL: {
@@ -105898,6 +107991,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-team-gdr-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.181',
       },
     },
     {
@@ -106047,6 +108143,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.182',
+      },
     },
     {
       argocdURL: {
@@ -106194,6 +108293,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpeh-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.183',
       },
     },
     {
@@ -106343,6 +108445,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-rap-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.184',
+      },
     },
     {
       argocdURL: {
@@ -106490,6 +108595,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-kaf-int',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.185',
       },
     },
     {
@@ -106639,6 +108747,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-ops',
       },
+      egressIP: {
+        fieldValue: '10.0.2.186',
+      },
     },
     {
       argocdURL: {
@@ -106786,6 +108897,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-soc-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.187',
       },
     },
     {
@@ -106935,6 +109049,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.188',
+      },
     },
     {
       argocdURL: {
@@ -107082,6 +109199,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-sb-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.189',
       },
     },
     {
@@ -107231,6 +109351,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.2.190',
+      },
     },
     {
       argocdURL: {
@@ -107378,6 +109501,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.191',
       },
     },
     {
@@ -107527,6 +109653,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod2',
       },
+      egressIP: {
+        fieldValue: '10.0.2.192',
+      },
     },
     {
       argocdURL: {
@@ -107674,6 +109803,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-per-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.193',
       },
     },
     {
@@ -107823,6 +109955,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.194',
+      },
     },
     {
       argocdURL: {
@@ -107970,6 +110105,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.195',
       },
     },
     {
@@ -108119,6 +110257,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.2.196',
+      },
     },
     {
       argocdURL: {
@@ -108266,6 +110407,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pers',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.197',
       },
     },
     {
@@ -108415,6 +110559,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.198',
+      },
     },
     {
       argocdURL: {
@@ -108562,6 +110709,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-il',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.199',
       },
     },
     {
@@ -108711,6 +110861,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.200',
+      },
     },
     {
       argocdURL: {
@@ -108858,6 +111011,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-xcads-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.201',
       },
     },
     {
@@ -109007,6 +111163,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-tp',
       },
+      egressIP: {
+        fieldValue: '10.0.2.202',
+      },
     },
     {
       argocdURL: {
@@ -109154,6 +111313,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-dd-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.203',
       },
     },
     {
@@ -109303,6 +111465,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-komsat-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.204',
+      },
     },
     {
       argocdURL: {
@@ -109450,6 +111615,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: '',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.205',
       },
     },
     {
@@ -109599,6 +111767,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-pastrans',
       },
+      egressIP: {
+        fieldValue: '10.0.2.206',
+      },
     },
     {
       argocdURL: {
@@ -109746,6 +111917,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.207',
       },
     },
     {
@@ -109895,6 +112069,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-komlink-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.208',
+      },
     },
     {
       argocdURL: {
@@ -110042,6 +112219,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-soc',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.209',
       },
     },
     {
@@ -110191,6 +112371,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-stat',
       },
+      egressIP: {
+        fieldValue: '10.0.2.210',
+      },
     },
     {
       argocdURL: {
@@ -110338,6 +112521,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-pjdmon-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.211',
       },
     },
     {
@@ -110487,6 +112673,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-rf-it',
       },
+      egressIP: {
+        fieldValue: '10.0.2.212',
+      },
     },
     {
       argocdURL: {
@@ -110634,6 +112823,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-par',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.213',
       },
     },
     {
@@ -110783,6 +112975,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.214',
+      },
     },
     {
       argocdURL: {
@@ -110930,6 +113125,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-kaf-int',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.215',
       },
     },
     {
@@ -111079,6 +113277,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-virk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.216',
+      },
     },
     {
       argocdURL: {
@@ -111226,6 +113427,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rf-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.217',
       },
     },
     {
@@ -111375,6 +113579,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mtj',
       },
+      egressIP: {
+        fieldValue: '10.0.2.218',
+      },
     },
     {
       argocdURL: {
@@ -111522,6 +113729,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.219',
       },
     },
     {
@@ -111671,6 +113881,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.2.220',
+      },
     },
     {
       argocdURL: {
@@ -111818,6 +114031,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-vkp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.221',
       },
     },
     {
@@ -111967,6 +114183,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-kj-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.222',
+      },
     },
     {
       argocdURL: {
@@ -112114,6 +114333,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-mtj',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.223',
       },
     },
     {
@@ -112263,6 +114485,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.224',
+      },
     },
     {
       argocdURL: {
@@ -112410,6 +114635,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-kj-qa',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.225',
       },
     },
     {
@@ -112559,6 +114787,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-dhp-nav-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.226',
+      },
     },
     {
       argocdURL: {
@@ -112706,6 +114937,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-ldp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.227',
       },
     },
     {
@@ -112855,6 +115089,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-ncpehp-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.228',
+      },
     },
     {
       argocdURL: {
@@ -113002,6 +115239,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-team-selvbetjening',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.229',
       },
     },
     {
@@ -113151,6 +115391,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-mitt-nettverk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.230',
+      },
     },
     {
       argocdURL: {
@@ -113298,6 +115541,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-ek',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.231',
       },
     },
     {
@@ -113447,6 +115693,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-per-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.232',
+      },
     },
     {
       argocdURL: {
@@ -113594,6 +115843,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-nn',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.233',
       },
     },
     {
@@ -113743,6 +115995,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-mot',
       },
+      egressIP: {
+        fieldValue: '10.0.2.234',
+      },
     },
     {
       argocdURL: {
@@ -113890,6 +116145,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-uni',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.235',
       },
     },
     {
@@ -114039,6 +116297,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-sb-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.236',
+      },
     },
     {
       argocdURL: {
@@ -114186,6 +116447,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-per',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.237',
       },
     },
     {
@@ -114335,6 +116599,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.238',
+      },
     },
     {
       argocdURL: {
@@ -114482,6 +116749,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-shp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.239',
       },
     },
     {
@@ -114631,6 +116901,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-komsat',
       },
+      egressIP: {
+        fieldValue: '10.0.2.240',
+      },
     },
     {
       argocdURL: {
@@ -114778,6 +117051,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-kj-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.241',
       },
     },
     {
@@ -114927,6 +117203,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-produktvm',
       },
+      egressIP: {
+        fieldValue: '10.0.2.242',
+      },
     },
     {
       argocdURL: {
@@ -115074,6 +117353,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-wap',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.243',
       },
     },
     {
@@ -115223,6 +117505,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.2.244',
+      },
     },
     {
       argocdURL: {
@@ -115370,6 +117655,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-soc-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.245',
       },
     },
     {
@@ -115519,6 +117807,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.246',
+      },
     },
     {
       argocdURL: {
@@ -115666,6 +117957,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-plm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.247',
       },
     },
     {
@@ -115815,6 +118109,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-shp',
       },
+      egressIP: {
+        fieldValue: '10.0.2.248',
+      },
     },
     {
       argocdURL: {
@@ -115962,6 +118259,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-ldp',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.249',
       },
     },
     {
@@ -116111,6 +118411,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.2.250',
+      },
     },
     {
       argocdURL: {
@@ -116258,6 +118561,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-per-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.251',
       },
     },
     {
@@ -116407,6 +118713,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.2.252',
+      },
     },
     {
       argocdURL: {
@@ -116554,6 +118863,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.253',
       },
     },
     {
@@ -116703,6 +119015,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 't-nhn',
       },
+      egressIP: {
+        fieldValue: '10.0.2.254',
+      },
     },
     {
       argocdURL: {
@@ -116850,6 +119165,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-rf',
+      },
+      egressIP: {
+        fieldValue: '10.0.2.255',
       },
     },
     {
@@ -116999,6 +119317,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.3.0',
+      },
     },
     {
       argocdURL: {
@@ -117146,6 +119467,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-team-kjernejournal-portal',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.1',
       },
     },
     {
@@ -117295,6 +119619,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-team-pts',
       },
+      egressIP: {
+        fieldValue: '10.0.3.2',
+      },
     },
     {
       argocdURL: {
@@ -117442,6 +119769,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-ncpeh',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.3',
       },
     },
     {
@@ -117591,6 +119921,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'p-dcn',
       },
+      egressIP: {
+        fieldValue: '10.0.3.4',
+      },
     },
     {
       argocdURL: {
@@ -117738,6 +120071,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-tp-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.5',
       },
     },
     {
@@ -117887,6 +120223,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-dhp-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.3.6',
+      },
     },
     {
       argocdURL: {
@@ -118034,6 +120373,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-tsc',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.7',
       },
     },
     {
@@ -118183,6 +120525,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-inn',
       },
+      egressIP: {
+        fieldValue: '10.0.3.8',
+      },
     },
     {
       argocdURL: {
@@ -118330,6 +120675,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-test',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.9',
       },
     },
     {
@@ -118479,6 +120827,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-inn-web',
       },
+      egressIP: {
+        fieldValue: '10.0.3.10',
+      },
     },
     {
       argocdURL: {
@@ -118626,6 +120977,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-tp',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.11',
       },
     },
     {
@@ -118775,6 +121129,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-test',
       },
+      egressIP: {
+        fieldValue: '10.0.3.12',
+      },
     },
     {
       argocdURL: {
@@ -118922,6 +121279,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-soc-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.13',
       },
     },
     {
@@ -119071,6 +121431,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-pers-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.14',
+      },
     },
     {
       argocdURL: {
@@ -119218,6 +121581,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-komlink',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.15',
       },
     },
     {
@@ -119367,6 +121733,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
       },
+      egressIP: {
+        fieldValue: '10.0.3.16',
+      },
     },
     {
       argocdURL: {
@@ -119514,6 +121883,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-asky',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.17',
       },
     },
     {
@@ -119663,6 +122035,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mrs-test',
       },
+      egressIP: {
+        fieldValue: '10.0.3.18',
+      },
     },
     {
       argocdURL: {
@@ -119810,6 +122185,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-nhn-mgmt',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.19',
       },
     },
     {
@@ -119959,6 +122337,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-cyberactionteam-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.20',
+      },
     },
     {
       argocdURL: {
@@ -120106,6 +122487,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.21',
       },
     },
     {
@@ -120255,6 +122639,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-amk',
       },
+      egressIP: {
+        fieldValue: '10.0.3.22',
+      },
     },
     {
       argocdURL: {
@@ -120402,6 +122789,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-team-kjernejournal-portal',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.23',
       },
     },
     {
@@ -120551,6 +122941,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1-ops',
       },
+      egressIP: {
+        fieldValue: '10.0.3.24',
+      },
     },
     {
       argocdURL: {
@@ -120698,6 +123091,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-amk',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.25',
       },
     },
     {
@@ -120847,6 +123243,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-mon-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.26',
+      },
     },
     {
       argocdURL: {
@@ -120994,6 +123393,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-pastrans-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.27',
       },
     },
     {
@@ -121143,6 +123545,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-taa',
       },
+      egressIP: {
+        fieldValue: '10.0.3.28',
+      },
     },
     {
       argocdURL: {
@@ -121290,6 +123695,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-inn-web',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.29',
       },
     },
     {
@@ -121439,6 +123847,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-lb',
       },
+      egressIP: {
+        fieldValue: '10.0.3.30',
+      },
     },
     {
       argocdURL: {
@@ -121586,6 +123997,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-xcads',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.31',
       },
     },
     {
@@ -121735,6 +124149,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-nhn-tooling',
       },
+      egressIP: {
+        fieldValue: '10.0.3.32',
+      },
     },
     {
       argocdURL: {
@@ -121882,6 +124299,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-virk-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.33',
       },
     },
     {
@@ -122031,6 +124451,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-smax',
       },
+      egressIP: {
+        fieldValue: '10.0.3.34',
+      },
     },
     {
       argocdURL: {
@@ -122178,6 +124601,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.35',
       },
     },
     {
@@ -122327,6 +124753,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-ori',
       },
+      egressIP: {
+        fieldValue: '10.0.3.36',
+      },
     },
     {
       argocdURL: {
@@ -122474,6 +124903,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-pers',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.37',
       },
     },
     {
@@ -122623,6 +125055,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-dd',
       },
+      egressIP: {
+        fieldValue: '10.0.3.38',
+      },
     },
     {
       argocdURL: {
@@ -122770,6 +125205,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: '',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.39',
       },
     },
     {
@@ -122919,6 +125357,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.40',
+      },
     },
     {
       argocdURL: {
@@ -123066,6 +125507,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-inn',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.41',
       },
     },
     {
@@ -123215,6 +125659,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-sfm',
       },
+      egressIP: {
+        fieldValue: '10.0.3.42',
+      },
     },
     {
       argocdURL: {
@@ -123362,6 +125809,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-virk',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.43',
       },
     },
     {
@@ -123511,6 +125961,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pps',
       },
+      egressIP: {
+        fieldValue: '10.0.3.44',
+      },
     },
     {
       argocdURL: {
@@ -123658,6 +126111,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.45',
       },
     },
     {
@@ -123807,6 +126263,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-tp',
       },
+      egressIP: {
+        fieldValue: '10.0.3.46',
+      },
     },
     {
       argocdURL: {
@@ -123954,6 +126413,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'p-ai',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.47',
       },
     },
     {
@@ -124103,6 +126565,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-hn-test',
       },
+      egressIP: {
+        fieldValue: '10.0.3.48',
+      },
     },
     {
       argocdURL: {
@@ -124250,6 +126715,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-internutv',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.49',
       },
     },
     {
@@ -124399,6 +126867,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-team-pts',
       },
+      egressIP: {
+        fieldValue: '10.0.3.50',
+      },
     },
     {
       argocdURL: {
@@ -124546,6 +127017,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-par',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.51',
       },
     },
     {
@@ -124695,6 +127169,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: '',
       },
+      egressIP: {
+        fieldValue: '10.0.3.52',
+      },
     },
     {
       argocdURL: {
@@ -124842,6 +127319,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-oct',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.53',
       },
     },
     {
@@ -124991,6 +127471,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: '',
       },
+      egressIP: {
+        fieldValue: '10.0.3.54',
+      },
     },
     {
       argocdURL: {
@@ -125138,6 +127621,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: '',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.55',
       },
     },
     {
@@ -125287,6 +127773,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: '',
       },
+      egressIP: {
+        fieldValue: '10.0.3.56',
+      },
     },
     {
       argocdURL: {
@@ -125434,6 +127923,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-sfm-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.57',
       },
     },
     {
@@ -125583,6 +128075,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-pastrans-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.58',
+      },
     },
     {
       argocdURL: {
@@ -125730,6 +128225,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-par-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.59',
       },
     },
     {
@@ -125879,6 +128377,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-komsat',
       },
+      egressIP: {
+        fieldValue: '10.0.3.60',
+      },
     },
     {
       argocdURL: {
@@ -126026,6 +128527,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1-team-melding-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.61',
       },
     },
     {
@@ -126175,6 +128679,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'trd1cl02-pam-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.62',
+      },
     },
     {
       argocdURL: {
@@ -126322,6 +128829,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'trd1cl02-mon-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.63',
       },
     },
     {
@@ -126471,6 +128981,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-mitt-nettverk-prod',
       },
+      egressIP: {
+        fieldValue: '10.0.3.64',
+      },
     },
     {
       argocdURL: {
@@ -126618,6 +129131,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'osl1-team-nav-prod',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.65',
       },
     },
     {
@@ -126767,6 +129283,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'osl1-team-nav',
       },
+      egressIP: {
+        fieldValue: '10.0.3.66',
+      },
     },
     {
       argocdURL: {
@@ -126915,6 +129434,9 @@ export const clusterListViewItem = {
       workspace: {
         fieldValue: 'Azure',
       },
+      egressIP: {
+        fieldValue: '10.0.3.67',
+      },
     },
     {
       argocdURL: {
@@ -127062,6 +129584,9 @@ export const clusterListViewItem = {
       },
       workspace: {
         fieldValue: 'Azure',
+      },
+      egressIP: {
+        fieldValue: '10.0.3.68',
       },
     },
   ],

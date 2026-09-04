@@ -1,26 +1,21 @@
-/*
- * FILE OVERVIEW:
- *
- * Generic hook for fuzzy searching any dataset with Fuse.js.
- */
-
 import { useMemo } from 'react'
 import Fuse, { FuseOptionKey } from 'fuse.js'
 
 /**
- * Options for configuring the useSearch hook.
+ * Options for configuring the {@link useSearch} hook.
  *
- * @template T - The type of items to be searched.
- * @template M - The mapped type (searchable object).
- * @property {number} [threshold] - The minimum score for a result to be considered a match. Lower values mean stricter matching.
- * @property {FuseOptionKey<T>[]} [keys] - The list of keys in the item to search against.
- * @property {(item: T) => Record<string, any>} [mapItem] - A function to transform an item before searching.
+ * @template T - The type of the raw items being searched.
+ * @template M - The shape actually handed to Fuse for matching. Defaults to `T` when no `mapItem` is provided.
+ * @property threshold - Match strictness, `0`–`1`. Lower is stricter. Defaults to `0.3`.
+ * @property keys - Keys on the (mapped) item to search against. Defaults to `[]` (no matches).
+ * @property mapItem - Transforms an item into the searchable shape before matching.
  */
 export interface UseSearchOptions<T, M = T> {
   threshold?: number
   keys?: FuseOptionKey<M>[]
   mapItem?: (item: T) => M
 }
+
 /**
  * Custom hook for searching and filtering an array of items using fuzzy matching.
  *

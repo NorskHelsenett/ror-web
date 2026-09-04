@@ -4,15 +4,7 @@ import { normalizeHealthStatus } from './health'
 import { ResourceType } from '../types/resource'
 import { Environment } from '../types/environment'
 
-/**
- * Represents a raw condition object, typically used to describe the state or status of a resource.
- *
- * @property type - The type of the condition
- * @property status - The status of the condition
- * @property message - A human-readable message indicating details about the condition's status
- * @property reason - A brief reason for the condition's last transition
- * @property lastTransitionTime - The timestamp for when the condition last changed
- */
+/** Represents a raw condition object, typically used to describe the state or status of a resource. */
 interface RawCondition {
   type?: string | null
   status?: string | null
@@ -21,94 +13,47 @@ interface RawCondition {
   lastTransitionTime?: string | null
 }
 
-/**
- * Represents a version with its name, version number, and branch.
- *
- * @property name - The name of the software or component.
- * @property version - The version identifier (e.g., semantic version).
- * @property branch - The source control branch associated with this version.
- */
+/** Represents a version with its name, version number, and branch. */
 interface Version {
   name: string
   version: string
   branch: string
 }
 
-/**
- * Represents the versions of various components within a cluster.
- *
- * @property agent - The version of the agent component.
- * @property kubernetes - The version of Kubernetes running in the cluster.
- * @property nhnTooling - The version of NHN tooling used in the cluster.
- */
+/** Represents the versions of various components within a cluster. */
 interface ClusterVersions {
   agent: Version
   kubernetes: Version
   nhnTooling: Version
 }
 
-/**
- * Represents a tag associated with a service, containing a key-value pair and additional properties.
- *
- * @property key - The unique identifier for the tag.
- * @property value - The value associated with the tag key.
- * @property properties - A record of additional properties related to the tag, where each property is a key-value pair of strings.
- */
+/** Represents a tag associated with a service, containing a key-value pair and additional properties. */
 export interface ServiceTag {
   key: string
   value: string
   properties: Record<string, string>
 }
 
-/**
- * Represents a string, number map for the count of cluster elements
- */
+/** Represents a string, number map for the count of cluster elements  */
 export type CountMap = Map<string, number>
 
-/**
- * Retrieves the cluster ID from a given KubernetesCluster object.
- *
- * @param cluster - The KubernetesCluster object from which to extract the cluster ID.
- * @returns The cluster ID as a string, or 'Unknown Cluster' if the ID is not available.
- */
+/** Falls back to `'Unknown Cluster'` if the ID is missing. */
 export const getClusterId = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.clusterId || 'Unknown Cluster'
 
-/**
- * Retrieves the cluster UID from a given KubernetesCluster object.
- *
- * @param cluster - The KubernetesCluster object from which to extract the cluster ID.
- * @returns The cluster UID as a string, or 'Unknown Cluster' if the ID is not available.
- */
+/** Falls back to `'Unknown Cluster'` if the UID is missing. */
 export const getClusterUid = (cluster: KubernetesCluster): string => cluster?.metadata.uid || 'Unknown Cluster'
 
-/**
- * Retrieves the name of a Kubernetes cluster from the provided cluster object.
- *
- * @param cluster - The Kubernetes cluster object to extract the name from.
- * @returns The name of the cluster, or `'Unknown Cluster'` if not found.
- */
+/** Falls back to `'Unknown Cluster'` if the name is missing. */
 export const getClusterName = (cluster: KubernetesCluster): string =>
   cluster?.metadata?.name || cluster?.kubernetescluster?.spec?.data?.clusterId || 'Unknown Cluster'
 
-/**
- * Represents a health condition that has been normalized to use a standardized health status.
- * Extends {@link RawCondition} and replaces the `status` property with a {@link HealthStatus}.
- *
- * @remarks
- * This interface is useful for ensuring that health conditions conform to a consistent status type
- * throughout the application.
- *
- * @see RawCondition
- * @see HealthStatus
- */
+/** Normalized 'ready' condition, with `status` mapped to `HealthStatus`. */
 export interface NormalizedHealthCondition extends RawCondition {
   status: HealthStatus
 }
 
-/**
- * Extracts and normalizes the 'ready' condition from a list of cluster conditions.
- */
+/** Extracts and normalizes the 'ready' condition, if present. */
 export function getHealthCondition(
   cluster: KubernetesCluster | null | undefined
 ): NormalizedHealthCondition | undefined {
@@ -122,14 +67,7 @@ export function getHealthCondition(
   }
 }
 
-/**
- * Retrieves resource information for a specific type from a Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object containing resource data.
- * @param type - The type of resource to retrieve (e.g., CPU, memory).
- * @returns An object containing the resource's capacity, used amount, and usage percentage.
- *          If a property is unavailable, `capacity` and `used` will be `undefined`, and `percentage` will be `null`.
- */
+/** Retrieves resource information for a specific type from a Kubernetes cluster. */
 export function getClusterResource(
   cluster: KubernetesCluster,
   type: ResourceType
@@ -142,12 +80,7 @@ export function getClusterResource(
   }
 }
 
-/**
- * Retrieves the addresses of ArgoCD and Grafana from a Kubernetes cluster's endpoints.
- *
- * @param cluster - The KubernetesCluster object containing endpoint information.
- * @returns An object with the addresses of ArgoCD and Grafana if available, otherwise `undefined`.
- */
+/** Get ArgoCD and Grafana endpoints */
 export function getTools(cluster: KubernetesCluster) {
   return {
     argo: cluster?.kubernetescluster?.status?.state?.endpoints?.find((endpoint) => endpoint.name === 'argocd')?.address,
@@ -156,12 +89,7 @@ export function getTools(cluster: KubernetesCluster) {
   }
 }
 
-/**
- * Retrieves the monthly and yearly prices from a given Kubernetes cluster object.
- *
- * @param cluster - The KubernetesCluster object containing pricing information.
- * @returns An object with `monthly` and `yearly` properties representing the respective prices.
- */
+/** Get monthly and yearly prices */
 export function getPrices(cluster: KubernetesCluster) {
   return {
     monthly: cluster?.kubernetescluster?.status?.state?.cluster?.price?.monthly || 0,
@@ -169,68 +97,32 @@ export function getPrices(cluster: KubernetesCluster) {
   }
 }
 
-/**
- * Retrieves the last observed update date of a Kubernetes cluster's state.
- *
- * @param cluster - The KubernetesCluster object containing cluster information.
- * @returns The date of the last state update, or `null`/`undefined` if not available.
- */
+/** Retrieves the last observed update date of a Kubernetes cluster's state. */
 export const getLastObserved = (cluster: KubernetesCluster): Date | null | undefined =>
   cluster?.kubernetescluster?.status?.state?.lastUpdated
 
-/**
- * Retrieves the creation date of a Kubernetes cluster, if available.
- *
- * @param cluster - The KubernetesCluster object containing cluster details.
- * @returns The creation date as a `Date` object, or `null`/`undefined` if not present.
- */
+/** Retrieves the creation date of a Kubernetes cluster, if available. */
 export const getCreated = (cluster: KubernetesCluster): Date | null | undefined =>
   cluster?.kubernetescluster?.status?.state?.created
 
-/**
- * Retrieves the environment value from a given Kubernetes cluster object.
- *
- * @param cluster - The Kubernetes cluster object containing environment information.
- * @returns The environment as an `Environment` type, or `'unknown'` if not specified.
- */
+/** Retrieves the environment value from a given Kubernetes cluster object. */
 export const getEnvironment = (cluster: KubernetesCluster): Environment =>
   (cluster?.kubernetescluster?.spec?.data?.environment as Environment) ?? 'unknown'
 
-/**
- * Retrieves the server URL for a given Kubernetes cluster by searching for the endpoint named 'datacenter'.
- *
- * @param cluster - The Kubernetes cluster object containing endpoint information.
- * @returns The address of the 'datacenter' endpoint if found; otherwise, returns the string '<missing>'.
- */
+/** Retrieves the server URL for a given Kubernetes cluster by searching for the endpoint named 'datacenter'. */
 export const getServerUrl = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.status?.state?.endpoints?.find((endpoint) => endpoint.name === 'datacenter')?.address ||
   '<missing>'
 
-/**
- * Generates a login command string for the specified Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object for which to generate the login command.
- * @returns A string containing the login command for the given cluster.
- */
+/** Generates a login command string for the specified Kubernetes cluster. */
 export const getRorLogin = (cluster: KubernetesCluster): string => `ror login ${getClusterId(cluster)}`
 
 /**
- * Generates a kubectl command string for logging into a vSphere Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object containing connection details.
- * @param userEmail - The email address of the user for authentication.
- * @returns The kubectl login command as a string, pre-filled with cluster and user information.
- */
+ * Generates a kubectl command string for logging into a vSphere Kubernetes cluster  */
 export const getKubectlLogin = (cluster: KubernetesCluster, userEmail: string): string =>
   `kubectl vsphere login --server=${getServerUrl(cluster)} -u ${userEmail} --insecure-skip-tls-verify --tanzu-kubernetes-cluster-namespace ${cluster.kubernetescluster?.spec?.data?.workspace} --tanzu-kubernetes-cluster-name ${getClusterName(cluster)}`
 
-/**
- * Determines whether a Kubernetes cluster has a highly available (HA) control plane.
- *
- * @param cluster - The KubernetesCluster object containing cluster specifications.
- * @returns 'Yes' if the control plane has more than one replica (HA), 'No' if only one replica (not HA),
- *          or an empty string if the replica count is undefined or zero.
- */
+/** 'Yes' if HA (>1 control-plane replica), 'No' if exactly 1, '' if unknown. */
 export function getHaClusterPlaneValue(cluster: KubernetesCluster) {
   const nodeNum = cluster?.kubernetescluster?.spec?.topology?.controlplane?.replicas ?? 0
   if (nodeNum > 1) {
@@ -241,14 +133,8 @@ export function getHaClusterPlaneValue(cluster: KubernetesCluster) {
     return ''
   }
 }
-/**
- * Retrieves the version information (agent, Kubernetes, and NHN Tooling) for a given Kubernetes cluster.
- *
- * Extracts the versions for agent, Kubernetes, and NHN Tooling from the cluster's status.
- *
- * @param cluster - The Kubernetes cluster object containing version information.
- * @returns An object containing the agent, Kubernetes, and NHN Tooling versions.
- */
+
+/** Get ror agent version, kubernetes version and nhn tooling version */
 export function getVersions(cluster: KubernetesCluster): ClusterVersions {
   const versions = cluster?.kubernetescluster?.status?.state?.versions || []
 
@@ -269,301 +155,330 @@ export function getVersions(cluster: KubernetesCluster): ClusterVersions {
   }
 }
 
-/**
- * Retrieves the control plane topology version from a Kubernetes cluster specification.
- * @param cluster - The Kubernetes cluster object containing spec and topology information.
- * @returns The control plane topology version string, or undefined if not available.
- */
+/** Retrieves the control plane topology version from a Kubernetes cluster specification. */
 export const getClusterSpecTopologyVersion = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.topology?.version || 'No topology version'
 
-/**
- * Retrieves the Kubernetes control plane version from a cluster's topology specification.
- * @param cluster - The Kubernetes cluster object containing specification details
- * @returns The control plane version string, or undefined if the path doesn't exist
- */
+/** Retrieves the Kubernetes control plane version from a cluster's topology specification. */
 export const getClusterSpecTopologyControlPlaneVersion = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.topology?.controlplane?.version || 'No topology control plane version'
 
-/**
- * Retrieves the provider of a Kubernetes cluster.
- * @param cluster - The Kubernetes cluster object to extract the provider from.
- * @returns The provider string of the cluster, or undefined if the cluster or its data is not available.
- */
-export const getClusterProvider = (cluster: KubernetesCluster): string =>
-  cluster?.kubernetescluster?.spec?.data?.provider || 'No provider'
-
+/** Retrieves the region of a Kubernetes cluster */
 export const getRegion = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.region || 'No region'
 
+/** Retrieves the workorder of a Kubernetes cluster */
 export const getWorkorder = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.workorder || 'No workorder'
 
-/**
- * Retrieves the project name from a given KubernetesCluster object.
- *
- * @param cluster - The KubernetesCluster object containing cluster information.
- * @returns The project name if available, otherwise returns 'No project assigned'.
- */
+/** Retrieves the project name from a given KubernetesCluster object. */
 export const getProject = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.project || 'No project assigned'
 
-/**
- * Retrieves the workspace name from a given Kubernetes cluster object.
- *
- * @param cluster - The KubernetesCluster object containing cluster details.
- * @returns The workspace name if available, otherwise returns 'No workspace assigned'.
- */
+/** Retrieves the workspace name from a given Kubernetes cluster object. */
 export const getWorkspace = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.workspace || 'No workspace assigned'
 
-/**
- * Retrieves the datacenter name from a given Kubernetes cluster object.
- *
- * @param cluster - The Kubernetes cluster object to extract the datacenter from.
- * @returns The name of the datacenter if available, otherwise returns 'No data center assigned'.
- */
+/** Retrieves the datacenter name from a given Kubernetes cluster object. */
 export const getDatacenter = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.datacenter || 'No data center assigned'
 
-/**
- * Retrieves the provider name from a given Kubernetes cluster object.
- *
- * @param cluster - The KubernetesCluster object containing cluster details.
- * @returns The provider name if available, otherwise returns 'No provider assigned'.
- */
+/** Retrieves the provider name from a given Kubernetes cluster object. */
 export const getProvider = (cluster: KubernetesCluster): string =>
   cluster?.kubernetescluster?.spec?.data?.provider || 'No provider assigned'
 
-/**
- * Retrieves the list of service tags from the `rormeta` property of a given Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object containing the `rormeta` property.
- * @returns An array of `ServiceTag` objects, or an empty array if no tags are present.
- */
+/** Retrieves the list of service tags from the `rormeta` property of a given Kubernetes cluster. */
 export const getRormetaTags = (cluster: KubernetesCluster): ServiceTag[] => cluster.rormeta.tags || []
 
-/**
- * Retrieves the list of node pools from a given Kubernetes cluster object.
- *
- * @param cluster - The Kubernetes cluster object containing topology and node pool information.
- * @returns An array of node pools if available; otherwise, returns an empty array.
- */
+/** Retrieves the list of node pools from a given Kubernetes cluster object. */
 export const getNodePools = (cluster: KubernetesCluster) =>
   cluster?.kubernetescluster?.spec?.topology?.workers?.nodePools || []
 
-/**
- * Generates a unique key string for an array of Kubernetes clusters by concatenating their IDs.
- *
- * @param clusters - An array of `KubernetesCluster` objects.
- * @returns A string representing the concatenated cluster IDs, separated by a pipe (`|`).
- */
+/** Generates a unique key string for an array of Kubernetes clusters by concatenating their IDs. */
 export const getClustersKey = (clusters: KubernetesCluster[] = []) =>
   Array.isArray(clusters) ? clusters.map(getClusterId).join('|') : ''
 
-/**
- * Retrieves the namespace from the metadata of a given Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object containing metadata.
- * @returns The namespace string associated with the cluster.
- */
+/** Retrieves the namespace from the metadata of a given Kubernetes cluster. */
 export const getClusterNamespace = (cluster: KubernetesCluster): string | undefined => cluster.metadata.namespace
 
-/**
- * Retrieves the creation timestamp from the metadata of a Kubernetes cluster.
- *
- * @param cluster - The Kubernetes cluster object containing metadata.
- * @returns The creation timestamp of the cluster.
- */
+/** Retrieves the creation timestamp from the metadata of a Kubernetes cluster. */
 export const getCreationTimestamp = (cluster: KubernetesCluster) => cluster.metadata.creationTimestamp
 
+/** Retrieves a KubernetesCluster based on ClusterId */
 export const getClusterById = (id: string, clusters: KubernetesCluster[]): KubernetesCluster | null => {
   return clusters.find((cluster) => getClusterId(cluster) === id) || null
 }
 
 // VIEWS
 
-export const getClusterUidView = (cluster: ClusterListViewRowType): string => cluster.clusterUid?.fieldValue || ''
+type WithValue<T> = { fieldValue?: T | null } | null | undefined
+type WithValueAndUnit<T> = { fieldValue?: T | null; fieldUnit?: unknown } | null | undefined
 
-export const getClusterIdView = (cluster: ClusterListViewRowType): string => cluster.clusterId?.fieldValue || ''
+/** Unwraps a string field, defaulting to `''` */
+const fieldStr = (field: WithValue<string>): string => field?.fieldValue ?? ''
 
-export const getClusterNameView = (cluster: ClusterListViewRowType): string => cluster.clusterName?.fieldValue || ''
+/** Unwraps a string field and appends its unit, defaulting to `''`. */
+const fieldStrWithUnit = (field: WithValueAndUnit<string>): string =>
+  (field?.fieldValue ?? '') + (typeof field?.fieldUnit === 'string' ? field.fieldUnit : '')
 
-export const getProviderView = (cluster: ClusterListViewRowType): string => cluster.provider?.fieldValue || ''
+/** Unwraps a numeric field, preserving `0` */
+const fieldNum = (field: WithValue<number>): number | undefined => field?.fieldValue ?? undefined
 
-export const getDatacenterView = (cluster: ClusterListViewRowType): string => cluster.datacenter?.fieldValue || ''
+/** Unwraps a numeric field and appends its unit as a string, defaulting to `''` */
+const fieldNumWithUnit = (field: WithValueAndUnit<number>): string =>
+  (field?.fieldValue ?? '') + (typeof field?.fieldUnit === 'string' ? field.fieldUnit : '')
 
-export const getAZView = (cluster: ClusterListViewRowType): string => cluster.availabilityZone?.fieldValue || ''
+/** Cluster UID. */
+export const getClusterUidView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.clusterUid)
 
-export const getCountryView = (cluster: ClusterListViewRowType): string => cluster.country?.fieldValue || ''
+/** Cluster ID. */
+export const getClusterIdView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.clusterId)
 
-export const getRegionView = (cluster: ClusterListViewRowType): string => cluster.region?.fieldValue || ''
+/** Cluster display name. */
+export const getClusterNameView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.clusterName)
 
-export const getWorkspaceView = (cluster: ClusterListViewRowType): string => cluster.workspace?.fieldValue || ''
+/** Cloud provider. */
+export const getProviderView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.provider)
 
-export const getEnvironmentView = (cluster: ClusterListViewRowType): string => cluster.environment?.fieldValue || ''
+/** Datacenter name. */
+export const getDatacenterView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.datacenter)
 
-export const getResourcesCpuView = (cluster: ClusterListViewRowType): string => cluster.resourcesCpu?.fieldValue || ''
+/** Availability zone. */
+export const getAZView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.availabilityZone)
 
-export const getResourcesMemoryView = (cluster: ClusterListViewRowType): string | '' =>
-  (cluster.resourcesMemory?.fieldValue || '') + (cluster.resourcesMemory?.fieldUnit || '')
+/** Country. */
+export const getCountryView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.country)
 
-export const getResourcesCpuUsedMilliView = (cluster: ClusterListViewRowType): string | '' =>
-  (cluster.resourcesCpuUsedMilli?.fieldValue || '') + (cluster.resourcesCpuUsedMilli?.fieldUnit || '')
+/** Region. */
+export const getRegionView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.region)
 
-export const getResourcesMemoryUsedView = (cluster: ClusterListViewRowType): string | '' =>
-  (cluster.resourcesMemoryUsed?.fieldValue || '') + (cluster.resourcesMemoryUsed?.fieldUnit || '')
+/** Workspace name. */
+export const getWorkspaceView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.workspace)
 
+/** Environment (e.g. prod/staging). */
+export const getEnvironmentView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.environment)
+
+/** CPU capacity spec, e.g. `'4'`. */
+export const getResourcesCpuView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.resourcesCpu)
+
+/** Memory capacity with unit, e.g. `'16Gi'`. */
+export const getResourcesMemoryView = (cluster: ClusterListViewRowType): string =>
+  fieldStrWithUnit(cluster.resourcesMemory)
+
+/** CPU used, in millicores with unit, e.g. `'500m'`. */
+export const getResourcesCpuUsedMilliView = (cluster: ClusterListViewRowType): string =>
+  fieldNumWithUnit(cluster.resourcesCpuUsedMilli)
+
+/** Memory used with unit, e.g. `'8Gi'`. */
+export const getResourcesMemoryUsedView = (cluster: ClusterListViewRowType): string =>
+  fieldStrWithUnit(cluster.resourcesMemoryUsed)
+
+/** CPU used, as a raw percentage number (no `%` suffix). */
 export const getResourcesCpuUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.resourcesCpuUsedPercent?.fieldValue ?? undefined
+  fieldNum(cluster.resourcesCpuUsedPercent)
 
+/** Memory used, as a raw percentage number (no `%` suffix). */
 export const getResourcesMemoryUsedPercentNumberView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.resourcesMemoryUsedPercent?.fieldValue ?? undefined
+  fieldNum(cluster.resourcesMemoryUsedPercent)
 
-export const getResourcesCpuUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
-  (cluster.resourcesCpuUsedPercent?.fieldValue || '') + (cluster.resourcesCpuUsedPercent?.fieldUnit || '')
+/** CPU used percentage, formatted with its unit, e.g. `'45%'`. */
+export const getResourcesCpuUsedPercentView = (cluster: ClusterListViewRowType): string =>
+  fieldNumWithUnit(cluster.resourcesCpuUsedPercent)
 
-export const getResourcesMemoryUsedPercentView = (cluster: ClusterListViewRowType): string | '' =>
-  (cluster.resourcesMemoryUsedPercent?.fieldValue || '') + (cluster.resourcesMemoryUsedPercent?.fieldUnit || '')
+/** Memory used percentage, formatted with its unit, e.g. `'60%'`. */
+export const getResourcesMemoryUsedPercentView = (cluster: ClusterListViewRowType): string =>
+  fieldNumWithUnit(cluster.resourcesMemoryUsedPercent)
 
-export const getNodesView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.nodes?.fieldValue || undefined
+/** Node count. */
+export const getNodesView = (cluster: ClusterListViewRowType): number | undefined => fieldNum(cluster.nodes)
 
+/** Node pool count. */
 export const getNodepoolsCountView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.nodepoolsCount?.fieldValue || undefined
+  fieldNum(cluster.nodepoolsCount)
 
-export const getPriceMonthView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.priceMonth?.fieldValue || undefined
+/** Monthly price. */
+export const getPriceMonthView = (cluster: ClusterListViewRowType): number | undefined => fieldNum(cluster.priceMonth)
 
-export const getPriceYearView = (cluster: ClusterListViewRowType): number | undefined =>
-  cluster.priceYear?.fieldValue || undefined
+/** Yearly price. */
+export const getPriceYearView = (cluster: ClusterListViewRowType): number | undefined => fieldNum(cluster.priceYear)
 
-export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => cluster.argocdURL?.fieldValue || ''
+/** ArgoCD URL. */
+export const getArgocdUrlView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.argocdURL)
 
-export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => cluster.grafanaURL?.fieldValue || ''
+/** Grafana URL. */
+export const getGrafanaUrlView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.grafanaURL)
 
-export const getRorAgentVersionView = (cluster: ClusterListViewRowType): string =>
-  cluster.rorAgentVersion?.fieldValue || ''
+/** ror agent version. */
+export const getRorAgentVersionView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.rorAgentVersion)
 
-export const getKubernetesVersionView = (cluster: ClusterListViewRowType): string =>
-  cluster.kubernetesVersion?.fieldValue || ''
+/** Kubernetes version. */
+export const getKubernetesVersionView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.kubernetesVersion)
 
-export const getNhnToolVersionView = (cluster: ClusterListViewRowType): string =>
-  cluster.nhnToolVersion?.fieldValue || ''
+/** NHN tooling version. */
+export const getNhnToolVersionView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.nhnToolVersion)
 
-export const getServiceIdView = (cluster: ClusterListViewRowType): string => cluster.serviceID?.fieldValue || ''
+/** Service ID. */
+export const getServiceIdView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.serviceID)
 
+/** Raw tags map. */
 export const getTagsView = (cluster: ClusterListViewRowType): Record<string, unknown> | null | undefined =>
   cluster.tags?.fieldValue || undefined
 
-export const getStatusView = (cluster: ClusterListViewRowType): string => cluster.status?.fieldValue || ''
+/** Egress IP address. */
+export const getEgressIPView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.egressIP)
 
-export const getCreatedView = (cluster: ClusterListViewRowType): string => cluster.created?.fieldValue || ''
+/** Cluster status. */
+export const getStatusView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.status)
 
-export const getLastSeenView = (cluster: ClusterListViewRowType): string => cluster.lastSeen?.fieldValue || ''
+/** Creation timestamp. */
+export const getCreatedView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.created)
 
-export const getNodepoolsView = (cluster: ClusterListViewRowType): unknown[] =>
-  cluster.nodepools?.fieldValue ?? []
+/** Last-seen timestamp. */
+export const getLastSeenView = (cluster: ClusterListViewRowType): string => fieldStr(cluster.lastSeen)
 
+/** Node pools list. */
+export const getNodepoolsView = (cluster: ClusterListViewRowType): unknown[] => cluster.nodepools?.fieldValue ?? []
+
+/** Pipe-joined cluster IDs, used as a memoization/dependency key. */
 export const getClustersViewKey = (clusters: ClusterListViewRowType[] = []): string =>
   Array.isArray(clusters) ? clusters.map(getClusterIdView).join('|') : ''
 
+/** `ror login` command for this cluster. */
 export const getRorLoginView = (cluster: ClusterListViewRowType): string => `ror login ${getClusterIdView(cluster)}`
 
-export const getClusterUidViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.clusterUid?.fieldValue || ''
+/** @see getClusterUidView */
+export const getClusterUidViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.clusterUid)
 
-export const getClusterIdViewItem = (cluster: ClusterListViewItemRowType): string => cluster.clusterId?.fieldValue || ''
+/** @see getClusterIdView */
+export const getClusterIdViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.clusterId)
 
-export const getClusterNameViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.clusterName?.fieldValue || ''
+/** @see getClusterNameView */
+export const getClusterNameViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.clusterName)
 
-export const getProviderViewItem = (cluster: ClusterListViewItemRowType): string => cluster.provider?.fieldValue || ''
+/** @see getProviderView */
+export const getProviderViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.provider)
 
-export const getDatacenterViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.datacenter?.fieldValue || ''
+/** @see getDatacenterView */
+export const getDatacenterViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.datacenter)
 
-export const getAZViewItem = (cluster: ClusterListViewItemRowType): string => cluster.availabilityZone?.fieldValue || ''
+/** @see getAZView */
+export const getAZViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.availabilityZone)
 
-export const getCountryViewItem = (cluster: ClusterListViewItemRowType): string => cluster.country?.fieldValue || ''
+/** @see getCountryView */
+export const getCountryViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.country)
 
-export const getRegionViewItem = (cluster: ClusterListViewItemRowType): string => cluster.region?.fieldValue || ''
+/** @see getRegionView */
+export const getRegionViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.region)
 
-export const getWorkspaceViewItem = (cluster: ClusterListViewItemRowType): string => cluster.workspace?.fieldValue || ''
+/** @see getWorkspaceView */
+export const getWorkspaceViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.workspace)
 
-export const getEnvironmentViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.environment?.fieldValue || ''
+/** @see getEnvironmentView */
+export const getEnvironmentViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.environment)
 
-export const getResourcesCpuViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.resourcesCpu?.fieldValue || ''
+/** @see getResourcesCpuView */
+export const getResourcesCpuViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.resourcesCpu)
 
-export const getResourcesMemoryViewItem = (cluster: ClusterListViewItemRowType): string | '' =>
-  (cluster.resourcesMemory?.fieldValue || '') + (cluster.resourcesMemory?.fieldUnit || '')
+/** @see getResourcesMemoryView */
+export const getResourcesMemoryViewItem = (cluster: ClusterListViewItemRowType): string =>
+  fieldStrWithUnit(cluster.resourcesMemory)
 
-export const getResourcesCpuUsedMilliViewItem = (cluster: ClusterListViewItemRowType): string | '' =>
-  (cluster.resourcesCpuUsedMilli?.fieldValue || '') + (cluster.resourcesCpuUsedMilli?.fieldUnit || '')
+/** @see getResourcesCpuUsedMilliView */
+export const getResourcesCpuUsedMilliViewItem = (cluster: ClusterListViewItemRowType): string =>
+  fieldNumWithUnit(cluster.resourcesCpuUsedMilli)
 
-export const getResourcesMemoryUsedViewItem = (cluster: ClusterListViewItemRowType): string | '' =>
-  (cluster.resourcesMemoryUsed?.fieldValue || '') + (cluster.resourcesMemoryUsed?.fieldUnit || '')
+/** @see getResourcesMemoryUsedView */
+export const getResourcesMemoryUsedViewItem = (cluster: ClusterListViewItemRowType): string =>
+  fieldStrWithUnit(cluster.resourcesMemoryUsed)
 
+/** @see getResourcesCpuUsedPercentNumberView */
 export const getResourcesCpuUsedPercentNumberViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.resourcesCpuUsedPercent?.fieldValue ?? undefined
+  fieldNum(cluster.resourcesCpuUsedPercent)
 
+/** @see getResourcesMemoryUsedPercentNumberView */
 export const getResourcesMemoryUsedPercentNumberViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.resourcesMemoryUsedPercent?.fieldValue ?? undefined
+  fieldNum(cluster.resourcesMemoryUsedPercent)
 
-export const getResourcesCpuUsedPercentViewItem = (cluster: ClusterListViewItemRowType): string | '' =>
-  (cluster.resourcesCpuUsedPercent?.fieldValue || '') + (cluster.resourcesCpuUsedPercent?.fieldUnit || '')
+/** @see getResourcesCpuUsedPercentView */
+export const getResourcesCpuUsedPercentViewItem = (cluster: ClusterListViewItemRowType): string =>
+  fieldNumWithUnit(cluster.resourcesCpuUsedPercent)
 
-export const getResourcesMemoryUsedPercentViewItem = (cluster: ClusterListViewItemRowType): string | '' =>
-  (cluster.resourcesMemoryUsedPercent?.fieldValue || '') + (cluster.resourcesMemoryUsedPercent?.fieldUnit || '')
+/** @see getResourcesMemoryUsedPercentView */
+export const getResourcesMemoryUsedPercentViewItem = (cluster: ClusterListViewItemRowType): string =>
+  fieldNumWithUnit(cluster.resourcesMemoryUsedPercent)
 
-export const getNodesViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.nodes?.fieldValue || undefined
+/** @see getNodesView */
+export const getNodesViewItem = (cluster: ClusterListViewItemRowType): number | undefined => fieldNum(cluster.nodes)
 
+/** @see getNodepoolsCountView */
 export const getNodepoolsCountViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.nodepoolsCount?.fieldValue || undefined
+  fieldNum(cluster.nodepoolsCount)
 
+/** @see getPriceMonthView */
 export const getPriceMonthViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.priceMonth?.fieldValue || undefined
+  fieldNum(cluster.priceMonth)
 
+/** @see getPriceYearView */
 export const getPriceYearViewItem = (cluster: ClusterListViewItemRowType): number | undefined =>
-  cluster.priceYear?.fieldValue || undefined
+  fieldNum(cluster.priceYear)
 
-export const getArgocdUrlViewItem = (cluster: ClusterListViewItemRowType): string => cluster.argocdURL?.fieldValue || ''
+/** @see getArgocdUrlView */
+export const getArgocdUrlViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.argocdURL)
 
-export const getGrafanaUrlViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.grafanaURL?.fieldValue || ''
+/** @see getGrafanaUrlView */
+export const getGrafanaUrlViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.grafanaURL)
 
+/** @see getRorAgentVersionView */
 export const getRorAgentVersionViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.rorAgentVersion?.fieldValue || ''
+  fieldStr(cluster.rorAgentVersion)
 
+/** @see getKubernetesVersionView */
 export const getKubernetesVersionViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.kubernetesVersion?.fieldValue || ''
+  fieldStr(cluster.kubernetesVersion)
 
+/** @see getNhnToolVersionView */
 export const getNhnToolVersionViewItem = (cluster: ClusterListViewItemRowType): string =>
-  cluster.nhnToolVersion?.fieldValue || ''
+  fieldStr(cluster.nhnToolVersion)
 
-export const getServiceIdViewItem = (cluster: ClusterListViewItemRowType): string => cluster.serviceID?.fieldValue || ''
+/** @see getServiceIdView */
+export const getServiceIdViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.serviceID)
 
+/** @see getTagsView */
 export const getTagsViewItem = (cluster: ClusterListViewItemRowType): Record<string, unknown> | null | undefined =>
   cluster.tags?.fieldValue || undefined
 
-export const getStatusViewItem = (cluster: ClusterListViewItemRowType): string => cluster.status?.fieldValue || ''
+/** @see getEgressIPView */
+export const getEgressIPViewItem = (cluster: ClusterListViewRowType): string => fieldStr(cluster.egressIP)
 
-export const getCreatedViewItem = (cluster: ClusterListViewItemRowType): string => cluster.created?.fieldValue || ''
+/** @see getStatusView */
+export const getStatusViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.status)
 
-export const getLastSeenViewItem = (cluster: ClusterListViewItemRowType): string => cluster.lastSeen?.fieldValue || ''
+/** @see getCreatedView */
+export const getCreatedViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.created)
 
+/** @see getLastSeenView */
+export const getLastSeenViewItem = (cluster: ClusterListViewItemRowType): string => fieldStr(cluster.lastSeen)
+
+/** @see getNodepoolsView */
 export const getNodepoolsViewItem = (cluster: ClusterListViewItemRowType): unknown[] =>
   cluster.nodepools?.fieldValue ?? []
 
+/** @see getClustersViewKey */
 export const getClustersViewKeyItem = (clusters: ClusterListViewItemRowType[] = []): string =>
   Array.isArray(clusters) ? clusters.map(getClusterIdViewItem).join('|') : ''
 
+/** @see getRorLoginView */
 export const getRorLoginViewItem = (cluster: ClusterListViewItemRowType): string =>
   `ror login ${getClusterIdViewItem(cluster)}`
 
+/**
+ * Groups `clusters` by the value returned from `extractor` and counts how
+ * many clusters fall into each group.
+ *
+ * @param clusters - The clusters to group and count.
+ * @param extractor - Derives the grouping key from a cluster (e.g. its provider or status).
+ * @returns A map from each distinct key to the number of clusters with that key.
+ */
 export const countBy = (
   clusters: ClusterListViewRowType[],
   extractor: (cluster: ClusterListViewRowType) => string
@@ -576,30 +491,41 @@ export const countBy = (
   return count
 }
 
+/** Cluster count providers */
 export const getProviderViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getProviderView)
 
+/** Cluster count datacenters */
 export const getDatacenterViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getDatacenterView)
 
+/** Cluster count availability zones */
 export const getAZViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getAZView)
 
+/** Cluster count countries */
 export const getCountryViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getCountryView)
 
+/** Cluster count regions */
 export const getRegionViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getRegionView)
 
+/** Cluster count workspaces */
 export const getWorkspaceViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getWorkspaceView)
 
+/** Cluster count environments */
 export const getEnvironmentViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getEnvironmentView)
 
+/** Cluster count kubernetes versions */
 export const getKubernetesVersionViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getKubernetesVersionView)
 
+/** Cluster count nhn tooling versions */
 export const getNhnToolVersionViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getNhnToolVersionView)
 
+/** Cluster count service IDs  */
 export const getServiceIdViewCount = (clusters: ClusterListViewRowType[]): CountMap =>
   countBy(clusters, getServiceIdView)
 
+/** Cluster count statuses */
 export const getStatusViewCount = (clusters: ClusterListViewRowType[]): CountMap => countBy(clusters, getStatusView)

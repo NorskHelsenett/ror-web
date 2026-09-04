@@ -31,7 +31,6 @@ import {
   getSpecCoresPerSocket,
   getVmToolVersion,
   getTeamValue,
-  VMDetailsProps,
   getTeamDescription,
   getLocation,
   getTags,
@@ -46,7 +45,7 @@ import Link from 'next/link'
 
 import { VulnerabilityCard } from './vm-vulnerability-info-card'
 
-export const VMDetails = ({ user }: VMDetailsProps) => {
+export const VMDetails = () => {
   const { vm } = useVMContext()
 
   const cpuSockets = getSpecSockets(vm) || 0
@@ -81,8 +80,6 @@ export const VMDetails = ({ user }: VMDetailsProps) => {
 
   const tags = getTags(vm)
   const tagKey = Object.keys(tags)
-
-  console.log(user)
 
   const ConfigurationCard = () => (
     <Card className='bg-slate-50 dark:bg-slate-900/50'>

@@ -10,7 +10,7 @@ import { alphabetical } from 'radash'
 import { createPaginatedResponse, type PaginatedResponse } from '../utils/paginated-response'
 import { getRorAPIPath } from '../utils/mock-base-url'
 import { clustersVersion1 } from '../data/clusters'
-//type ClusterVersionOne = (typeof clustersVersion1)[number]
+type ClusterVersionOne = (typeof clustersVersion1)[number]
 
 /**
  * The body of the request to filter clusters.

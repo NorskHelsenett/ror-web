@@ -11,7 +11,7 @@ import { routes } from '@/config/routes'
  */
 export async function authGuard() {
   const session = await auth()
-  if (!session) {
+  if (!session || session.error === 'RefreshAccessTokenError') {
     redirect(routes.auth.signIn.getHref())
   }
   return session

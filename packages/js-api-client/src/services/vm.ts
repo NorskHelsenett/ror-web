@@ -25,7 +25,7 @@ export const createVirtualMachineService = (request: (requestOptions: RequestOpt
       const normalized = Array.isArray(response) ? { resources: response } : response
       return validateResponse(normalized, VMResourceResponseSchema)
     } catch (error) {
-      console.log('Error fetching virtual machine by ID:', error)
+      console.error('Error fetching virtual machine by ID:', error)
       throw error
     }
   },

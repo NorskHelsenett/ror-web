@@ -38,7 +38,7 @@ const DatacentersPage = async () => {
 
       <div className='mx-12 my-8 flex flex-col gap-6'>
         <DatacenterStats items={items} />
-        <DataTable columns={datacenterColumns} data={items} />
+        <DataTable columns={datacenterColumns} data={items} resizable storageKey='datacenters-table-columns-size' />
       </div>
     </div>
   )

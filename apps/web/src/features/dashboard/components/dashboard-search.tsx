@@ -11,6 +11,9 @@ import { fetchAllClustersForSearch, searchVmsForDashboard } from '../utils/searc
 import { ResourceRegexSearch } from '@/components/ui/resource-regex-search'
 import { cn } from '@/utils/clsxm'
 import { getTeamIdentifier, getVmName, getVmPowerState, getVmUid } from '@/features/vms/utils/vms'
+import { useRouter } from 'next/navigation'
+import { routes } from '@/config/routes'
+import { getClusterUidView } from '@/features/cluster/utils/cluster'
 
 type Domain = 'cluster' | 'vms'
 
@@ -19,6 +22,7 @@ interface DashboardSearchProps {
 }
 
 export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
+  const router = useRouter()
   const [domain, setDomain] = useState<Domain>('cluster')
   const [clusterQuery, setClusterQuery] = useState('')
   const [vmQuery, setVmQuery] = useState('')
@@ -170,7 +174,13 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
                   return (
                     <div key={uid} className='flex items-center justify-between px-3 py-2 hover:bg-muted/50'>
                       <div>
-                        <p className='text-sm font-medium'>{name}</p>
+                        <button
+                          type='button'
+                          className='text-sm font-medium text-left cursor-pointer hover:underline'
+                          onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
+                        >
+                          {name}
+                        </button>
                         <p className='text-xs text-muted-foreground'>
                           {[cluster.datacenter?.fieldValue, cluster.environment?.fieldValue]
                             .filter(Boolean)
@@ -205,7 +215,15 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
                   return (
                     <div key={uid} className='flex items-center justify-between px-3 py-2 hover:bg-muted/50'>
                       <div>
-                        <p className='text-sm font-medium'>{name}</p>
+                        <p
+                          className='text-sm font-medium cursor-pointer hover:underline'
+                          onClick={() => {
+                            localStorage.setItem('selectedVm', JSON.stringify(vm))
+                            router.push(routes.app.vm.getHref(getVmUid(vm)))
+                          }}
+                        >
+                          {name}
+                        </p>
                         <p className='text-xs text-muted-foreground'>
                           {[getVmPowerState(vm), getTeamIdentifier(vm)].filter(Boolean).join(' · ')}
                         </p>

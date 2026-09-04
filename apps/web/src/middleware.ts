@@ -54,7 +54,28 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next()
   }
 
-  // ── 3. Get session token ─────────────────────────────
+  // ── 3. Reject unauthenticated background requests ───
+  // Only direct browser navigations (Sec-Fetch-Mode: navigate) should trigger
+  // the sign-in redirect. RSC fetches, prefetches, and other background requests
+  // (Sec-Fetch-Mode: cors / no-cors / absent-with-RSC-header) must return 401 instead.
+  // If they redirect to /sign-in they race with the real navigation and overwrite
+  // the in-flight PKCE/state cookies, causing "Try signing in with a different account".
+  const secFetchMode = req.headers.get('sec-fetch-mode')
+  const isRsc = req.headers.get('rsc') === '1'
+  // Treat as a direct navigation only when the browser explicitly says so.
+  // Absent sec-fetch-mode with no RSC header is treated as navigate (legacy/proxy safe).
+  const isDirectNavigation = secFetchMode === 'navigate' || (!secFetchMode && !isRsc)
+
+  if (debug)
+    console.log('[AUTH][MW] request-type', {
+      path,
+      secFetchMode,
+      isRsc,
+      isPrefetch: req.headers.get('next-router-prefetch') === '1',
+      isDirectNavigation,
+    })
+
+  // ── 4. Get session token ─────────────────────────────
   // This reads the NextAuth JWT (stored in cookies).
   // Requires the same secret used in NextAuth config.
   const token = (await getToken({
@@ -69,6 +90,7 @@ export async function middleware(req: NextRequest) {
 
   // If no token found -> redirect to sign-in and remember where to go back
   if (!token) {
+    if (!isDirectNavigation) return new NextResponse(null, { status: 401 })
     const url = new URL('/sign-in', origin)
     url.searchParams.set('callbackUrl', req.nextUrl.pathname + req.nextUrl.search)
     if (debug) console.log('[AUTH][MW] no token -> redirect', { to: url.toString() })
@@ -85,23 +107,23 @@ export async function middleware(req: NextRequest) {
   }
 
   // ── 4. Validate token expiry ─────────────────────────
-  // Use our custom accessTokenExpires if present,
-  // otherwise fall back to NextAuth's built-in exp (in seconds).
-  const expMs =
-    typeof token.accessTokenExpires === 'number'
-      ? token.accessTokenExpires
-      : typeof token.exp === 'number'
-        ? token.exp * 1000
-        : undefined
+  // Use only the session JWT expiry (token.exp), NOT accessTokenExpires.
+  // Access token refresh is handled transparently by the NextAuth JWT callback
+  // when the session is read server-side. Checking accessTokenExpires here would
+  // force a full IdP re-auth (and a new callbackUrl) every time the short-lived
+  // access token expires, even when the refresh token is still valid.
+  const expMs = typeof token.exp === 'number' ? token.exp * 1000 : undefined
 
-  // If expiry missing or already passed -> redirect to sign-in
-  if (!expMs || Date.now() >= expMs) {
+  // Redirect to sign-in if session is expired or a previous refresh attempt failed
+  if (!expMs || Date.now() >= expMs || token.error === 'RefreshAccessTokenError') {
+    if (!isDirectNavigation) return new NextResponse(null, { status: 401 })
     const url = new URL('/sign-in', origin)
     url.searchParams.set('callbackUrl', req.nextUrl.pathname + req.nextUrl.search)
     if (debug)
-      console.log('[AUTH][MW] token expired or missing exp -> redirect', {
+      console.log('[AUTH][MW] session expired or refresh error -> redirect', {
         nowIso: new Date().toISOString(),
         expIso: expMs ? new Date(expMs).toISOString() : 'n/a',
+        refreshError: token.error,
         to: url.toString(),
       })
     return NextResponse.redirect(url)
@@ -111,8 +133,9 @@ export async function middleware(req: NextRequest) {
   if (debug) {
     console.log('[AUTH][MW] allow', {
       nowIso: new Date().toISOString(),
-      expIso: new Date(expMs).toISOString(),
-      secondsRemaining: Math.floor((expMs - Date.now()) / 1000),
+      sessionExpIso: new Date(expMs).toISOString(),
+      sessionSecondsRemaining: Math.floor((expMs - Date.now()) / 1000),
+      accessTokenExpIso: token.accessTokenExpires ? new Date(token.accessTokenExpires).toISOString() : 'n/a',
     })
   }
 

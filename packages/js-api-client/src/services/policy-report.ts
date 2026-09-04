@@ -39,7 +39,7 @@ export const createPolicyReportService = (request: (requestOptions: RequestOptio
       const normalized = Array.isArray(response) ? { resources: response } : response
       return validateResponse(normalized, ResourcePolicyReportSchema)
     } catch (error) {
-      console.log('Error fetching policy report by ID:', error)
+      console.error('Error fetching policy report by ID:', error)
       throw error
     }
   },

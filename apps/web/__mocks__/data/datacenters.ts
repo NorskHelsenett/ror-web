@@ -5,12 +5,12 @@
  */
 
 import { faker } from '@faker-js/faker'
-import { DatacenterResponse } from '@ror/js-api-client'
+import { DataCenterResponse } from '@ror/js-api-client'
 
 /**
  * Mock data for datacenters (5 datacenters total).
  */
-export const datacenters: DatacenterResponse = {
+export const datacenters: DataCenterResponse = {
   resources: [
     {
       kind: 'Datacenter',

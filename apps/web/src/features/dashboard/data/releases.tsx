@@ -26,16 +26,16 @@ const icons = {
   LayoutDashboard: <LayoutDashboard className='size-5 text-blue-400' />,
 
   // Used for new components
-  Table: <Table className='size-5 text-emerald-400' />,
+  Table: <Table className='size-5 text-emerald-700 dark:text-emerald-400' />,
 
   // Used for new functionality
-  Filter: <Filter className='size-5 text-violet-400' />,
+  Filter: <Filter className='size-5 text-violet-700 dark:text-violet-400' />,
 
   // Used for major new features - at this time VMs and Cluster enhancements
-  Server: <Server className='size-5 text-cyan-400' />,
+  Server: <Server className='size-5 text-cyan-700 dark:text-cyan-400' />,
 
   // Bug is used when there has been a fixed a bug in previous release
-  Bug: <Bug className='size-5 text-orange-400' />,
+  Bug: <Bug className='size-5 text-orange-700 dark:text-orange-400' />,
 }
 
 /**
@@ -44,12 +44,38 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'resizable-tables',
+    day: 5,
+    month: 'AUG',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-200 dark:bg-violet-950',
+    title: 'Resizable tables',
+    description:
+      'The user is now able to resize the columns of tables in the size they prefer. The sizes will be saved in local storage and will be used the next time the user visits the page.',
+    tags: ['Improved'],
+    href: routes.app.clusters.getHref(),
+  },
+  {
+    id: 'rediect-from-search-on-dashboard',
+    day: 4,
+    month: 'AUG',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-200 dark:bg-violet-950',
+    title: 'Redirect from search on dashboard',
+    description:
+      'In the dashboard search bar, the user is able to click on one of the vms/clusters in the results list and be redirected to the correct page.',
+    tags: ['Improved'],
+    href: routes.app.dashboard.getHref(),
+  },
+  {
     id: 'node-pools-cluster-tab',
     day: 21,
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Node pools on cluster page',
     description:
       'Moved from legacy.ror.nhn.no. View node pools for a specific cluster on the cluster page under the node pools tab.',
@@ -66,7 +92,7 @@ export const releases: Release[] = [
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Datacenter page',
     description: 'Added data for datacenters on datacenter page.',
     tags: ['New', 'V2'],
@@ -78,7 +104,7 @@ export const releases: Release[] = [
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Projects page',
     description: 'Moved from legacy.ror.nhn.no. View projects.',
     tags: ['New', 'V2'],
@@ -90,7 +116,7 @@ export const releases: Release[] = [
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Statistics page',
     description: 'Moved from legacy.ror.nhn.no. View statistics of several different metrics.',
     tags: ['New', 'V2'],
@@ -102,7 +128,7 @@ export const releases: Release[] = [
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Vulnerability integration',
     description: 'Integrated against SPAM-tool. View your vulnerabilities in SPAM.',
     tags: ['New'],
@@ -114,7 +140,7 @@ export const releases: Release[] = [
     month: 'JUL',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Workspace page',
     description:
       'Moved from legacy.ror.nhn.no. Browse workspaces and inspect their clusters with search, sorting, and filters for datacenter, machine class, and storage class.',
@@ -127,7 +153,7 @@ export const releases: Release[] = [
     month: 'JUN',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Policy reports on cluster page',
     description:
       'Moved from legacy.ror.nhn.no. View policy reports for a specific cluster on the cluster page under policy reports tab.',
@@ -144,7 +170,7 @@ export const releases: Release[] = [
     month: 'JUN',
     year: 2026,
     icon: icons.LayoutDashboard,
-    iconBg: 'bg-blue-950',
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
     title: 'Policy reports page',
     description:
       'Moved from legacy.ror.nhn.no. View policy reports across clusters and namespaces, filterable by severity, category, and result status.',

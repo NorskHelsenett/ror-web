@@ -20,7 +20,6 @@ export async function loadMoreVMs({ offset, limit, sort, order, search, searchFi
   const searchQuery = search?.trim() || undefined
   if (searchQuery) {
     const filters = buildRegexSearchFilter(searchQuery, 'virtualmachine.spec.name', searchField)
-    //console.log('[loadMoreVMs] offset:', offset, 'search:', searchQuery, 'filters:', filters)
     if (filters) params.set('filters', filters)
   }
 
