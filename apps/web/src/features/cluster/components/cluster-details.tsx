@@ -34,6 +34,7 @@ import {
   getRorLoginViewItem,
   getServiceIdViewItem,
   getWorkspaceViewItem,
+  getEgressIPViewItem,
 } from '../utils/cluster'
 import { formatObservationDate } from '../utils/formats'
 import { GridLayoutWrapper } from '@/components/ui/grid-layout-wrapper'
@@ -72,6 +73,7 @@ export const ClusterDetails = () => {
   const created = getCreatedViewItem(cluster)
   const lastSeen = getLastSeenViewItem(cluster)
   const rorLogin = getRorLoginViewItem(cluster) || missingText
+  const egressIP = getEgressIPViewItem(cluster) || missingText
 
   const cardStyling = 'h-full w-full flex flex-col bg-(--r-layer) p-4 rounded-md'
 
@@ -117,14 +119,14 @@ export const ClusterDetails = () => {
           <CardItem label='Datacenter' value={datacenter} copyable />
           <CardItem label='Provider' value={provider} copyable />
           <CardItem label='Service ID' value={serviceId} copyable />
+          <CardItem label='Egress IP' value={egressIP} copyable />
           <CardItem label='Availability zone' value={az} copyable />
           <CardItem label='Location' value={region + ' - ' + country} copyable />
           {/* TODO: ADD HA (THROUGH CONTROL PLANE OVER 1 <CardItem label='HA control plane'>{getHaClusterPlaneValue(cluster)}</CardItem> */}
-          {/* TODO: ADD EGRESS IP<CardItem label='Egress IP'>MOCK EGRESS IP</CardItem> */}
         </div>
       </div>
     ),
-    [az, clusterId, clusterUid, country, datacenter, provider, region, serviceId, workspace]
+    [az, clusterId, clusterUid, country, datacenter, provider, region, serviceId, workspace, egressIP]
   )
 
   const ObservedCard = useCallback(

@@ -19,3 +19,4 @@ export type ClusterCardDisplayData =
   | 'region'
   | 'az'
   | 'workspace'
+  | 'egressIP'
