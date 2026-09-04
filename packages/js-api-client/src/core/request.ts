@@ -78,8 +78,7 @@ export function generateRequest(config: ApiClientConfig): ApiRequestFunction {
         handleErrorResponse(response)
       }
 
-      const json = await response.json()
-      return json
+      return await response.json()
     } catch (error) {
       // Enhanced error logging with environment information
       const additionalInfo = {

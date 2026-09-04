@@ -10,9 +10,10 @@ import { useActiveRelease } from '@/hooks/use-active-release'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
 const tagStyles: Record<ReleaseTag, string> = {
-  New: 'bg-cyan-900 border-cyan-600 text-cyan-300',
-  Improved: 'bg-orange-900 border-orange-300 text-orange-300',
-  V2: 'bg-violet-900 border-violet-600 text-violet-300',
+  New: 'bg-cyan-200 border-cyan-400 text-cyan-800 dark:bg-cyan-900 dark:border-cyan-600 dark:text-cyan-300',
+  Improved:
+    'bg-orange-200 border-orange-400 text-orange-800 dark:bg-orange-900 dark:border-orange-300 dark:text-orange-300',
+  V2: 'bg-violet-200 border-violet-400 text-violet-800 dark:bg-violet-900 dark:border-violet-600 dark:text-violet-300',
 }
 
 const tagTooltips: Record<ReleaseTag, string> = {
