@@ -35,13 +35,19 @@ export function useSearch<T, M = T>(items: T[], query: string, options: UseSearc
       : items.map((i) => ({ original: i, mapped: i as unknown as M }))
     const fuse = new Fuse<M>(
       sourceItems.map((i) => i.mapped),
-      { keys, threshold }
+      { keys, threshold, ignoreLocation: true, useExtendedSearch: true }
     )
     return { fuse, sourceItems }
   }, [items, keys, threshold, mapItem])
 
   if (!query.trim()) return items
-  const results = fuse.search(query.trim())
+  // Extended search gives meaning to !, ^, =, ', | — strip them so free-text queries always match literally.
+  const sanitizedQuery = query
+    .trim()
+    .replace(/[!^='|]/g, ' ')
+    .trim()
+  if (!sanitizedQuery) return items
+  const results = fuse.search(sanitizedQuery)
 
   return results.map((r) => sourceItems[r.refIndex].original)
 }
