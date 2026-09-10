@@ -18,11 +18,11 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         argocd:
-          'border-2 bg-[#4141e1]/10 border-[#4141e1] text-[#4141e1] shadow-xs hover:bg-[#2c2cc7] hover:text-white dark:hover:bg-[#2c2cc7]',
+          'border-2 bg-[#4141e1]/10 dark:bg-[#7c93ff]/10 border-[#4141e1] dark:border-[#7c93ff] text-[#4141e1] dark:text-[#7c93ff] shadow-xs hover:bg-[#2c2cc7] hover:text-white dark:hover:text-white dark:hover:bg-[#7c93ff]/20',
         grafana:
-          'border-2 bg-[#ff671d]/10 border-[#ff671d] text-[#ff671d] shadow-xs hover:bg-[#e05009] hover:text-white dark:hover:bg-[#e05009]',
+          'border-2 bg-[#ff671d]/10 dark:bg-[#ff9142]/10 border-[#ff671d] dark:border-[#ff9142] text-[#ff671d] dark:text-[#ff9142] shadow-xs hover:bg-[#e05009] hover:text-white dark:hover:text-white dark:hover:bg-[#ff9142]/20',
         rorcli:
-          'border-2 bg-[#04d607]/10 border-[#04d607] text-[#04d607] shadow-xs hover:bg-[#04b306] hover:text-white dark:hover:bg-[#04b306]',
+          'border-2 bg-[#04d607]/10 dark:bg-[#49ce2c]/10 border-[#04d607] dark:border-[#49ce2c] text-[#04d607] dark:text-[#49ce2c] shadow-xs hover:bg-[#04b306] hover:text-white dark:hover:text-white dark:hover:bg-[#49ce2c]/20',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
