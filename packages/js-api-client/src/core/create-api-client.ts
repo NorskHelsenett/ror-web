@@ -25,6 +25,7 @@ import { createClusterListItemViewService } from '../services/views/clusterlisti
 import { createOverviewItemsViewService } from '../services/views/overviewitems'
 import { createWorkspaceListViewService } from '../services/views/workspacelist'
 import { createPolicyReportService } from '../services/policy-report'
+import { createNamespacesService } from '../services/namespaces'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -61,6 +62,7 @@ export function createApiClient(config: ApiClientConfig) {
     deployment: createDeploymentService(request),
     ingresses: createIngressesService(request),
     kubernetesClusters: createKubernetesClusterService(request),
+    namespaces: createNamespacesService(request),
     nodes: createNodesService(request),
     pods: createPodsService(request),
     prices: createPriceService(request),
