@@ -11,6 +11,7 @@ interface WizardProps<TFieldValues extends FieldValues> {
   trigger: UseFormTrigger<TFieldValues>
   stepFields: Array<Array<Path<TFieldValues>>>
   summary: ReactNode
+  finalStepAction?: ReactNode
 }
 
 interface WizardItemProps {
@@ -76,6 +77,7 @@ export const Wizard = <TFieldValues extends FieldValues>({
   trigger,
   stepFields,
   summary,
+  finalStepAction,
 }: WizardProps<TFieldValues>) => {
   const [active, setActive] = useState(0)
   const [maxReached, setMaxReached] = useState(0)
@@ -147,16 +149,18 @@ export const Wizard = <TFieldValues extends FieldValues>({
           {showSummary && safeActive !== content.length - 1 && summary}
         </div>
 
-        <div className='flex gap-4 justify-center mt-16'>
+        <div className='flex gap-4 justify-center items-center mt-16'>
           {safeActive > 0 && (
             <Button variant='outline' type='button' aria-label='Previous step' onClick={goPrev}>
               <ArrowLeft />
             </Button>
           )}
-          {safeActive < content.length - 1 && (
+          {safeActive < content.length - 1 ? (
             <Button type='button' aria-label='Next step' onClick={goNext}>
               <ArrowRight />
             </Button>
+          ) : (
+            finalStepAction
           )}
         </div>
       </div>
