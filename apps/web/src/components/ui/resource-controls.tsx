@@ -20,7 +20,6 @@ import { ResourceSearch } from './resource-search'
 import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
 import { ResourceRegexSearch } from './resource-regex-search'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
 import { ValueLabel } from '@/types/value-label'
 
 /**
@@ -48,6 +47,7 @@ import { ValueLabel } from '@/types/value-label'
  */
 interface ResourceControlsProps<T> {
   safeItems: T[]
+  showCreateCluster?: boolean
   searchType: 'fuzzy' | 'regex'
   searchText?: string
   selectedDisplayData: string[]
@@ -82,6 +82,7 @@ interface ResourceControlsProps<T> {
  *
  * @template T - The type of the resource items.
  * @param safeItems - The array of resource items to display and interact with.
+ * @param showCreateCluster - Condition to determine if create cluster should be displayed
  * @param searchText - The current search text input value.
  * @param selectedDisplayData - The currently selected display data option values.
  * @param onDisplayChange - Callback invoked when the display data selection changes.
@@ -104,6 +105,7 @@ interface ResourceControlsProps<T> {
  */
 export function ResourceControls<T>({
   safeItems,
+  showCreateCluster,
   searchType,
   searchText,
   selectedDisplayData,
@@ -217,24 +219,15 @@ export function ResourceControls<T>({
           </Link>
         </Toggle>
 
-        {domain === 'clusters' && (
-          // TODO: enable when cluster creation is available in ROR
-          // <Link href={`/clusters/new-cluster`}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
-                <Button disabled>
-                  <Plus />
-                  Create Cluster
-                </Button>
-              </span>
-            </TooltipTrigger>
-
-            <TooltipContent>
-              <p>Coming to ROR real soon</p>
-            </TooltipContent>
-          </Tooltip>
-          // </Link>
+        {domain === 'clusters' && showCreateCluster && (
+          <Link href={`/clusters/new-cluster`}>
+            <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
+              <Button>
+                <Plus />
+                Create Cluster
+              </Button>
+            </span>
+          </Link>
         )}
 
         <Button
