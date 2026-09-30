@@ -2,6 +2,9 @@ import { Header } from '@/components/layout/app-shell/header'
 import { PageView } from './page-view'
 import { getRorApi } from '@/services/ror-api'
 import { randomString } from '@/utils/random-string'
+import { Namespace } from '@ror/js-api-client'
+import { auth } from '@/config/next-auth'
+import { notFound } from 'next/navigation'
 
 interface BillingType {
   workorder: string
@@ -35,15 +38,27 @@ export interface ProjectType {
 }
 
 export default async function ClustersPage() {
+  if (process.env.IS_NHN !== 'true') notFound()
+
+  const session = await auth()
   const api = await getRorApi()
-  const res = await api.projects.list()
-  const projects: ProjectType[] = res.data
+  const resProjects = await api.projects.list()
+  const resNamespaces = await api.namespaces.list()
+  const namespaces = resNamespaces?.resources ?? []
+  const namespacesNames: string[] = namespaces.flatMap((n: Namespace) => n.metadata.name ?? [])
+  const uniqueNamespaceNames: string[] = [...new Set(namespacesNames)]
+  const projects: ProjectType[] = resProjects.data
   const clusterIdSuffix = randomString(4) // unpredictability of suffix is not important
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='New Cluster' />
-      <PageView projects={projects} clusterIdSuffix={clusterIdSuffix} />
+      <PageView
+        projects={projects}
+        namespacesNames={uniqueNamespaceNames}
+        clusterIdSuffix={clusterIdSuffix}
+        orderer={session?.user?.name || session?.user?.email || ''}
+      />
     </div>
   )
 }

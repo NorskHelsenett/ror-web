@@ -47,6 +47,7 @@ interface PageViewProps {
   className?: string
   clusters: ClusterListViewRowType[]
   params: Params
+  showCreateCluster?: boolean
 }
 
 /**
@@ -68,7 +69,7 @@ interface PageViewProps {
  *
  * @returns The rendered page view component.
  */
-export const PageView = ({ className, clusters, params }: PageViewProps) => {
+export const PageView = ({ className, clusters, params, showCreateCluster }: PageViewProps) => {
   // Filter state
   const filtersOpen = params.filters === 'open'
 
@@ -194,6 +195,7 @@ export const PageView = ({ className, clusters, params }: PageViewProps) => {
         <div className={cn('mx-12 flex items-center min-h-28 py-6 ', filtersOpen && 'w-[calc(100%-6rem)] border-b')}>
           <ResourceControls
             safeItems={safeItems}
+            showCreateCluster={showCreateCluster}
             searchType='fuzzy'
             searchText='Find clusters...'
             selectedDisplayData={selectedDisplayData}
