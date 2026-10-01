@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 
-const CREATE_CLUSTER_WEBHOOK_URL =
-  process.env.CREATE_CLUSTER_WEBHOOK_URL ||
-  'https://hooks.slack.com/triggers/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'
-
 export async function POST(request: Request) {
   try {
+    const webhookUrl = process.env.CREATE_CLUSTER_WEBHOOK_URL
+    if (!webhookUrl) {
+      return NextResponse.json({ error: 'Cluster webhook is not configured' }, { status: 503 })
+    }
+
     const payload = await request.json()
-    const response = await fetch(CREATE_CLUSTER_WEBHOOK_URL, {
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
