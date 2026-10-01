@@ -2,7 +2,7 @@ import { Header } from '@/components/layout/app-shell/header'
 import { PageView } from './page-view'
 import { getRorApi } from '@/services/ror-api'
 import { randomString } from '@/utils/random-string'
-import { Namespace } from '@ror/js-api-client'
+import type { WorkspaceListViewRowType } from '@ror/js-api-client'
 import { auth } from '@/config/next-auth'
 import { notFound } from 'next/navigation'
 
@@ -43,9 +43,11 @@ export default async function ClustersPage() {
   const session = await auth()
   const api = await getRorApi()
   const resProjects = await api.projects.list()
-  const resNamespaces = await api.namespaces.list()
-  const namespaces = resNamespaces?.resources ?? []
-  const namespacesNames: string[] = namespaces.flatMap((n: Namespace) => n.metadata.name ?? [])
+  const workspaceList = await api.workspaceListView.getWorkspaceList(new URLSearchParams([['limit', '10000']]))
+  const workspaceRows: WorkspaceListViewRowType[] = workspaceList.rows
+  const namespacesNames: string[] = workspaceRows
+    .map((workspace) => workspace.workspaceName?.fieldValue ?? '')
+    .filter(Boolean)
   const uniqueNamespaceNames: string[] = [...new Set(namespacesNames)]
   const projects: ProjectType[] = resProjects.data
   const clusterIdSuffix = randomString(4) // unpredictability of suffix is not important

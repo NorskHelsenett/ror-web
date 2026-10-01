@@ -916,6 +916,7 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }
       datacenter: regions.find((region) => region.key === formValues.region)?.display.trim() || '',
       team: formValues.team || '',
       environment: formValues.environment || '',
+      namespace: formValues.namespace || '',
       machine_class: formValues.machineClass || '',
       nodes: String(formValues.numOfNodes ?? ''),
       high_availability: formValues.highAvailability ? 'Ja - For Produksjons-cluster!' : 'Nei - Gjelder test/qa/dev',
@@ -1007,7 +1008,7 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }
         <div key='basics' className='w-fit mx-auto'>
           <div className={cn('grid grid-cols-3 gap-x-8 gap-y-4 w-fit')}>
             <h3 className='text-3xl'>Project</h3>
-            <h3 className='text-3xl'>Namespaces</h3>
+            <h3 className='text-3xl'>Namespace</h3>
             <h3 className='text-3xl'>{fieldLabel('serviceId')}</h3>
             <ProjectInput control={control} projects={projects} />
             <NamespaceInput control={control} namespaces={namespacesNames} />
