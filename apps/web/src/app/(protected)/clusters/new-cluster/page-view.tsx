@@ -437,7 +437,6 @@ interface NewClusterProps {
   projects: ProjectType[]
   namespacesNames: string[]
   clusterIdSuffix: string
-  orderer: string
 }
 
 interface SimpleProjectType {
@@ -781,13 +780,13 @@ const SummaryTableRow = ({ title, content }: { title: string; content: React.Rea
   </tr>
 )
 
-export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }: NewClusterProps) => {
+export const PageView = ({ projects, clusterIdSuffix, namespacesNames }: NewClusterProps) => {
   // States
   const [tagKey, setTagKey] = useState('')
   const [tagValue, setTagValue] = useState('')
 
   // Hooks
-  const form = useCreateClusterForm(orderer)
+  const form = useCreateClusterForm()
   const {
     control,
     register,
@@ -861,7 +860,7 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }
     if (!n) return ''
 
     // Remove -p, -t, -q or -d prefix
-    n = n.replace(/^[ptqd]-/, '')
+    n = n.replace(/^[ptqd]-/i, '')
 
     return `${envPrefix}-${n}`
   }, [formValues.environment, formValues.name])
@@ -910,7 +909,6 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }
 
   const createClusterPayload = useMemo(
     () => ({
-      orderer: orderer || '',
       project: projectName,
       name: formValues.fullname || '',
       datacenter: regions.find((region) => region.key === formValues.region)?.display.trim() || '',
@@ -931,7 +929,7 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames, orderer }
       access_groups: formValues.accessGroups || '',
       other: formValues.other || '',
     }),
-    [formValues, orderer, projectName]
+    [formValues, projectName]
   )
 
   const Summary = () => (

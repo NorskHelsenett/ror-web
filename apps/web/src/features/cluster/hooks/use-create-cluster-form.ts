@@ -1,10 +1,9 @@
 import { useForm } from 'react-hook-form'
 import type { CreateClusterForm } from '../types/create-cluster'
 
-export function useCreateClusterForm(orderer: string) {
+export function useCreateClusterForm() {
   return useForm<CreateClusterForm>({
     defaultValues: {
-      orderer,
       name: '',
       project: '',
       namespace: '',
@@ -21,7 +20,7 @@ export function useCreateClusterForm(orderer: string) {
       team: '',
       sensitivity: '',
       criticality: '',
-      lcm: 'dag',
+      lcm: 'Dag (i arbeidstid, kl 0800 - 1600)',
       cp: 3,
       wpName: '',
       numOfNodes: 1,

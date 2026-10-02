@@ -17,7 +17,7 @@ export const sensitivityOptions = [
   { key: '1 - Åpen', display: '1 - Åpen' },
   { key: '2 - Intern', display: '2 - Intern' },
   { key: '3 - Skjermet', display: '3 - Skjermet' },
-  { key: '4 - Sterkt skjermed', display: '4 - Sterkt skjermet' },
+  { key: '4 - Sterkt skjermet', display: '4 - Sterkt skjermet' },
 ]
 
 export const criticalityOptions = [

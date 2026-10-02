@@ -19,6 +19,7 @@ interface WizardItemProps {
   circleNum: number
   itemState: ItemState
   onClick?: () => void
+  ariaLabel?: string
 }
 
 type ItemState = 'inactive' | 'active' | 'wasActive'
@@ -50,7 +51,7 @@ function getItemState(index: number, active: number, maxReached: number): ItemSt
   return 'inactive'
 }
 
-const WizardItem = ({ title, circleNum, itemState, onClick }: WizardItemProps) => {
+const WizardItem = ({ title, circleNum, itemState, onClick, ariaLabel }: WizardItemProps) => {
   const isActive = itemState === 'active'
   const isReached = itemState !== 'inactive'
   const circleClass = cn('border-2 sm:border-3 sm:font-bold', isReached && 'border-blue-600', isActive && 'bg-blue-600')
@@ -61,7 +62,7 @@ const WizardItem = ({ title, circleNum, itemState, onClick }: WizardItemProps) =
       type='button'
       onClick={isReached ? onClick : undefined}
       disabled={!isReached}
-      aria-disabled={!isReached}
+      aria-label={ariaLabel}
       aria-current={isActive ? 'step' : undefined}
       className={cn('flex items-center text-left', isReached ? 'cursor-pointer' : 'cursor-not-allowed')}
     >
@@ -130,7 +131,7 @@ export const Wizard = <TFieldValues extends FieldValues>({
                   circleNum={index + 1}
                   itemState={state}
                   onClick={() => goToStep(index)}
-                  aria-label={`Step ${index + 1}: ${c.title}`}
+                  ariaLabel={`Step ${index + 1}: ${c.title}`}
                 />
               </div>
             )

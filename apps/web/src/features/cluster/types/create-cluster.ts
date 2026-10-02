@@ -1,5 +1,4 @@
 export interface CreateClusterForm {
-  orderer: string
   name: string
   project: string
   namespace: string
@@ -16,7 +15,7 @@ export interface CreateClusterForm {
   team: string
   sensitivity: string
   criticality: string
-  lcm: 'dag' | 'kveld'
+  lcm: 'Dag (i arbeidstid, kl 0800 - 1600)' | 'Kveld (utenfor arbeidstid, kl 1600 - 2359)'
   cp: number
   wpName: string
   numOfNodes: number
