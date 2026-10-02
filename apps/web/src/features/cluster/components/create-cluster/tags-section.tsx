@@ -30,7 +30,7 @@ export const TagsSection = ({
   const safeTags: { key: string; value: string }[] = Array.isArray(tags) ? tags : []
   return (
     <>
-      <h3 className={cn('mx-auto w-fit mb-4 text-3xl', 'sm:text-3xl', 'md:text-5xl')}>Tags</h3>
+      <h3 className={cn('mx-auto w-fit mb-4 text-3xl')}>Tags</h3>
       <section>
         <div
           className={cn(

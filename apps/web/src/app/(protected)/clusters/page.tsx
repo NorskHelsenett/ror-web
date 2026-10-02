@@ -43,12 +43,13 @@ export default async function ClustersPage({
 
   const clusterList = await api.clusterListView.getClusterList(listParams)
   const clusters: ClusterListViewRowType[] = clusterList.rows
+  const isNhn = process.env.IS_NHN === 'true'
 
   return (
     <div className='w-full flex flex-col'>
       <Header title='Clusters' />
 
-      <PageView clusters={clusters} params={params} />
+      <PageView clusters={clusters} params={params} showCreateCluster={isNhn} />
     </div>
   )
 }
