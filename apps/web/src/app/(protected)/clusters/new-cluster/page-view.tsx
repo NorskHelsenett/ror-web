@@ -408,10 +408,16 @@ const fields: FieldConfig[] = [
           {...register('numOfNodes', {
             required: 'Number of nodes is required',
             valueAsNumber: true,
-            validate: (value) => !Number.isNaN(value) || 'Number of nodes must be a valid number',
+            validate: (value) =>
+              (Number.isInteger(value) && value >= 1 && value <= 100) ||
+              'Number of nodes must be an integer from 1 to 100',
             min: { value: 1, message: 'Number of nodes must be at least 1' },
+            max: { value: 100, message: 'Number of nodes must be at most 100' },
           })}
           type='number'
+          min={1}
+          max={100}
+          step={1}
           placeholder='Enter num of nodes...'
         />
       </FormSection>

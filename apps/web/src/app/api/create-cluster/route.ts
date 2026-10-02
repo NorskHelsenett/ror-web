@@ -115,6 +115,10 @@ async function readRequestBody(request: Request): Promise<string> {
 }
 
 export async function POST(request: Request) {
+  if (process.env.IS_NHN !== 'true') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
   const session = await authGuard()
 
   try {
