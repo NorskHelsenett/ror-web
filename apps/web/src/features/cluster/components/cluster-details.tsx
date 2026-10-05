@@ -242,6 +242,12 @@ export const ClusterDetails = () => {
 
   return (
     <div>
+      {provider === 'tanzu' && (
+        <div className='rounded-lg p-4 bg-red-500 border-red-700 dark:bg-red-700 dark:border-red-900 border-2 mb-3'>
+          We noticed this cluster is still provided by Tanzu. Please start planning the conversion to Vitistack, and
+          contact your technical support if assistance is needed.
+        </div>
+      )}
       <GridLayoutWrapper
         preferenceKey={'clusterCards'}
         standardLayouts={standardLayouts}
