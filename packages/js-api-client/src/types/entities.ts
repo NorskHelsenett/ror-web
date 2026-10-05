@@ -38,6 +38,7 @@ import type { ClusterListItemViewRow, ClusterListItemViewSchema } from '../schem
 import type { OverviewItemsViewRow, OverviewItemsViewSchema } from '../schemas/views/overviewitems'
 import type { ResourcePolicyReportType } from '../schemas/policy-report'
 import type { WorkspaceListViewRow, WorkspaceListViewSchema } from '../schemas/views/workspacelist'
+import type { NamespaceResponseSchema, NamespaceSchema } from '../schemas/namespace'
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
@@ -65,6 +66,8 @@ export type KubernetesClusterResponse = z.infer<typeof KubernetesClusterResponse
 export type KubernetesClusterNodePool = z.infer<typeof KubernetesClusterNodePoolSchema>
 export type { KubernetesClusterNodePoolType }
 export type { KubernetesClusterNodePoolStatusType }
+export type Namespace = z.infer<typeof NamespaceSchema>
+export type NamespaceResponse = z.infer<typeof NamespaceResponseSchema>
 export type Node = z.infer<typeof NodeSchema>
 export type NodeResponse = z.infer<typeof NodeResponseSchema>
 export type Price = z.infer<typeof PriceSchema>

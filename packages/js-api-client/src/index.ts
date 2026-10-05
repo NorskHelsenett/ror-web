@@ -33,6 +33,8 @@ export type {
   KubernetesClusterNodePool,
   KubernetesClusterNodePoolType,
   KubernetesClusterNodePoolStatusType,
+  Namespace,
+  NamespaceResponse,
   Node,
   NodeResponse,
   Pod,

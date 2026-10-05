@@ -44,6 +44,18 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'create-cluster-functionality',
+    day: 1,
+    month: 'OCT',
+    year: 2026,
+    icon: icons.Filter,
+    iconBg: 'bg-violet-200 dark:bg-violet-950',
+    title: 'Create cluster functionality',
+    description: 'The user is now able to send a request to create a cluster from the ROR interface.',
+    tags: ['New', 'V2'],
+    href: routes.app.clusters.getHref(),
+  },
+  {
     id: 'resizable-tables',
     day: 5,
     month: 'AUG',

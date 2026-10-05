@@ -17,7 +17,7 @@ export const createProjectService = (request: (requestOptions: RequestOptions) =
           },
         ],
         globalFilter: 'string',
-        limit: 0,
+        limit: 1000,
         skip: 0,
         sort: [
           {
