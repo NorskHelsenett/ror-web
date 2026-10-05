@@ -224,6 +224,12 @@ const ClusterCard = ({ className, cluster, displayData }: ClusterCardProps) => {
           </>
         )}
 
+        {provider === 'tanzu' && (
+          <div className='rounded-lg p-4 bg-red-500 border-red-700 dark:bg-red-700 dark:border-red-900 border-2 mb-3'>
+            Tanzu cluster: plan conversion to Vitistack
+          </div>
+        )}
+
         {shows('nodes', 'cpu', 'memory', 'price', 'workspace', 'egressIP') && (
           <>
             <section className={infoSectionCls}>
