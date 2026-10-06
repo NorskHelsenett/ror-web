@@ -2,7 +2,7 @@ import { Header } from '@/components/layout/app-shell/header'
 import { PageView } from './page-view'
 import { getRorApi } from '@/services/ror-api'
 import { randomString } from '@/utils/random-string'
-import type { WorkspaceListViewRowType, KubernetesCluster } from '@ror/js-api-client'
+import type { KubernetesCluster } from '@ror/js-api-client'
 import { notFound } from 'next/navigation'
 
 interface BillingType {
@@ -51,7 +51,7 @@ export default async function ClustersPage() {
     project: c.kubernetescluster?.spec?.data?.project ?? '',
     datacenter: c.kubernetescluster?.spec?.data?.datacenter ?? '',
   }))
-  // console.log(clustersWithNamesProjectsDatacenter)
+  console.log(clustersWithNamesProjectsDatacenter)
   const resProjects = await api.projects.list()
   const workspaces = (await api.workspaces.list()).data
   const workspaceNames: string[] = workspaces.map((ws) => ws.name)
