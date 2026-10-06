@@ -26,6 +26,7 @@ import { createOverviewItemsViewService } from '../services/views/overviewitems'
 import { createWorkspaceListViewService } from '../services/views/workspacelist'
 import { createPolicyReportService } from '../services/policy-report'
 import { createNamespacesService } from '../services/namespaces'
+import { createWorkspacesService } from '../services/workspaces'
 
 function setDefaultHeaders(config: ApiClientConfig): Record<string, string> {
   return {
@@ -70,6 +71,7 @@ export function createApiClient(config: ApiClientConfig) {
     replicaSet: createReplicaSetService(request),
     service: createServiceService(request),
     users: createUsersService(request),
+    workspaces: createWorkspacesService(request),
     vulnerabilityReport: createVulnerabilityReportService(request),
     virtualMachine: createVirtualMachineService(request),
     virtualMachineVulnerabilityInfo: createVirtualMachineVulnerabilityInfoService(request),

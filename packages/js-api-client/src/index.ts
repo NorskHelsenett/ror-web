@@ -41,6 +41,8 @@ export type {
   PodResponse,
   Price,
   PriceResponse,
+  Workspace,
+  WorkspaceResponse,
   Project,
   ProjectResponse,
   User,

@@ -29,7 +29,7 @@ export function useCreateClusterForm() {
       machineClass: '',
       wpClass: '',
       tags: [],
-      region: 'east',
+      region: '',
       other: '',
     },
   })
