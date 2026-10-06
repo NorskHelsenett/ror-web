@@ -221,19 +221,21 @@ export function ResourceControls<T>({
         </Toggle>
 
         {domain === 'clusters' && showCreateCluster && (
-          <Link href={`/clusters/new-cluster`}>
-            <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button disabled>
-                    <Plus />
-                    Create Cluster
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>We encountered a small issue. Will be back!</TooltipContent>
-              </Tooltip>
-            </span>
-          </Link>
+          // <Link href={`/clusters/new-cluster`}>
+          // <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span>
+                <Button disabled>
+                  <Plus />
+                  Create Cluster
+                </Button>
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>We encountered a small issue. Will be back!</TooltipContent>
+          </Tooltip>
+          // </span>
+          // </Link>
         )}
 
         <Button
