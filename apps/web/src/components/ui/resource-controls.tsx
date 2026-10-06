@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { Toggle } from '../shadcn/toggle'
 import { ResourceRegexSearch } from './resource-regex-search'
 import { ValueLabel } from '@/types/value-label'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../shadcn/tooltip'
 
 /**
  * Props for the ResourceControls component.
@@ -222,10 +223,15 @@ export function ResourceControls<T>({
         {domain === 'clusters' && showCreateCluster && (
           <Link href={`/clusters/new-cluster`}>
             <span className='inline-block w-fit' tabIndex={0} aria-disabled='true'>
-              <Button>
-                <Plus />
-                Create Cluster
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button disabled>
+                    <Plus />
+                    Create Cluster
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>We encountered a small issue. Will be back!</TooltipContent>
+              </Tooltip>
             </span>
           </Link>
         )}

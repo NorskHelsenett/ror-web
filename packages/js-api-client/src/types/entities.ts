@@ -19,6 +19,7 @@ import { VulnerabilityReportResponseSchema, VulnerabilityReportSchema } from '..
 import { RorMetaDataResponseSchema, RorMetaDataSchema } from '../schemas/common'
 import { VirtualMachineDiskStatus, VirtualMachineNetwork, VirtualMachineTag, VirtualMachineType } from '../schemas/vm'
 import type { PriceResponseSchema, PriceSchema } from '../schemas/price'
+import type { WorkspaceResponseSchema, WorkspaceSchema } from '../schemas/workspace'
 import type { DatacenterResponseSchema, DatacenterSchema } from '../schemas/datacenter'
 import type { BackupJobSchema } from '../schemas/backup-job'
 import type { BackupRunSchema } from '../schemas/backup-run'
@@ -72,6 +73,8 @@ export type Node = z.infer<typeof NodeSchema>
 export type NodeResponse = z.infer<typeof NodeResponseSchema>
 export type Price = z.infer<typeof PriceSchema>
 export type PriceResponse = z.infer<typeof PriceResponseSchema>
+export type Workspace = z.infer<typeof WorkspaceSchema>
+export type WorkspaceResponse = z.infer<typeof WorkspaceResponseSchema>
 export type Project = z.infer<typeof ProjectSchema>
 export type ProjectResponse = z.infer<typeof ProjectResponseSchema>
 export type Pod = z.infer<typeof PodSchema>

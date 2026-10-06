@@ -408,16 +408,10 @@ const fields: FieldConfig[] = [
           {...register('numOfNodes', {
             required: 'Number of nodes is required',
             valueAsNumber: true,
-            validate: (value) =>
-              (Number.isInteger(value) && value >= 1 && value <= 100) ||
-              'Number of nodes must be an integer from 1 to 100',
+            validate: (value) => !Number.isNaN(value) || 'Number of nodes must be a valid number',
             min: { value: 1, message: 'Number of nodes must be at least 1' },
-            max: { value: 100, message: 'Number of nodes must be at most 100' },
           })}
           type='number'
-          min={1}
-          max={100}
-          step={1}
           placeholder='Enter num of nodes...'
         />
       </FormSection>
@@ -435,7 +429,8 @@ fields.forEach((f) => {
   if (!stepFields[f.step]) stepFields[f.step] = []
   stepFields[f.step].push(f.key as Path<CreateClusterForm>)
 })
-stepFields[0].push('project', 'namespace')
+stepFields[0].push('project')
+stepFields[3].push('namespace')
 
 // ---------------------------------------------------------------------------
 
@@ -724,7 +719,15 @@ function ProjectInput({
   )
 }
 
-function NamespaceInput({ control, namespaces }: { control: Control<CreateClusterForm>; namespaces: string[] }) {
+function NamespaceInput({
+  control,
+  namespaces,
+  disabled = false,
+}: {
+  control: Control<CreateClusterForm>
+  namespaces: string[]
+  disabled?: boolean
+}) {
   return (
     <section className={cn('flex flex-col gap-4')}>
       <FormField
@@ -738,7 +741,7 @@ function NamespaceInput({ control, namespaces }: { control: Control<CreateCluste
           },
         }}
         render={({ field, fieldState }) => {
-          const selected = namespaces.find((p) => p === (field.value ?? '')) ?? null
+          const selected = field.value ? (namespaces.find((p) => p === field.value) ?? null) : null
 
           return (
             <FormItem>
@@ -746,11 +749,16 @@ function NamespaceInput({ control, namespaces }: { control: Control<CreateCluste
                 <Combobox<string>
                   items={namespaces}
                   value={selected}
+                  disabled={disabled}
                   onValueChange={(p) => field.onChange(p ?? '')}
                   itemToStringValue={(p) => p ?? ''}
                 >
-                  <ComboboxInput showTrigger={false} className='max-w-52 -mb-2' placeholder='Search namespace...' />
-
+                  <ComboboxInput
+                    showTrigger={false}
+                    disabled={disabled}
+                    className='max-w-52 -mb-2'
+                    placeholder={disabled ? 'Select project and region first' : 'Search namespace...'}
+                  />
                   <ComboboxContent className='max-w-52'>
                     <ComboboxEmpty>No items found.</ComboboxEmpty>
                     <ComboboxList>
@@ -769,7 +777,7 @@ function NamespaceInput({ control, namespaces }: { control: Control<CreateCluste
               {fieldState.error?.message ? (
                 <span className={errorTextStyling}>{fieldState.error.message}</span>
               ) : (
-                <span>Namespace must exist</span>
+                <span>{disabled ? 'Select a project and region to choose a namespace' : 'Namespace must exist'}</span>
               )}
             </FormItem>
           )
@@ -880,6 +888,14 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames }: NewClus
     setValue('fullname', fullname, { shouldValidate: true, shouldDirty: false })
     setValue('clusterId', clusterId, { shouldValidate: true, shouldDirty: false })
   }, [fullname, clusterId, setValue])
+
+  const namespaceDisabled = !formValues.project || !formValues.region
+
+  useEffect(() => {
+    if (namespaceDisabled && getValues('namespace')) {
+      setValue('namespace', '', { shouldDirty: true })
+    }
+  }, [namespaceDisabled, getValues, setValue])
 
   // Helper functions for form
   const onSubmit = async () => {
@@ -1012,18 +1028,14 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames }: NewClus
         <div key='basics' className='w-fit mx-auto'>
           <div className={cn('grid grid-cols-3 gap-x-8 gap-y-4 w-fit')}>
             <h3 className='text-3xl'>Project</h3>
-            <h3 className='text-3xl'>Namespaces</h3>
             <h3 className='text-3xl'>{fieldLabel('serviceId')}</h3>
-            <ProjectInput control={control} projects={projects} />
-            <NamespaceInput control={control} namespaces={namespacesNames} />
-            {renderField('serviceId')}
-
-            <div className='col-span-3' />
-
             <h3 className='text-3xl'>{fieldLabel('name')}</h3>
-            <h3 className='text-3xl'>{fieldLabel('environment')}</h3>
-            <div />
+            <ProjectInput control={control} projects={projects} />
+            {renderField('serviceId')}
             {renderField('name')}
+
+            <h3 className='text-3xl'>{fieldLabel('environment')}</h3>
+            <div className='col-span-2' />
             {renderField('environment')}
           </div>
           <p className='w-183 mt-12'>
@@ -1107,10 +1119,11 @@ export const PageView = ({ projects, clusterIdSuffix, namespacesNames }: NewClus
             {renderField('machineClass')}
             {renderField('numOfNodes')}
             <h3 className='text-3xl'>{fieldLabel('wpName')}</h3>
-            <div />
+            <h3 className='text-3xl'>Namespaces</h3>
             <div />
 
             {renderField('wpName')}
+            <NamespaceInput control={control} namespaces={namespacesNames} disabled={namespaceDisabled} />
           </div>
 
           <MachineProfileTable />

@@ -27,7 +27,6 @@ export const createKubernetesClusterService = (request: (requestOptions: Request
   },
   list: async (otherParams: URLSearchParams) => {
     const params = new URLSearchParams(otherParams)
-    params.set('apiversion', 'vitistack.io/v1alpha1')
     params.set('kind', 'KubernetesCluster')
 
     const responseSchema = z.object({
