@@ -17,11 +17,11 @@ const isEffectivelyNeverExpiring = (date: Date): boolean => {
   return date > hundredYearsFromNow
 }
 
-export const ApiKeysTable = ({ keys }: { keys: ApiKey[] }) => {
+export const ApiKeysTable = ({ keys, expired = false }: { keys: ApiKey[]; expired?: boolean }) => {
   const router = useRouter()
 
   return (
-    <div className='overflow-hidden rounded-lg border'>
+    <div className={`overflow-hidden rounded-lg border ${expired ? 'text-(--r-text-secondary)' : ''}`}>
       <table className='w-full table table-auto'>
         <thead>
           <tr>
