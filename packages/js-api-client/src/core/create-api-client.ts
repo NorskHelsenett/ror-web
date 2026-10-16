@@ -18,7 +18,7 @@ import { createBackupJobService } from '../services/backup-job'
 import { createBackupRunService } from '../services/backup-run'
 import { createProjectService } from '../services/projects'
 import { createVirtualMachineVulnerabilityService as createVirtualMachineVulnerabilityInfoService } from '../services/vm-vulnerability-info'
-import { createAclService } from '../services/acls'
+import { createAclService, createAclV2Service } from '../services/acls'
 import { createApiKeyService } from '../services/api-keys'
 import { createClusterListViewService } from '../services/views/clusterlist'
 import { createClusterListItemViewService } from '../services/views/clusterlistitem'
@@ -56,6 +56,7 @@ export function createApiClient(config: ApiClientConfig) {
    */
   const services = {
     acl: createAclService(request),
+    aclV2: createAclV2Service(request),
     apiKey: createApiKeyService(request),
     configuration: createConfigurationService(request),
     daemonSet: createDaemonSetService(request),

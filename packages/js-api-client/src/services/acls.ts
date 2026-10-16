@@ -1,6 +1,6 @@
 import type { RequestOptions } from '../core/request'
 import { validateResponse } from '../core/validation'
-import { AclResponseSchema } from '../schemas/acl'
+import { AclResponseSchema, AclV2Schema } from '../schemas/acl'
 
 export interface Filter {
   field: string
@@ -54,5 +54,24 @@ export const createAclService = (request: (requestOptions: RequestOptions) => Pr
     })
 
     return validateResponse(response, AclResponseSchema)
+  },
+})
+
+export const createAclV2Service = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
+  filter: async (options: FilterRequestOptions, scope: string, subject: string) => {
+    const body = {
+      limit: options?.limit ?? 25,
+      skip: options?.skip ?? 0,
+      sort: options?.sort ?? {},
+      filter: options?.filter ?? [],
+    }
+
+    const response = await request({
+      method: 'GET',
+      path: `/v2/acl/lookup/${scope}/${subject}`,
+      body,
+    })
+
+    return validateResponse(response, AclV2Schema)
   },
 })

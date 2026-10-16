@@ -30,3 +30,20 @@ export const AclSchema = z
   .passthrough()
 
 export const AclResponseSchema = createPaginationSchema(AclSchema)
+
+export const AclV2Schema = z.object({
+  access: z.string().optional().nullable(),
+  group: z.string().optional().nullable(),
+  provenance: z
+    .array(
+      z.object({
+        scope: z.string().optional().nullable(),
+        subject: z.string().optional().nullable(),
+        level: z.number().optional().nullable(),
+      })
+    )
+    .optional()
+    .nullable(),
+})
+
+export const AclV2ResponseSchema = createPaginationSchema(AclV2Schema)
