@@ -2,6 +2,7 @@ import { getRorApi } from '@/services/ror-api'
 import { Tile } from '@ror/react/components/tile'
 import { ApiKeysTable } from './api-keys-table'
 import { ApiKeysTileHeaderCreate } from './api-keys-tile-header-create'
+import { ExpiredApiKeysSection } from './expired-api-keys-section'
 
 export async function ApiKeysTile() {
   try {
@@ -20,13 +21,7 @@ export async function ApiKeysTile() {
         ) : (
           <ApiKeysTable keys={activeKeys} />
         )}
-        {expiredKeys.length > 0 && (
-          <>
-            <hr className='my-4' />
-            <h4 className='mb-4'>Expired API keys</h4>
-            <ApiKeysTable keys={expiredKeys} expired />
-          </>
-        )}
+        {expiredKeys.length > 0 && <ExpiredApiKeysSection keys={expiredKeys} />}
       </Tile>
     )
   } catch (error) {
