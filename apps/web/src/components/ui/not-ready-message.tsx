@@ -2,16 +2,27 @@
 
 import { cn } from '@/utils/clsxm'
 import { X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface NotReadyMessageProps {
   className?: string
   removable?: boolean
   children?: React.ReactNode
+  /** If set, dismissal is persisted in localStorage under this key. */
+  storageKey?: string
 }
 
-export const NotReadyMessage = ({ className, removable = true, children }: NotReadyMessageProps) => {
+export const NotReadyMessage = ({ className, removable = true, children, storageKey }: NotReadyMessageProps) => {
   const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    if (storageKey && localStorage.getItem(storageKey) === 'true') setIsVisible(false)
+  }, [storageKey])
+
+  const dismiss = () => {
+    setIsVisible(false)
+    if (storageKey) localStorage.setItem(storageKey, 'true')
+  }
 
   if (!isVisible) return null
 
@@ -26,7 +37,7 @@ export const NotReadyMessage = ({ className, removable = true, children }: NotRe
     >
       <div>{children}</div>
       {removable && (
-        <button onClick={() => setIsVisible(false)} aria-label='Close notification' type='button' className='pr-2'>
+        <button onClick={dismiss} aria-label='Close notification' type='button' className='pr-2'>
           <X />
         </button>
       )}

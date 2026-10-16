@@ -28,6 +28,16 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   const [resolvedHrefs, setResolvedHrefs] = useState<Record<number, string>>({})
 
   useEffect(() => {
+    setCollapsed(localStorage.getItem('releaseCardCollapsed') === 'true')
+  }, [])
+
+  const toggleCollapsed = () => {
+    const next = !collapsed
+    setCollapsed(next)
+    localStorage.setItem('releaseCardCollapsed', String(next))
+  }
+
+  useEffect(() => {
     const releasesToShow = view === 'dashboard' ? releases.slice(0, 4) : releases
     releasesToShow.forEach((release, i) => {
       if (release.resolveHref) {
@@ -39,7 +49,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   }, [view])
 
   return (
-    <div className='bg-(--r-layer) rounded-lg px-6 pt-5 pb-2 w-full'>
+    <div className='bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full'>
       {/* Header */}
       <div className={cn('flex items-center justify-between', collapsed ? '' : 'mb-4')}>
         <div className='flex items-center gap-2'>
@@ -48,13 +58,14 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
         </div>
         {view === 'dashboard' && (
           <button
-            onClick={() => setCollapsed((c) => !c)}
+            onClick={toggleCollapsed}
             className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
             aria-label={collapsed ? 'Expand' : 'Hide'}
           >
             {collapsed ? (
               <>
-                <ChevronDown className='size-4' /> Expand
+                <ChevronDown className='size-4' />
+                Expand
               </>
             ) : (
               <>
