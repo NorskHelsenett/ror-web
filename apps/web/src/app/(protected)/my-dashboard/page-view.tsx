@@ -87,14 +87,14 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
     <div className='w-full flex flex-col'>
       <Header title='My Dashboard' />
       <div className='mx-6 my-8'>
-        <div className='mx-7'>
-          <NotReadyMessage removable={true}>
+        <div className='mx-7 mb-3'>
+          <NotReadyMessage removable={true} storageKey='dashboardWelcomeMessageDismissed'>
             Welcome to the new ROR website! We are excited to launch this, and aware that some parts of the page is
             still not operational. In these places we have aimed at rerouting you to the old ROR website. If you prefer
             the old ROR website, you can find this in the sidebar to your left.
           </NotReadyMessage>
         </div>
-        <div className='mx-7 mt-6'>
+        <div className='mx-7'>
           <ReleaseCard view='dashboard' />
         </div>
         <div className='mb-6 pt-5 max-w-2xl mx-7'>
