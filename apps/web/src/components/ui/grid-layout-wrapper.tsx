@@ -85,8 +85,12 @@ export const GridLayoutWrapper = ({
 
     const savedMap: Record<string, { x: number; y: number; w: number; h: number }> = {}
 
-    const layoutForBreakpoint =
-      savedLayouts?.[currentBreakpoint] ?? standardLayouts[currentBreakpoint] ?? standardLayouts.lg
+    const standardForBreakpoint = standardLayouts[currentBreakpoint] ?? standardLayouts.lg ?? []
+    const savedForBreakpoint = savedLayouts?.[currentBreakpoint]
+    // Append widgets added after the user saved their layout, so new cards still show up
+    const layoutForBreakpoint = Array.isArray(savedForBreakpoint)
+      ? [...savedForBreakpoint, ...standardForBreakpoint.filter((s) => !savedForBreakpoint.some((l) => l.i === s.i))]
+      : standardForBreakpoint
 
     const items: WidgetItem[] = (Array.isArray(layoutForBreakpoint) ? layoutForBreakpoint : []).map((l) => ({
       id: l.i,
