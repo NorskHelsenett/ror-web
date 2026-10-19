@@ -1,6 +1,6 @@
 import type { RequestOptions } from '../core/request'
 import { validateResponse } from '../core/validation'
-import { AclResponseSchema, AclV2Schema } from '../schemas/acl'
+import { AclResponseSchema, AclV2ResponseSchema } from '../schemas/acl'
 
 export interface Filter {
   field: string
@@ -58,20 +58,15 @@ export const createAclService = (request: (requestOptions: RequestOptions) => Pr
 })
 
 export const createAclV2Service = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
-  filter: async (options: FilterRequestOptions, scope: string, subject: string) => {
-    const body = {
-      limit: options?.limit ?? 25,
-      skip: options?.skip ?? 0,
-      sort: options?.sort ?? {},
-      filter: options?.filter ?? [],
-    }
-
+  /**
+   * Lists the groups with access to a given resource, e.g. lookup('KubernetesCluster', clusterUid)
+   */
+  lookup: async (scope: string, subject: string) => {
     const response = await request({
       method: 'GET',
-      path: `/v2/acl/lookup/${scope}/${subject}`,
-      body,
+      path: `/v2/acl/lookup/${encodeURIComponent(scope)}/${encodeURIComponent(subject)}`,
     })
 
-    return validateResponse(response, AclV2Schema)
+    return validateResponse(response, AclV2ResponseSchema)
   },
 })

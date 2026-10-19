@@ -31,19 +31,23 @@ export const AclSchema = z
 
 export const AclResponseSchema = createPaginationSchema(AclSchema)
 
+export const AclV2ProvenanceSchema = z.object({
+  scope: z.string().optional().nullable(),
+  subject: z.string().optional().nullable(),
+  // 0 = the queried resource itself, 1 = its parent, 2 = grandparent, ...
+  level: z.number().optional().nullable(),
+})
+
+// Access is e.g. "ror:read", "ror:create", "ror:update" or "kubernetes:<something>"
 export const AclV2Schema = z.object({
   access: z.string().optional().nullable(),
   group: z.string().optional().nullable(),
-  provenance: z
-    .array(
-      z.object({
-        scope: z.string().optional().nullable(),
-        subject: z.string().optional().nullable(),
-        level: z.number().optional().nullable(),
-      })
-    )
-    .optional()
-    .nullable(),
+  provenance: z.array(AclV2ProvenanceSchema).optional().nullable(),
 })
 
-export const AclV2ResponseSchema = createPaginationSchema(AclV2Schema)
+// Response from GET /v2/acl/lookup/{scope}/{subject}
+export const AclV2ResponseSchema = z.object({
+  scope: z.string().optional().nullable(),
+  subject: z.string().optional().nullable(),
+  accessGroups: z.array(AclV2Schema).optional().nullable(),
+})
