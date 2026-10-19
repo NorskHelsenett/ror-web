@@ -3,8 +3,10 @@
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { DeleteApiKeyButton } from './delete-api-key-button'
+import { Badge } from '@/components/shadcn/badge'
+import { cn } from '@/utils/clsxm'
 
-type ApiKey = {
+export type ApiKey = {
   id: string
   displayName: string
   created: string | Date
@@ -17,11 +19,11 @@ const isEffectivelyNeverExpiring = (date: Date): boolean => {
   return date > hundredYearsFromNow
 }
 
-export const ApiKeysTable = ({ keys }: { keys: ApiKey[] }) => {
+export const ApiKeysTable = ({ keys, expired = false }: { keys: ApiKey[]; expired?: boolean }) => {
   const router = useRouter()
 
   return (
-    <div className='overflow-hidden rounded-lg border'>
+    <div className={cn('overflow-hidden rounded-lg border', expired && 'border-dashed text-(--r-text-secondary)')}>
       <table className='w-full table table-auto'>
         <thead>
           <tr>
@@ -34,9 +36,14 @@ export const ApiKeysTable = ({ keys }: { keys: ApiKey[] }) => {
         <tbody>
           {keys.map((k) => (
             <tr key={k.id} className='last:[&>td]:border-b-0'>
-              <td className='border border-l-0 px-2 py-1'>{k.displayName}</td>
+              <td className={cn('border border-l-0 px-2 py-1', expired && 'line-through')}>{k.displayName}</td>
               <td className='border px-2 py-1'>{format(new Date(k.created), 'dd.MM.yy, HH:mm')}</td>
               <td className='border px-2 py-1'>
+                {expired && (
+                  <Badge variant='destructive' className='mb-1 block'>
+                    Expired
+                  </Badge>
+                )}
                 {isEffectivelyNeverExpiring(new Date(k.expires!))
                   ? 'No expiration'
                   : format(new Date(k.expires!), 'dd.MM.yy, HH:mm')}
