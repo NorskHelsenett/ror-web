@@ -235,7 +235,7 @@ export const ClusterDetails = ({ accessGroups }: { accessGroups: ResourceAccessG
   const AccessCard = useCallback(
     () => (
       <div className={cardStyling}>
-        <CardHeader title={accessGroups?.length ? `Access groups (${accessGroups.length})` : 'Access groups'} />
+        <CardHeader title={accessGroups?.length ? `ROR Access groups (${accessGroups.length})` : 'ROR Access groups'} />
         <ResourceAccessGroupsTable accessGroups={accessGroups} />
       </div>
     ),

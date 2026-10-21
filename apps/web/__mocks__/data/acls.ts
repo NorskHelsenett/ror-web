@@ -1,7 +1,7 @@
 /**
  * Mock data for GET /v2/acl/lookup/{scope}/{subject}
  *
- * Includes "kubernetes:*" entries on purpose so the UI filtering of non-ROR access types can be tested.
+ * Includes "kubernetes:logon" entries, shown in the "Login" column of the Access card.
  */
 
 type AclLookupProvenance = { scope: string; subject: string; level: number }
@@ -25,6 +25,13 @@ const createDefaultAccessGroups = (clusterUid: string): AclLookupAccessGroup[] =
     { access: 'ror:read', group: 'security-auditors@ror.dev', provenance: [onDatacenter] },
     { access: 'kubernetes:logon', group: 'team-platform@ror.dev', provenance: [onCluster] },
     { access: 'kubernetes:logon', group: 'team-developers@ror.dev', provenance: [onWorkspace] },
+    // Not in ACCESS_TYPE_LABELS -> should get its own column with the raw name as header
+    { access: 'kubernetes:admin', group: 'team-platform@ror.dev', provenance: [onCluster] },
+    // Ends with "@cluster.ror.system" -> should be hidden
+    { access: 'ror:read', group: `${clusterUid}@cluster.ror.system`, provenance: [onCluster] },
+    { access: 'ror:update', group: `${clusterUid}@cluster.ror.system`, provenance: [onCluster] },
+    // Only hidden access types (create/update) -> should be hidden
+    { access: 'ror:update', group: 'team-deployers@ror.dev', provenance: [onWorkspace] },
   ]
 }
 
@@ -52,7 +59,7 @@ const createManyAccessGroups = (clusterUid: string, count = 40): AclLookupAccess
 const customAccessGroups: Record<string, AclLookupAccessGroup[]> = {
   // 40 groups -> the Access card table should scroll with sticky headers
   '5a327eac-9dbc-42dc-89e4-3a2a2c45dd6e': createManyAccessGroups('5a327eac-9dbc-42dc-89e4-3a2a2c45dd6e'),
-  // Only kubernetes access -> UI should show "no ROR access groups"
+  // Only kubernetes login, no ROR access -> one row with only "Login" checked
   '21fca0d4-051b-46cf-8b16-e77ce974ffb1': [
     {
       access: 'kubernetes:logon',

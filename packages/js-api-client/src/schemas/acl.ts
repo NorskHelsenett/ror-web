@@ -38,14 +38,12 @@ export const AclV2ProvenanceSchema = z.object({
   level: z.number().optional().nullable(),
 })
 
-// Access is e.g. "ror:read", "ror:create", "ror:update" or "kubernetes:<something>"
 export const AclV2Schema = z.object({
   access: z.string().optional().nullable(),
   group: z.string().optional().nullable(),
   provenance: z.array(AclV2ProvenanceSchema).optional().nullable(),
 })
 
-// Response from GET /v2/acl/lookup/{scope}/{subject}
 export const AclV2ResponseSchema = z.object({
   scope: z.string().optional().nullable(),
   subject: z.string().optional().nullable(),

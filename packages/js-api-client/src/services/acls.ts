@@ -58,9 +58,6 @@ export const createAclService = (request: (requestOptions: RequestOptions) => Pr
 })
 
 export const createAclV2Service = (request: (requestOptions: RequestOptions) => Promise<unknown>) => ({
-  /**
-   * Lists the groups with access to a given resource, e.g. lookup('KubernetesCluster', clusterUid)
-   */
   lookup: async (scope: string, subject: string) => {
     const response = await request({
       method: 'GET',

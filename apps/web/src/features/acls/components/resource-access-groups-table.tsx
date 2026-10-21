@@ -1,11 +1,5 @@
 import { Check, Minus } from 'lucide-react'
-import { ROR_ACCESS_TYPES, type ResourceAccessGroup } from '../utils/access-groups'
-
-const accessLabels = {
-  'ror:read': 'Read',
-  'ror:create': 'Create',
-  'ror:update': 'Update',
-} as const
+import { getAccessTypeColumns, getAccessTypeLabel, type ResourceAccessGroup } from '../utils/access-groups'
 
 export const ResourceAccessGroupsTable = ({ accessGroups }: { accessGroups: ResourceAccessGroup[] | null }) => {
   if (accessGroups === null) {
@@ -13,8 +7,10 @@ export const ResourceAccessGroupsTable = ({ accessGroups }: { accessGroups: Reso
   }
 
   if (accessGroups.length === 0) {
-    return <p className='text-md text-(--r-text-secondary)'>No groups have ROR access to this resource.</p>
+    return <p className='text-md text-(--r-text-secondary)'>No groups have access to this resource.</p>
   }
+
+  const columns = getAccessTypeColumns(accessGroups)
 
   return (
     <div className='min-h-0 overflow-auto rounded-lg border'>
@@ -23,9 +19,9 @@ export const ResourceAccessGroupsTable = ({ accessGroups }: { accessGroups: Reso
         <thead className='sticky top-0 z-10 bg-(--r-layer) shadow-[inset_0_-1px_0_var(--border)]'>
           <tr>
             <th className='border border-t-0 border-l-0 px-2 py-1 text-left'>Group</th>
-            {ROR_ACCESS_TYPES.map((a) => (
-              <th key={a} className='border border-t-0 px-2 py-1'>
-                {accessLabels[a]}
+            {columns.map((a) => (
+              <th key={a} className='border border-t-0 px-2 py-1' title={a}>
+                {getAccessTypeLabel(a)}
               </th>
             ))}
             {/* <th className='border border-t-0 border-r-0 px-2 py-1 text-left'>Granted on</th> */}
@@ -35,14 +31,17 @@ export const ResourceAccessGroupsTable = ({ accessGroups }: { accessGroups: Reso
           {accessGroups.map((g) => (
             <tr key={g.group} className='last:[&>td]:border-b-0'>
               <td className='border border-l-0 px-2 py-1 break-all'>{g.group}</td>
-              {ROR_ACCESS_TYPES.map((a) => (
+              {columns.map((a) => (
                 <td key={a} className='border px-2 py-1'>
-                  {g.access[a] ? (
-                    <Check className='mx-auto h-4 w-4 text-green-600' aria-label={`Has ${accessLabels[a]} access`} />
+                  {g.access.includes(a) ? (
+                    <Check
+                      className='mx-auto h-4 w-4 text-green-600'
+                      aria-label={`Has ${getAccessTypeLabel(a)} access`}
+                    />
                   ) : (
                     <Minus
                       className='mx-auto h-4 w-4 text-(--r-text-secondary)'
-                      aria-label={`No ${accessLabels[a]} access`}
+                      aria-label={`No ${getAccessTypeLabel(a)} access`}
                     />
                   )}
                 </td>
