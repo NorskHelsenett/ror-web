@@ -30,3 +30,22 @@ export const AclSchema = z
   .passthrough()
 
 export const AclResponseSchema = createPaginationSchema(AclSchema)
+
+export const AclV2ProvenanceSchema = z.object({
+  scope: z.string().optional().nullable(),
+  subject: z.string().optional().nullable(),
+  // 0 = the queried resource itself, 1 = its parent, 2 = grandparent, ...
+  level: z.number().optional().nullable(),
+})
+
+export const AclV2Schema = z.object({
+  access: z.string().optional().nullable(),
+  group: z.string().optional().nullable(),
+  provenance: z.array(AclV2ProvenanceSchema).optional().nullable(),
+})
+
+export const AclV2ResponseSchema = z.object({
+  scope: z.string().optional().nullable(),
+  subject: z.string().optional().nullable(),
+  accessGroups: z.array(AclV2Schema).optional().nullable(),
+})

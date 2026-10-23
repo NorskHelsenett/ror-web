@@ -15,6 +15,8 @@ export type {
   CreateApiKeyResponse,
   Acl,
   AclResponse,
+  AclV2,
+  AclV2Response,
   Cluster,
   ClusterIngress,
   ClustersResponse,

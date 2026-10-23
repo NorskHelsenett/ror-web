@@ -24,7 +24,7 @@ import type { DatacenterResponseSchema, DatacenterSchema } from '../schemas/data
 import type { BackupJobSchema } from '../schemas/backup-job'
 import type { BackupRunSchema } from '../schemas/backup-run'
 import type { ProjectResponseSchema, ProjectSchema } from '../schemas/project'
-import type { AclResponseSchema, AclSchema } from '../schemas/acl'
+import type { AclResponseSchema, AclSchema, AclV2ResponseSchema, AclV2Schema } from '../schemas/acl'
 import type {
   ApiKeyListResponseSchema,
   ApiKeySchema,
@@ -43,6 +43,8 @@ import type { NamespaceResponseSchema, NamespaceSchema } from '../schemas/namesp
 
 export type Acl = z.infer<typeof AclSchema>
 export type AclResponse = z.infer<typeof AclResponseSchema>
+export type AclV2 = z.infer<typeof AclV2Schema>
+export type AclV2Response = z.infer<typeof AclV2ResponseSchema>
 export type ApiKey = z.infer<typeof ApiKeySchema>
 export type ApiKeyListResponse = z.infer<typeof ApiKeyListResponseSchema>
 export type CreateApiKeyRequest = z.infer<typeof CreateApiKeyRequestSchema>

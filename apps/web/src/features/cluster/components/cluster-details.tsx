@@ -42,8 +42,10 @@ import { missingText } from './cluster-card'
 import { ResourceBar } from '../../../components/ui/resource-bar'
 import { Button } from '@/components/shadcn/button'
 import { copyToClipboard } from '@/utils/copy-to-clipboard'
+import { ResourceAccessGroupsTable } from '@/features/acls/components/resource-access-groups-table'
+import type { ResourceAccessGroup } from '@/features/acls/utils/access-groups'
 
-export const ClusterDetails = () => {
+export const ClusterDetails = ({ accessGroups }: { accessGroups: ResourceAccessGroup[] | null }) => {
   const { cluster, kubernetesCluster } = useClusterContext()
 
   const clusterId = getClusterIdViewItem(cluster) || missingText
@@ -230,6 +232,16 @@ export const ClusterDetails = () => {
     [monthlyPrices, yearlyPrices]
   )
 
+  const AccessCard = useCallback(
+    () => (
+      <div className={cardStyling}>
+        <CardHeader title={accessGroups?.length ? `ROR Access groups (${accessGroups.length})` : 'ROR Access groups'} />
+        <ResourceAccessGroupsTable accessGroups={accessGroups} />
+      </div>
+    ),
+    [accessGroups]
+  )
+
   const widgetContent: Record<string, React.ReactNode> = {
     memory: <MemoryCard />,
     nodes: <NodesCard />,
@@ -238,6 +250,7 @@ export const ClusterDetails = () => {
     tools: <ToolsCard />,
     versions: <VersionsCard />,
     prices: <PricesCard />,
+    access: <AccessCard />,
   }
 
   return (
