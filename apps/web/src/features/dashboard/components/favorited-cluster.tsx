@@ -22,6 +22,7 @@ import {
   getGrafanaUrlViewItem,
   getStatusViewItem,
   getClusterUidView,
+  getClusterNameView,
 } from '@/features/cluster/utils/cluster'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
@@ -94,6 +95,8 @@ export const FavoritedClusterRow = ({
       )}
     >
       <Dot status={getStatusViewItem(cluster) as HealthStatus} />
+      <span className='text-sm font-medium truncate min-w-0'>{getClusterNameView(cluster) || 'Unknown cluster'}</span>
+      <DotIcon />
       <span className='text-sm'>{displayedStatus(getStatusViewItem(cluster) as HealthStatus)}</span>
       <DotIcon />
       <div className='flex gap-2'>
