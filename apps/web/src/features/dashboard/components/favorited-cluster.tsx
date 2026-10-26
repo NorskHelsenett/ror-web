@@ -2,6 +2,9 @@
 
 import { ClusterListViewItemRowType } from '@ror/js-api-client'
 import { DotIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { routes } from '@/config/routes'
+import { FavoriteStar } from '@/components/ui/favorite-star'
 import { cn } from '@/utils/clsxm'
 import { HealthStatus } from '@/features/cluster/types/health-status'
 import { ExternalToolButton } from '@/features/cluster/components/external-tool-button'
@@ -18,6 +21,7 @@ import {
   getArgocdUrlViewItem,
   getGrafanaUrlViewItem,
   getStatusViewItem,
+  getClusterUidView,
 } from '@/features/cluster/utils/cluster'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
@@ -71,6 +75,53 @@ const syncedText = (lastSeen: string) => {
   return 'synced ' + getDaysHoursMinutes(diff)
 }
 
+export const FavoritedClusterRow = ({
+  cluster,
+  onUnfavorite,
+}: {
+  cluster: ClusterListViewItemRowType
+  onUnfavorite?: () => void
+}) => {
+  const router = useRouter()
+  const isError = getStatusViewItem(cluster) === 'error'
+
+  return (
+    <div
+      onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
+      className={cn(
+        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
+        isError && 'opacity-50'
+      )}
+    >
+      <Dot status={getStatusViewItem(cluster) as HealthStatus} />
+      <span className='text-sm'>{displayedStatus(getStatusViewItem(cluster) as HealthStatus)}</span>
+      <DotIcon />
+      <div className='flex gap-2'>
+        <ExternalToolButton name='ArgoCD' type='argocd' size='sm' url={getArgocdUrlViewItem(cluster)} />
+        <ExternalToolButton name='Grafana' type='grafana' size='sm' url={getGrafanaUrlViewItem(cluster)} />
+        <RorCliButton cluster={cluster} size='sm' />
+      </div>
+      <DotIcon />
+      <p className='text-sm'>CPU</p>
+      <ResourceBar
+        capacity={getResourcesCpuViewItem(cluster)}
+        used={getResourcesCpuUsedMilliViewItem(cluster)}
+        percentage={getResourcesCpuUsedPercentNumberViewItem(cluster)}
+        showPercentage={false}
+      />
+      <DotIcon />
+      <p className='text-sm'>Memory</p>
+      <ResourceBar
+        capacity={getResourcesMemoryViewItem(cluster)}
+        used={getResourcesMemoryUsedViewItem(cluster)}
+        percentage={getResourcesMemoryUsedPercentNumberViewItem(cluster)}
+        showPercentage={false}
+      />
+      <FavoriteStar domain='cluster' itemId={getClusterUidView(cluster)} scale='scale-50' onUnfavorite={onUnfavorite} />
+    </div>
+  )
+}
+
 export const FavoritedCluster = ({ cluster }: { cluster: ClusterListViewItemRowType }) => (
   <div className='flex flex-col gap-2 min-w-86'>
     <div className='flex items-center'>
@@ -95,7 +146,7 @@ export const FavoritedCluster = ({ cluster }: { cluster: ClusterListViewItemRowT
         showPercentage={false}
       />
     </div>
-    <div className='flex justify-between'>
+    <div className='flex justify-start gap-2'>
       <ExternalToolButton name='ArgoCD' type='argocd' url={getArgocdUrlViewItem(cluster)} />
       <ExternalToolButton name='Grafana' type='grafana' url={getGrafanaUrlViewItem(cluster)} />
       <RorCliButton cluster={cluster} />

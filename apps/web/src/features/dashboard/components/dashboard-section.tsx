@@ -11,6 +11,8 @@ interface DashboardSectionProps {
   editable?: boolean
   onRemove?: (title: OverviewItem) => void
   addSlot?: ReactNode
+  headerSlot?: ReactNode
+  layout?: 'card' | 'list'
   className?: string
 }
 
@@ -20,6 +22,8 @@ export const DashboardSection = ({
   editable = false,
   onRemove,
   addSlot,
+  headerSlot,
+  layout = 'card',
   className,
 }: DashboardSectionProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false)
@@ -28,6 +32,7 @@ export const DashboardSection = ({
     <div className={cn('mx-7', className)}>
       <div className='flex justify-between items-center'>
         <h3>{title}</h3>
+        {headerSlot}
         {editable &&
           (isEditing ? (
             <Button onClick={() => setIsEditing(false)} variant='green'>
@@ -41,7 +46,11 @@ export const DashboardSection = ({
             </Button>
           ))}
       </div>
-      <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
+      <div
+        className={cn(
+          layout === 'list' ? 'flex flex-col gap-1 pt-2.5' : 'flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'
+        )}
+      >
         {items?.length
           ? items.map((item) => (
               <div key={item.nodeId} className='relative'>

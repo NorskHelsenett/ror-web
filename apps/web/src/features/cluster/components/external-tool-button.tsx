@@ -22,22 +22,24 @@ export function ExternalToolButton({
   name,
   type,
   url,
+  size,
 }: {
   name: string
   type: 'argocd' | 'grafana'
   url: string | null | undefined
+  size?: 'default' | 'sm'
 }) {
   const safeUrl = getSafeExternalUrl(url)
 
   if (!safeUrl) {
     return (
-      <Button variant={type} disabled className='font-bold'>
+      <Button variant={type} size={size} disabled className='font-bold'>
         <ExternalLink className='w-5 h-5' /> {name}
       </Button>
     )
   }
   return (
-    <Button variant={type} className='font-bold' asChild>
+    <Button variant={type} size={size} className='font-bold' asChild>
       <a href={safeUrl} target='_blank' rel='noopener noreferrer' onClick={(e) => e.stopPropagation()}>
         <ExternalLink className='w-5 h-5' /> {name}
       </a>

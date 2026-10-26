@@ -4,9 +4,10 @@ import { getRorLoginViewItem } from '../utils/cluster'
 import type { ClusterListViewRowType } from '@ror/js-api-client'
 import { Copy } from 'lucide-react'
 
-export const RorCliButton = (cluster: ClusterListViewRowType) => (
+export const RorCliButton = ({ size, ...cluster }: ClusterListViewRowType & { size?: 'default' | 'sm' }) => (
   <Button
     variant='rorcli'
+    size={size}
     onClick={(e) => {
       e.stopPropagation()
       void copyToClipboard(getRorLoginViewItem(cluster)).catch(() => {})
