@@ -108,7 +108,7 @@ export const FavoritedClusterRow = ({
       </div>
       <DotIcon />
       <div className='flex items-center gap-2 flex-1 min-w-0 max-w-sm'>
-        <p className='text-sm w-12 shrink-0'>CPU</p>
+        <p className='text-sm w-8 shrink-0'>CPU</p>
         <ResourceBar
           capacity={getResourcesCpuViewItem(cluster)}
           used={getResourcesCpuUsedMilliViewItem(cluster)}
@@ -118,7 +118,7 @@ export const FavoritedClusterRow = ({
       </div>
       <DotIcon />
       <div className='flex items-center gap-2 flex-1 min-w-0 max-w-sm'>
-        <p className='text-sm w-16 shrink-0'>Memory</p>
+        <p className='text-sm w-14 shrink-0'>Memory</p>
         <ResourceBar
           capacity={getResourcesMemoryViewItem(cluster)}
           used={getResourcesMemoryUsedViewItem(cluster)}
