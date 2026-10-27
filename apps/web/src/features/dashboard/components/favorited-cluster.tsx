@@ -95,32 +95,45 @@ export const FavoritedClusterRow = ({
       )}
     >
       <Dot status={getStatusViewItem(cluster) as HealthStatus} />
-      <span className='text-sm font-medium truncate min-w-0'>{getClusterNameView(cluster) || 'Unknown cluster'}</span>
+      <span className='text-sm font-medium truncate w-44 shrink-0'>
+        {getClusterNameView(cluster) || 'Unknown cluster'}
+      </span>
       <DotIcon />
-      <span className='text-sm'>{displayedStatus(getStatusViewItem(cluster) as HealthStatus)}</span>
+      <span className='text-sm w-16 shrink-0'>{displayedStatus(getStatusViewItem(cluster) as HealthStatus)}</span>
       <DotIcon />
-      <div className='flex gap-2'>
+      <div className='flex gap-2 shrink-0'>
         <ExternalToolButton name='ArgoCD' type='argocd' size='sm' url={getArgocdUrlViewItem(cluster)} />
         <ExternalToolButton name='Grafana' type='grafana' size='sm' url={getGrafanaUrlViewItem(cluster)} />
         <RorCliButton cluster={cluster} size='sm' />
       </div>
       <DotIcon />
-      <p className='text-sm'>CPU</p>
-      <ResourceBar
-        capacity={getResourcesCpuViewItem(cluster)}
-        used={getResourcesCpuUsedMilliViewItem(cluster)}
-        percentage={getResourcesCpuUsedPercentNumberViewItem(cluster)}
-        showPercentage={false}
-      />
+      <div className='flex items-center gap-2 flex-1 min-w-0 max-w-sm'>
+        <p className='text-sm w-12 shrink-0'>CPU</p>
+        <ResourceBar
+          capacity={getResourcesCpuViewItem(cluster)}
+          used={getResourcesCpuUsedMilliViewItem(cluster)}
+          percentage={getResourcesCpuUsedPercentNumberViewItem(cluster)}
+          showPercentage={false}
+        />
+      </div>
       <DotIcon />
-      <p className='text-sm'>Memory</p>
-      <ResourceBar
-        capacity={getResourcesMemoryViewItem(cluster)}
-        used={getResourcesMemoryUsedViewItem(cluster)}
-        percentage={getResourcesMemoryUsedPercentNumberViewItem(cluster)}
-        showPercentage={false}
-      />
-      <FavoriteStar domain='cluster' itemId={getClusterUidView(cluster)} scale='scale-50' onUnfavorite={onUnfavorite} />
+      <div className='flex items-center gap-2 flex-1 min-w-0 max-w-sm'>
+        <p className='text-sm w-16 shrink-0'>Memory</p>
+        <ResourceBar
+          capacity={getResourcesMemoryViewItem(cluster)}
+          used={getResourcesMemoryUsedViewItem(cluster)}
+          percentage={getResourcesMemoryUsedPercentNumberViewItem(cluster)}
+          showPercentage={false}
+        />
+      </div>
+      <div className='ml-auto shrink-0'>
+        <FavoriteStar
+          domain='cluster'
+          itemId={getClusterUidView(cluster)}
+          scale='scale-50'
+          onUnfavorite={onUnfavorite}
+        />
+      </div>
     </div>
   )
 }

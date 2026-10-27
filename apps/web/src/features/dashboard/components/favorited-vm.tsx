@@ -74,7 +74,7 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
     >
       <Dot status={powerState} />
       <div className={cn('flex flex-1 items-center gap-3 min-w-0', isPoweredOff && 'grayscale')}>
-        <span className='text-sm truncate min-w-0 shrink'>{getVmName(vm)}</span>
+        <span className='text-sm truncate w-44 shrink-0'>{getVmName(vm)}</span>
         <DotIcon />
         <span className='flex-1 text-sm truncate min-w-0'>{getTeamIdentifier(vm)}</span>
         <div className='flex items-center gap-1.5'>
