@@ -2,6 +2,7 @@
 /*---break---
  */
 @custom-variant dark (&:is(.dark *));
+@custom-variant black (&:where([data-color-scheme='dark-black'] *));
 
 /**
  * Configure theme variables for tailwind
@@ -95,6 +96,11 @@
 
 @import '@evilmartians/harmony/tailwind.css';
 @import 'tw-animate-css';
+
+@theme {
+  /* Keep custom colors after Harmony's palette reset. Used by the app-wide black theme. */
+  --color-dashboard: #0b0d0e;
+}
 
 /**
 * Create custom utility classes making use of our different tokens from @ror/styles

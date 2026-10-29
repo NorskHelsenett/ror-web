@@ -15,7 +15,7 @@ const StatItem = ({ color, value, label }: { color: 'emerald' | 'yellow' | 'red'
 }
 
 export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => (
-  <div className='bg-(--r-layer) rounded-lg px-4 py-3 flex flex-col gap-3 min-w-[210px]'>
+  <div className='bg-(--r-layer) border-r border-subtle rounded-lg px-4 py-3 flex flex-col gap-3 min-w-[210px]'>
     <p className='text-xl font-semibold'>{item.itemName?.fieldValue ?? 'Unknown'}</p>
     <div className='flex gap-4 justify-center'>
       <StatItem color='emerald' value={item.greenNumber?.fieldValue ?? 0} label={item.greenTitle?.fieldValue ?? ''} />

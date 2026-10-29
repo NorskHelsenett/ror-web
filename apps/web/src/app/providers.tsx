@@ -1,11 +1,10 @@
 import { getDarkModePreferenceAction } from '@/actions/dark-mode'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SidebarProvider } from '@/components/shadcn/sidebar'
-import { ColorSchemeProvider } from '@/context/color-theme-context'
+import { ColorSchemeProvider, ThemedToaster } from '@/context/color-theme-context'
 import { cookies } from 'next/headers'
 import { ReactNode } from 'react'
 import { MSWProvider } from './mock-provider'
-import { Toaster } from 'sonner'
 
 interface ProvidersProps {
   children: ReactNode
@@ -23,11 +22,11 @@ export async function Providers({ children }: ProvidersProps) {
 
   return (
     <MSWProvider>
-      <ColorSchemeProvider>
+      <ColorSchemeProvider initialScheme={colorScheme}>
         <SidebarProvider defaultOpen={defaultOpen}>
           {colorScheme ? <AppSidebar colorScheme={colorScheme} /> : null}
           <main className='flex-1 min-w-0'>{children}</main>
-          <Toaster richColors position='bottom-right' theme={colorScheme} />
+          <ThemedToaster />
         </SidebarProvider>
       </ColorSchemeProvider>
     </MSWProvider>

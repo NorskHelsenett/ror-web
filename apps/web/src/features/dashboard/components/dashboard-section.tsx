@@ -29,7 +29,7 @@ export const DashboardSection = ({
   const [isEditing, setIsEditing] = useState<boolean>(false)
 
   return (
-    <div className={cn('mx-7', className)}>
+    <div className={cn('mx-7 mt-6 border-t border-subtle pt-6', className)}>
       <div className='flex justify-between items-center'>
         <h3>{title}</h3>
         {headerSlot}

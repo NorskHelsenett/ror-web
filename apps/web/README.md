@@ -36,6 +36,17 @@ This will start the Next.js development server at http://localhost:11100.
 npm run build
 ```
 
+## Appearance
+
+Open the theme menu in the sidebar to choose Light, Dark, or System. Selecting
+Dark reveals Gray (the original dark palette) and Black (near-black app-wide
+surfaces). The choice is saved in the existing theme cookie and restored on
+reload. System follows the operating system and uses Gray when dark.
+
+The Black palette overrides shared background, layer, field, and border tokens
+in `src/styles/globals.scss`, preserving semantic status colors. Its base color
+is defined by `--color-dashboard` in `src/styles/tailwind.css`.
+
 ## Project Structure
 
 The ROR Web app follows a Next.js 15 App Router architecture:

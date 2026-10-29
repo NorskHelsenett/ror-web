@@ -99,8 +99,9 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
   }))
 
   return (
-    <div className='w-full flex flex-col'>
-      <Header title='My Dashboard' />
+    <div className='w-full min-h-full flex flex-col bg-background'>
+      <Header title='My dashboard' />
+
       <div className='mx-6 my-8'>
         <div className='mx-7 mb-3'>
           <NotReadyMessage removable={true} storageKey='dashboardWelcomeMessageDismissed'>
@@ -109,7 +110,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
             the old ROR website, you can find this in the sidebar to your left.
           </NotReadyMessage>
         </div>
-        <div className='mx-7'>
+        <div className='mx-7 border-b border-subtle pb-6'>
           <ReleaseCard view='dashboard' />
         </div>
         <div className='mb-6 pt-5 max-w-2xl mx-7'>
@@ -135,7 +136,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
             </Tooltip>
           }
         />
-        <div className='mx-7'>
+        <div className='mx-7 mt-6 border-t border-subtle pt-6'>
           {/* <div className='flex justify-between items-center'> */}
           <h3>VMs</h3>
           {/* </div> */}

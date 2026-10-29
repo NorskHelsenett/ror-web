@@ -90,7 +90,7 @@ export const FavoritedClusterRow = ({
     <div
       onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
       className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
+        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) border-b border-subtle rounded-md transition-opacity cursor-pointer',
         isError && 'opacity-50'
       )}
     >

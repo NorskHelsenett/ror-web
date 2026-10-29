@@ -68,7 +68,7 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
         router.push(routes.app.vm.getHref(getVmUid(vm)))
       }}
       className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
+        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) border-b border-subtle rounded-md transition-opacity cursor-pointer',
         isPoweredOff && 'opacity-50'
       )}
     >
