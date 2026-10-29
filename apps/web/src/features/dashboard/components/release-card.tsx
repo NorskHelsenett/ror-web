@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { routes } from '@/config/routes'
 import { cn } from '@/utils/clsxm'
-import { releases, type ReleaseTag } from '../data/releases'
+import { releases, type Release, type ReleaseTag } from '../data/releases'
 import { useState, useEffect } from 'react'
 import { useActiveRelease } from '@/hooks/use-active-release'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
@@ -22,11 +22,61 @@ const tagTooltips: Record<ReleaseTag, string> = {
   V2: 'Version 2 of existing functionality that was available in legacy.ror.nhn.no',
 }
 
+const VIEWED_RELEASES_KEY = 'release:viewed'
+const getReleaseKey = (release: Release) =>
+  release.id ?? `${release.year}-${release.month}-${release.day}-${release.title}`
+
+function ReleaseTags({ tags }: { tags: ReleaseTag[] }) {
+  return tags.map((tag) => (
+    <Tooltip key={tag}>
+      <TooltipTrigger asChild>
+        <span
+          className={cn(
+            'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium cursor-default',
+            tagStyles[tag]
+          )}
+        >
+          {tag}
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>{tagTooltips[tag]}</TooltipContent>
+    </Tooltip>
+  ))
+}
+
 export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) => {
   const [collapsed, setCollapsed] = useState(false)
   const isCollapsed = view === 'dashboard' && collapsed
   const { setActiveRelease } = useActiveRelease()
   const [resolvedHrefs, setResolvedHrefs] = useState<Record<number, string>>({})
+  const [viewedReleases, setViewedReleases] = useState<string[]>([])
+  const latestRelease = releases[0]
+  const unreadCount = releases.filter((release) => !viewedReleases.includes(getReleaseKey(release))).length
+  const expandLabel = unreadCount > 0 ? `${unreadCount} updates${unreadCount === 1 ? '' : 's'}` : 'Recent updates'
+
+  useEffect(() => {
+    const saved = localStorage.getItem(VIEWED_RELEASES_KEY)
+    if (!saved) return
+    try {
+      const parsed: unknown = JSON.parse(saved)
+      if (!Array.isArray(parsed) || !parsed.every((id): id is string => typeof id === 'string')) {
+        throw new Error('Viewed releases must be an array of release identifiers')
+      }
+      setViewedReleases(parsed)
+    } catch (error) {
+      console.error('Failed to load viewed releases:', error)
+    }
+  }, [])
+
+  const handleReleaseClick = (release: Release) => {
+    const key = getReleaseKey(release)
+    if (!viewedReleases.includes(key)) {
+      const next = [...viewedReleases, key]
+      localStorage.setItem(VIEWED_RELEASES_KEY, JSON.stringify(next))
+      setViewedReleases(next)
+    }
+    if (release.id) setActiveRelease(release.id)
+  }
 
   useEffect(() => {
     if (view === 'dashboard') {
@@ -54,25 +104,37 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   return (
     <div className='bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full'>
       {/* Header */}
-      <div className={cn('flex items-center justify-between', isCollapsed ? '' : 'mb-4')}>
-        <div className='flex items-center gap-2'>
-          <span className='size-2.5 rounded-full bg-cyan-400 animate-pulse' />
-          <span className='text-xs font-semibold uppercase tracking-widest text-muted-foreground'>What&apos;s new</span>
-        </div>
+      <div className={cn('flex flex-wrap items-center justify-between gap-3', isCollapsed ? '' : 'mb-4')}>
+        {latestRelease && (
+          <div className='flex flex-1 items-center gap-2 min-w-0'>
+            <div className='flex gap-1 shrink-0'>
+              <ReleaseTags tags={latestRelease.tags} />
+            </div>
+            <Link
+              href={resolvedHrefs[0] ?? latestRelease.href}
+              onClick={() => handleReleaseClick(latestRelease)}
+              className='text-sm min-w-0 hover:underline'
+            >
+              <span className='font-medium'>{latestRelease.title}</span>
+              <span className='mx-3 text-muted-foreground'>{'\u2014'}</span>
+              <span className='text-muted-foreground'>{latestRelease.description}</span>
+            </Link>
+          </div>
+        )}
         {view === 'dashboard' && (
           <button
             onClick={toggleCollapsed}
-            className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
-            aria-label={isCollapsed ? 'Expand' : 'Hide'}
+            className='flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
+            aria-expanded={!isCollapsed}
           >
             {isCollapsed ? (
               <>
                 <ChevronDown className='size-4' />
-                Expand
+                {expandLabel}
               </>
             ) : (
               <>
-                <ChevronUp className='size-4' /> Hide
+                <ChevronUp className='size-4' /> Hide releases
               </>
             )}
           </button>
@@ -86,7 +148,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
             <Link
               key={i}
               href={resolvedHrefs[i] ?? release.href}
-              onClick={() => release.id && setActiveRelease(release.id)}
+              onClick={() => handleReleaseClick(release)}
               className='flex items-center gap-4 py-4 group hover:bg-muted/5 -mx-6 px-6 transition-colors border-t border-border'
             >
               {/* Date */}
@@ -110,21 +172,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
 
               {/* Tags + arrow */}
               <div className='flex items-center gap-2 shrink-0'>
-                {release.tags.map((tag) => (
-                  <Tooltip key={tag}>
-                    <TooltipTrigger asChild>
-                      <span
-                        className={cn(
-                          'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium cursor-default',
-                          tagStyles[tag]
-                        )}
-                      >
-                        {tag}
-                      </span>
-                    </TooltipTrigger>
-                    <TooltipContent>{tagTooltips[tag]}</TooltipContent>
-                  </Tooltip>
-                ))}
+                <ReleaseTags tags={release.tags} />
                 <ArrowRight className='size-4 text-muted-foreground group-hover:text-foreground transition-colors' />
               </div>
             </Link>

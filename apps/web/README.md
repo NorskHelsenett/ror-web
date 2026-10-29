@@ -47,6 +47,15 @@ The Black palette overrides shared background, layer, field, and border tokens
 in `src/styles/globals.scss`, preserving semantic status colors. Its base color
 is defined by `--color-dashboard` in `src/styles/tailwind.css`.
 
+### Dashboard releases
+
+The release header shows the latest release's tags, title, and description.
+When collapsed, the dashboard shows the number of unread releases among the four
+most recent entries, or "Recent releases" once all four have been viewed.
+Clicking a release in the header or either release table marks it as viewed,
+saved in local storage. Expanding the table does not mark releases as viewed.
+The dashboard's collapse preference never hides the full release-notes table.
+
 ## Project Structure
 
 The ROR Web app follows a Next.js 15 App Router architecture:
