@@ -2,7 +2,7 @@
 import { Header } from '@/components/layout/app-shell/header'
 import { DashboardSection } from '@/features/dashboard/components/dashboard-section'
 import { FavoritedBox } from '@/features/dashboard/components/favorited-box'
-import { FavoritedCluster } from '@/features/dashboard/components/favorited-cluster'
+import { FavoritedCluster, FavoritedClusterRow } from '@/features/dashboard/components/favorited-cluster'
 import { NotReadyMessage } from '@/components/ui/not-ready-message'
 import { OverviewSection } from '@/features/dashboard/components/overview-section'
 import { getFavoritedItems } from '@/features/dashboard/utils/dashboard-localstorage'
@@ -27,7 +27,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
   const router = useRouter()
   const [favoritedClusters, setFavoritedClusters] = useState<ClusterListViewItemRowType[]>([])
   const [favoritedVms, setFavoritedVms] = useState<VirtualMachine[]>([])
-  const [vmView, setVmView] = useState<'card' | 'list'>('card')
+  const [view, setView] = useState<'card' | 'list'>('card')
 
   const fetchFavorites = useCallback(() => {
     const clusterUids = getFavoritedItems('cluster')
@@ -49,20 +49,35 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
     fetchFavorites()
   }, [fetchFavorites])
 
+  useEffect(() => {
+    const stored = localStorage.getItem('dashboardView')
+    if (stored === 'card' || stored === 'list') {
+      setView(stored)
+    }
+  }, [])
+
+  function saveView(viewType: 'card' | 'list') {
+    setView(viewType)
+    localStorage.setItem('dashboardView', viewType)
+  }
+
   const favoritedClusterBoxes = favoritedClusters.map((cluster) => ({
     nodeId: cluster.clusterUid?.fieldValue ?? globalThis.crypto.randomUUID(),
-    node: (
-      <FavoritedBox
-        title={cluster.clusterName?.fieldValue || 'Unknown cluster'}
-        domain='cluster'
-        itemId={cluster.clusterUid?.fieldValue ?? globalThis.crypto.randomUUID()}
-        isError={cluster.status?.fieldValue === 'error'}
-        onUnfavorite={fetchFavorites}
-        onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
-      >
-        <FavoritedCluster cluster={cluster} />
-      </FavoritedBox>
-    ),
+    node:
+      view === 'list' ? (
+        <FavoritedClusterRow cluster={cluster} onUnfavorite={fetchFavorites} />
+      ) : (
+        <FavoritedBox
+          title={cluster.clusterName?.fieldValue || 'Unknown cluster'}
+          domain='cluster'
+          itemId={cluster.clusterUid?.fieldValue ?? globalThis.crypto.randomUUID()}
+          isError={cluster.status?.fieldValue === 'error'}
+          onUnfavorite={fetchFavorites}
+          onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
+        >
+          <FavoritedCluster cluster={cluster} />
+        </FavoritedBox>
+      ),
   }))
 
   const favoritedVmBoxes = favoritedVms.map((vm) => ({
@@ -101,24 +116,30 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
           <DashboardSearch onFavorite={fetchFavorites} />
         </div>
         <OverviewSection allItems={overviewItems} />
-        <DashboardSection title='Clusters' items={favoritedClusterBoxes} />
-        <div className='mx-7'>
-          <div className='flex justify-between items-center'>
-            <h3>VMs</h3>
+        <DashboardSection
+          title='Clusters'
+          items={favoritedClusterBoxes}
+          layout={view}
+          headerSlot={
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={() => setVmView((v) => (v === 'card' ? 'list' : 'card'))}
+                  onClick={() => saveView(view === 'card' ? 'list' : 'card')}
                   className='text-muted-foreground hover:text-foreground transition-colors p-1'
-                  aria-label='Toggle VM view'
+                  aria-label='Toggle view'
                 >
-                  {vmView === 'card' ? <LayoutList className='size-6' /> : <LayoutGrid className='size-6' />}
+                  {view === 'card' ? <LayoutList className='size-6' /> : <LayoutGrid className='size-6' />}
                 </button>
               </TooltipTrigger>
-              <TooltipContent>{vmView === 'card' ? 'List-view' : 'Card-view'}</TooltipContent>
+              <TooltipContent>{view === 'card' ? 'List-view' : 'Card-view'}</TooltipContent>
             </Tooltip>
-          </div>
-          {vmView === 'card' ? (
+          }
+        />
+        <div className='mx-7'>
+          {/* <div className='flex justify-between items-center'> */}
+          <h3>VMs</h3>
+          {/* </div> */}
+          {view === 'card' ? (
             <div className='flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'>
               {favoritedVmBoxes.length
                 ? favoritedVmBoxes.map((item) => (

@@ -63,10 +63,10 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
 
   return (
     <div
-onClick={() => {
-  localStorage.setItem('selectedVm', JSON.stringify(vm))
-  router.push(routes.app.vm.getHref(getVmUid(vm)))
-}}
+      onClick={() => {
+        localStorage.setItem('selectedVm', JSON.stringify(vm))
+        router.push(routes.app.vm.getHref(getVmUid(vm)))
+      }}
       className={cn(
         'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
         isPoweredOff && 'opacity-50'
@@ -74,40 +74,38 @@ onClick={() => {
     >
       <Dot status={powerState} />
       <div className={cn('flex flex-1 items-center gap-3 min-w-0', isPoweredOff && 'grayscale')}>
-        <span className='text-sm truncate min-w-0 shrink'>{getVmName(vm)}</span>
+        <span className='text-sm truncate w-44 shrink-0'>{getVmName(vm)}</span>
         <DotIcon />
-        <span className='flex-1 text-sm truncate min-w-0'>{getTeamIdentifier(vm)}</span>
-        <div className='flex items-center gap-1.5'>
-          <span className='text-xs text-muted-foreground w-6'>CPU</span>
-          <div className='w-30'>
-            <ResourceBar
-              capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
-              used={`${cpuUsage} cores`}
-              percentage={parseFloat(cpuPct)}
-            />
-          </div>
+        <span className='text-sm truncate w-32 shrink-0'>{getTeamIdentifier(vm)}</span>
+        <DotIcon />
+        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
+          <p className='text-sm w-8 shrink-0'>CPU</p>
+          <ResourceBar
+            capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
+            used={`${cpuUsage} cores`}
+            percentage={parseFloat(cpuPct)}
+            showPercentage={false}
+          />
         </div>
         <DotIcon />
-        <div className='flex items-center gap-1.5'>
-          <span className='text-xs text-muted-foreground w-12 '>Memory</span>
-          <div className='w-30'>
-            <ResourceBar
-              capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
-              used={formatBytes(memoryUsageBytes)}
-              percentage={parseFloat(memoryPct)}
-            />
-          </div>
+        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
+          <p className='text-sm w-14 shrink-0'>Memory</p>
+          <ResourceBar
+            capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
+            used={formatBytes(memoryUsageBytes)}
+            percentage={parseFloat(memoryPct)}
+            showPercentage={false}
+          />
         </div>
         <DotIcon />
-        <div className='flex items-center gap-1.5'>
-          <span className='text-xs text-muted-foreground w-7 '>Disk</span>
-          <div className='w-30'>
-            <ResourceBar
-              capacity={formatBytes(diskTotalBytes)}
-              used={formatBytes(diskUsedBytes)}
-              percentage={parseFloat(diskPct)}
-            />
-          </div>
+        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
+          <p className='text-sm w-8 shrink-0'>Disk</p>
+          <ResourceBar
+            capacity={formatBytes(diskTotalBytes)}
+            used={formatBytes(diskUsedBytes)}
+            percentage={parseFloat(diskPct)}
+            showPercentage={false}
+          />
         </div>
       </div>
       <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
