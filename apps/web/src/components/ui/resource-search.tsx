@@ -5,6 +5,7 @@ import { Input } from '@/components/shadcn/input'
 import { Search } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { useSearch } from '@/hooks/use-search'
+import { FuzzySearchHelp } from './fuzzy-search-help'
 
 /**
  * Props for the `ResourceSearch` component.
@@ -70,13 +71,17 @@ export function ResourceSearch<T>({
     }
   }, [results, debouncedQuery, onResultsChange, getItemsKey, resourceType])
   return (
-    <Input
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-      aria-label={searchText || 'Search...'}
-      placeholder={searchText || 'Search...'}
-      icon={<Search className='w-4 h-4' />}
-      iconPosition='left'
-    />
+    <div className='relative'>
+      <Input
+        className='pr-8'
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        aria-label={searchText || 'Search...'}
+        placeholder={searchText || 'Search...'}
+        icon={<Search className='w-4 h-4' />}
+        iconPosition='left'
+      />
+      <FuzzySearchHelp />
+    </div>
   )
 }

@@ -9,6 +9,7 @@ import { useSearch } from '@/hooks/use-search'
 import type { ClusterListViewRowType, VirtualMachine } from '@ror/js-api-client'
 import { fetchAllClustersForSearch, searchVmsForDashboard } from '../utils/search-dashboard'
 import { ResourceRegexSearch } from '@/components/ui/resource-regex-search'
+import { FuzzySearchHelp } from '@/components/ui/fuzzy-search-help'
 import { cn } from '@/utils/clsxm'
 import { getTeamIdentifier, getVmName, getVmPowerState, getVmUid } from '@/features/vms/utils/vms'
 import { useRouter } from 'next/navigation'
@@ -124,19 +125,22 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
       {/* Search input + dropdown */}
       <div className='flex-1 relative'>
         {domain === 'cluster' ? (
-          <Input
-            className='w-full'
-            value={clusterQuery}
-            onChange={(e) => {
-              setClusterQuery(e.target.value)
-              setResultsOpen(true)
-            }}
-            onFocus={() => setResultsOpen(true)}
-            placeholder='Find clusters...'
-            aria-label='Search clusters'
-            icon={loadingClusters ? <Loader2 className='w-4 h-4 animate-spin' /> : <Search className='w-4 h-4' />}
-            iconPosition='left'
-          />
+          <div className='relative'>
+            <Input
+              className='w-full pr-8'
+              value={clusterQuery}
+              onChange={(e) => {
+                setClusterQuery(e.target.value)
+                setResultsOpen(true)
+              }}
+              onFocus={() => setResultsOpen(true)}
+              placeholder='Find clusters...'
+              aria-label='Search clusters'
+              icon={loadingClusters ? <Loader2 className='w-4 h-4 animate-spin' /> : <Search className='w-4 h-4' />}
+              iconPosition='left'
+            />
+            <FuzzySearchHelp />
+          </div>
         ) : (
           <ResourceRegexSearch
             key={vmResetKey}

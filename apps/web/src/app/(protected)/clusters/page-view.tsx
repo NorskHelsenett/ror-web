@@ -20,6 +20,7 @@ import {
   getEnvironmentView,
   getProviderView,
   getWorkspaceView,
+  getEgressIPView,
 } from '@/features/cluster/utils/cluster'
 import { useInfiniteLoader } from '@/hooks/use-infinite-loader'
 import { cn } from '@/utils/clsxm'
@@ -95,6 +96,7 @@ export const PageView = ({ className, clusters, params, showCreateCluster }: Pag
     { key: 'Environments', extractor: getEnvironmentView },
     { key: 'Datacenters', extractor: getDatacenterView },
     { key: 'Workspaces', extractor: getWorkspaceView },
+    { key: 'Egress IPs', extractor: getEgressIPView },
   ]
 
   const { selectedFilters, setSelectedFilters, filteredItems, resetFilters } = useFilters<ClusterListViewRowType>(
@@ -209,12 +211,13 @@ export const PageView = ({ className, clusters, params, showCreateCluster }: Pag
             handleRefreshFilters={handleRefreshFilters}
             domain='clusters'
             sortingOptions={sortingOptions}
-            searchKeys={['label', 'datacenterName', 'datacenterProvider', 'environment']}
+            searchKeys={['label', 'datacenterName', 'datacenterProvider', 'environment', 'egressIP']}
             mapItem={(cluster) => ({
               ...cluster,
               label: getClusterNameView(cluster),
               datacenterProvider: getProviderView(cluster),
               environment: getEnvironmentView(cluster),
+              egressIP: getEgressIPView(cluster),
             })}
             getItemsKey={getClustersViewKey}
             exportAsCSV={exportClustersAsCSV}
