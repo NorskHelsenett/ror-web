@@ -24,12 +24,15 @@ const tagTooltips: Record<ReleaseTag, string> = {
 
 export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) => {
   const [collapsed, setCollapsed] = useState(false)
+  const isCollapsed = view === 'dashboard' && collapsed
   const { setActiveRelease } = useActiveRelease()
   const [resolvedHrefs, setResolvedHrefs] = useState<Record<number, string>>({})
 
   useEffect(() => {
-    setCollapsed(localStorage.getItem('releaseCardCollapsed') === 'true')
-  }, [])
+    if (view === 'dashboard') {
+      setCollapsed(localStorage.getItem('releaseCardCollapsed') === 'true')
+    }
+  }, [view])
 
   const toggleCollapsed = () => {
     const next = !collapsed
@@ -51,7 +54,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   return (
     <div className='bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full'>
       {/* Header */}
-      <div className={cn('flex items-center justify-between', collapsed ? '' : 'mb-4')}>
+      <div className={cn('flex items-center justify-between', isCollapsed ? '' : 'mb-4')}>
         <div className='flex items-center gap-2'>
           <span className='size-2.5 rounded-full bg-cyan-400 animate-pulse' />
           <span className='text-xs font-semibold uppercase tracking-widest text-muted-foreground'>What&apos;s new</span>
@@ -60,9 +63,9 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
           <button
             onClick={toggleCollapsed}
             className='flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
-            aria-label={collapsed ? 'Expand' : 'Hide'}
+            aria-label={isCollapsed ? 'Expand' : 'Hide'}
           >
-            {collapsed ? (
+            {isCollapsed ? (
               <>
                 <ChevronDown className='size-4' />
                 Expand
@@ -77,7 +80,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
       </div>
 
       {/* Release rows */}
-      {!collapsed && (
+      {!isCollapsed && (
         <div className='flex flex-col'>
           {(view === 'dashboard' ? releases.slice(0, 4) : releases).map((release, i) => (
             <Link
@@ -129,7 +132,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
         </div>
       )}
 
-      {view === 'dashboard' && !collapsed && (
+      {view === 'dashboard' && !isCollapsed && (
         <Link
           href={routes.app.releaseNotes.getHref()}
           className='flex items-center justify-center gap-1 py-3 mt-1 border-t border-border text-sm text-muted-foreground hover:text-foreground transition-colors'
