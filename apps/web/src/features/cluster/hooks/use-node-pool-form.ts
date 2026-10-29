@@ -73,11 +73,12 @@ export function useNodePoolForm(
       const result = nodePoolFormSchema.safeParse(data)
 
       if (!result.success) {
+        const invalidFields = new Set(result.error.issues.map((issue) => issue.path[0]))
         const newErrors = {
-          name: !!result.error.formErrors.fieldErrors.name,
-          provider: !!result.error.formErrors.fieldErrors.provider,
-          version: !!result.error.formErrors.fieldErrors.version,
-          class: !!result.error.formErrors.fieldErrors.machineClass,
+          name: invalidFields.has('name'),
+          provider: invalidFields.has('provider'),
+          version: invalidFields.has('version'),
+          class: invalidFields.has('machineClass'),
         }
         setErrors(newErrors)
         return { valid: false, data: null }
