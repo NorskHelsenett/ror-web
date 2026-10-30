@@ -58,32 +58,6 @@ The sidebar highlights the current page with blue text/icons and a tinted
 background in both expanded and icon-only modes. Nested pages highlight their
 matching navigation item and parent section, including links in collapsed popovers.
 
-### Dashboard releases
-
-The release header shows the latest release's tags, title, and description.
-When collapsed, the dashboard shows the number of unread releases among the four
-most recent entries, or "Recent releases" once all four have been viewed.
-Clicking a release in the header or either release table marks it as viewed,
-saved in local storage. Expanding the table does not mark releases as viewed.
-The dashboard's collapse preference never hides the full release-notes table.
-
-### Dashboard customization
-
-Choose **Customize dashboard** in the top bar to show or hide Releases, Greeting, Search,
-Overview, Favorite clusters, and Favorite VMs. Use the handles on the right to
-drag sections into a new order. The arrow buttons, or Up/Down keys on a focused
-handle, also move sections; Escape cancels an active drag.
-
-The checklist restores hidden sections, and **Reset layout** restores the default
-section order and visibility. Changes are saved automatically in local storage
-under `dashboard:layout`; **Done** closes customization. Hiding a favorites section
-never removes starred resources. Overview metrics retain their separate add/remove
-preferences, and resetting the section layout does not reset those metrics.
-Hiding Releases only affects the dashboard, not the Help release-notes page.
-
-The dashboard shows a loading spinner until its initial data, saved preferences,
-and favorite resources are ready, avoiding a flash of the default layout on reload.
-
 ## Project Structure
 
 The ROR Web app follows a Next.js 15 App Router architecture:
