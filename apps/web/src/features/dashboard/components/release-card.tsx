@@ -5,7 +5,7 @@ import { ArrowRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { routes } from '@/config/routes'
 import { cn } from '@/utils/clsxm'
 import { releases, type Release, type ReleaseTag } from '../data/releases'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import { useActiveRelease } from '@/hooks/use-active-release'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/shadcn/tooltip'
 
@@ -44,7 +44,7 @@ function ReleaseTags({ tags }: { tags: ReleaseTag[] }) {
   ))
 }
 
-export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) => {
+export const ReleaseCard = ({ view, className }: { view: 'dashboard' | 'release-notes'; className?: string }) => {
   const [collapsed, setCollapsed] = useState(false)
   const isCollapsed = view === 'dashboard' && collapsed
   const { setActiveRelease } = useActiveRelease()
@@ -54,7 +54,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   const unreadCount = releases.filter((release) => !viewedReleases.includes(getReleaseKey(release))).length
   const expandLabel = unreadCount > 0 ? `${unreadCount} updates${unreadCount === 1 ? '' : 's'}` : 'Recent updates'
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const saved = localStorage.getItem(VIEWED_RELEASES_KEY)
     if (!saved) return
     try {
@@ -78,7 +78,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
     if (release.id) setActiveRelease(release.id)
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (view === 'dashboard') {
       setCollapsed(localStorage.getItem('releaseCardCollapsed') === 'true')
     }
@@ -102,7 +102,7 @@ export const ReleaseCard = ({ view }: { view: 'dashboard' | 'release-notes' }) =
   }, [view])
 
   return (
-    <div className='bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full'>
+    <div className={cn('bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full', className)}>
       {/* Header */}
       <div className={cn('flex flex-wrap items-center justify-between gap-3', isCollapsed ? '' : 'mb-4')}>
         {latestRelease && (

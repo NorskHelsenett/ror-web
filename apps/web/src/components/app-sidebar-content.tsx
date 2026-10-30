@@ -1,4 +1,7 @@
+'use client'
+
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@radix-ui/react-collapsible'
+import { usePathname } from 'next/navigation'
 import {
   // Boxes,
   ChartColumn,
@@ -177,6 +180,14 @@ const sections: Section[] = [
 ].filter(Boolean) as Section[]
 
 export function AppSidebarContent() {
+  const pathname = usePathname()
+  const activeUrl = sections
+    .flatMap((section) => section.items)
+    .filter((item): item is SidebarItem & { url: string } => 'url' in item && item.url.startsWith('/'))
+    .map((item) => item.url)
+    .filter((url) => pathname === url || pathname.startsWith(`${url}/`))
+    .sort((a, b) => b.length - a.length)[0]
+
   return (
     <SidebarContent>
       <SidebarGroup className=''>
@@ -186,11 +197,15 @@ export function AppSidebarContent() {
               <SidebarMenuItem>
                 {section.items.length === 1 ? (
                   <div className='flex flex-row items-center'>
-                    <SidebarMenuButton asChild popoverContent={{ title: section.title, items: section.items }}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={'url' in section.items[0] && section.items[0].url === activeUrl}
+                      popoverContent={{ title: section.title, items: section.items, activeUrl }}
+                    >
                       {'url' in section.items[0] ? (
                         <Link
                           href={section.items[0].url}
-                          aria-current={section.isActive ? 'page' : undefined}
+                          aria-current={section.items[0].url === activeUrl ? 'page' : undefined}
                           className='flex items-center gap-2'
                         >
                           <section.icon />
@@ -206,7 +221,10 @@ export function AppSidebarContent() {
                   </div>
                 ) : (
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton popoverContent={{ title: section.title, items: section.items }}>
+                    <SidebarMenuButton
+                      isActive={section.items.some((item) => 'url' in item && item.url === activeUrl)}
+                      popoverContent={{ title: section.title, items: section.items, activeUrl }}
+                    >
                       <section.icon />
                       <span>{section.title}</span>
                       <ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
@@ -219,9 +237,9 @@ export function AppSidebarContent() {
                     <SidebarMenuSub>
                       {section.items.map((item, index) => (
                         <SidebarMenuSubItem key={index}>
-                          <SidebarMenuButton asChild>
+                          <SidebarMenuButton asChild isActive={'url' in item && item.url === activeUrl}>
                             {'url' in item ? (
-                              <Link href={item.url}>
+                              <Link href={item.url} aria-current={item.url === activeUrl ? 'page' : undefined}>
                                 {item.title}
                                 {item.icon && <span>{item.icon}</span>}
                               </Link>

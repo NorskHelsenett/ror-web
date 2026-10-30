@@ -1,26 +1,46 @@
 import { OverviewItemsViewRowType } from '@ror/js-api-client'
 
-const StatItem = ({ color, value, label }: { color: 'emerald' | 'yellow' | 'red'; value: number; label: string }) => {
-  const numColor = {
-    emerald: 'text-emerald-500',
-    yellow: 'text-yellow-500',
-    red: 'text-red-500',
-  }[color]
+export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => {
+  const name = item.itemName?.fieldValue ?? 'Unknown'
+  const stats = [
+    { color: 'bg-emerald-500', value: item.greenNumber?.fieldValue ?? 0, label: item.greenTitle?.fieldValue ?? '' },
+    { color: 'bg-[#edb54a]', value: item.yellowNumber?.fieldValue ?? 0, label: item.yellowTitle?.fieldValue ?? '' },
+    { color: 'bg-red-500', value: item.redNumber?.fieldValue ?? 0, label: item.redTitle?.fieldValue ?? '' },
+  ]
+  const total = stats.reduce((sum, stat) => sum + stat.value, 0)
+  const formatCount = (value: number) => value.toLocaleString('en-GB')
+
   return (
-    <div className='flex flex-col items-center'>
-      <span className={`text-3xl font-bold tabular-nums leading-none ${numColor}`}>{value}</span>
-      <span className='text-xs text-muted-foreground leading-tight'>{label}</span>
+    <div className='border-l border-subtle px-5 py-3 flex flex-col gap-4 min-w-72'>
+      <p className='text-xs font-medium uppercase tracking-widest text-muted-foreground'>{name}</p>
+      <div className='flex items-baseline gap-2'>
+        <span className='text-4xl font-semibold tabular-nums leading-none'>{formatCount(total)}</span>
+        <span className='text-sm text-muted-foreground'>{name === 'Vulnerabilities' ? 'findings' : 'total'}</span>
+      </div>
+      <div
+        role='img'
+        aria-label={`${name}: ${stats.map((stat) => `${formatCount(stat.value)} ${stat.label}`).join(', ')}`}
+        className='flex h-2 w-full overflow-hidden rounded-full bg-muted'
+      >
+        {stats
+          .filter((stat) => stat.value > 0)
+          .map((stat) => (
+            <div
+              key={stat.color}
+              className={`${stat.color} h-full shrink-0 border-r border-background last:border-r-0`}
+              style={{ width: `${(stat.value / total) * 100}%` }}
+            />
+          ))}
+      </div>
+      <div className='flex flex-wrap items-center gap-x-4 gap-y-2'>
+        {stats.map((stat) => (
+          <div key={stat.color} className='flex items-center gap-1.5 text-sm'>
+            <span aria-hidden='true' className={`${stat.color} size-2 shrink-0 rounded-full`} />
+            <span className='font-semibold tabular-nums'>{formatCount(stat.value)}</span>
+            <span className='text-muted-foreground'>{stat.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
-
-export const OverviewBox = ({ item }: { item: OverviewItemsViewRowType }) => (
-  <div className='bg-(--r-layer) border-r border-subtle rounded-lg px-4 py-3 flex flex-col gap-3 min-w-[210px]'>
-    <p className='text-xl font-semibold'>{item.itemName?.fieldValue ?? 'Unknown'}</p>
-    <div className='flex gap-4 justify-center'>
-      <StatItem color='emerald' value={item.greenNumber?.fieldValue ?? 0} label={item.greenTitle?.fieldValue ?? ''} />
-      <StatItem color='yellow' value={item.yellowNumber?.fieldValue ?? 0} label={item.yellowTitle?.fieldValue ?? ''} />
-      <StatItem color='red' value={item.redNumber?.fieldValue ?? 0} label={item.redTitle?.fieldValue ?? ''} />
-    </div>
-  </div>
-)

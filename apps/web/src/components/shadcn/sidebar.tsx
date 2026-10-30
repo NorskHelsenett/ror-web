@@ -36,6 +36,7 @@ type SidebarContextProps = {
 type PopoverContent = {
   title: string
   items: SidebarItem[]
+  activeUrl?: string
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -558,7 +559,11 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar='menu-button'
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+        className={cn(
+          sidebarMenuButtonVariants({ variant, size }),
+          'data-[active=true]:bg-action-blue data-[active=true]:text-action-blue-foreground data-[active=true]:data-[state=open]:hover:bg-action-blue data-[active=true]:data-[state=open]:hover:text-action-blue-foreground data-[active=true]:hover:bg-action-blue data-[active=true]:hover:text-action-blue-foreground',
+          className
+        )}
         onClick={(e) => {
           props.onClick?.(e as React.MouseEvent<HTMLButtonElement>)
         }}
@@ -589,7 +594,11 @@ const SidebarMenuButton = React.forwardRef<
         >
           {popoverContent.items.length === 1 ? (
             'url' in popoverContent.items[0] ? (
-              <Link className='block hover:bg-(--r-layer) rounded-md px-2 pt-1 pb-1' href={popoverContent.items[0].url}>
+              <Link
+                className='block hover:bg-(--r-layer) rounded-md px-2 pt-1 pb-1 aria-[current=page]:bg-action-blue aria-[current=page]:text-action-blue-foreground'
+                href={popoverContent.items[0].url}
+                aria-current={popoverContent.items[0].url === popoverContent.activeUrl ? 'page' : undefined}
+              >
                 {popoverContent.items[0].title}
               </Link>
             ) : (
@@ -601,7 +610,11 @@ const SidebarMenuButton = React.forwardRef<
                 {popoverContent.items.map((item) => (
                   <div key={item.title}>
                     {'url' in item ? (
-                      <Link href={item.url} className='block hover:bg-(--r-layer) rounded-md px-2 pt-2 pb-1'>
+                      <Link
+                        href={item.url}
+                        aria-current={item.url === popoverContent.activeUrl ? 'page' : undefined}
+                        className='block hover:bg-(--r-layer) rounded-md px-2 pt-2 pb-1 aria-[current=page]:bg-action-blue aria-[current=page]:text-action-blue-foreground'
+                      >
                         {item.title}
                       </Link>
                     ) : (

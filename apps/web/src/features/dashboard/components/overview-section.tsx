@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { OverviewItem, overviewItemsValues } from '../types/items'
 import { addOverviewItem, getOverviewItems, removeOverviewItem } from '../utils/dashboard-localstorage'
 import { OverviewBox } from './overview-box'
@@ -11,12 +11,13 @@ import { Plus } from 'lucide-react'
 
 interface OverviewSectionProps {
   allItems: OverviewItemsViewRowType[]
+  isEditing: boolean
 }
 
-export const OverviewSection = ({ allItems }: OverviewSectionProps) => {
+export const OverviewSection = ({ allItems, isEditing }: OverviewSectionProps) => {
   const [visibleItems, setVisibleItems] = useState<OverviewItem[]>([...overviewItemsValues])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setVisibleItems(getOverviewItems())
   }, [])
 
@@ -72,5 +73,5 @@ export const OverviewSection = ({ allItems }: OverviewSectionProps) => {
       </Popover>
     ) : null
 
-  return <DashboardSection title='Overview' items={items} editable onRemove={handleRemove} addSlot={addSlot} />
+  return <DashboardSection title='' items={items} isEditing={isEditing} onRemove={handleRemove} addSlot={addSlot} />
 }

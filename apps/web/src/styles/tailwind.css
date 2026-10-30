@@ -100,6 +100,10 @@
 @theme {
   /* Keep custom colors after Harmony's palette reset. Used by the app-wide black theme. */
   --color-dashboard: #0b0d0e;
+  --color-action-blue: light-dark(#edf4ff, #1b2533);
+  --color-action-blue-hover: light-dark(#dceaff, #26364c);
+  --color-action-blue-border: light-dark(#7799c4, #3d5d85);
+  --color-action-blue-foreground: light-dark(#244e80, #a9ccff);
 }
 
 /**
