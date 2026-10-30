@@ -36,16 +36,17 @@
     opacity: 0.85;
   }
 
-  &:focus {
-    outline: none;
+  &:focus-visible {
+    outline: 2px solid var(--r-border-interactive);
+    outline-offset: 4px;
   }
 
-  &[aria-selected='true'] {
+  &[aria-pressed='true'] {
     color: var(--r-button-primary-border);
   }
 }
 
-.option[aria-selected='true'] figure {
+.option[aria-pressed='true'] > span:first-child {
   box-shadow:
     0 0 0 1px var(--r-background),
     0 0 0 3px currentColor;

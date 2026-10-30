@@ -77,7 +77,7 @@ export const ClusterDetails = ({ accessGroups }: { accessGroups: ResourceAccessG
   const rorLogin = getRorLoginViewItem(cluster) || missingText
   const egressIP = getEgressIPViewItem(cluster) || missingText
 
-  const cardStyling = 'h-full w-full flex flex-col bg-(--r-layer) p-4 rounded-md'
+  const cardStyling = 'h-full w-full flex flex-col bg-(--r-layer) border border-subtle p-4 rounded-md'
 
   const MemoryCard = useCallback(
     () => (
