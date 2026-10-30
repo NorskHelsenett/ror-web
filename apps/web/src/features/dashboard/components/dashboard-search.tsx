@@ -176,81 +176,94 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
 
       {/* Results list */}
       {resultsOpen && (showClusterResults || showVmResults) && (
-        <div className='absolute z-50 top-full left-0 right-0 mt-1 bg-popover border rounded-md shadow-lg max-h-80 overflow-y-auto'>
-          {showClusterResults &&
-            (clusterResults.length === 0 ? (
-              <p className='px-3 py-2 text-sm text-muted-foreground'>No clusters found</p>
-            ) : (
-              clusterResults.map((cluster) => {
-                const uid = cluster.clusterUid?.fieldValue
-                const name = cluster.clusterName?.fieldValue || 'Unknown cluster'
-                if (!uid) return null
-                return (
-                  <div key={uid} className='flex items-center justify-between px-3 py-2 hover:bg-muted/50'>
-                    <div>
-                      <button
-                        type='button'
-                        className='text-sm font-medium text-left cursor-pointer hover:underline'
-                        onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
-                      >
-                        {name}
-                      </button>
-                      <p className='text-xs text-muted-foreground'>
-                        {[cluster.datacenter?.fieldValue, cluster.environment?.fieldValue].filter(Boolean).join(' · ')}
-                      </p>
+        <div className='absolute z-50 top-full left-0 right-0 mt-2 overflow-hidden rounded-xl border border-action-blue-border bg-[light-dark(#ffffff,#191c1e)] text-popover-foreground shadow-2xl shadow-black/30 ring-1 ring-action-blue-border/30'>
+          <div className='border-b border-action-blue-border/50 bg-action-blue px-4 py-2 text-xs font-semibold text-action-blue-foreground'>
+            {domain === 'cluster' ? 'Cluster results' : 'VM results'}
+          </div>
+          <div className='max-h-80 overflow-y-auto divide-y divide-subtle'>
+            {showClusterResults &&
+              (clusterResults.length === 0 ? (
+                <p className='px-3 py-2 text-sm text-muted-foreground'>No clusters found</p>
+              ) : (
+                clusterResults.map((cluster) => {
+                  const uid = cluster.clusterUid?.fieldValue
+                  const name = cluster.clusterName?.fieldValue || 'Unknown cluster'
+                  if (!uid) return null
+                  return (
+                    <div
+                      key={uid}
+                      className='flex items-center justify-between px-4 py-3 hover:bg-action-blue/60 focus-within:bg-action-blue/60'
+                    >
+                      <div>
+                        <button
+                          type='button'
+                          className='text-sm font-medium text-left cursor-pointer hover:underline'
+                          onClick={() => router.push(routes.app.cluster.getHref(getClusterUidView(cluster)))}
+                        >
+                          {name}
+                        </button>
+                        <p className='text-xs text-muted-foreground'>
+                          {[cluster.datacenter?.fieldValue, cluster.environment?.fieldValue]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </p>
+                      </div>
+                      <FavoriteStar
+                        scale='scale-50'
+                        domain='cluster'
+                        itemId={uid}
+                        onUnfavorite={onFavorite}
+                        onFavorite={onFavorite}
+                      />
                     </div>
-                    <FavoriteStar
-                      scale='scale-50'
-                      domain='cluster'
-                      itemId={uid}
-                      onUnfavorite={onFavorite}
-                      onFavorite={onFavorite}
-                    />
-                  </div>
-                )
-              })
-            ))}
+                  )
+                })
+              ))}
 
-          {showVmResults &&
-            (loadingVms ? (
-              <div className='flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground'>
-                <Loader2 className='w-4 h-4 animate-spin' />
-                Searching...
-              </div>
-            ) : vmResults.length === 0 ? (
-              <p className='px-3 py-2 text-sm text-muted-foreground'>No VMs found</p>
-            ) : (
-              vmResults.map((vm) => {
-                const uid = getVmUid(vm)
-                const name = getVmName(vm)
-                if (!uid) return null
-                return (
-                  <div key={uid} className='flex items-center justify-between px-3 py-2 hover:bg-muted/50'>
-                    <div>
-                      <p
-                        className='text-sm font-medium cursor-pointer hover:underline'
-                        onClick={() => {
-                          localStorage.setItem('selectedVm', JSON.stringify(vm))
-                          router.push(routes.app.vm.getHref(getVmUid(vm)))
-                        }}
-                      >
-                        {name}
-                      </p>
-                      <p className='text-xs text-muted-foreground'>
-                        {[getVmPowerState(vm), getTeamIdentifier(vm)].filter(Boolean).join(' · ')}
-                      </p>
+            {showVmResults &&
+              (loadingVms ? (
+                <div className='flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground'>
+                  <Loader2 className='w-4 h-4 animate-spin' />
+                  Searching...
+                </div>
+              ) : vmResults.length === 0 ? (
+                <p className='px-3 py-2 text-sm text-muted-foreground'>No VMs found</p>
+              ) : (
+                vmResults.map((vm) => {
+                  const uid = getVmUid(vm)
+                  const name = getVmName(vm)
+                  if (!uid) return null
+                  return (
+                    <div
+                      key={uid}
+                      className='flex items-center justify-between px-4 py-3 hover:bg-action-blue/60 focus-within:bg-action-blue/60'
+                    >
+                      <div>
+                        <p
+                          className='text-sm font-medium cursor-pointer hover:underline'
+                          onClick={() => {
+                            localStorage.setItem('selectedVm', JSON.stringify(vm))
+                            router.push(routes.app.vm.getHref(getVmUid(vm)))
+                          }}
+                        >
+                          {name}
+                        </p>
+                        <p className='text-xs text-muted-foreground'>
+                          {[getVmPowerState(vm), getTeamIdentifier(vm)].filter(Boolean).join(' · ')}
+                        </p>
+                      </div>
+                      <FavoriteStar
+                        scale='scale-50'
+                        domain='vms'
+                        itemId={uid}
+                        onUnfavorite={onFavorite}
+                        onFavorite={onFavorite}
+                      />
                     </div>
-                    <FavoriteStar
-                      scale='scale-50'
-                      domain='vms'
-                      itemId={uid}
-                      onUnfavorite={onFavorite}
-                      onFavorite={onFavorite}
-                    />
-                  </div>
-                )
-              })
-            ))}
+                  )
+                })
+              ))}
+          </div>
         </div>
       )}
       <p className='mt-3 text-xs text-muted-foreground'>
