@@ -102,92 +102,93 @@ export const ReleaseCard = ({ view, className }: { view: 'dashboard' | 'release-
   }, [view])
 
   return (
-    <div className={cn('bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full', className)}>
-      {/* Header */}
-      <div className={cn('flex flex-wrap items-center justify-between gap-3', isCollapsed ? '' : 'mb-4')}>
-        {latestRelease && (
-          <div className='flex flex-1 items-center gap-2 min-w-0'>
-            <div className='flex gap-1 shrink-0'>
-              <ReleaseTags tags={latestRelease.tags} />
+    <div className={cn(view === 'dashboard' && 'border-b border-border pb-2')}>
+      <div className={cn('bg-(--r-layer) rounded-lg px-6 pt-2 pb-2 w-full', className)}>
+        {/* Header */}
+        <div className={cn('flex flex-wrap items-center justify-between gap-3', isCollapsed ? '' : 'mb-4')}>
+          {latestRelease && (
+            <div className='flex flex-1 items-center gap-2 min-w-0'>
+              <div className='flex gap-1 shrink-0'>
+                <ReleaseTags tags={latestRelease.tags} />
+              </div>
+              <Link
+                href={resolvedHrefs[0] ?? latestRelease.href}
+                onClick={() => handleReleaseClick(latestRelease)}
+                className='text-sm min-w-0 hover:underline'
+              >
+                <span className='font-medium'>{latestRelease.title}</span>
+                <span className='mx-3 text-muted-foreground'>{'\u2014'}</span>
+                <span className='text-muted-foreground'>{latestRelease.description}</span>
+              </Link>
             </div>
-            <Link
-              href={resolvedHrefs[0] ?? latestRelease.href}
-              onClick={() => handleReleaseClick(latestRelease)}
-              className='text-sm min-w-0 hover:underline'
+          )}
+          {view === 'dashboard' && (
+            <button
+              onClick={toggleCollapsed}
+              className='flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
+              aria-expanded={!isCollapsed}
             >
-              <span className='font-medium'>{latestRelease.title}</span>
-              <span className='mx-3 text-muted-foreground'>{'\u2014'}</span>
-              <span className='text-muted-foreground'>{latestRelease.description}</span>
-            </Link>
+              {isCollapsed ? (
+                <>
+                  <ChevronDown className='size-4' />
+                  {expandLabel}
+                </>
+              ) : (
+                <>
+                  <ChevronUp className='size-4' /> Hide releases
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Release rows */}
+        {!isCollapsed && (
+          <div className='flex flex-col'>
+            {(view === 'dashboard' ? releases.slice(0, 4) : releases).map((release, i) => (
+              <Link
+                key={i}
+                href={resolvedHrefs[i] ?? release.href}
+                onClick={() => handleReleaseClick(release)}
+                className='flex items-center gap-4 py-4 group hover:bg-muted/5 -mx-6 px-6 transition-colors border-t border-border'
+              >
+                {/* Date */}
+                <div className='w-9 text-center shrink-0'>
+                  <p className='text-lg font-semibold leading-tight tabular-nums'>
+                    {String(release.day).padStart(2, '0')}
+                  </p>
+                  <p className='text-[11px] text-muted-foreground uppercase tracking-wide'>{release.month}</p>
+                </div>
+
+                {/* Icon */}
+                <div className={cn('size-9 rounded-lg flex items-center justify-center shrink-0', release.iconBg)}>
+                  {release.icon}
+                </div>
+
+                {/* Title + description */}
+                <div className='flex-1 min-w-0'>
+                  <p className='font-medium text-sm'>{release.title}</p>
+                  <p className='text-xs text-muted-foreground mt-0.5'>{release.description}</p>
+                </div>
+
+                {/* Tags + arrow */}
+                <div className='flex items-center gap-2 shrink-0'>
+                  <ReleaseTags tags={release.tags} />
+                  <ArrowRight className='size-4 text-muted-foreground group-hover:text-foreground transition-colors' />
+                </div>
+              </Link>
+            ))}
           </div>
         )}
-        {view === 'dashboard' && (
-          <button
-            onClick={toggleCollapsed}
-            className='flex shrink-0 items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors'
-            aria-expanded={!isCollapsed}
+        {view === 'dashboard' && !isCollapsed && (
+          <Link
+            href={routes.app.releaseNotes.getHref()}
+            className='flex items-center justify-center gap-1 py-3 mt-1 border-t border-border text-sm text-muted-foreground hover:text-foreground transition-colors'
           >
-            {isCollapsed ? (
-              <>
-                <ChevronDown className='size-4' />
-                {expandLabel}
-              </>
-            ) : (
-              <>
-                <ChevronUp className='size-4' /> Hide releases
-              </>
-            )}
-          </button>
+            All releases <ArrowRight className='size-4' />
+          </Link>
         )}
       </div>
-
-      {/* Release rows */}
-      {!isCollapsed && (
-        <div className='flex flex-col'>
-          {(view === 'dashboard' ? releases.slice(0, 4) : releases).map((release, i) => (
-            <Link
-              key={i}
-              href={resolvedHrefs[i] ?? release.href}
-              onClick={() => handleReleaseClick(release)}
-              className='flex items-center gap-4 py-4 group hover:bg-muted/5 -mx-6 px-6 transition-colors border-t border-border'
-            >
-              {/* Date */}
-              <div className='w-9 text-center shrink-0'>
-                <p className='text-lg font-semibold leading-tight tabular-nums'>
-                  {String(release.day).padStart(2, '0')}
-                </p>
-                <p className='text-[11px] text-muted-foreground uppercase tracking-wide'>{release.month}</p>
-              </div>
-
-              {/* Icon */}
-              <div className={cn('size-9 rounded-lg flex items-center justify-center shrink-0', release.iconBg)}>
-                {release.icon}
-              </div>
-
-              {/* Title + description */}
-              <div className='flex-1 min-w-0'>
-                <p className='font-medium text-sm'>{release.title}</p>
-                <p className='text-xs text-muted-foreground mt-0.5'>{release.description}</p>
-              </div>
-
-              {/* Tags + arrow */}
-              <div className='flex items-center gap-2 shrink-0'>
-                <ReleaseTags tags={release.tags} />
-                <ArrowRight className='size-4 text-muted-foreground group-hover:text-foreground transition-colors' />
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {view === 'dashboard' && !isCollapsed && (
-        <Link
-          href={routes.app.releaseNotes.getHref()}
-          className='flex items-center justify-center gap-1 py-3 mt-1 border-t border-border text-sm text-muted-foreground hover:text-foreground transition-colors'
-        >
-          All releases <ArrowRight className='size-4' />
-        </Link>
-      )}
     </div>
   )
 }

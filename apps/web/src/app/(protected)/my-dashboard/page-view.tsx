@@ -38,6 +38,10 @@ function DashboardGreeting({ overviewItems }: PageViewProps) {
   const vmOverview = overviewItems.find((item) => item.itemName?.fieldValue === 'VMs')
   const clusterErrors = clusterOverview?.redNumber?.fieldValue
   const clusterWarnings = clusterOverview?.yellowNumber?.fieldValue
+  const hasErrors = clusterErrors != null && clusterErrors > 0
+  const hasWarnings = clusterWarnings != null && clusterWarnings > 0
+  const clustersHealthy = clusterErrors === 0 && clusterWarnings === 0
+  const headlineCount = hasErrors ? clusterErrors : hasWarnings ? clusterWarnings : undefined
   const vmsOff = vmOverview?.redNumber?.fieldValue
   const vmCounts = [vmOverview?.greenNumber?.fieldValue, vmOverview?.yellowNumber?.fieldValue, vmsOff]
   const vmTotal = vmCounts.every((count): count is number => count != null)
@@ -65,18 +69,35 @@ function DashboardGreeting({ overviewItems }: PageViewProps) {
           {greeting} · {now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}
         </p>
       )}
-      {clusterErrors != null && (
+      {(headlineCount != null || clustersHealthy) && (
         <h2 className='text-4xl sm:text-5xl font-semibold tracking-tight'>
-          <span className={`inline overflow-visible${clusterErrors > 0 ? ' text-red-500' : ''}`}>
-            {formatCount(clusterErrors)} {clusterErrors === 1 ? 'cluster' : 'clusters'}
-          </span>{' '}
-          {clusterErrors === 1 ? 'is' : 'are'} in error
+          {clustersHealthy ? (
+            <span className='text-emerald-500'>All clusters are healthy</span>
+          ) : headlineCount != null ? (
+            <>
+              <span className={cn('inline overflow-visible', hasErrors ? 'text-red-500' : 'text-yellow-500')}>
+                {formatCount(headlineCount)} {headlineCount === 1 ? 'cluster' : 'clusters'}
+              </span>{' '}
+              {hasErrors
+                ? `${headlineCount === 1 ? 'is' : 'are'} in error`
+                : `${headlineCount === 1 ? 'has' : 'have'} warnings`}
+            </>
+          ) : null}
         </h2>
       )}
-      {clusterWarnings != null && vmsOff != null && vmTotal != null && (
+      {((hasErrors && hasWarnings) || (vmsOff != null && vmTotal != null)) && (
         <p className='mt-3 text-sm sm:text-base text-muted-foreground'>
-          {formatCount(clusterWarnings)} more have warnings, and {formatCount(vmsOff)} of your {formatCount(vmTotal)}{' '}
-          VMs are switched off.
+          {hasErrors && hasWarnings && (
+            <>
+              {formatCount(clusterWarnings)} more {clusterWarnings === 1 ? 'has' : 'have'} warnings
+              {vmsOff != null && vmTotal != null ? ', and ' : '.'}
+            </>
+          )}
+          {vmsOff != null && vmTotal != null && (
+            <>
+              {formatCount(vmsOff)} of your {formatCount(vmTotal)} VMs are switched off.
+            </>
+          )}
         </p>
       )}
     </div>
@@ -215,7 +236,7 @@ export const PageView = ({ overviewItems }: PageViewProps) => {
           }
         />
         <div className='mx-6 my-4'>
-          <div className='mx-7 pb-2'>
+          <div className='mx-7 pb-1'>
             <NotReadyMessage removable={true} storageKey='dashboardWelcomeMessageDismissed'>
               Welcome to the new ROR website! We are excited to launch this, and aware that some parts of the page is
               still not operational. In these places we have aimed at rerouting you to the old ROR website. If you

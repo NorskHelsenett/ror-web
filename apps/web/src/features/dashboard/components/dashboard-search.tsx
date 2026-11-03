@@ -108,8 +108,8 @@ export function DashboardSearch({ onFavorite }: DashboardSearchProps) {
                   setResultsOpen(true)
                 }}
                 onFocus={() => setResultsOpen(true)}
-                placeholder='Search all clusters...'
-                aria-label='Search clusters'
+                placeholder='Find clusters...'
+                aria-label='Find clusters'
                 icon={loadingClusters ? <Loader2 className='w-4 h-4 animate-spin' /> : <Search className='w-4 h-4' />}
                 iconPosition='left'
               />

@@ -44,6 +44,18 @@ const icons = {
  */
 export const releases: Release[] = [
   {
+    id: 'new-dashboard-design',
+    day: 3,
+    month: 'NOV',
+    year: 2026,
+    icon: icons.LayoutDashboard,
+    iconBg: 'bg-blue-200 dark:bg-blue-950',
+    title: 'New dashboard design',
+    description: 'Introduced a new design for the dashboard and possiblity to customize view.',
+    tags: ['New'],
+    href: routes.app.dashboard.getHref(),
+  },
+  {
     id: 'create-cluster-functionality',
     day: 1,
     month: 'OCT',
