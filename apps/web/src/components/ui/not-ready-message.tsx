@@ -2,7 +2,7 @@
 
 import { cn } from '@/utils/clsxm'
 import { X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 
 interface NotReadyMessageProps {
   className?: string
@@ -15,7 +15,7 @@ interface NotReadyMessageProps {
 export const NotReadyMessage = ({ className, removable = true, children, storageKey }: NotReadyMessageProps) => {
   const [isVisible, setIsVisible] = useState(true)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (storageKey && localStorage.getItem(storageKey) === 'true') setIsVisible(false)
   }, [storageKey])
 

@@ -9,6 +9,7 @@ import '@/styles/tailwind.css'
 import '@/styles/globals.scss'
 import { Providers } from './providers'
 import { RenderApiError } from '@/utils/renderApiError'
+import { ColorScheme } from '@/utils/dark-mode'
 
 /**
  * Register the server-side mock server
@@ -54,7 +55,10 @@ export default async function RootLayout({ children }: Readonly<RootLayoutProps>
     // otherwise it defaults to "system"
     const theme = await getDarkModePreferenceAction()
 
-    const classes = clsx(inter.variable, ubuntuMono.variable)
+    const classes = clsx(inter.variable, ubuntuMono.variable, {
+      dark: theme === ColorScheme.Dark || theme === ColorScheme.DarkBlack,
+      light: theme === ColorScheme.Light,
+    })
 
     return (
       <html lang='en' className={classes} data-color-scheme={theme}>

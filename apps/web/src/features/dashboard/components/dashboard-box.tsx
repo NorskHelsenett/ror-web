@@ -12,7 +12,7 @@ interface DashboardBoxProps {
 export const DashboardBox = ({ title, half = false, className, children, onClick }: DashboardBoxProps) => (
   <div
     className={cn(
-      'relative bg-(--r-layer) p-4 rounded-lg',
+      'relative bg-(--r-layer) border border-subtle p-4 rounded-lg',
       half ? 'w-61.5' : 'w-96.25',
       onClick && 'cursor-pointer',
       className

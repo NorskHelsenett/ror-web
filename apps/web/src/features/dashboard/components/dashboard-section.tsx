@@ -1,17 +1,17 @@
 'use client'
-import { Button } from '@/components/shadcn/button'
 import { cn } from '@/utils/clsxm'
-import { Check, Pencil, X } from 'lucide-react'
-import { ReactNode, useState } from 'react'
+import { X } from 'lucide-react'
+import { ReactNode } from 'react'
 import { OverviewItem } from '../types/items'
 
 interface DashboardSectionProps {
   title: string
   items?: { nodeId: string; nodeTitle?: string; node: ReactNode }[]
-  editable?: boolean
+  isEditing?: boolean
   onRemove?: (title: OverviewItem) => void
   addSlot?: ReactNode
   headerSlot?: ReactNode
+  listHeader?: ReactNode
   layout?: 'card' | 'list'
   className?: string
 }
@@ -19,38 +19,30 @@ interface DashboardSectionProps {
 export const DashboardSection = ({
   title,
   items,
-  editable = false,
+  isEditing = false,
   onRemove,
   addSlot,
   headerSlot,
+  listHeader,
   layout = 'card',
   className,
 }: DashboardSectionProps) => {
-  const [isEditing, setIsEditing] = useState<boolean>(false)
-
   return (
-    <div className={cn('mx-7', className)}>
-      <div className='flex justify-between items-center'>
-        <h3>{title}</h3>
-        {headerSlot}
-        {editable &&
-          (isEditing ? (
-            <Button onClick={() => setIsEditing(false)} variant='green'>
-              Save
-              <Check />
-            </Button>
-          ) : (
-            <Button onClick={() => setIsEditing(true)}>
-              <Pencil />
-              Edit
-            </Button>
-          ))}
-      </div>
+    <div className={className}>
+      {(title || headerSlot) && (
+        <div className='flex justify-between items-center'>
+          <h4 className='font-bold'>{title}</h4>
+          {headerSlot}
+        </div>
+      )}
       <div
         className={cn(
-          layout === 'list' ? 'flex flex-col gap-1 pt-2.5' : 'flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'
+          layout === 'list'
+            ? 'flex flex-col overflow-x-auto pt-2.5'
+            : 'flex gap-4 overflow-x-auto hide-scrollbar -mt-2.5 pt-2.5'
         )}
       >
+        {layout === 'list' && listHeader}
         {items?.length
           ? items.map((item) => (
               <div key={item.nodeId} className='relative'>

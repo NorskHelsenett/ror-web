@@ -14,8 +14,32 @@
   }
 
   /// Override the color system to say it only supports dark mode (see )
-  html[data-color-scheme='dark'] {
+  html[data-color-scheme='dark'],
+  html[data-color-scheme='dark-black'] {
     color-scheme: dark;
+  }
+
+  html[data-color-scheme='dark-black'] {
+    --r-background: var(--color-dashboard);
+    --r-background-primary: var(--color-dashboard);
+    --r-background-hover: #191c1e;
+    --r-background-active: #34383b;
+    --r-background-selected: #292d30;
+    --r-background-selected-hover: #34383b;
+
+    @for $level from 1 through 3 {
+      --r-layer-0#{$level}: var(--color-dashboard);
+      --r-layer-hover-0#{$level}: #191c1e;
+      --r-layer-active-0#{$level}: #34383b;
+      --r-layer-selected-0#{$level}: #292d30;
+      --r-layer-selected-hover-0#{$level}: #34383b;
+      --r-layer-accent-0#{$level}: #191c1e;
+      --r-layer-accent-hover-0#{$level}: #292d30;
+      --r-layer-accent-active-0#{$level}: #34383b;
+      --r-field-0#{$level}: #191c1e;
+      --r-field-hover-0#{$level}: #292d30;
+      --r-border-subtle-0#{$level}: #34383b;
+    }
   }
 }
 

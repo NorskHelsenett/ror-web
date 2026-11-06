@@ -21,17 +21,17 @@ import { useRouter } from 'next/navigation'
 import { routes } from '@/config/routes'
 
 const Dot = ({ status }: { status: string }) => (
-  <span className='relative flex items-center justify-center size-5'>
+  <span aria-hidden='true' className='relative flex shrink-0 items-center justify-center size-5'>
     <span
       className={cn(
-        'size-4 rounded-full opacity-75',
-        status === 'poweredOn' ? 'bg-emerald-500' : status === 'poweredOff' ? 'bg-red-500' : 'bg-gray-500'
+        'absolute inset-0 rounded-full',
+        status === 'poweredOn' ? 'bg-emerald-500/15' : status === 'poweredOff' ? 'bg-red-500/15' : 'bg-gray-500/15'
       )}
     />
     <span
       className={cn(
-        'size-3 absolute z-10 rounded-full',
-        status === 'poweredOn' ? 'bg-emerald-700' : status === 'poweredOff' ? 'bg-red-700' : 'bg-gray-700'
+        'relative size-2.5 rounded-full',
+        status === 'poweredOn' ? 'bg-emerald-500' : status === 'poweredOff' ? 'bg-red-500' : 'bg-gray-500'
       )}
     />
   </span>
@@ -41,6 +41,20 @@ const DisplayedPowerState = ({ status, className }: { status: string; className?
   const label = status === 'poweredOn' ? 'Power on' : status === 'poweredOff' ? 'Power off' : 'Unknown'
   return <span className={className}>{label}</span>
 }
+
+const vmRowGrid =
+  'grid grid-cols-[minmax(160px,1fr)_minmax(160px,1fr)_minmax(140px,1fr)_minmax(140px,1fr)_minmax(140px,1fr)_36px] min-w-[1000px] items-center gap-6 px-3'
+
+export const FavoritedVmHeader = () => (
+  <div className={cn(vmRowGrid, 'py-3 border-b border-subtle text-xs uppercase tracking-widest text-muted-foreground')}>
+    <span>VM</span>
+    <span>Team</span>
+    <span>CPU</span>
+    <span>Memory</span>
+    <span>Disk</span>
+    <span className='sr-only'>Favorite</span>
+  </div>
+)
 
 export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnfavorite?: () => void }) => {
   const router = useRouter()
@@ -68,45 +82,39 @@ export const FavoritedVmRow = ({ vm, onUnfavorite }: { vm: VirtualMachine; onUnf
         router.push(routes.app.vm.getHref(getVmUid(vm)))
       }}
       className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-(--r-layer) rounded-md transition-opacity cursor-pointer',
+        vmRowGrid,
+        'py-4 border-b border-subtle transition-opacity cursor-pointer',
         isPoweredOff && 'opacity-50'
       )}
     >
-      <Dot status={powerState} />
-      <div className={cn('flex flex-1 items-center gap-3 min-w-0', isPoweredOff && 'grayscale')}>
-        <span className='text-sm truncate w-44 shrink-0'>{getVmName(vm)}</span>
-        <DotIcon />
-        <span className='text-sm truncate w-32 shrink-0'>{getTeamIdentifier(vm)}</span>
-        <DotIcon />
-        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
-          <p className='text-sm w-8 shrink-0'>CPU</p>
-          <ResourceBar
-            capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
-            used={`${cpuUsage} cores`}
-            percentage={parseFloat(cpuPct)}
-            showPercentage={false}
-          />
+      <div className='flex items-center gap-3 min-w-0'>
+        <Dot status={powerState} />
+        <div className='min-w-0'>
+          <p className='text-sm font-medium font-mono truncate'>{getVmName(vm)}</p>
+          <DisplayedPowerState status={powerState} className='text-xs text-muted-foreground' />
         </div>
-        <DotIcon />
-        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
-          <p className='text-sm w-14 shrink-0'>Memory</p>
-          <ResourceBar
-            capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
-            used={formatBytes(memoryUsageBytes)}
-            percentage={parseFloat(memoryPct)}
-            showPercentage={false}
-          />
-        </div>
-        <DotIcon />
-        <div className='flex items-center gap-2 flex-1 min-w-0 max-w-xs'>
-          <p className='text-sm w-8 shrink-0'>Disk</p>
-          <ResourceBar
-            capacity={formatBytes(diskTotalBytes)}
-            used={formatBytes(diskUsedBytes)}
-            percentage={parseFloat(diskPct)}
-            showPercentage={false}
-          />
-        </div>
+      </div>
+      <span className='text-sm truncate'>{getTeamIdentifier(vm)}</span>
+      <div className='flex items-center min-w-0' aria-label='CPU usage'>
+        <ResourceBar
+          capacity={cpuTotal != null ? `${cpuTotal} cores` : undefined}
+          used={`${cpuUsage} cores`}
+          percentage={parseFloat(cpuPct)}
+        />
+      </div>
+      <div className='flex items-center min-w-0' aria-label='Memory usage'>
+        <ResourceBar
+          capacity={memorySizeBytes != null ? formatBytes(memorySizeBytes) : undefined}
+          used={formatBytes(memoryUsageBytes)}
+          percentage={parseFloat(memoryPct)}
+        />
+      </div>
+      <div className='flex items-center min-w-0' aria-label='Disk usage'>
+        <ResourceBar
+          capacity={formatBytes(diskTotalBytes)}
+          used={formatBytes(diskUsedBytes)}
+          percentage={parseFloat(diskPct)}
+        />
       </div>
       <FavoriteStar domain='vms' itemId={getVmUid(vm)} scale='scale-50' onUnfavorite={onUnfavorite} />
     </div>
