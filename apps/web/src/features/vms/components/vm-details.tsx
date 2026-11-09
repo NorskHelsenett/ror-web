@@ -357,7 +357,7 @@ export const VMDetails = () => {
         </div>
       </div>
       <div className='grid grid-cols-1 md:grid-cols-1'>
-        <VulnerabilityCard vmid={vm?.metadata?.uid} />
+        <VulnerabilityCard vmSubject={vm?.rormeta?.ownerref?.subject} />
       </div>
     </div>
   )
