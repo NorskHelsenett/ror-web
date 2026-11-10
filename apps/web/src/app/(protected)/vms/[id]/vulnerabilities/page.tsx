@@ -14,7 +14,7 @@ export default function VMRawDataPage() {
 
   return (
     <div className=''>
-      <VulnerabilityCard vmid={vm?.metadata?.uid} />
+      <VulnerabilityCard vmSubject={vm?.rormeta?.ownerref?.subject} />
     </div>
   )
 }
