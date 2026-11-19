@@ -45,6 +45,9 @@ export const ClusterListItemViewRow = z
     slackChannels: ViewElementArray.nullish(),
     nodepools: ViewElementArray.nullish(),
     egressIP: ViewElementString.nullish(),
+    gateways: ViewElementArray.nullish(),
+    gatewayClasses: ViewElementArray.nullish(),
+    httpRoutes: ViewElementArray.nullish(),
   })
   .loose()
 

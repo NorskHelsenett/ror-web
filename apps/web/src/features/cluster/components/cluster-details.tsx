@@ -79,6 +79,8 @@ export const ClusterDetails = ({ accessGroups }: { accessGroups: ResourceAccessG
 
   const cardStyling = 'h-full w-full flex flex-col bg-(--r-layer) border border-subtle p-4 rounded-md'
 
+  console.log(cluster)
+
   const MemoryCard = useCallback(
     () => (
       <div className={cardStyling}>
