@@ -30,9 +30,9 @@ export const routes = {
       label: 'Create cluster',
       getHref: () => '/clusters/create-cluster',
     },
-    clusterIngresses: {
-      label: 'Ingresses',
-      getHref: (id: string) => `/clusters/${id}/ingresses`,
+    clusterGatewayApi: {
+      label: 'Gateway API',
+      getHref: (id: string) => `/clusters/${id}/gateway-api`,
     },
     clusterNodePools: {
       label: 'Node pools',

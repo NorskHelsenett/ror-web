@@ -27,6 +27,7 @@ import {
   getClusterNameView,
   getRorLoginViewItem,
 } from '@/features/cluster/utils/cluster'
+import { Gateway, GatewayStatusAddress } from '@/features/cluster/types/gateway-api'
 
 const Dot = ({ status }: { status: HealthStatus }) => (
   <span aria-hidden='true' className='relative flex shrink-0 items-center justify-center size-5'>
@@ -199,6 +200,16 @@ export const FavoritedCluster = ({ cluster }: { cluster: ClusterListViewItemRowT
       <ExternalToolButton name='ArgoCD' type='argocd' url={getArgocdUrlViewItem(cluster)} />
       <ExternalToolButton name='Grafana' type='grafana' url={getGrafanaUrlViewItem(cluster)} />
       <RorCliButton cluster={cluster} />
+    </div>
+    <div>
+      <b>Gateway IP addresses</b>
+      <div className='grid grid-cols-2'>
+        {cluster.gateways?.fieldValue?.map((g, index) => (
+          <div key={index}>
+            {g.gateway?.status?.addresses?.map((a: GatewayStatusAddress) => a.value).join(' - ') || '-'}
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 )

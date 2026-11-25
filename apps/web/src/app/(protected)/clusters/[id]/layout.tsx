@@ -23,7 +23,7 @@ interface ClusterPageLayoutProps {
 }
 const {
   cluster,
-  clusterIngresses,
+  clusterGatewayApi,
   clusterNodePools,
   clusterPolicies,
   clusterVulnerabilities,
@@ -45,8 +45,8 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
       href: cluster.getHref(clusterUid),
     },
     {
-      label: clusterIngresses.label,
-      href: `${oldRorBaseUrl}cluster/${clusterId}?tab=ingresses`,
+      label: clusterGatewayApi.label,
+      href: cluster.getHref(clusterUid),
     },
     {
       label: clusterNodePools.label,
