@@ -46,7 +46,7 @@ const createTabNavigationItems = (clusterId: string, clusterUid: string, cluster
     },
     {
       label: clusterGatewayApi.label,
-      href: cluster.getHref(clusterUid),
+      href: clusterGatewayApi.getHref(clusterUid),
     },
     {
       label: clusterNodePools.label,
